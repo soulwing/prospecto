@@ -40,20 +40,20 @@ public class ConcreteViewTemplateBuilderProvider
 
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
-      Class<?> sourceType) throws ViewTemplateException {
+      Class<?> modelType) throws ViewTemplateException {
     final ObjectNode target = new ObjectNode(name, namespace,
-        sourceType, new RootAccessor());
-    return new ConcreteViewTemplateBuilder(sourceType, target);
+        modelType, new RootAccessor());
+    return new ConcreteViewTemplateBuilder(modelType, target);
 
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
-      String namespace, Class<?> sourceType) throws ViewTemplateException {
+      String namespace, Class<?> modelType) throws ViewTemplateException {
     final ArrayOfObjectNode target =
-        new ArrayOfObjectNode(name, elementName, namespace, sourceType,
+        new ArrayOfObjectNode(name, elementName, namespace, modelType,
             new RootMultiValuedAccessor());
-    return new ConcreteViewTemplateBuilder(sourceType, target);
+    return new ConcreteViewTemplateBuilder(modelType, target);
   }
 
   @Override
