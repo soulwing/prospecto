@@ -21,10 +21,65 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <modules>
+    <module>prospecto-api</module>
+    <module>prospecto-runtime</module>
+    <module>prospecto-tests</module>
+  </modules>
+
+  <parent>
+    <groupId>org.soulwing</groupId>
+    <artifactId>soulwing-parent</artifactId>
+    <version>7</version>
+  </parent>
 
   <groupId>org.soulwing.prospecto</groupId>
   <artifactId>prospecto</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
+  <name>Prospecto</name>
+  <description>
+    A framework for producing client views in a RESTful web application
+  </description>
+  <url>https://github.com/soulwing/${project.artifactId}</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Carl Harris</name>
+      <organization>Soulwing</organization>
+      <organizationUrl>https://github.com/soulwing</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:soulwing/${project.artifactId}.git</connection>
+    <developerConnection>${project.scm.connection}</developerConnection>
+    <url>git@github.com:soulwing/${project.artifactId}.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.json</groupId>
+        <artifactId>javax.json-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.json</artifactId>
+        <version>1.0.4</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>
