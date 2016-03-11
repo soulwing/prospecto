@@ -27,4 +27,23 @@ package org.soulwing.prospecto.api;
  * @author Carl Harris
  */
 public interface ViewNode {
+
+  /**
+   * Gets the name associated with this node.
+   * @return name or {@code null} if none was specified
+   */
+  String getName();
+
+  /**
+   * Gets the namespace associated with this node.
+   * @return namespace or {@code null} if none was specified
+   */
+  String getNamespace();
+
+  /**
+   * Gets the model type associated with this node.
+   * @return model type or {@code null} if none was specified
+   */
+  Class<?> getModelType();
+
 }
