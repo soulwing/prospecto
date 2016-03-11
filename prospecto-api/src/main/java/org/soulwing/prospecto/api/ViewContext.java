@@ -68,6 +68,58 @@ public interface ViewContext {
   }
 
   /**
+   * A mutable scope.
+   */
+  interface MutableScope extends Scope {
+
+    /**
+     * Puts an object into this scope.
+     * @param obj the object to put
+     */
+    void put(Object obj);
+
+    /**
+     * Puts a named object into this scope.
+     * @param name name to assign
+     * @param obj the object to put
+     * @return the object that was replaced by {@code obj} in this scope
+     */
+    Object put(String name, Object obj);
+
+    /**
+     * Puts a collection of objects into this scope.
+     * @param objs the objects to put
+     */
+    void putAll(Iterable<?> objs);
+
+    /**
+     * Puts a collection of named objects into this scope.
+     * @param objs map of named objects to put
+     */
+    void putAll(Map<String, ?> objs);
+
+    /**
+     * Removes an object from this scope.
+     * @param obj the object to remove
+     * @return {@code true} if an object matching the identity of {@code obj}
+     *   was removed
+     */
+    boolean remove(Object obj);
+
+  }
+
+  /**
+   * Creates a new mutable scope.
+   * <p>
+   * After creation, the caller must add the scope to the context's
+   * {@linkplain #getScopes() configured scopes} in order for it to be
+   * consulted when requesting an object from the context.
+   *
+   * @return new mutable scope instance
+   */
+  MutableScope newScope();
+
+  /**
    * Gets the sequence of scopes that will be consulted when a requested
    * context object is not found in any of the internal scopes managed by the
    * context itself. The scopes are consulted in order until a requested
@@ -222,8 +274,9 @@ public interface ViewContext {
 
   /**
    * Removes an object from the current frame of the context stack.
-   * <p>
    * @param value the value to remove
+   * @return {@code true} if an object matching the identity of {@code value}
+   *   was removed
    */
   boolean remove(Object value);
 
