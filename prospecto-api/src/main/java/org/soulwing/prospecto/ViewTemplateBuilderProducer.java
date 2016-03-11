@@ -55,52 +55,125 @@ public class ViewTemplateBuilderProducer {
     this.provider = provider;
   }
 
-  public static ViewTemplateBuilderProducer getInstance() {
-    return singleton.getInstance();
-  }
-
-  public ViewTemplateBuilder object(Class<?> sourceType)
+  /**
+   * Creates a template builder whose root node type is of object type.
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder object(Class<?> modelType)
       throws ViewTemplateException {
-    return object(null, null, sourceType);
+    return object(null, null, modelType);
   }
 
-  public ViewTemplateBuilder object(String name, Class<?> sourceType)
+  /**
+   * Creates a template builder whose root node type is of object type.
+   * @param name name for the root node; some textual representations
+   *   (e.g. JSON) will add an extra envelope object around a named root view
+   *   node
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder object(String name, Class<?> modelType)
       throws ViewTemplateException {
-    return object(name, null, sourceType);
+    return object(name, null, modelType);
   }
 
-  public ViewTemplateBuilder object(String name, String namespace,
-      Class<?> sourceType) throws ViewTemplateException {
-    return provider.object(name, namespace, sourceType);
+  /**
+   * Creates a template builder whose root node type is of object type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param namespace namespace for {@code name}; this is used by only some
+   *   view types (e.g. XML)
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder object(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return singleton.getInstance().provider.object(name, namespace, modelType);
   }
 
-  public ViewTemplateBuilder arrayOfObjects(Class<?> sourceType)
+  /**
+   * Creates a template builder whose root node type is of array-of-objects type.
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfObjects(Class<?> modelType)
       throws ViewTemplateException {
-    return arrayOfObjects(null, null, null, sourceType);
+    return arrayOfObjects(null, null, null, modelType);
   }
 
-  public ViewTemplateBuilder arrayOfObjects(String name,
-      Class<?> sourceType) throws ViewTemplateException {
-    return arrayOfObjects(name, null, null, sourceType);
+  /**
+   * Creates a template builder whose root node type is of array-of-objects type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfObjects(String name,
+      Class<?> modelType) throws ViewTemplateException {
+    return arrayOfObjects(name, null, null, modelType);
   }
 
-  public ViewTemplateBuilder arrayOfObjects(String name,
-      String elementName, String namespace, Class<?> sourceType)
+  /**
+   * Creates a template builder whose root node type is of array-of-objects type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param elementName name for the elements in the array; this is used by only
+   *   some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName}; this
+   *   is used by only some view types (e.g. XML)
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfObjects(String name,
+      String elementName, String namespace, Class<?> modelType)
       throws ViewTemplateException {
-    return provider.arrayOfObjects(name, elementName, namespace, sourceType);
+    return singleton.getInstance().provider.arrayOfObjects(name, elementName,
+        namespace, modelType);
   }
 
-  public ViewTemplate arrayOfValues() throws ViewTemplateException {
+  /**
+   * Creates a template whose root node type is of array-of-values type.
+   * @return template
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfValues() throws ViewTemplateException {
     return arrayOfValues(null, null, null);
   }
 
-  public ViewTemplate arrayOfValues(String name) throws ViewTemplateException {
+  /**
+   * Creates a template whose root node type is of array-of-values type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @return template
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfValues(String name)
+      throws ViewTemplateException {
     return arrayOfValues(name, null, null);
   }
 
-  public ViewTemplate arrayOfValues(String name, String elementName,
+  /**
+   * Creates a template whose root node type is of array-of-values type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param elementName name for the elements in the array; this is used by only
+   *   some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName}; this
+   *   is used by only some view types (e.g. XML)
+   * @return template
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfValues(String name, String elementName,
       String namespace) throws ViewTemplateException {
-    return provider.arrayOfValues(name, elementName, namespace);
+    return singleton.getInstance().provider.arrayOfValues(name, elementName,
+        namespace);
   }
 
 }
