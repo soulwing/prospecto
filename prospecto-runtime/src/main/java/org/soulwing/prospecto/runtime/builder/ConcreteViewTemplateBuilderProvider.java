@@ -21,13 +21,9 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
-import org.soulwing.prospecto.runtime.accessor.RootAccessor;
-import org.soulwing.prospecto.runtime.accessor.RootMultiValuedAccessor;
-import org.soulwing.prospecto.runtime.builder.ConcreteViewTemplate;
-import org.soulwing.prospecto.runtime.builder.ConcreteViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.node.RootArrayOfValueNode;
+import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**
@@ -41,27 +37,23 @@ public class ConcreteViewTemplateBuilderProvider
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException {
-    final ObjectNode target = new ObjectNode(name, namespace,
-        modelType, new RootAccessor());
-    return new ConcreteViewTemplateBuilder(modelType, target);
-
+    return new ConcreteViewTemplateBuilder(modelType,
+        new RootObjectNode(name, namespace, modelType));
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) throws ViewTemplateException {
-    final ArrayOfObjectNode target =
-        new ArrayOfObjectNode(name, elementName, namespace, modelType,
-            new RootMultiValuedAccessor());
-    return new ConcreteViewTemplateBuilder(modelType, target);
+    return new ConcreteViewTemplateBuilder(modelType,
+        new RootArrayOfObjectNode(name, elementName, namespace,
+            modelType));
   }
 
   @Override
   public ViewTemplate arrayOfValues(String name, String elementName,
       String namespace) throws ViewTemplateException {
     return new ConcreteViewTemplate(
-        new ArrayOfValueNode(name, elementName, namespace,
-            new RootMultiValuedAccessor()));
+        new RootArrayOfValueNode(name, elementName, namespace));
   }
 
 }

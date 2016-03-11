@@ -23,11 +23,11 @@ import org.soulwing.prospecto.api.ValueConverter;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
-import org.soulwing.prospecto.runtime.node.EventGeneratingViewNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
@@ -67,7 +67,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder value(String name, String namespace) {
     configureCurrentNode();
-    EventGeneratingViewNode node = new ValueNode(name, namespace);
+    AbstractViewNode node = new ValueNode(name, namespace);
     target.addChild(node);
     if (sourceType == null) {
       throw new IllegalStateException("sourceType is required");
@@ -90,7 +90,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder arrayOfValues(String name, String elementName,
       String namespace) {
     configureCurrentNode();
-    EventGeneratingViewNode node = new ArrayOfValueNode(name, elementName, namespace);
+    AbstractViewNode node = new ArrayOfValueNode(name, elementName, namespace);
     target.addChild(node);
     if (sourceType == null) {
       throw new IllegalStateException("sourceType is required");
@@ -130,8 +130,8 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) {
     configureCurrentNode();
-    ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,
-        modelType);
+    ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName,
+        namespace, modelType);
     target.addChild(node);
     nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
     return new ConcreteViewTemplateBuilder(this, modelType, node,
@@ -141,7 +141,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder subview(String name, ViewTemplate template) {
     configureCurrentNode();
-    final EventGeneratingViewNode node = (EventGeneratingViewNode)
+    final AbstractViewNode node = (AbstractViewNode)
         template.generateSubView(name);
     nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
     target.addChild(node);
@@ -161,7 +161,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder url(String name, String namespace) {
     configureCurrentNode();
-    EventGeneratingViewNode node = new UrlNode(name, namespace);
+    AbstractViewNode node = new UrlNode(name, namespace);
     target.addChild(node);
     return this;
   }

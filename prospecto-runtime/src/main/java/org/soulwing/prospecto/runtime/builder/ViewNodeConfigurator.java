@@ -25,7 +25,7 @@ import org.soulwing.prospecto.api.ValueConverter;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
-import org.soulwing.prospecto.runtime.node.EventGeneratingViewNode;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A configurator for a view node.
@@ -35,25 +35,18 @@ import org.soulwing.prospecto.runtime.node.EventGeneratingViewNode;
  */
 class ViewNodeConfigurator {
 
-  private final EventGeneratingViewNode target;
+  private final AbstractViewNode target;
   private final Class<?> declaringClass;
 
   private String name;
   private AccessType accessType = AccessType.FIELD;
   private Class<? extends ValueConverter> converterClass;
 
-  public ViewNodeConfigurator(EventGeneratingViewNode target, Class<?> declaringClass,
+  public ViewNodeConfigurator(AbstractViewNode target, Class<?> declaringClass,
       String defaultName) {
     this.target = target;
     this.name = defaultName;
     this.declaringClass = declaringClass;
-  }
-
-  public ViewNodeConfigurator(ViewNodeConfigurator source,
-      EventGeneratingViewNode target) {
-    this(target, source.declaringClass, source.name);
-    this.accessType = source.accessType;
-    this.converterClass = source.converterClass;
   }
 
   public void setSource(String name) {
