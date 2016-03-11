@@ -37,11 +37,6 @@ public class CollectionAccessor implements MultiValuedAccessor {
   }
 
   @Override
-  public void setDelegate(Accessor delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
   public Iterator<Object> iterator(Object source) throws Exception {
     return ((Collection<Object>) delegate.get(source)).iterator();

@@ -37,11 +37,6 @@ public class ArrayAccessor implements MultiValuedAccessor {
   }
 
   @Override
-  public void setDelegate(Accessor delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
   public Iterator<Object> iterator(Object source) throws Exception {
     return Arrays.asList((Object[]) delegate.get(source)).iterator();
   }

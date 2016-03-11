@@ -27,8 +27,6 @@ import java.util.Iterator;
  */
 public interface MultiValuedAccessor {
 
-  void setDelegate(Accessor accessor);
-
   Iterator<Object> iterator(Object source) throws Exception;
 
 }
