@@ -22,9 +22,11 @@ package org.soulwing.prospecto.api;
  * A converter that transforms model values of some type for representation as
  * values in a view.
  *
+ * @param <M> model type
+ * @param <V> view type
  * @author Carl Harris
  */
-public interface ValueConverter {
+public interface ValueConverter<M, V> {
 
   /**
    * Converts a model value (generally of a simple type) to a view
@@ -33,7 +35,7 @@ public interface ValueConverter {
    * @return view representation of {@code value}
    * @throws ViewException if conversion fails
    */
-  Object modelToView(Object value) throws ViewException;
+  V modelToView(M value) throws ViewException;
 
   /**
    * Converts a view representation of a value to a model value.
@@ -41,7 +43,7 @@ public interface ValueConverter {
    * @return model value
    * @throws ViewException if conversion fails
    */
-  Object viewToModel(Object value) throws ViewException;
+  M viewToModel(V value) throws ViewException;
 
 }
 
