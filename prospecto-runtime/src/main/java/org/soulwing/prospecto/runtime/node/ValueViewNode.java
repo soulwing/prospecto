@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,52 +18,51 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import org.soulwing.prospecto.UrlResolverProducer;
-import org.soulwing.prospecto.api.UrlResolver;
+import java.util.Collections;
+import java.util.List;
+
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
 
 /**
- * A view node that represents a value that is resolved as a URL.
+ * An abstract base for nodes of value type.
  *
  * @author Carl Harris
  */
-public class UrlNode extends ValueViewNode {
-
-  public static final String DEFAULT_NAME = "href";
+abstract class ValueViewNode extends AbstractViewNode {
 
   /**
-   * Constructs a new instance.
+   * Constructs a new instance
    * @param name node name
    * @param namespace namespace for {@code name}
    */
-  public UrlNode(String name, String namespace) {
-    super(name, namespace);
-  }
-
-  /**
-   * Constructs a copy of a node, composed with a new name.
-   * @param source source node that will be copied
-   * @param name name to compose in the new node
-   */
-  private UrlNode(UrlNode source, String name) {
-    super(name, source.getNamespace());
+  protected ValueViewNode(String name, String namespace) {
+    super(name, namespace, null);
   }
 
   @Override
+  protected final List<View.Event> onEvaluate(Object source,
+      ScopedViewContext context) throws Exception {
+
+    final ViewNodeValueHandlerSupport handlers =
+        new ViewNodeValueHandlerSupport(context.getViewNodeValueHandlers());
+
+    final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
+        getModelValue(source, context), context);
+
+    return Collections.singletonList(newEvent(getEventType(), getName(),
+        handlers.valueToExtract(valueEvent)));
+  }
+
   protected View.Event.Type getEventType() {
-    return View.Event.Type.URL;
+    return View.Event.Type.VALUE;
   }
 
-  @Override
   protected Object getModelValue(Object source, ScopedViewContext context)
       throws Exception {
-    return context.get(UrlResolver.class).resolve(this, context);
-  }
-
-  @Override
-  public UrlNode copy(String name) {
-    return new UrlNode(this, name);
+    return getAccessor().get(source);
   }
 
 }

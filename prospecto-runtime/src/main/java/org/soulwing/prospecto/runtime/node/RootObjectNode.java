@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,33 +19,26 @@
 package org.soulwing.prospecto.runtime.node;
 
 /**
- * A view node that represents a value with a simple textual representation.
+ * A root view node that represents an object.
  *
  * @author Carl Harris
  */
-public class ValueNode extends ValueViewNode {
+public class RootObjectNode extends ObjectNode {
 
   /**
-   * Constructs a new instance.
+   * Constructs a new instance
    * @param name node name
    * @param namespace namespace for {@code name}
+   * @param modelType model type associated with the node
+   * @return root object node
    */
-  public ValueNode(String name, String namespace) {
-    super(name, namespace);
-  }
-
-  /**
-   * Constructs a copy of a node, composed with a new name.
-   * @param source source node that will be copied
-   * @param name name to compose in the new node
-   */
-  private ValueNode(ValueNode source, String name) {
-    super(name, source.getNamespace());
+  public RootObjectNode(String name, String namespace, Class<?> modelType) {
+    super(name, namespace, modelType);
   }
 
   @Override
-  public ValueNode copy(String name) {
-    return new ValueNode(this, name);
+  protected Object getModelObject(Object source) throws Exception {
+    return source;
   }
 
 }

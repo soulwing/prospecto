@@ -18,11 +18,21 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import org.soulwing.prospecto.NoSuchProviderException;
+import org.soulwing.prospecto.UrlResolverProducer;
+import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.runtime.node.EventGeneratingViewNode;
+import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
+import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
+import org.soulwing.prospecto.api.handler.ViewNodeHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
+import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
@@ -32,9 +42,9 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  */
 public class ConcreteViewTemplate implements ViewTemplate {
 
-  private final EventGeneratingViewNode root;
+  private final AbstractViewNode root;
 
-  public ConcreteViewTemplate(EventGeneratingViewNode root) {
+  public ConcreteViewTemplate(AbstractViewNode root) {
     this.root = root;
   }
 
@@ -42,7 +52,9 @@ public class ConcreteViewTemplate implements ViewTemplate {
   public View generateView(Object source, ViewContext context)
       throws ViewException {
     try {
-      return new ConcreteView(root.evaluate(source, context), root);
+      final ScopedViewContext configuredContext = configureContext(
+          (ScopedViewContext) context);
+      return new ConcreteView(root.evaluate(source, configuredContext), root);
     }
     catch (Exception ex) {
       throw new ViewException(ex);
@@ -50,8 +62,74 @@ public class ConcreteViewTemplate implements ViewTemplate {
   }
 
   @Override
-  public EventGeneratingViewNode generateSubView(String name) {
+  public AbstractViewNode generateSubView(String name) {
     return root.copy(name);
   }
+
+  private ScopedViewContext configureContext(ScopedViewContext context) {
+    context = context.copy();
+
+    final ViewContext.MutableScope globalScope = context.newScope();
+    context.getScopes().add(0, globalScope);
+
+    final UrlResolver resolver = getUrlResolver();
+
+    if (resolver != null) {
+      globalScope.put(resolver);
+    }
+
+    context.getViewNodeHandlers().add(new ViewNodeHandler() {
+      @Override
+      public boolean beforeVisit(ViewNodeEvent event) {
+        System.out.println("visiting node at path "
+            + event.getContext().currentViewPathAsString());
+        return true;
+      }
+
+      @Override
+      public void afterVisit(ViewNodeEvent event) {
+
+      }
+    });
+
+    context.getViewNodeElementHandlers().add(new ViewNodeElementHandler() {
+      @Override
+      public boolean beforeVisitElement(ViewNodeElementEvent event) {
+        System.out.println("visiting element at path "
+            + event.getContext().currentViewPathAsString()
+            + ": " + event.getElementModel());
+        return true;
+      }
+
+      @Override
+      public Object onVisitElement(ViewNodeElementEvent event) {
+        return event.getElementModel();
+      }
+    });
+
+    context.getViewNodeValueHandlers().add(new ViewNodeValueHandler() {
+      @Override
+      public Object onExtractValue(ViewNodeValueEvent event) {
+        return event.getValue();
+      }
+
+      @Override
+      public Object onInjectValue(ViewNodeValueEvent event) {
+        return null;
+      }
+    });
+
+    return context;
+  }
+
+  private UrlResolver getUrlResolver() {
+    try {
+      return UrlResolverProducer.newResolver();
+    }
+    catch (NoSuchProviderException ex) {
+      return null;
+    }
+  }
+
 
 }

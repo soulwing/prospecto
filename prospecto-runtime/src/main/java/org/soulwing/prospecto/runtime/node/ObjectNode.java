@@ -18,82 +18,58 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A view node that represents an object.
  *
  * @author Carl Harris
  */
-public class ObjectNode implements ContainerViewNode {
+public class ObjectNode extends ContainerViewNode {
 
-  private final String name;
-
-  private final String namespace;
-
-  private Accessor accessor;
-
-  private Class<?> modelType;
-
-  private final List<EventGeneratingViewNode> children;
-
-  private ObjectNode(ObjectNode source, String name) {
-    this(name, source.namespace, source.modelType, null,
-        source.children);
-  }
-
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType model type associated with node
+   */
   public ObjectNode(String name, String namespace, Class<?> modelType) {
-    this(name, namespace, modelType, null);
+    super(name, namespace, modelType);
   }
 
-  public ObjectNode(String name, String namespace, Class<?> modelType,
-      Accessor accessor) {
-    this(name, namespace, modelType, accessor, new ArrayList<EventGeneratingViewNode>());
-  }
-
-  private ObjectNode(String name, String namespace, Class<?> modelType, Accessor accessor,
-      List<EventGeneratingViewNode> children) {
-    this.name = name;
-    this.namespace = namespace;
-    this.accessor = accessor;
-    this.modelType = modelType;
-    this.children = children;
+  /**
+   * Constructs a copy of a node, composed with a new name.
+   * @param source source object node that will be copied
+   * @param name name to compose in the new node
+   */
+  private ObjectNode(ObjectNode source, String name) {
+    super(name, source.getNamespace(), source.getModelType(),
+        source.getChildren());
   }
 
   @Override
-  public void setAccessor(Accessor accessor) {
-    this.accessor = accessor;
-  }
+  protected List<View.Event> onEvaluate(Object source,
+      ScopedViewContext context) throws Exception {
 
-  @Override
-  public List<View.Event> evaluate(Object source, ViewContext context)
-      throws Exception {
-    final Object object = accessor != null ? accessor.get(source) : source;
     final List<View.Event> events = new LinkedList<>();
-    context.push(name, modelType, object);
-    events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, name, namespace));
-    for (EventGeneratingViewNode child : children) {
-      events.addAll(child.evaluate(object, context));
-    }
-    context.pop();
-    events.add(new ConcreteViewEvent(View.Event.Type.END_OBJECT, name, namespace));
+
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+    events.addAll(evaluateChildren(getModelObject(source), context));
+    events.add(newEvent(View.Event.Type.END_OBJECT));
+
     return events;
   }
 
-  @Override
-  public void addChild(EventGeneratingViewNode child) {
-    children.add(child);
+  protected Object getModelObject(Object source) throws Exception {
+    return getAccessor().get(source);
   }
 
   @Override
-  public EventGeneratingViewNode copy(String name) {
+  public ObjectNode copy(String name) {
     return new ObjectNode(this, name);
   }
 

@@ -18,14 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A view node that represents an envelope.
@@ -35,57 +32,39 @@ import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
  *
  * @author Carl Harris
  */
-public class EnvelopeNode implements ContainerViewNode {
+public class EnvelopeNode extends ContainerViewNode {
 
-  private final String name;
-
-  private final String namespace;
-
-  private Accessor accessor;
-
-  private final List<EventGeneratingViewNode> children;
-
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   */
   public EnvelopeNode(String name, String namespace) {
-    this(name, namespace, null);
+    super(name, namespace, null);
   }
 
-  public EnvelopeNode(String name, String namespace, Accessor accessor) {
-    this(name, namespace, accessor, new ArrayList<EventGeneratingViewNode>());
-  }
-
-  private EnvelopeNode(String name, String namespace, Accessor accessor,
-      List<EventGeneratingViewNode> children) {
-    this.name = name;
-    this.namespace = namespace;
-    this.accessor = accessor;
-    this.children = children;
+  /**
+   * Constructs a copy of a node, composing it with a new name.
+   * @param source source node to be copied
+   * @param name name to be composed in the new node
+   */
+  private EnvelopeNode(EnvelopeNode source, String name) {
+    super(name, source.getNamespace(), null, source.getChildren());
   }
 
   @Override
-  public void setAccessor(Accessor accessor) {
-    this.accessor = accessor;
-  }
-
-  @Override
-  public List<View.Event> evaluate(Object source, ViewContext context)
+  protected List<View.Event> onEvaluate(Object model, ScopedViewContext context)
       throws Exception {
     final List<View.Event> events = new LinkedList<>();
-    events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, name, namespace));
-    for (EventGeneratingViewNode child : children) {
-      events.addAll(child.evaluate(source, context));
-    }
-    events.add(new ConcreteViewEvent(View.Event.Type.END_OBJECT, name, namespace));
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+    events.addAll(evaluateChildren(model, context));
+    events.add(newEvent(View.Event.Type.END_OBJECT));
     return events;
   }
 
   @Override
-  public void addChild(EventGeneratingViewNode child) {
-    children.add(child);
-  }
-
-  @Override
-  public EventGeneratingViewNode copy(String name) {
-    return new EnvelopeNode(name, this.namespace, null, this.children);
+  public EnvelopeNode copy(String name) {
+    return new EnvelopeNode(this, name);
   }
 
 }

@@ -24,93 +24,92 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.ViewNodeElementHandlerSupport;
 
 /**
  * A view node that represents an array of objects.
  *
  * @author Carl Harris
  */
-public class ArrayOfObjectNode implements ContainerViewNode {
+public class ArrayOfObjectNode extends ContainerViewNode {
 
-  private final String name;
   private final String elementName;
-  private final String namespace;
-  private final Class<?> modelType;
-  private final List<EventGeneratingViewNode> children;
 
   private MultiValuedAccessor accessor;
 
-  private ArrayOfObjectNode(ArrayOfObjectNode source, String name) {
-    this(name, source.elementName, source.namespace, source.modelType, null,
-        source.children);
-  }
-
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param elementName name for the elements of the array
+   * @param namespace namespace for {@code name} and {@code elementName}
+   * @param modelType model type of the array elements
+   * @return array-of-objects node
+   */
   public ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType) {
-    this(name, elementName, namespace, modelType, null);
+    this(name, elementName, namespace, modelType,
+        new ArrayList<AbstractViewNode>());
   }
 
-  public ArrayOfObjectNode(String name, String elementName,
-      String namespace, Class<?> modelType, MultiValuedAccessor accessor) {
-    this(name, elementName, namespace, modelType, accessor,
-        new ArrayList<EventGeneratingViewNode>());
+  /**
+   * Constructs a copy of a node, composing it with a new name.
+   * @param source source node to be copied
+   * @param name name to be composed in the new node
+   */
+  private ArrayOfObjectNode(ArrayOfObjectNode source, String name) {
+    this(name, source.elementName, source.getNamespace(), source.getModelType(),
+        source.getChildren());
   }
 
   private ArrayOfObjectNode(String name, String elementName,
-      String namespace, Class<?> modelType, MultiValuedAccessor accessor,
-      List<EventGeneratingViewNode> children) {
-    this.name = name;
+      String namespace, Class<?> modelType, List<AbstractViewNode> children) {
+    super(name, namespace, modelType, children);
     this.elementName = elementName;
-    this.namespace = namespace;
-    this.modelType = modelType;
-    this.accessor = accessor;
-    this.children = children;
   }
 
   @Override
   public void setAccessor(Accessor accessor) {
+    super.setAccessor(accessor);
     this.accessor = AccessorFactory.multiValue(accessor);
   }
 
   @Override
-  public List<View.Event> evaluate(Object source, ViewContext context)
+  protected List<View.Event> onEvaluate(Object model,
+       ScopedViewContext context)
       throws Exception {
     final List<View.Event> events = new LinkedList<>();
-    context.push(name);
-    events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY, name,
-        namespace));
-    final Iterator<Object> i = accessor.iterator(source);
+    final Iterator<Object> i = getModelIterator(model);
+    final ViewNodeElementHandlerSupport handlers =
+        new ViewNodeElementHandlerSupport(context.getViewNodeElementHandlers());
 
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
-      final Object elementSource = i.next();
-      context.push(elementName, modelType, elementSource);
-      events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, elementName,
-          namespace));
-      for (EventGeneratingViewNode child : children) {
-        events.addAll(child.evaluate(elementSource, context));
+      final Object elementModel = i.next();
+      final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
+          model, elementModel, context);
+      if (handlers.willVisitElement(elementEvent)) {
+        events.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
+        events.addAll(evaluateChildren(handlers.visitElement(elementEvent),
+            context));
+        events.add(newEvent(View.Event.Type.END_OBJECT, elementName));
+        handlers.visitElement(elementEvent);
       }
-      events.add(new ConcreteViewEvent(View.Event.Type.END_OBJECT, elementName,
-          namespace));
-      context.pop();
     }
-    events.add(new ConcreteViewEvent(View.Event.Type.END_ARRAY, name,
-        namespace));
-    context.pop();
+    events.add(newEvent(View.Event.Type.END_ARRAY));
     return events;
   }
 
-  @Override
-  public void addChild(EventGeneratingViewNode child) {
-    children.add(child);
+  protected Iterator<Object> getModelIterator(Object source) throws Exception {
+    return accessor.iterator(source);
   }
 
   @Override
-  public EventGeneratingViewNode copy(String name) {
+  public ArrayOfObjectNode copy(String name) {
     return new ArrayOfObjectNode(this, name);
   }
 

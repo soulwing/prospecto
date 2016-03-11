@@ -23,60 +23,87 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
+import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
+import org.soulwing.prospecto.runtime.handler.ViewNodeElementHandlerSupport;
+import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
 
 /**
  * A view node that represents an array of values.
  *
  * @author Carl Harris
  */
-public class ArrayOfValueNode implements EventGeneratingViewNode {
+public class ArrayOfValueNode extends AbstractViewNode {
 
-  private final String name;
   private final String elementName;
-  private final String namespace;
 
   private MultiValuedAccessor accessor;
 
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param elementName name for the elements of the array
+   * @param namespace namespace for {@code name} and {@code elementName}
+   * @return array-of-values node
+   */
   public ArrayOfValueNode(String name, String elementName, String namespace) {
-    this(name, elementName, namespace, null);
+    super(name, namespace, null);
+    this.elementName = elementName;
   }
 
-  public ArrayOfValueNode(String name, String elementName, String namespace,
-      MultiValuedAccessor accessor) {
-    this.name = name;
-    this.elementName = elementName;
-    this.namespace = namespace;
-    this.accessor = accessor;
+  /**
+   * Constructs a copy of a node, composing it with a new name.
+   * @param source source node to be copied
+   * @param name name to be composed in the new node
+   */
+  private ArrayOfValueNode(ArrayOfValueNode source, String name) {
+    this(name, source.elementName, source.getNamespace());
   }
 
   @Override
   public void setAccessor(Accessor accessor) {
+    super.setAccessor(accessor);
     this.accessor = AccessorFactory.multiValue(accessor);
   }
 
   @Override
-  public List<View.Event> evaluate(Object source, ViewContext context)
+  public List<View.Event> onEvaluate(Object model, ScopedViewContext context)
       throws Exception {
     final List<View.Event> events = new LinkedList<>();
-    events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY, name, namespace));
-    final Iterator<Object> i = accessor.iterator(source);
+    final Iterator<Object> i = getModelIterator(model);
+    final ViewNodeElementHandlerSupport elementHandlers =
+        new ViewNodeElementHandlerSupport(context.getViewNodeElementHandlers());
+    final ViewNodeValueHandlerSupport valueHandlers =
+        new ViewNodeValueHandlerSupport(context.getViewNodeValueHandlers());
+
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
-      final Object value = i.next();
-      events.add(new ConcreteViewEvent(View.Event.Type.VALUE,
-          elementName, namespace, value));
+      final Object elementModel = i.next();
+      final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
+          model, elementModel, context);
+      if (elementHandlers.willVisitElement(elementEvent)) {
+        final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
+            elementHandlers.visitElement(elementEvent), context);
+        events.add(newEvent(View.Event.Type.VALUE, elementName,
+            valueHandlers.valueToExtract(valueEvent)));
+      }
     }
-    events.add(new ConcreteViewEvent(View.Event.Type.END_ARRAY, name, namespace));
+    events.add(newEvent(View.Event.Type.END_ARRAY));
+
     return events;
   }
 
+  protected Iterator<Object> getModelIterator(Object source) throws Exception {
+    return accessor.iterator(source);
+  }
+
   @Override
-  public EventGeneratingViewNode copy(String name) {
-    return new ArrayOfValueNode(name, this.elementName, this.namespace, null);
+  public ArrayOfValueNode copy(String name) {
+    return new ArrayOfValueNode(this, name);
   }
 
 }

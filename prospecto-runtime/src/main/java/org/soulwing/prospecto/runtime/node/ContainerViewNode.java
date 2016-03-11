@@ -18,13 +18,60 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+
 /**
  * A view node that contains other view nodes.
  *
  * @author Carl Harris
  */
-public interface ContainerViewNode extends EventGeneratingViewNode {
+public abstract class ContainerViewNode extends AbstractViewNode {
 
-  void addChild(EventGeneratingViewNode child);
+  private final List<AbstractViewNode> children;
+
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType element model type
+   */
+  protected ContainerViewNode(String name, String namespace, Class<?> modelType) {
+    this(name, namespace, modelType, new ArrayList<AbstractViewNode>());
+  }
+
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType element model type
+   * @param children node children
+   */
+  protected ContainerViewNode(String name, String namespace, Class<?> modelType,
+      List<AbstractViewNode> children) {
+    super(name, namespace, modelType);
+    this.children = children;
+  }
+
+  public List<AbstractViewNode> getChildren() {
+    return children;
+  }
+
+  public void addChild(AbstractViewNode child) {
+    children.add(child);
+  }
+
+  protected final List<View.Event> evaluateChildren(Object model,
+      ScopedViewContext context) throws Exception {
+    final List<View.Event> events = new LinkedList<>();
+    for (AbstractViewNode child : getChildren()) {
+      events.addAll(child.evaluate(model, context));
+    }
+    return events;
+  }
 
 }
