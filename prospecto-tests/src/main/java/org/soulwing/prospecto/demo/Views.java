@@ -31,7 +31,7 @@ public interface Views {
 
   String NAMESPACE = "urn:org.soulwing.prospecto:demo";
 
-  ViewTemplate VENDOR_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer.getInstance()
+  ViewTemplate VENDOR_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer
       .object("vendor", NAMESPACE, Vendor.class)
         .url()
         .value("name")
@@ -39,7 +39,7 @@ public interface Views {
         .end()
       .build();
 
-  ViewTemplate PO_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer.getInstance()
+  ViewTemplate PO_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer
       .arrayOfObjects("orders", "order", NAMESPACE, PurchaseOrder.class)
         .value("id")
         .value("fob")
@@ -51,7 +51,7 @@ public interface Views {
         .end()
       .build();
 
-  ViewTemplate PO_DETAILS_TEMPLATE = ViewTemplateBuilderProducer.getInstance()
+  ViewTemplate PO_DETAILS_TEMPLATE = ViewTemplateBuilderProducer
       .object("order", NAMESPACE, PurchaseOrder.class)
         .value("id")
         .value("fob")

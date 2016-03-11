@@ -24,10 +24,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
+import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewContextBase;
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.demo.PurchaseItem;
 import org.soulwing.prospecto.demo.PurchaseOrder;
@@ -78,7 +78,7 @@ public class Demo {
      * of a transaction context, while the entity manager is still open on the
      * thread.
      */
-    final ViewContext context = new ViewContextBase();
+    final ViewContext context = ViewContextProducer.newContext();
 
     final View summaryView = Views.PO_SUMMARY_TEMPLATE.generateView(orders, context);
     summaryView.getEnvelope().putProperty("offset", 0);
