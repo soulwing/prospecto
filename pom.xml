@@ -110,7 +110,7 @@
     <module>prospecto-api</module>
     <module>prospecto-runtime</module>
     <module>prospecto-tests</module>
-    <module>prospecto-url-resolver</module>
+    <module>prospecto-url-resolver-jaxrs</module>
   </modules>
 
 </project>
