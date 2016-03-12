@@ -82,10 +82,6 @@ public class ConcreteViewContext implements ScopedViewContext {
     this.viewNodeValueHandlers.addAll(source.getViewNodeValueHandlers());
   }
 
-  public ScopedViewContext copy() {
-    return new ConcreteViewContext(this);
-  }
-
   @Override
   public MutableScope newScope() {
     return new ConcreteMutableScope();

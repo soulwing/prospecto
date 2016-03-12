@@ -29,12 +29,6 @@ import org.soulwing.prospecto.api.ViewContext;
 public interface ScopedViewContext extends ViewContext {
 
   /**
-   * Creates a copy of this context.
-   * @return context copy
-   */
-  ScopedViewContext copy();
-
-  /**
    * Pushes a new frame onto the context stack.
    * @param name name of the subject view node
    * @param modelType model type associated with the node
