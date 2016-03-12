@@ -88,15 +88,15 @@ public class ArrayOfObjectNode extends ContainerViewNode {
 
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
-      final Object elementModel = i.next();
+      Object elementModel = i.next();
       final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
           model, elementModel, context);
       if (handlers.willVisitElement(elementEvent)) {
+        handlers.didVisitElement(elementEvent);
         events.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
         events.addAll(evaluateChildren(handlers.didVisitElement(elementEvent),
             context));
         events.add(newEvent(View.Event.Type.END_OBJECT, elementName));
-        handlers.didVisitElement(elementEvent);
       }
     }
     events.add(newEvent(View.Event.Type.END_ARRAY));
