@@ -33,10 +33,8 @@ public interface Views {
 
   ViewTemplate VENDOR_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer
       .object("vendor", NAMESPACE, Vendor.class)
-        .url()
         .value("name")
         .value("taxId")
-        .end()
       .build();
 
   ViewTemplate PO_SUMMARY_TEMPLATE = ViewTemplateBuilderProducer
