@@ -24,8 +24,16 @@ package org.soulwing.prospecto.api;
  */
 public class UnresolvedUrlException extends RuntimeException {
 
-  public UnresolvedUrlException(String viewPath) {
-    super("unresolved URL at view path " + viewPath);
+  public UnresolvedUrlException(String message) {
+    super(message);
+  }
+
+  public UnresolvedUrlException(Throwable cause) {
+    super(cause);
+  }
+
+  public UnresolvedUrlException(String message, Throwable cause) {
+    super(message, cause);
   }
 
 }
