@@ -21,11 +21,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <modules>
-    <module>prospecto-api</module>
-    <module>prospecto-runtime</module>
-    <module>prospecto-tests</module>
-  </modules>
 
   <parent>
     <groupId>org.soulwing</groupId>
@@ -97,7 +92,25 @@
         <artifactId>javax.json</artifactId>
         <version>1.0.4</version>
       </dependency>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-common</artifactId>
+        <version>2.13</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <modules>
+    <module>prospecto-api</module>
+    <module>prospecto-runtime</module>
+    <module>prospecto-tests</module>
+    <module>prospecto-url-resolver</module>
+  </modules>
 
 </project>
