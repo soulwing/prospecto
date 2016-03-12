@@ -67,6 +67,7 @@ public abstract class ContainerViewNode extends AbstractViewNode {
 
   protected final List<View.Event> evaluateChildren(Object model,
       ScopedViewContext context) throws Exception {
+    context.put(model);
     final List<View.Event> events = new LinkedList<>();
     for (AbstractViewNode child : getChildren()) {
       events.addAll(child.evaluate(model, context));

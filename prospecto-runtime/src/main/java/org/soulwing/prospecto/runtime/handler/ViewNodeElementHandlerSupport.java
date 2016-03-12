@@ -46,7 +46,7 @@ public class ViewNodeElementHandlerSupport {
     return visiting;
   }
 
-  public Object visitElement(ViewNodeElementEvent event) {
+  public Object didVisitElement(ViewNodeElementEvent event) {
     for (final ViewNodeElementHandler handler : handlers) {
       final Object elementModel = handler.onVisitElement(event);
       event = new ViewNodeElementEvent(event, elementModel);

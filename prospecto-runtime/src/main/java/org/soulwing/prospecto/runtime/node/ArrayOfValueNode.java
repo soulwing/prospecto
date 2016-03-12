@@ -87,7 +87,7 @@ public class ArrayOfValueNode extends AbstractViewNode {
           model, elementModel, context);
       if (elementHandlers.willVisitElement(elementEvent)) {
         final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
-            elementHandlers.visitElement(elementEvent), context);
+            elementHandlers.didVisitElement(elementEvent), context);
         events.add(newEvent(View.Event.Type.VALUE, elementName,
             valueHandlers.valueToExtract(valueEvent)));
       }
