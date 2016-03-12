@@ -323,7 +323,7 @@ public class ConcreteViewContextTest {
     context.getViewNodeElementHandlers().add(viewNodeElementHandler);
     context.getViewNodeValueHandlers().add(viewNodeValueHandler);
 
-    ViewContext contextCopy = context.copy();
+    ViewContext contextCopy = new ConcreteViewContext(context);
     context.getScopes().clear();
     context.getViewNodeHandlers().clear();
     context.getViewNodeElementHandlers().clear();
