@@ -48,7 +48,6 @@ public class ArrayOfObjectNode extends ContainerViewNode {
    * @param elementName name for the elements of the array
    * @param namespace namespace for {@code name} and {@code elementName}
    * @param modelType model type of the array elements
-   * @return array-of-objects node
    */
   public ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType) {
