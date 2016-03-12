@@ -124,7 +124,7 @@ public class ConcreteViewTemplate implements ViewTemplate {
 
   private UrlResolver getUrlResolver() {
     try {
-      return UrlResolverProducer.newResolver();
+      return UrlResolverProducer.getResolver();
     }
     catch (NoSuchProviderException ex) {
       return null;

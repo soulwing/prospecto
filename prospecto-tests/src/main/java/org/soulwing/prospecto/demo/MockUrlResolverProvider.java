@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.demo;
 
+import java.util.Map;
+
 import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
@@ -30,7 +32,17 @@ import org.soulwing.prospecto.spi.UrlResolverProvider;
 public class MockUrlResolverProvider implements UrlResolverProvider {
 
   @Override
-  public UrlResolver newResolver() {
+  public void init(Map<String, Object> properties) {
+
+  }
+
+  @Override
+  public void destroy() {
+
+  }
+
+  @Override
+  public UrlResolver getResolver() {
     return new MockUrlResolver();
   }
 

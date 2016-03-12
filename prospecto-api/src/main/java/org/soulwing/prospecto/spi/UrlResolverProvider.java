@@ -40,12 +40,12 @@ public interface UrlResolverProvider {
   void destroy();
 
   /**
-   * Creates a new resolver instance.
+   * Retrieves the resolver instance.
    * <p>
    * As specified in the documentation for {@link UrlResolver}, the provided
    * implementation <em>must</em> be thread safe.
    * @return URL resolver
    */
-  UrlResolver newResolver();
+  UrlResolver getResolver();
 
 }

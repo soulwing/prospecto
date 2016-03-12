@@ -74,8 +74,8 @@ public class UrlResolverProducer {
    * Creates a new URL resolver.
    * @return URL resolver
    */
-  public static UrlResolver newResolver() {
-    return singleton.getInstance().provider.newResolver();
+  public static UrlResolver getResolver() {
+    return singleton.getInstance().provider.getResolver();
   }
   
 }
