@@ -72,6 +72,7 @@ public abstract class ContainerViewNode extends AbstractViewNode {
     for (AbstractViewNode child : getChildren()) {
       events.addAll(child.evaluate(model, context));
     }
+    context.remove(model);
     return events;
   }
 
