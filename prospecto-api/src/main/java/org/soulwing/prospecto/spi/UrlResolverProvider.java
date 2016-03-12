@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.spi;
 
+import java.util.Map;
+
 import org.soulwing.prospecto.api.UrlResolver;
 
 /**
@@ -25,6 +27,17 @@ import org.soulwing.prospecto.api.UrlResolver;
  * @author Carl Harris
  */
 public interface UrlResolverProvider {
+
+  /**
+   * Initializes this provider.
+   * @param properties configuration properties
+   */
+  void init(Map<String, Object> properties);
+
+  /**
+   * Prepares this provider to be discarded.
+   */
+  void destroy();
 
   /**
    * Creates a new resolver instance.

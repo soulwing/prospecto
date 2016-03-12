@@ -19,6 +19,7 @@
 package org.soulwing.prospecto;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import org.soulwing.prospecto.api.UrlResolver;
@@ -52,6 +53,21 @@ public class UrlResolverProducer {
 
   private UrlResolverProducer(UrlResolverProvider provider) {
     this.provider = provider;
+  }
+
+  /**
+   * Initializes the URL resolver provider.
+   * @param properties
+   */
+  public static void init(Map<String, Object> properties) {
+    singleton.getInstance().provider.init(properties);
+  }
+
+  /**
+   * Prepares the URL resolver provider to be discarded.
+   */
+  public static void destroy() {
+    singleton.getInstance().provider.destroy();
   }
 
   /**
