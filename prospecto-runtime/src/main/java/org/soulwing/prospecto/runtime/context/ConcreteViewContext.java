@@ -75,11 +75,11 @@ public class ConcreteViewContext implements ScopedViewContext {
   public ConcreteViewContext() {
   }
 
-  public ConcreteViewContext(ConcreteViewContext source) {
-    this.scopes.addAll(source.scopes);
-    this.viewNodeHandlers.addAll(source.viewNodeHandlers);
-    this.viewNodeElementHandlers.addAll(source.viewNodeElementHandlers);
-    this.viewNodeValueHandlers.addAll(source.viewNodeValueHandlers);
+  public ConcreteViewContext(ViewContext source) {
+    this.scopes.addAll(source.getScopes());
+    this.viewNodeHandlers.addAll(source.getViewNodeHandlers());
+    this.viewNodeElementHandlers.addAll(source.getViewNodeElementHandlers());
+    this.viewNodeValueHandlers.addAll(source.getViewNodeValueHandlers());
   }
 
   public ScopedViewContext copy() {
