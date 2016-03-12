@@ -30,7 +30,7 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 /**
  * A configurator for a view node.
  *
- * TODO: I hate this abstraction and it's relationship to ConcreteViewTemplateBuilder.
+ * TODO: I hate this abstraction and its relationship to ConcreteViewTemplateBuilder.
  * @author Carl Harris
  */
 class ViewNodeConfigurator {
@@ -39,7 +39,7 @@ class ViewNodeConfigurator {
   private final Class<?> declaringClass;
 
   private String name;
-  private AccessType accessType = AccessType.FIELD;
+  private AccessType accessType = AccessType.PROPERTY;
   private Class<? extends ValueConverter> converterClass;
 
   public ViewNodeConfigurator(AbstractViewNode target, Class<?> declaringClass,
