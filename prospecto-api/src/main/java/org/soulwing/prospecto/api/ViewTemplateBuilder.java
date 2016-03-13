@@ -105,9 +105,23 @@ public interface ViewTemplateBuilder {
    * Adds an object node at the cursor.
    * @param name name for the object in the view
    * @param modelType the data type for the corresponding model
-   * @return this builder
+   * @return template builder for new object node
    */
   ViewTemplateBuilder object(String name, Class<?> modelType);
+
+  /**
+   * Adds an object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder object(String name, ViewTemplate template);
 
   /**
    * Adds an object node at the cursor.
@@ -115,18 +129,49 @@ public interface ViewTemplateBuilder {
    * @param namespace namespace for {@code name} and {@code elementName};
    *    used in only some view types (e.g. XML)
    * @param modelType the data type for the corresponding model
-   * @return this builder
+   * @return template builder for new object node
    */
   ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType);
 
   /**
+   * Adds an object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder object(String name, String namespace,
+      ViewTemplate template);
+
+  /**
    * Adds an array-of-objects node at the cursor.
    * @param name name for the array in the view
    * @param modelType the data type for the elements of the array
-   * @return this builder
+   * @return template builder for new array-of-objects node
    */
   ViewTemplateBuilder arrayOfObjects(String name, Class<?> modelType);
+
+  /**
+   * Adds an array-of-objects node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder arrayOfObjects(String name, ViewTemplate template);
 
   /**
    * Adds an array-of-objects node at the cursor.
@@ -134,10 +179,27 @@ public interface ViewTemplateBuilder {
    * @param elementName name for the elements in the array; used in only some
    *    some view types (e.g. XML)
    * @param modelType the data type for the elements of the array
-   * @return this builder
+   * @return template builder for new array-of-objects node
    */
   ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       Class<?> modelType);
+
+  /**
+   * Adds an array-of-objects node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder arrayOfObjects(String name, String elementName,
+      ViewTemplate template);
 
   /**
    * Adds an array-of-objects node  at the cursor.
@@ -147,41 +209,64 @@ public interface ViewTemplateBuilder {
    * @param modelType the data type for the elements of the array
    * @param namespace namespace for {@code name} and {@code elementName};
    *    used in only some view types (e.g. XML)
-   * @return this builder
+   * @return template builder for new array-of-objects node
    */
   ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType);
 
   /**
-   * Adds a node at the cursor using the root node of the specified template.
-   * @param name name for the node in the view
+   * Adds an array-of-objects node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
    * @param template source template
    * @return this builder
    */
-  ViewTemplateBuilder subview(String name, ViewTemplate template);
+  ViewTemplateBuilder arrayOfObjects(String name, String elementName,
+      String namespace, ViewTemplate template);
 
   /**
    * Adds a URL node at the cursor.
-   * TODO: provide description/reference on how this works
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
    * @return this builder
+   * @see UrlResolver
    */
   ViewTemplateBuilder url();
 
   /**
    * Adds a URL node at the cursor.
-   * TODO: provide description/reference on how this works
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
    * @param name name for the node in the view
    * @return this builder
+   * @see UrlResolver
    */
   ViewTemplateBuilder url(String name);
 
   /**
    * Adds a URL node at the cursor.
-   * TODO: provide description/reference on how this works
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
    * @param name name for the node in the view
    * @param namespace namespace for {@code name}; used in only some view 
    *    types (e.g. XML)
    * @return this builder
+   * @see UrlResolver
    */
   ViewTemplateBuilder url(String name, String namespace);
 

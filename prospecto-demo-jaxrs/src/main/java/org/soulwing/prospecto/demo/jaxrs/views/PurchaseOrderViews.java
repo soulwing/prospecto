@@ -19,8 +19,6 @@
 package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
-import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseItem;
@@ -33,6 +31,17 @@ import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
  */
 public interface PurchaseOrderViews {
 
+  ViewTemplate ITEM_DETAIL = ViewTemplateBuilderProducer
+      .object(PurchaseItem.class)
+        .value("id")
+        .value("version")
+        .value("lineNumber")
+        .value("description")
+        .value("quantity")
+        .value("unitPrice")
+        .value("price")
+      .build();
+
   ViewTemplate ORDER_DETAIL = ViewTemplateBuilderProducer
       .object("order", Namespace.URI, PurchaseOrder.class)
           .url()
@@ -42,19 +51,11 @@ public interface PurchaseOrderViews {
           .value("dueDate")
               .converter(DateTypeConverter.class,
                   "format", DateTypeConverter.Format.ISO8601_DATE)
-          .subview("vendor", VendorViews.VENDOR_REFERENCE)
-          .subview("orderedBy", PersonViews.PERSON_REFERENCE)
+          .object("vendor", VendorViews.VENDOR_REFERENCE)
+          .object("orderedBy", PersonViews.PERSON_REFERENCE)
           .value("comment")
           .value("total")
-          .arrayOfObjects("items", "item", PurchaseItem.class)
-              .value("id")
-              .value("version")
-              .value("lineNumber")
-              .value("description")
-              .value("quantity")
-              .value("unitPrice")
-              .value("price")
-          .end()
+          .arrayOfObjects("items", "item", ITEM_DETAIL)
       .build();
 
   ViewTemplate ORDERS_SUMMARY = ViewTemplateBuilderProducer
@@ -63,8 +64,8 @@ public interface PurchaseOrderViews {
           .value("dueDate")
               .converter(DateTypeConverter.class,
                   "format", DateTypeConverter.Format.ISO8601_DATE)
-          .subview("vendor", VendorViews.VENDOR_REFERENCE)
-          .subview("orderedBy", PersonViews.PERSON_REFERENCE)
+          .object("vendor", VendorViews.VENDOR_REFERENCE)
+          .object("orderedBy", PersonViews.PERSON_REFERENCE)
           .value("total")
       .build();
 

@@ -21,6 +21,8 @@ package org.soulwing.prospecto.runtime.builder;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
@@ -118,14 +120,43 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder object(String name, ViewTemplate template) {
+    return object(name, null, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder object(String name, String namespace,
+      ViewTemplate template) {
+    configureCurrentNode();
+    ViewNode subViewNode = template.generateSubView(name);
+    assertIsObjectContainerNode(name, subViewNode);
+    ObjectNode node = new ObjectNode(name, namespace, subViewNode.getModelType());
+    node.addChildren(((ContainerViewNode) subViewNode).getChildren());
+    nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
+    target.addChild(node);
+    return this;
+  }
+
+  @Override
   public ViewTemplateBuilder arrayOfObjects(String name, Class<?> modelType) {
     return arrayOfObjects(name, null, null, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfObjects(String name, ViewTemplate template) {
+    return arrayOfObjects(name, null, null, template);
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       Class<?> modelType) {
     return arrayOfObjects(name, elementName, null, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
+      ViewTemplate template) {
+    return arrayOfObjects(name, elementName, null, template);
   }
 
   @Override
@@ -141,13 +172,25 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
-  public ViewTemplateBuilder subview(String name, ViewTemplate template) {
+  public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
+      String namespace, ViewTemplate template) {
     configureCurrentNode();
-    final AbstractViewNode node = (AbstractViewNode)
-        template.generateSubView(name);
+    ViewNode subViewNode = template.generateSubView(name);
+    assertIsObjectContainerNode(name, subViewNode);
+    ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,
+        subViewNode.getModelType());
+    node.addChildren(((ContainerViewNode) subViewNode).getChildren());
     nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
     target.addChild(node);
     return this;
+  }
+
+  private void assertIsObjectContainerNode(String name, ViewNode subViewNode) {
+    if (!(subViewNode instanceof ObjectNode)
+        && !(subViewNode instanceof ArrayOfObjectNode)) {
+      throw new ViewTemplateException("referenced view template for node '"
+          + name + "' must have a root node of object or array-of-object type");
+    }
   }
 
   @Override

@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.demo;
 
-import java.util.Collections;
-
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
@@ -50,7 +48,7 @@ public interface Views {
         .value("total")
           .source("itemTotal")
           .accessType(AccessType.PROPERTY)
-        .subview("vendor", VENDOR_SUMMARY_TEMPLATE)
+        .object("vendor", VENDOR_SUMMARY_TEMPLATE)
         .end()
       .build();
 
@@ -67,7 +65,7 @@ public interface Views {
         .envelope("approverList")
           .arrayOfValues("approvers", "approver")
           .end()
-        .subview("vendor", VENDOR_SUMMARY_TEMPLATE)
+        .object("vendor", VENDOR_SUMMARY_TEMPLATE)
         .arrayOfObjects("items", "item", PurchaseItem.class)
           .value("description")
           .value("quantity")
