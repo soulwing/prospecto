@@ -26,7 +26,7 @@ package org.soulwing.prospecto.api;
  *
  * @author Carl Harris
  */
-public interface ViewNode {
+public interface ViewNode extends MutableScope {
 
   /**
    * Gets the name associated with this node.
@@ -45,5 +45,7 @@ public interface ViewNode {
    * @return model type or {@code null} if none was specified
    */
   Class<?> getModelType();
+
+
 
 }

@@ -20,11 +20,14 @@ package org.soulwing.prospecto.runtime.node;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.handler.ViewNodeHandlerSupport;
@@ -35,6 +38,8 @@ import org.soulwing.prospecto.runtime.handler.ViewNodeHandlerSupport;
  * @author Carl Harris
  */
 public abstract class AbstractViewNode implements ViewNode {
+
+  private final MutableScope scope = new ConcreteMutableScope();
 
   private final String name;
   private final String namespace;
@@ -112,6 +117,41 @@ public abstract class AbstractViewNode implements ViewNode {
   protected View.Event newEvent(View.Event.Type type, String name,
       Object value) {
     return new ConcreteViewEvent(type, name, namespace, value);
+  }
+
+  @Override
+  public <T> T get(Class<T> type) {
+    return scope.get(type);
+  }
+
+  @Override
+  public <T> T get(String name, Class<T> type) {
+    return scope.get(name, type);
+  }
+
+  @Override
+  public void put(Object obj) {
+    scope.put(obj);
+  }
+
+  @Override
+  public Object put(String name, Object obj) {
+    return scope.put(name, obj);
+  }
+
+  @Override
+  public void putAll(Iterable<?> objs) {
+    scope.putAll(objs);
+  }
+
+  @Override
+  public void putAll(Map<String, ?> objs) {
+    scope.putAll(objs);
+  }
+
+  @Override
+  public boolean remove(Object obj) {
+    return scope.remove(obj);
   }
 
 }
