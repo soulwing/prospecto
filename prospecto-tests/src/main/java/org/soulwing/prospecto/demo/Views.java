@@ -18,9 +18,12 @@
  */
 package org.soulwing.prospecto.demo;
 
+import java.util.Collections;
+
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.converter.DateTypeConverter;
 
 /**
  * Demo views.
@@ -42,6 +45,8 @@ public interface Views {
         .value("id")
         .value("fob")
         .value("dueDate")
+          .converter(DateTypeConverter.class,
+              "format", DateTypeConverter.Format.ISO8601_DATE)
         .value("total")
           .source("itemTotal")
           .accessType(AccessType.PROPERTY)
@@ -54,6 +59,8 @@ public interface Views {
         .value("id")
         .value("fob")
         .value("dueDate")
+            .converter(DateTypeConverter.class,
+                "format", DateTypeConverter.Format.ISO8601_DATE)
         .value("total")
           .source("itemTotal")
           .accessType(AccessType.PROPERTY)

@@ -29,6 +29,7 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.demo.MockUrlResolverProvider;
 import org.soulwing.prospecto.demo.PurchaseItem;
 import org.soulwing.prospecto.demo.PurchaseOrder;
@@ -83,6 +84,9 @@ public class Demo {
     ViewContext.MutableScope scope = context.newScope();
     scope.put(new MockUrlResolverProvider().getResolver());
     context.getScopes().add(scope);
+
+    context.getValueTypeConverters().add(
+      new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
 
     final View summaryView = Views.PO_SUMMARY_TEMPLATE.generateView(orders, context);
     summaryView.getEnvelope().putProperty("offset", 0);
