@@ -58,6 +58,7 @@ public interface PurchaseOrderViews {
           .value("comment")
           .value("currency")
           .value("fund")
+              .attribute("roleRequired", "MANAGER")
               .converter(PropertyExtractingValueTypeConverter.class,
                   "modelType", Account.class,
                   "propertyName", "accountId")

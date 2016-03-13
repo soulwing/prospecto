@@ -20,6 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 import org.soulwing.prospecto.demo.jaxrs.domain.Money;
+import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
 /**
  * A bean that produces {@link ViewContext} instances.
@@ -48,13 +50,19 @@ public class ViewContextProducerBean {
   private static final Logger logger =
       LoggerFactory.getLogger(ViewContextProducerBean.class);
 
+  @Inject
+  private UserContextService userContextService;
+
   @Produces
   @ApplicationScoped
   public ViewContext newContext() {
+
     final ViewContext context = ViewContextProducer.newContext();
+
     final MutableScope scope = context.newScope();
-    scope.put(UrlResolverProducer.getResolver());
     context.getScopes().add(scope);
+    scope.put(UrlResolverProducer.getResolver());
+    scope.put(userContextService);
 
     context.getValueTypeConverters().add(DateTypeConverter.Builder.with()
         .format(DateTypeConverter.Format.ISO8601_DATE)
@@ -79,7 +87,12 @@ public class ViewContextProducerBean {
     context.getViewNodeHandlers().add(new ViewNodeHandler() {
       @Override
       public boolean beforeVisit(ViewNodeEvent event) {
-        return true;
+        String role = event.getSource().get("roleRequired", String.class);
+        if (role == null) return true;
+        logger.info("role required for node {}: {}",
+            event.getContext().currentViewPath(), role);
+        return event.getContext().get(UserContextService.class)
+            .currentUser().hasRole(role);
       }
 
       @Override
