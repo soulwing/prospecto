@@ -21,12 +21,14 @@ package org.soulwing.prospecto.demo.jaxrs.service;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
+import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
@@ -52,6 +54,8 @@ public class ViewContextProducerBean {
     final ViewContext.MutableScope scope = context.newScope();
     scope.put(UrlResolverProducer.getResolver());
     context.getScopes().add(scope);
+    context.getValueTypeConverters().add(
+        new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
     configureContext(context);
     return context;
   }

@@ -19,13 +19,22 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.json.JsonValue;
 
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ValueConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.ValueNode;
 
 /**
  * A configurator for a view node.
@@ -40,7 +49,7 @@ class ViewNodeConfigurator {
 
   private String name;
   private AccessType accessType = AccessType.PROPERTY;
-  private Class<? extends ValueConverter> converterClass;
+  private ValueTypeConverter<?> converter;
 
   public ViewNodeConfigurator(AbstractViewNode target, Class<?> declaringClass,
       String defaultName) {
@@ -57,14 +66,52 @@ class ViewNodeConfigurator {
     this.accessType = accessType;
   }
 
-  public void setConverter(Class<? extends ValueConverter> converterClass) {
-    this.converterClass = converterClass;
+  public void setConverter(Class<? extends ValueTypeConverter> converterClass,
+      Object... configuration) {
+    if (configuration.length % 2 != 0) {
+      throw new IllegalArgumentException("configuration must be name-value pairs");
+    }
+    final Map<String, Object> map = new HashMap<>();
+    for (int i = 0; i < configuration.length / 2; i++) {
+      map.put(configuration[i].toString(), configuration[i + 1]);
+    }
+    setConverter(converterClass, map);
+  }
+
+  public void setConverter(Class<? extends ValueTypeConverter> converterClass,
+      Map<String, Object> configuration) {
+    try {
+      final ValueTypeConverter<?> converter = converterClass.newInstance();
+      for (final String key : configuration.keySet()) {
+        final PropertyDescriptor descriptor = new PropertyDescriptor(key,
+            converterClass);
+        descriptor.getWriteMethod().invoke(converter, configuration.get(key));
+      }
+      for (Method method : converterClass.getMethods()) {
+        if (method.getParameterTypes().length == 0
+            && method.getAnnotation(PostConstruct.class) != null) {
+          method.invoke(converter);
+        }
+      }
+      setConverter(converter);
+    }
+    catch (IntrospectionException | InstantiationException
+        | InvocationTargetException | IllegalAccessException ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  public void setConverter(ValueTypeConverter<?> converter) {
+    this.converter = converter;
   }
 
   public Accessor configure() {
     try {
       final Accessor accessor = newAccessor(declaringClass);
       target.setAccessor(accessor);
+      if (target instanceof ValueNode) {
+        ((ValueNode) target).setConverter(converter);
+      }
       return accessor;
     }
     catch (Exception ex) {
@@ -77,9 +124,6 @@ class ViewNodeConfigurator {
       InstantiationException, IllegalAccessException {
     final Accessor accessor = AccessorFactory.accessor(declaringClass,
         name, accessType);
-    if (converterClass != null) {
-      return AccessorFactory.converter(accessor, converterClass);
-    }
     return accessor;
   }
 

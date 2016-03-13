@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
@@ -48,6 +49,9 @@ public class ConcreteViewContext implements ScopedViewContext {
       new ArrayList<>();
 
   private final List<ViewNodeValueHandler> viewNodeValueHandlers =
+      new ArrayList<>();
+
+  private final List<ValueTypeConverter<?>> valueTypeConverters =
       new ArrayList<>();
 
   static class ScopeFrame extends ConcreteMutableScope {
@@ -80,6 +84,7 @@ public class ConcreteViewContext implements ScopedViewContext {
     this.viewNodeHandlers.addAll(source.getViewNodeHandlers());
     this.viewNodeElementHandlers.addAll(source.getViewNodeElementHandlers());
     this.viewNodeValueHandlers.addAll(source.getViewNodeValueHandlers());
+    this.valueTypeConverters.addAll(source.getValueTypeConverters());
   }
 
   @Override
@@ -105,6 +110,11 @@ public class ConcreteViewContext implements ScopedViewContext {
   @Override
   public List<ViewNodeValueHandler> getViewNodeValueHandlers() {
     return viewNodeValueHandlers;
+  }
+
+  @Override
+  public List<ValueTypeConverter<?>> getValueTypeConverters() {
+    return valueTypeConverters;
   }
 
   @Override

@@ -18,12 +18,18 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+
 /**
  * A view node that represents a value with a simple textual representation.
  *
  * @author Carl Harris
  */
 public class ValueNode extends ValueViewNode {
+
+  private ValueTypeConverter<?> converter;
 
   /**
    * Constructs a new instance.
@@ -41,6 +47,43 @@ public class ValueNode extends ValueViewNode {
    */
   private ValueNode(ValueNode source, String name) {
     super(name, source.getNamespace());
+  }
+
+  /**
+   * Gets this node's value type converter.
+   * @return value type converter or {@code null} if none is configured.
+   */
+  public ValueTypeConverter<?> getConverter() {
+    return converter;
+  }
+
+  /**
+   * Sets this node's value type converter.
+   * @param converter the value type converter to set
+   */
+  public void setConverter(ValueTypeConverter<?> converter) {
+    this.converter = converter;
+  }
+
+  @Override
+  protected Object getModelValue(Object source, ScopedViewContext context)
+      throws Exception {
+    return getAccessor().get(source);
+  }
+
+  @Override
+  protected Object toViewValue(Object model, ViewContext context)
+      throws Exception {
+    if (model == null) return null;
+    if (converter != null) {
+      return converter.toValue(model);
+    }
+    for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
+      if (converter.supports(model.getClass())) {
+        return converter.toValue(model);
+      }
+    }
+    return model;
   }
 
   @Override

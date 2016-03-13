@@ -18,8 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.Map;
+
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ValueConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
@@ -193,8 +195,24 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
-  public ViewTemplateBuilder converter(Class<? extends ValueConverter> converterClass) {
-    nodeConfigurator.setConverter(converterClass);
+  public ViewTemplateBuilder converter(
+      Class<? extends ValueTypeConverter> converterClass,
+      Object... configuration) {
+    nodeConfigurator.setConverter(converterClass, configuration);
+    return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder converter(
+      Class<? extends ValueTypeConverter> converterClass,
+      Map<String, Object> configuration) {
+    nodeConfigurator.setConverter(converterClass, configuration);
+    return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
+    nodeConfigurator.setConverter(converter);
     return this;
   }
 

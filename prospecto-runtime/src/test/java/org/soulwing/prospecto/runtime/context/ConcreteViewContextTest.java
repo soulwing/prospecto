@@ -36,6 +36,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
@@ -317,23 +318,30 @@ public class ConcreteViewContextTest {
         mockery.mock(ViewNodeElementHandler.class);
     final ViewNodeValueHandler viewNodeValueHandler =
         mockery.mock(ViewNodeValueHandler.class);
+    final ValueTypeConverter valueTypeConverter =
+        mockery.mock(ValueTypeConverter.class);
 
     context.getScopes().add(scope);
     context.getViewNodeHandlers().add(viewNodeHandler);
     context.getViewNodeElementHandlers().add(viewNodeElementHandler);
     context.getViewNodeValueHandlers().add(viewNodeValueHandler);
+    context.getValueTypeConverters().add(valueTypeConverter);
 
     ViewContext contextCopy = new ConcreteViewContext(context);
     context.getScopes().clear();
     context.getViewNodeHandlers().clear();
     context.getViewNodeElementHandlers().clear();
     context.getViewNodeValueHandlers().clear();
+    context.getValueTypeConverters().clear();
+
     assertThat(contextCopy.getScopes(), contains(scope));
     assertThat(contextCopy.getViewNodeHandlers(), contains(viewNodeHandler));
     assertThat(contextCopy.getViewNodeElementHandlers(),
         contains(viewNodeElementHandler));
     assertThat(contextCopy.getViewNodeValueHandlers(),
         contains(viewNodeValueHandler));
+    assertThat(contextCopy.getValueTypeConverters(),
+        contains(valueTypeConverter));
   }
 
 }

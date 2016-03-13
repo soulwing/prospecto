@@ -24,7 +24,7 @@ import java.beans.PropertyDescriptor;
 import java.util.Collection;
 
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ValueConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
  * Static factory methods that produce accessors.
@@ -63,13 +63,6 @@ public class AccessorFactory {
     }
     throw new IllegalArgumentException(declaringClass.getName()
         + " has no property named '" + name + "'");
-  }
-
-  public static Accessor converter(Accessor accessor,
-      Class<? extends ValueConverter> converterClass)
-      throws InstantiationException, IllegalAccessException {
-    final ValueConverter converter = converterClass.newInstance();
-    return new ValueConvertingAccessor(accessor, converter);
   }
 
   public static MultiValuedAccessor multiValue(Accessor accessor) {

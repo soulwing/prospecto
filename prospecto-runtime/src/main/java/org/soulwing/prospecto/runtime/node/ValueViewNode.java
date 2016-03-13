@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
@@ -53,16 +54,17 @@ abstract class ValueViewNode extends AbstractViewNode {
         getModelValue(source, context), context);
 
     return Collections.singletonList(newEvent(getEventType(), getName(),
-        handlers.valueToExtract(valueEvent)));
+        toViewValue(handlers.valueToExtract(valueEvent), context)));
   }
 
   protected View.Event.Type getEventType() {
     return View.Event.Type.VALUE;
   }
 
-  protected Object getModelValue(Object source, ScopedViewContext context)
-      throws Exception {
-    return getAccessor().get(source);
-  }
+  protected abstract Object getModelValue(Object source,
+      ScopedViewContext context) throws Exception;
+
+  protected abstract Object toViewValue(Object model, ViewContext context)
+      throws Exception;
 
 }

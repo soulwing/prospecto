@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.node;
 import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -59,6 +60,12 @@ public class UrlNode extends ValueViewNode {
   protected Object getModelValue(Object source, ScopedViewContext context)
       throws Exception {
     return context.get(UrlResolver.class).resolve(this, context);
+  }
+
+  @Override
+  protected Object toViewValue(Object model, ViewContext context)
+      throws Exception {
+    return model;
   }
 
   @Override
