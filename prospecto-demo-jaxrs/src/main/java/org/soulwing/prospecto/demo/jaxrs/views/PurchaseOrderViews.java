@@ -22,6 +22,7 @@ import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseItem;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
 
@@ -39,6 +40,8 @@ public interface PurchaseOrderViews {
           .value("version")
           .value("creationDate")
           .value("dueDate")
+              .converter(DateTypeConverter.class,
+                  "format", DateTypeConverter.Format.ISO8601_DATE)
           .subview("vendor", VendorViews.VENDOR_REFERENCE)
           .subview("orderedBy", PersonViews.PERSON_REFERENCE)
           .value("comment")
@@ -58,6 +61,8 @@ public interface PurchaseOrderViews {
       .arrayOfObjects("orders", "order", Namespace.URI, PurchaseOrder.class)
           .url()
           .value("dueDate")
+              .converter(DateTypeConverter.class,
+                  "format", DateTypeConverter.Format.ISO8601_DATE)
           .subview("vendor", VendorViews.VENDOR_REFERENCE)
           .subview("orderedBy", PersonViews.PERSON_REFERENCE)
           .value("total")
