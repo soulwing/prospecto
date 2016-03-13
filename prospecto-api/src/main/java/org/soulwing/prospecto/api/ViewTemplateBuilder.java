@@ -131,8 +131,7 @@ public interface ViewTemplateBuilder {
    * @param modelType the data type for the corresponding model
    * @return template builder for new object node
    */
-  ViewTemplateBuilder object(String name, String namespace,
-      Class<?> modelType);
+  ViewTemplateBuilder object(String name, String namespace, Class<?> modelType);
 
   /**
    * Adds an object node at the cursor using the root node of the given
@@ -356,6 +355,21 @@ public interface ViewTemplateBuilder {
    * @return this builder
    */
   ViewTemplateBuilder converter(ValueTypeConverter<?> converter);
+
+  /**
+   * Puts an attribute into the scope associated with the node at the cursor.
+   * @param value the attribute value to put
+   * @return this builder
+   */
+  ViewTemplateBuilder attribute(Object value);
+
+  /**
+   * Puts an attribute into the scope associated with the node at the cursor.
+   * @param name name for the attribute
+   * @param value the attribute value to put
+   * @return this builder
+   */
+  ViewTemplateBuilder attribute(String name, Object value);
 
   /**
    * Moves the cursor to the parent of the cursor node.

@@ -105,6 +105,14 @@ class ViewNodeConfigurator {
     this.converter = converter;
   }
 
+  public void putAttribute(Object value) {
+    target.put(value);
+  }
+
+  public void putAttribute(String name, Object value) {
+    target.put(name, value);
+  }
+
   public Accessor configure() {
     try {
       final Accessor accessor = newAccessor(declaringClass);

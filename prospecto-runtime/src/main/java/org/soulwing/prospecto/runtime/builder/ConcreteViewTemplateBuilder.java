@@ -259,6 +259,18 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
     return this;
   }
 
+  @Override
+  public ViewTemplateBuilder attribute(Object value) {
+    nodeConfigurator.putAttribute(value);
+    return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder attribute(String name, Object value) {
+    nodeConfigurator.putAttribute(name, value);
+    return this;
+  }
+
   public Accessor configureCurrentNode() {
     Accessor accessor = null;
     if (nodeConfigurator != null) {
