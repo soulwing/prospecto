@@ -235,7 +235,8 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeAttribute(View.Event event) throws XMLStreamException {
-    writeAttributeString(event.getName(), event.getNamespace(),
+    writeAttributeString(event.getName(),
+        event.getNamespace() != null ? event.getNamespace() : DEFAULT_NAMESPACE,
         event.getValue().toString());
   }
 
