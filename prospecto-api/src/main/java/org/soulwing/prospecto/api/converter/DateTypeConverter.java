@@ -52,18 +52,42 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
     CUSTOM
   }
 
-  public static String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+  private static String ISO8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
-  public static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
+  private static String ISO8601_DATE_PATTERN = "yyyy-MM-dd";
 
-  public static String ISO8601_TIME_PATTERN = "HH:mm:ss";
+  private static String ISO8601_TIME_PATTERN = "HH:mm:ss";
 
-  public static String RFC1123_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
+  private static String RFC1123_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
 
   private Class<? extends Date> supportedType = Date.class;
   private Format format = Format.ISO8601;
   private String pattern = ISO8601_PATTERN;
   private TimeZone timeZone = TimeZone.getDefault();
+
+  /**
+   * Constructs a new instance that uses ISO 8601 format.
+   */
+  public DateTypeConverter() {
+    this(Format.ISO8601);
+  }
+
+  /**
+   * Constructs an instance that uses a custom pattern.
+   * @param pattern custom pattern
+   */
+  public DateTypeConverter(String pattern) {
+    this(Format.CUSTOM);
+    this.pattern = pattern;
+  }
+
+  /**
+   * Constructs an instance that uses a specific format.
+   * @param format format
+   */
+  public DateTypeConverter(Format format) {
+    this.format = format;
+  }
 
   @Override
   public boolean supports(Class<?> type) {

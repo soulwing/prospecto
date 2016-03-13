@@ -31,6 +31,30 @@ public class CalendarTypeConverter implements ValueTypeConverter<String> {
 
   private final DateTypeConverter delegate = new DateTypeConverter();
 
+  /**
+   * Constructs a new instance that uses ISO 8601 format.
+   */
+  public CalendarTypeConverter() {
+    delegate.setFormat(DateTypeConverter.Format.ISO8601);
+  }
+
+  /**
+   * Constructs an instance that uses a custom pattern.
+   * @param pattern custom pattern
+   */
+  public CalendarTypeConverter(String pattern) {
+    delegate.setFormat(DateTypeConverter.Format.CUSTOM);
+    delegate.setPattern(pattern);
+  }
+
+  /**
+   * Constructs an instance that uses a specific format.
+   * @param format format
+   */
+  public CalendarTypeConverter(DateTypeConverter.Format format) {
+    delegate.setFormat(format);
+  }
+
   @Override
   public boolean supports(Class<?> type) {
     return Calendar.class.isAssignableFrom(type);
