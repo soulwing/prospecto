@@ -35,8 +35,9 @@ import javax.xml.bind.DatatypeConverter;
  * subtypes (including the SQL subtypes {@link java.sql.Date},
  * {@link java.sql.Time}, and {@link java.sql.Timestamp}). If you wish to use
  * different conversions for different subtypes, create multiple instances
- * each configured for a different subtype, and be sure to order the converters
- * appropriately when registering them with a
+ * each configured for a different subtype, and set the {@code supportSubTypes}
+ * property to {@code false}.
+ *
  * {@link org.soulwing.prospecto.api.ViewContext}.
  *
  * @author Carl Harris
@@ -61,6 +62,7 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   private static String RFC1123_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
 
   private Class<? extends Date> supportedType = Date.class;
+  private boolean supportSubTypes = true;
   private Format format = Format.ISO8601;
   private String pattern = ISO8601_PATTERN;
   private TimeZone timeZone = TimeZone.getDefault();
@@ -91,7 +93,8 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
 
   @Override
   public boolean supports(Class<?> type) {
-    return supportedType.isAssignableFrom(type);
+    return supportSubTypes ?
+        supportedType.isAssignableFrom(type) : supportedType.equals(type);
   }
 
   @Override
@@ -183,6 +186,22 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   /**
+   * Gets the {@code supportSubTypes} property.
+   * @return property value
+   */
+  public boolean isSupportSubTypes() {
+    return supportSubTypes;
+  }
+
+  /**
+   * Sets the {@code supportSubTypes} property.
+   * @param supportSubTypes the property value to set
+   */
+  public void setSupportSubTypes(boolean supportSubTypes) {
+    this.supportSubTypes = supportSubTypes;
+  }
+
+  /**
    * Gets the {@code format} property.
    * @return property value
    */
@@ -247,6 +266,94 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
    */
   public void setTimeZoneId(String id) {
     setTimeZone(TimeZone.getTimeZone(id));
+  }
+
+  /**
+   * A builder that produces a {@link DateTypeConverter}.
+   */
+  public static class Builder {
+
+    private final DateTypeConverter converter = new DateTypeConverter();
+
+    /**
+     * Constructs a new instance.
+     * @return builder
+     */
+    public static Builder with() {
+      return new Builder();
+    }
+
+    private Builder() {
+    }
+
+    /**
+     * Configures the {@code supportedType} property.
+     * @param supportedType the property value to set
+     * @return this builder
+     */
+    public Builder supportedType(Class<? extends Date> supportedType) {
+      converter.setSupportedType(supportedType);
+      return this;
+    }
+
+    /**
+     * Configures the {@code supportSubTypes} property.
+     * @param supportSubTypes the property value to set
+     * @return this builder
+     */
+    public Builder supportSubTypes(boolean supportSubTypes) {
+      converter.setSupportSubTypes(supportSubTypes);
+      return this;
+    }
+
+    /**
+     * Configures the {@code format} property.
+     * @param format the property value to set
+     * @return this builder
+     */
+    public Builder format(Format format) {
+      converter.setFormat(format);
+      return this;
+    }
+
+    /**
+     * Configures the {@code pattern} property.
+     * @param pattern the property value to set
+     * @return this builder
+     */
+    public Builder pattern(String pattern) {
+      converter.setPattern(pattern);
+      return this;
+    }
+
+    /**
+     * Configures the {@code timeZone} property.
+     * @param timeZone the property value to set
+     * @return this builder
+     */
+    public Builder timeZone(TimeZone timeZone) {
+      converter.setTimeZone(timeZone);
+      return this;
+    }
+
+    /**
+     * Configures the {@code timeZoneId} property.
+     * @param timeZoneId the property value to set
+     * @return this builder
+     */
+    public Builder timeZoneId(String timeZoneId) {
+      converter.setTimeZoneId(timeZoneId);
+      return this;
+    }
+
+    /**
+     * Builds the converter.
+     * @return converter
+     */
+    public DateTypeConverter build() {
+      return converter;
+    }
+
   }
 
 }

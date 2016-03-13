@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.converter;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -138,6 +139,74 @@ public class CalendarTypeConverter implements ValueTypeConverter<String> {
    */
   public void setTimeZoneId(String id) {
     delegate.setTimeZoneId(id);
+  }
+
+  /**
+   * A builder that produces a {@link CalendarTypeConverter}.
+   */
+  public static class Builder {
+
+    private final CalendarTypeConverter converter = new CalendarTypeConverter();
+
+    /**
+     * Constructs a new instance.
+     * @return builder
+     */
+    public static Builder with() {
+      return new Builder();
+    }
+
+    private Builder() {
+    }
+
+    /**
+     * Configures the {@code format} property.
+     * @param format the property value to set
+     * @return this builder
+     */
+    public Builder format(DateTypeConverter.Format format) {
+      converter.setFormat(format);
+      return this;
+    }
+
+    /**
+     * Configures the {@code pattern} property.
+     * @param pattern the property value to set
+     * @return this builder
+     */
+    public Builder pattern(String pattern) {
+      converter.setPattern(pattern);
+      return this;
+    }
+
+    /**
+     * Configures the {@code timeZone} property.
+     * @param timeZone the property value to set
+     * @return this builder
+     */
+    public Builder timeZone(TimeZone timeZone) {
+      converter.setTimeZone(timeZone);
+      return this;
+    }
+
+    /**
+     * Configures the {@code timeZoneId} property.
+     * @param timeZoneId the property value to set
+     * @return this builder
+     */
+    public Builder timeZoneId(String timeZoneId) {
+      converter.setTimeZoneId(timeZoneId);
+      return this;
+    }
+
+    /**
+     * Builds the converter.
+     * @return converter
+     */
+    public CalendarTypeConverter build() {
+      return converter;
+    }
+
   }
 
 }
