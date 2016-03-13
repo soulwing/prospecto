@@ -1,5 +1,5 @@
 /*
- * File created on Mar 11, 2016
+ * File created on Mar 13, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.context;
+package org.soulwing.prospecto.runtime.scope;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 
 /**
  * Unit tests for {@link ConcreteMutableScope}.

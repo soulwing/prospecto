@@ -1,5 +1,5 @@
 /*
- * File created on Mar 10, 2016
+ * File created on Mar 13, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,20 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.context;
+package org.soulwing.prospecto.runtime.scope;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.MutableScope;
 
 /**
- * A simple {@link ViewContext.MutableScope}.
+ * A simple {@link MutableScope}.
  *
  * @author Carl Harris
  */
-public class ConcreteMutableScope implements ViewContext.MutableScope {
+public class ConcreteMutableScope implements MutableScope {
 
   private final Map<String, Object> nameMap = new HashMap<>();
 

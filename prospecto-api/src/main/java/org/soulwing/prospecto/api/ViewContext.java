@@ -21,7 +21,6 @@ package org.soulwing.prospecto.api;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
@@ -39,76 +38,6 @@ public interface ViewContext {
    * Delimiter used in the string representation of a view path
    */
   char PATH_DELIMITER = '/';
-
-  /**
-   * An object that can be used by a {@link ViewContext} to retrieve objects
-   * in a particular scope.
-   */
-  interface Scope {
-
-    /**
-     * Gets a singleton object of the given type.
-     * @param type the type of object to retrieve
-     * @return singleton instance of the given type or {@code null} if there
-     *    is no object of the given type
-     * @throws IllegalStateException if there is more than one object of the
-     *    given type
-     */
-    <T> T get(Class<T> type);
-
-    /**
-     * Gets a named object of the given type.
-     * @param name name of the object to retrieve
-     * @param type expected type of the named object
-     * @return instance of the given type that corresponds to the given name
-     *    or {@code null} if no such instance exists
-     * @throws ClassCastException if the object with the given name does not
-     *    have the expected type
-     */
-    <T> T get(String name, Class<T> type);
-
-  }
-
-  /**
-   * A mutable scope.
-   */
-  interface MutableScope extends Scope {
-
-    /**
-     * Puts an object into this scope.
-     * @param obj the object to put
-     */
-    void put(Object obj);
-
-    /**
-     * Puts a named object into this scope.
-     * @param name name to assign
-     * @param obj the object to put
-     * @return the object that was replaced by {@code obj} in this scope
-     */
-    Object put(String name, Object obj);
-
-    /**
-     * Puts a collection of objects into this scope.
-     * @param objs the objects to put
-     */
-    void putAll(Iterable<?> objs);
-
-    /**
-     * Puts a collection of named objects into this scope.
-     * @param objs map of named objects to put
-     */
-    void putAll(Map<String, ?> objs);
-
-    /**
-     * Removes an object from this scope.
-     * @param obj the object to remove
-     * @return {@code true} if an object matching the identity of {@code obj}
-     *   was removed
-     */
-    boolean remove(Object obj);
-
-  }
 
   /**
    * Creates a new mutable scope.

@@ -26,15 +26,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.MutableScope;
+import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
@@ -94,7 +92,7 @@ public class ConcreteViewContextTest {
   public void testScopesPutAndGetByType() throws Exception {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
-    final ViewContext.MutableScope scope0 = context.newScope();
+    final MutableScope scope0 = context.newScope();
     context.getScopes().add(scope0);
     scope0.put(SCOPE0);
     scope0.put(scope0Mock);
@@ -134,7 +132,7 @@ public class ConcreteViewContextTest {
   public void testScopesPutAndGetByName() throws Exception {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
-    final ViewContext.MutableScope scope0 = context.newScope();
+    final MutableScope scope0 = context.newScope();
     context.getScopes().add(scope0);
     scope0.put(SCOPE0, SCOPE0);
     scope0.put(SCOPE0_MOCK, scope0Mock);
@@ -310,8 +308,8 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testCopy() throws Exception {
-    final ViewContext.Scope scope =
-        mockery.mock(ViewContext.Scope.class);
+    final Scope scope =
+        mockery.mock(Scope.class);
     final ViewNodeHandler viewNodeHandler =
         mockery.mock(ViewNodeHandler.class);
     final ViewNodeElementHandler viewNodeElementHandler =

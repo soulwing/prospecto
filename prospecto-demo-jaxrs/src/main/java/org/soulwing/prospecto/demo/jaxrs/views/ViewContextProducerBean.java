@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
+import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
@@ -51,7 +52,7 @@ public class ViewContextProducerBean {
   @ApplicationScoped
   public ViewContext newContext() {
     final ViewContext context = ViewContextProducer.newContext();
-    final ViewContext.MutableScope scope = context.newScope();
+    final MutableScope scope = context.newScope();
     scope.put(UrlResolverProducer.getResolver());
     context.getScopes().add(scope);
 

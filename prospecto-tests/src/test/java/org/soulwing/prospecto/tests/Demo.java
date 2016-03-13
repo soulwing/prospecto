@@ -26,6 +26,7 @@ import java.util.List;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
+import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewWriterFactory;
@@ -81,7 +82,7 @@ public class Demo {
      * thread.
      */
     final ViewContext context = ViewContextProducer.newContext();
-    ViewContext.MutableScope scope = context.newScope();
+    MutableScope scope = context.newScope();
     scope.put(new MockUrlResolverProvider().getResolver());
     context.getScopes().add(scope);
 

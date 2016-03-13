@@ -26,11 +26,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.MutableScope;
+import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
+import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 import org.soulwing.prospecto.runtime.util.StringUtil;
 
 /**
