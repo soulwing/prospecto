@@ -57,62 +57,62 @@ public class DemoDataLoader {
         .givenName("Meggan")
         .build();
 
-    Vendor bn = Vendor.Builder.with()
-        .name("Bare Necessities")
+    Vendor officeMax = Vendor.Builder.with()
+        .name("Office Max")
         .taxId("9018-82828")
         .build();
 
-    Vendor hr = Vendor.Builder.with()
-        .name("Her Room")
+    Vendor staples = Vendor.Builder.with()
+        .name("Staples")
         .taxId("7272-12381")
         .build();
 
     PurchaseOrder order1 = PurchaseOrder.Builder.with()
         .dueDate(new Date())
-        .vendor(bn)
+        .vendor(officeMax)
         .orderedBy(nadine)
         .item()
           .itemId("76382")
-          .description("Vanity Fair: Lace Beauty Back™ Smoothing Bra; color:Toasted Coconut; size:36DD")
+          .description("Stapler, manufacturer:Swingline, color:Red")
           .quantity(BigDecimal.valueOf(2))
-          .unitPrice(BigDecimal.valueOf(40.00))
+          .unitPrice(BigDecimal.valueOf(15.99))
           .end()
         .item()
           .itemId("13138")
-          .description("Vanity Fair: Body Caress Brief; color:Toasted Coconut; size:7")
+          .description("Staples, manufacturer:Bostich")
           .quantity(BigDecimal.valueOf(3))
-          .unitPrice(BigDecimal.valueOf(10))
+          .unitPrice(BigDecimal.valueOf(7.99))
           .end()
         .build();
 
     PurchaseOrder order2 = PurchaseOrder.Builder.with()
         .dueDate(new Date())
-        .vendor(hr)
+        .vendor(staples)
         .orderedBy(meggan)
         .item()
           .itemId("9483")
-          .description("Jockey Plus Size Classic Brief - 3 Pack; color:White; size:8")
-          .quantity(BigDecimal.valueOf(1))
-          .unitPrice(BigDecimal.valueOf(22.50))
+          .description("Copy paper, case")
+          .quantity(BigDecimal.valueOf(2))
+          .unitPrice(BigDecimal.valueOf(42.50))
           .end()
         .item()
           .itemId("9483")
-          .description("Jockey Plus Size Classic Brief - 3 Pack; color:Absolute Plum; size:8")
+          .description("Ink Jet Printer Paper, Bright White, 1 case; Georgia Pacific")
           .quantity(BigDecimal.valueOf(1))
-          .unitPrice(BigDecimal.valueOf(22.50))
+          .unitPrice(BigDecimal.valueOf(42.50))
           .end()
         .item()
           .itemId("855170")
-          .description("Wacoal Sports Underwire Bra; color:Natural Nude; size:36DD")
-          .quantity(BigDecimal.valueOf(1))
-          .unitPrice(BigDecimal.valueOf(60.00))
+          .description("Sharpie, Ultra; Black; box of 8")
+          .quantity(BigDecimal.valueOf(4))
+          .unitPrice(BigDecimal.valueOf(11.50))
           .end()
         .build();
 
     entityManager.persist(nadine);
     entityManager.persist(meggan);
-    entityManager.persist(bn);
-    entityManager.persist(hr);
+    entityManager.persist(officeMax);
+    entityManager.persist(staples);
     entityManager.persist(order1);
     entityManager.persist(order2);
     entityManager.flush();
