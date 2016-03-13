@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 13, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,12 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.views;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
-import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +27,14 @@ import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
+import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
+import org.soulwing.prospecto.demo.jaxrs.domain.Money;
 
 /**
  * A bean that produces {@link ViewContext} instances.
@@ -54,13 +54,22 @@ public class ViewContextProducerBean {
     final ViewContext.MutableScope scope = context.newScope();
     scope.put(UrlResolverProducer.getResolver());
     context.getScopes().add(scope);
-    DateTypeConverter sqlDateConverter = new DateTypeConverter();
-    sqlDateConverter.setSupportedType(java.sql.Date.class);
-    sqlDateConverter.setFormat(DateTypeConverter.Format.ISO8601_DATE);
 
-    context.getValueTypeConverters().add(sqlDateConverter);
+    context.getValueTypeConverters().add(DateTypeConverter.Builder.with()
+        .format(DateTypeConverter.Format.ISO8601_DATE)
+        .supportedType(java.sql.Date.class)
+        .build());
+
+    context.getValueTypeConverters().add(DateTypeConverter.Builder.with()
+        .format(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE)
+        .build());
+
     context.getValueTypeConverters().add(
-        new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
+        PropertyExtractingValueTypeConverter.Builder.with()
+            .modelType(Money.class)
+            .propertyName("amount")
+            .build());
+
     configureContext(context);
     return context;
   }
