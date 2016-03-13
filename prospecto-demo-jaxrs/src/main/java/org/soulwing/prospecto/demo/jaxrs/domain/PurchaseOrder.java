@@ -30,6 +30,8 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -66,6 +68,12 @@ public class PurchaseOrder extends AbstractEntity {
 
   @Column(length = 1024)
   private String comment;
+
+  @Enumerated(EnumType.STRING)
+  private Currency currency = Currency.USD;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Account fund;
 
   @OrderBy("lineNumber ASC")
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
@@ -153,6 +161,38 @@ public class PurchaseOrder extends AbstractEntity {
   }
 
   /**
+   * Gets the {@code currency} property.
+   * @return property value
+   */
+  public Currency getCurrency() {
+    return currency;
+  }
+
+  /**
+   * Sets the {@code currency} property.
+   * @param currency the property value to set
+   */
+  public void setCurrency(Currency currency) {
+    this.currency = currency;
+  }
+
+  /**
+   * Gets the {@code fund} property.
+   * @return property value
+   */
+  public Account getFund() {
+    return fund;
+  }
+
+  /**
+   * Sets the {@code fund} property.
+   * @param fund the property value to set
+   */
+  public void setFund(Account fund) {
+    this.fund = fund;
+  }
+
+  /**
    * Gets the {@code items} property.
    * @return property value
    */
@@ -180,8 +220,8 @@ public class PurchaseOrder extends AbstractEntity {
     }
   }
 
-  public BigDecimal getTotal() {
-    BigDecimal total = BigDecimal.ZERO;
+  public Money getTotal() {
+    Money total = new Money(currency);
     for (final PurchaseItem item : getItems()) {
       total = total.add(item.getPrice());
     }
@@ -243,6 +283,26 @@ public class PurchaseOrder extends AbstractEntity {
      */
     public Builder comment(String comment) {
       order.setComment(comment);
+      return this;
+    }
+
+    /**
+     * Configures the {@code currency} property
+     * @param currency the property value to set
+     * @return this builder
+     */
+    public Builder currency(Currency currency) {
+      order.setCurrency(currency);
+      return this;
+    }
+
+    /**
+     * Configures the {@code fund} property
+     * @param fund the property value to set
+     * @return this builder
+     */
+    public Builder fund(Account fund) {
+      order.setFund(fund);
       return this;
     }
 

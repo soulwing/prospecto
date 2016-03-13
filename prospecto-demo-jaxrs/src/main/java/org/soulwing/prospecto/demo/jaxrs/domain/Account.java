@@ -82,7 +82,15 @@ public class Account extends AbstractEntity {
    * A builder that produces an {@link Account}.
    */
   public static class Builder {
-    final Account account = new Account();
+
+    private final Account account = new Account();
+
+    public static Builder with() {
+      return new Builder();
+    }
+
+    private Builder() {
+    }
 
     /**
      * Configures the {@code accountId} property

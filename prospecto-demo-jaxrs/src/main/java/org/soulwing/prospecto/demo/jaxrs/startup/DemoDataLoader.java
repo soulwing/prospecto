@@ -28,6 +28,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.soulwing.prospecto.demo.jaxrs.domain.Account;
+import org.soulwing.prospecto.demo.jaxrs.domain.Currency;
+import org.soulwing.prospecto.demo.jaxrs.domain.Money;
 import org.soulwing.prospecto.demo.jaxrs.domain.Person;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
 import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
@@ -45,6 +47,12 @@ public class DemoDataLoader {
 
   @PostConstruct
   public void init() {
+
+    Account suppliesAndMaterials = Account.Builder.with()
+        .accountId("C35172")
+        .description("Supplies and Materials")
+        .build();
+
     Person nadine = Person.Builder.with()
         .type(Person.Type.EMPLOYEE)
         .surname("Bennett")
@@ -71,6 +79,8 @@ public class DemoDataLoader {
         .dueDate(new Date())
         .vendor(officeMax)
         .orderedBy(nadine)
+        .currency(Currency.USD)
+        .fund(suppliesAndMaterials)
         .item()
           .itemId("76382")
           .description("Stapler, manufacturer:Swingline, color:Red")
@@ -89,6 +99,8 @@ public class DemoDataLoader {
         .dueDate(new Date())
         .vendor(staples)
         .orderedBy(meggan)
+        .currency(Currency.USD)
+        .fund(suppliesAndMaterials)
         .item()
           .itemId("9483")
           .description("Copy paper, case")
@@ -99,16 +111,17 @@ public class DemoDataLoader {
           .itemId("9483")
           .description("Ink Jet Printer Paper, Bright White, 1 case; Georgia Pacific")
           .quantity(BigDecimal.valueOf(1))
-          .unitPrice(BigDecimal.valueOf(42.50))
+          .unitPrice(BigDecimal.valueOf(51.50))
           .end()
         .item()
           .itemId("855170")
           .description("Sharpie, Ultra; Black; box of 8")
           .quantity(BigDecimal.valueOf(4))
-          .unitPrice(BigDecimal.valueOf(11.50))
+          .unitPrice(BigDecimal.valueOf(11.98))
           .end()
         .build();
 
+    entityManager.persist(suppliesAndMaterials);
     entityManager.persist(nadine);
     entityManager.persist(meggan);
     entityManager.persist(officeMax);
