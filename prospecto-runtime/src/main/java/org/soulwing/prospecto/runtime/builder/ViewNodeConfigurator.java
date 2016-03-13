@@ -73,7 +73,7 @@ class ViewNodeConfigurator {
     }
     final Map<String, Object> map = new HashMap<>();
     for (int i = 0; i < configuration.length / 2; i++) {
-      map.put(configuration[i].toString(), configuration[i + 1]);
+      map.put(configuration[2*i].toString(), configuration[2*i + 1]);
     }
     setConverter(converterClass, map);
   }
