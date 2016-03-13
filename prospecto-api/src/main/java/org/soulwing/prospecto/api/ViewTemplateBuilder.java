@@ -18,6 +18,10 @@
  */
 package org.soulwing.prospecto.api;
 
+import java.util.Map;
+
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+
 /**
  * A builder for a {@link ViewTemplate}.
  * <p>
@@ -222,10 +226,51 @@ public interface ViewTemplateBuilder {
   /**
    * Specifies a converter that will be used to transform the model property
    * associated with the node at the cursor.
+   * <p>
+   * An instance of the specified converter will be constructed and configured
+   * and will be used by only the value node at the cursor <em>instead of</em>
+   * consulting converters registered with the view context.
+   *
    * @param converterClass converter class
+   * @param configuration name-value pairs that will be used to configure the
+   *   converter instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
    * @return this builder
    */
-  ViewTemplateBuilder converter(Class<? extends ValueConverter> converterClass);
+  ViewTemplateBuilder converter(
+      Class<? extends ValueTypeConverter> converterClass,
+      Object... configuration);
+
+  /**
+   * Specifies a converter that will be used to transform the model property
+   * associated with the node at the cursor.
+   * <p>
+   * An instance of the specified converter will be constructed and configured
+   * and will be used by only the value node at the cursor <em>instead of</em>
+   * consulting converters registered with the view context.
+   *
+   * @param converterClass converter class
+   * @param configuration name-value pairs that will be used to configure the
+   *   converter instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return this builder
+   */
+  ViewTemplateBuilder converter(
+      Class<? extends ValueTypeConverter> converterClass,
+      Map<String, Object> configuration);
+
+  /**
+   * Specifies a converter that will be used to transform the model property
+   * associated with the node at the cursor.
+   * <p>
+   * The given converter instance will be used by the value node at the
+   * cursor <em>instead of</em> consulting converters registered with the view
+   * context.
+   *
+   * @param converter converter class
+   * @return this builder
+   */
+  ViewTemplateBuilder converter(ValueTypeConverter<?> converter);
 
   /**
    * Moves the cursor to the parent of the cursor node.

@@ -21,7 +21,9 @@ package org.soulwing.prospecto.api;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
@@ -167,6 +169,23 @@ public interface ViewContext {
    * @return view node value handlers
    */
   List<ViewNodeValueHandler> getViewNodeValueHandlers();
+
+  /**
+   * Gets the set of {@link ValueTypeConverter} instances that will be consulted
+   * to convert model value types to view value types and vice-versa.
+   * <p>
+   * The list of converters can be manipulated directly to add
+   * (or remove, or reorder) converters as needed. The order of the converters
+   * in this list has an effect on converter selection; the first converter
+   * in the list that claims support for a given type {via its
+   * {@link ValueTypeConverter#supports(Class)} method}, will be used to
+   * convert <em>all</em> model instances of that type.
+   * <p>
+   * Manipulating the list of converters while a view is being generated using
+   * this context has no effect.
+   * @return value type converters
+   */
+  List<ValueTypeConverter<?>> getValueTypeConverters();
 
   /**
    * Gets the sequence of view node names that form the path to the current
