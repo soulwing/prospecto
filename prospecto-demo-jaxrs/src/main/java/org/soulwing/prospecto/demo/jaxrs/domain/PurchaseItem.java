@@ -151,7 +151,7 @@ public class PurchaseItem extends AbstractEntity {
   }
 
   public BigDecimal getPrice() {
-    return quantity.multiply(unitPrice);
+    return quantity.multiply(unitPrice).setScale(2);
   }
 
   @Override
