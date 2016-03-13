@@ -47,6 +47,7 @@ public interface VendorViews {
 
   ViewTemplate VENDOR_REFERENCE = ViewTemplateBuilderProducer
       .object(Vendor.class)
+          .url()
           .value("name")
       .build();
 

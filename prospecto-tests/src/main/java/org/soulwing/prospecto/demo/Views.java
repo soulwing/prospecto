@@ -22,6 +22,7 @@ import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
+import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
 
 /**
  * Demo views.
@@ -65,7 +66,10 @@ public interface Views {
         .envelope("approverList")
           .arrayOfValues("approvers", "approver")
           .end()
-        .object("vendor", VENDOR_SUMMARY_TEMPLATE)
+        .value("vendor")
+            .converter(PropertyExtractingValueTypeConverter.class,
+                "supportedType", Vendor.class,
+                "propertyName", "name")
         .arrayOfObjects("items", "item", PurchaseItem.class)
           .value("description")
           .value("quantity")

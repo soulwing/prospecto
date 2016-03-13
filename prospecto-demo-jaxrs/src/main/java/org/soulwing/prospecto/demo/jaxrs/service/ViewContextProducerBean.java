@@ -54,6 +54,11 @@ public class ViewContextProducerBean {
     final ViewContext.MutableScope scope = context.newScope();
     scope.put(UrlResolverProducer.getResolver());
     context.getScopes().add(scope);
+    DateTypeConverter sqlDateConverter = new DateTypeConverter();
+    sqlDateConverter.setSupportedType(java.sql.Date.class);
+    sqlDateConverter.setFormat(DateTypeConverter.Format.ISO8601_DATE);
+
+    context.getValueTypeConverters().add(sqlDateConverter);
     context.getValueTypeConverters().add(
         new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
     configureContext(context);

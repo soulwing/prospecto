@@ -21,6 +21,8 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.demo.jaxrs.domain.Person;
 
 /**
@@ -30,6 +32,12 @@ import org.soulwing.prospecto.demo.jaxrs.domain.Person;
  */
 public interface PersonViews {
 
+  ValueTypeConverter<?> PERSON_NAME_CONVERTER =
+      PropertyExtractingValueTypeConverter.Builder.with()
+          .modelType(Person.class)
+          .propertyName("displayName")
+          .build();
+
   ViewTemplate PERSON_DETAIL = ViewTemplateBuilderProducer
       .object("person", Namespace.URI, Person.class)
           .value("id").accessType(AccessType.PROPERTY)
@@ -37,11 +45,6 @@ public interface PersonViews {
           .value("type")
           .value("surname")
           .value("givenName")
-      .build();
-
-  ViewTemplate PERSON_REFERENCE = ViewTemplateBuilderProducer
-      .object(Person.class)
-          .value("displayName")
       .build();
 
 }

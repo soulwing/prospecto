@@ -21,6 +21,9 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
+import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.demo.jaxrs.domain.Person;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseItem;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
 
@@ -49,10 +52,8 @@ public interface PurchaseOrderViews {
           .value("version")
           .value("creationDate")
           .value("dueDate")
-              .converter(DateTypeConverter.class,
-                  "format", DateTypeConverter.Format.ISO8601_DATE)
           .object("vendor", VendorViews.VENDOR_REFERENCE)
-          .object("orderedBy", PersonViews.PERSON_REFERENCE)
+          .value("orderedBy").converter(PersonViews.PERSON_NAME_CONVERTER)
           .value("comment")
           .value("total")
           .arrayOfObjects("items", "item", ITEM_DETAIL)
@@ -62,10 +63,8 @@ public interface PurchaseOrderViews {
       .arrayOfObjects("orders", "order", Namespace.URI, PurchaseOrder.class)
           .url()
           .value("dueDate")
-              .converter(DateTypeConverter.class,
-                  "format", DateTypeConverter.Format.ISO8601_DATE)
           .object("vendor", VendorViews.VENDOR_REFERENCE)
-          .object("orderedBy", PersonViews.PERSON_REFERENCE)
+          .value("orderedBy").converter(PersonViews.PERSON_NAME_CONVERTER)
           .value("total")
       .build();
 

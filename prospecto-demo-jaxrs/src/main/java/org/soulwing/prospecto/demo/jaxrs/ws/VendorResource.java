@@ -30,6 +30,7 @@ import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.VendorService;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
  * A JAX-RS resource for {@link Vendor} entities.
@@ -49,7 +50,7 @@ public class VendorResource {
 
   @GET
   @Path("/{id}")
-  @ReferencedBy(Vendor.class)
+  @ReferencedBy({ AnyModelSequence.class, Vendor.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getOrder(@PathParam("id") Long orderId) {
     try {
