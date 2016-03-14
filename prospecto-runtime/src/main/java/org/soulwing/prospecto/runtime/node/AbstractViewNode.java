@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +27,10 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.handler.ViewNodeHandlerSupport;
+import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 
 /**
  * An abstract base for {@link ViewNode} implementations.
@@ -86,18 +86,19 @@ public abstract class AbstractViewNode implements ViewNode {
   public final List<View.Event> evaluate(Object model,
       ScopedViewContext context) throws Exception {
 
-    context.push(name, modelType);
     final ViewNodeEvent event = new ViewNodeEvent(this, model, context);
     final ViewNodeHandlerSupport handlers = new ViewNodeHandlerSupport(
         context.getViewNodeHandlers());
 
-    if (!handlers.willVisitNode(event)) {
-      return Collections.emptyList();
-    }
+    final List<View.Event> events = new LinkedList<>();
 
-    final List<View.Event> events = onEvaluate(model, context);
-    handlers.nodeVisited(event);
+    context.push(name, modelType);
+    if (handlers.willVisitNode(event)) {
+      events.addAll(onEvaluate(model, context));
+      handlers.nodeVisited(event);
+    }
     context.pop();
+
     return events;
   }
 
