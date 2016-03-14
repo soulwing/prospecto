@@ -1,5 +1,5 @@
 /*
- * File created on Mar 11, 2016
+ * File created on Mar 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,22 +18,20 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * Unit tests for {@link ValueNode}.
@@ -44,41 +42,71 @@ public class ValueNodeTest {
 
   private static final String NAME = "name";
   private static final String NAMESPACE = "namespace";
-
+  private static final Object MODEL = new Object();
   private static final Object MODEL_VALUE = new Object();
   private static final Object VIEW_VALUE = new Object();
 
   @Rule
-  public final JUnitRuleMockery mockery = new JUnitRuleMockery();
-
-  @Mock
-  private ViewNodeValueHandler handler;
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   private Accessor accessor;
 
   @Mock
-  private ViewContext context;
+  private ValueTypeConverter<?> converter;
 
-  private ValueNode node = new ValueNode(NAME, NAMESPACE);
+  @Mock
+  private ScopedViewContext viewContext;
 
-  @Before
-  public void setUp() throws Exception {
+  private ValueNode node = new ValueNode(NAME,  NAMESPACE);
+
+  @Test
+  public void testGetModelValue() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(MODEL_VALUE));
+      }
+    });
+
     node.setAccessor(accessor);
+    assertThat(node.getModelValue(MODEL, viewContext),
+        is(sameInstance(MODEL_VALUE)));
   }
 
-//  @Test
-//  public void testEvaluate() throws Exception {
-//    context.checking(new Expectations() {
-//      {
-//        oneOf(context).getViewNodeValueHandlers();
-//        will(returnValue(Arrays.asList(handler)));
-//        oneOf(handler).onExtractValue(allOf(
-//          hasProperty("source", sameInstance(node)),
-//          hasProperty("value", sameInstance(MODEL_VALUE))
-//
-//      }
-//    });
-//  }
+  @Test
+  public void testWithLocalConverter() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(converter).toValue(MODEL_VALUE);
+        will(returnValue(VIEW_VALUE));
+      }
+    });
+
+    node.setConverter(converter);
+    assertThat(node.toViewValue(MODEL_VALUE, viewContext),
+        is(sameInstance(VIEW_VALUE)));
+  }
+
+  @Test
+  public void testWithContextConverter() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(viewContext).getValueTypeConverters();
+        will(returnValue(Collections.singletonList(converter)));
+        oneOf(converter).supports(Object.class);
+        will(returnValue(true));
+        oneOf(converter).toValue(MODEL_VALUE);
+        will(returnValue(VIEW_VALUE));
+      }
+    });
+
+    node.setConverter(null);
+    assertThat(node.toViewValue(MODEL_VALUE, viewContext),
+        is(sameInstance(VIEW_VALUE)));
+  }
+
 
 }
+
+

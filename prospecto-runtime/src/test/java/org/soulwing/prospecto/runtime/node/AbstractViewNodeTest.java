@@ -123,7 +123,7 @@ public class AbstractViewNodeTest {
     @Override
     protected List<View.Event> onEvaluate(Object source,
         ScopedViewContext context) throws Exception {
-      assertThat(source, is(sameInstance(source)));
+      assertThat(source, is(sameInstance(MODEL)));
       assertThat(context, is(sameInstance(viewContext)));
       return Collections.singletonList(event);
     }

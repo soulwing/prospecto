@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
@@ -66,7 +65,7 @@ public class ValueNode extends ValueViewNode implements Convertable {
   }
 
   @Override
-  protected Object toViewValue(Object model, ViewContext context)
+  protected Object toViewValue(Object model, ScopedViewContext context)
       throws Exception {
     return converterSupport.toViewValue(model, context);
   }

@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
@@ -64,7 +63,7 @@ abstract class ValueViewNode extends AbstractViewNode {
   protected abstract Object getModelValue(Object source,
       ScopedViewContext context) throws Exception;
 
-  protected abstract Object toViewValue(Object model, ViewContext context)
-      throws Exception;
+  protected abstract Object toViewValue(Object model,
+      ScopedViewContext context) throws Exception;
 
 }
