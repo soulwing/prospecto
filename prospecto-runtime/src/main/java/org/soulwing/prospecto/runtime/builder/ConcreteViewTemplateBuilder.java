@@ -219,14 +219,14 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder converter(
       Class<? extends ValueTypeConverter> converterClass,
       Object... configuration) {
-    if (configuration.length % 2 != 0) {
-      throw new ViewTemplateException("configuration must be name-value pairs");
+    try {
+      final ValueTypeConverter<?> converter = beanFactory.construct(
+          converterClass, configuration);
+      return converter(converter);
     }
-    final Map<String, Object> map = new HashMap<>();
-    for (int i = 0; i < configuration.length / 2; i++) {
-      map.put(configuration[2*i].toString(), configuration[2*i + 1]);
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
     }
-    return converter(converterClass, map);
   }
 
   @Override

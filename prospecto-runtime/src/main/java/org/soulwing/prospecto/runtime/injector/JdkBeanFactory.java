@@ -20,9 +20,12 @@ package org.soulwing.prospecto.runtime.injector;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+
+import org.soulwing.prospecto.api.ViewTemplateException;
 
 /**
  * A {@link BeanFactory} that uses JDK-provided introspection facilities.
@@ -32,12 +35,25 @@ import javax.annotation.PostConstruct;
 public class JdkBeanFactory implements BeanFactory {
 
   @Override
-  public <T> T construct(Class<T> beanClass, Map<String, Object> properties)
+  public <T> T construct(Class<T> beanClass, Object... properties)
+      throws Exception {
+    if (properties.length % 2 != 0) {
+      throw new ViewTemplateException("properties must be name-value pairs");
+    }
+    final Map<String, Object> map = new HashMap<>();
+    for (int i = 0; i < properties.length / 2; i++) {
+      map.put(properties[2*i].toString(), properties[2*i + 1]);
+    }
+    return construct(beanClass, map);
+  }
+
+  @Override
+  public <T> T construct(Class<T> beanClass, Map properties)
       throws Exception {
     final T bean = beanClass.newInstance();
-    for (final String key : properties.keySet()) {
-      final PropertyDescriptor descriptor = new PropertyDescriptor(key,
-          beanClass);
+    for (final Object key : properties.keySet()) {
+      final PropertyDescriptor descriptor = new PropertyDescriptor(
+          key.toString(), beanClass);
       descriptor.getWriteMethod().invoke(bean, properties.get(key));
     }
     for (Method method : beanClass.getMethods()) {
@@ -48,4 +64,5 @@ public class JdkBeanFactory implements BeanFactory {
     }
     return bean;
   }
+
 }

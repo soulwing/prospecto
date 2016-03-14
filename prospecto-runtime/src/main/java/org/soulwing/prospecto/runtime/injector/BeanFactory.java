@@ -34,13 +34,27 @@ public interface BeanFactory {
    * {@link javax.annotation.PostConstruct} initializers.
    *
    * @param beanClass a bean class (must have a no-arg constructor)
-   * @param properties map of property values; each name in the map must
+   * @param properties key-value pairs; each pair must correspond to a
+   *   JavaBeans-style property of {@code beanClass}
+   * @param <T> type of bean to create
+   * @return bean instance
+   * @throws Exception
+   */
+  <T> T construct(Class<T> beanClass, Object... properties) throws Exception;
+
+  /**
+   * Constructs an instance of a bean.
+   * <p>
+   * Constructs and injects property values, and invokes any
+   * {@link javax.annotation.PostConstruct} initializers.
+   *
+   * @param beanClass a bean class (must have a no-arg constructor)
+   * @param properties map of property values; each key in the map must
    *   correspond to a JavaBeans-style property of {@code beanClass}
    * @param <T> type of bean to create
    * @return bean instance
    * @throws Exception
    */
-  <T> T construct(Class<T> beanClass, Map<String, Object> properties)
-      throws Exception;
+  <T> T construct(Class<T> beanClass, Map properties) throws Exception;
 
 }
