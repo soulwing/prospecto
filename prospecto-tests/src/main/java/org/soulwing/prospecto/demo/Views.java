@@ -68,7 +68,7 @@ public interface Views {
           .end()
         .value("vendor")
             .converter(PropertyExtractingValueTypeConverter.class,
-                "supportedType", Vendor.class,
+                "modelType", Vendor.class,
                 "propertyName", "name")
         .arrayOfObjects("items", "item", PurchaseItem.class)
           .value("description")
