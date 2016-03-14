@@ -18,17 +18,22 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
+import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
+import org.soulwing.prospecto.runtime.injector.BeanFactory;
+import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.Convertable;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
@@ -41,24 +46,22 @@ import org.soulwing.prospecto.runtime.node.ValueNode;
  */
 public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
+  private final BeanFactory beanFactory = new JdkBeanFactory();
+
   private final ViewTemplateBuilder parent;
-  private final Class<?> sourceType;
   private final ContainerViewNode target;
+  private final Cursor cursor;
 
-  private ViewNodeConfigurator nodeConfigurator;
-
-  public ConcreteViewTemplateBuilder(Class<?> sourceType,
+  public ConcreteViewTemplateBuilder(Class<?> modelType,
       ContainerViewNode target) {
-    this(null, sourceType, target, null);
+    this(null, new Cursor(modelType), modelType, target);
   }
 
   private ConcreteViewTemplateBuilder(ViewTemplateBuilder parent,
-      Class<?> sourceType, ContainerViewNode target,
-      ViewNodeConfigurator nodeConfigurator) {
+      Cursor cursor, Class<?> modelType, ContainerViewNode target) {
     this.parent = parent;
-    this.sourceType = sourceType;
+    this.cursor = new Cursor(cursor, modelType);
     this.target = target;
-    this.nodeConfigurator = nodeConfigurator;
   }
 
   @Override
@@ -68,13 +71,9 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder value(String name, String namespace) {
-    configureCurrentNode();
     AbstractViewNode node = new ValueNode(name, namespace);
     target.addChild(node);
-    if (sourceType == null) {
-      throw new IllegalStateException("sourceType is required");
-    }
-    nodeConfigurator = new ViewNodeConfigurator(node, sourceType, name);
+    cursor.advance(node);
     return this;
   }
 
@@ -91,13 +90,9 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, String elementName,
       String namespace) {
-    configureCurrentNode();
     AbstractViewNode node = new ArrayOfValueNode(name, elementName, namespace);
     target.addChild(node);
-    if (sourceType == null) {
-      throw new IllegalStateException("sourceType is required");
-    }
-    nodeConfigurator = new ViewNodeConfigurator(node, sourceType, name);
+    cursor.advance(node);
     return this;
   }
 
@@ -109,12 +104,10 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) {
-    configureCurrentNode();
     ObjectNode node = new ObjectNode(name, namespace, modelType);
     target.addChild(node);
-    nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
-    return new ConcreteViewTemplateBuilder(this, modelType, node,
-        nodeConfigurator);
+    cursor.advance(node);
+    return new ConcreteViewTemplateBuilder(this, cursor, modelType, node);
   }
 
   @Override
@@ -126,12 +119,10 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder object(String name, String namespace,
       ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    configureCurrentNode();
     final AbstractViewNode node = ((ComposableViewTemplate) template)
         .object(name, namespace);
-    nodeConfigurator = new ViewNodeConfigurator(node,
-        this.sourceType, name);
     target.addChild(node);
+    cursor.advance(node);
     return this;
   }
 
@@ -160,25 +151,36 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) {
-    configureCurrentNode();
     ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName,
         namespace, modelType);
     target.addChild(node);
-    nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
-    return new ConcreteViewTemplateBuilder(this, modelType, node,
-        nodeConfigurator);
+    cursor.advance(node);
+    return new ConcreteViewTemplateBuilder(this, cursor, modelType, node);
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    configureCurrentNode();
     final AbstractViewNode node = ((ComposableViewTemplate) template)
         .arrayOfObjects(name, elementName, namespace);
-    nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
     target.addChild(node);
+    cursor.advance(node);
     return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder envelope(String name) {
+    return envelope(name, null);
+  }
+
+  @Override
+  public ViewTemplateBuilder envelope(String name, String namespace) {
+    EnvelopeNode node = new EnvelopeNode(name, namespace);
+    target.addChild(node);
+    cursor.advance(node, cursor.getModelName());
+    return new ConcreteViewTemplateBuilder(this, cursor, cursor.getModelType(),
+        node);
   }
 
   @Override
@@ -193,35 +195,23 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder url(String name, String namespace) {
-    configureCurrentNode();
     AbstractViewNode node = new UrlNode(name, namespace);
     target.addChild(node);
+    cursor.advance(node, null);
     return this;
   }
 
   @Override
-  public ViewTemplateBuilder envelope(String name) {
-    return envelope(name, null);
-  }
-
-  @Override
-  public ViewTemplateBuilder envelope(String name, String namespace) {
-    configureCurrentNode();
-    EnvelopeNode node = new EnvelopeNode(name, namespace);
-    target.addChild(node);
-    return new ConcreteViewTemplateBuilder(this, sourceType, node,
-        nodeConfigurator);
-  }
-
-  @Override
   public ViewTemplateBuilder source(String name) {
-    nodeConfigurator.setSource(name);
+    cursor.setModelName(name);
+    cursor.update();
     return this;
   }
 
   @Override
   public ViewTemplateBuilder accessType(AccessType accessType) {
-    nodeConfigurator.setAccessType(accessType);
+    cursor.setAccessType(accessType);
+    cursor.update();
     return this;
   }
 
@@ -229,56 +219,157 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder converter(
       Class<? extends ValueTypeConverter> converterClass,
       Object... configuration) {
-    nodeConfigurator.setConverter(converterClass, configuration);
-    return this;
+    if (configuration.length % 2 != 0) {
+      throw new ViewTemplateException("configuration must be name-value pairs");
+    }
+    final Map<String, Object> map = new HashMap<>();
+    for (int i = 0; i < configuration.length / 2; i++) {
+      map.put(configuration[2*i].toString(), configuration[2*i + 1]);
+    }
+    return converter(converterClass, map);
   }
 
   @Override
   public ViewTemplateBuilder converter(
       Class<? extends ValueTypeConverter> converterClass,
       Map<String, Object> configuration) {
-    nodeConfigurator.setConverter(converterClass, configuration);
-    return this;
+    try {
+      final ValueTypeConverter<?> converter = beanFactory.construct(
+          converterClass, configuration);
+      return converter(converter);
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
   }
 
   @Override
   public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
-    nodeConfigurator.setConverter(converter);
+    if (!(cursor.getNode() instanceof Convertable)) {
+      throw new ViewTemplateException("node '" + cursor.getNode().getName()
+          + "' does not support a converter");
+    }
+    ((Convertable) cursor.getNode()).setConverter(converter);
     return this;
   }
 
   @Override
   public ViewTemplateBuilder attribute(Object value) {
-    nodeConfigurator.putAttribute(value);
+    cursor.getNode().put(value);
     return this;
   }
 
   @Override
   public ViewTemplateBuilder attribute(String name, Object value) {
-    nodeConfigurator.putAttribute(name, value);
+    cursor.getNode().put(name, value);
     return this;
-  }
-
-  public Accessor configureCurrentNode() {
-    Accessor accessor = null;
-    if (nodeConfigurator != null) {
-      accessor = nodeConfigurator.configure();
-    }
-    nodeConfigurator = null;
-    return accessor;
   }
 
   @Override
   public ViewTemplateBuilder end() {
-    configureCurrentNode();
     if (parent == null) return this;
+    cursor.advance();
     return parent;
   }
 
   @Override
   public ViewTemplate build() {
-    configureCurrentNode();
+    cursor.advance();
     return new ConcreteViewTemplate(target);
+  }
+
+  static class Cursor {
+    private final Class<?> modelType;
+
+    private AbstractViewNode node;
+    private String modelName;
+    private AccessType accessType = AccessType.PROPERTY;
+
+    Cursor(Class<?> modelType) {
+      this.modelType = modelType;
+    }
+
+    Cursor(Cursor cursor, Class<?> modelType) {
+      this.modelType = modelType;
+      this.accessType = cursor.accessType;
+    }
+
+    /**
+     * Gets the {@code modelType} property.
+     * @return property value
+     */
+    public Class<?> getModelType() {
+      return modelType;
+    }
+
+    /**
+     * Gets the {@code node} property.
+     * @return property value
+     */
+    public AbstractViewNode getNode() {
+      return node;
+    }
+
+    /**
+     * Gets the {@code modelName} property.
+     * @return property value
+     */
+    public String getModelName() {
+      return modelName;
+    }
+
+    /**
+     * Sets the {@code modelName} property.
+     * @param modelName the property value to set
+     */
+    public void setModelName(String modelName) {
+      this.modelName = modelName;
+    }
+
+    /**
+     * Gets the {@code accessType} property.
+     * @return property value
+     */
+    public AccessType getAccessType() {
+      return accessType;
+    }
+
+    /**
+     * Sets the {@code accessType} property.
+     * @param accessType the property value to set
+     */
+    public void setAccessType(AccessType accessType) {
+      this.accessType = accessType;
+    }
+
+    public void advance() {
+      advance(null, null);
+    }
+
+    public void advance(AbstractViewNode node) {
+      advance(node, node.getName());
+    }
+
+    public void advance(AbstractViewNode node, String modelName) {
+      update();
+      this.node = node;
+      this.modelName = modelName;
+    }
+
+    public void update() {
+      if (modelName == null) return;
+      if (modelType == null) {
+        throw new AssertionError("modelType is required");
+      }
+      try {
+        node.setAccessor(AccessorFactory.accessor(modelType, modelName,
+            accessType));
+      }
+      catch (Exception ex) {
+        throw new ViewTemplateException(ex);
+      }
+    }
+
   }
 
 }
