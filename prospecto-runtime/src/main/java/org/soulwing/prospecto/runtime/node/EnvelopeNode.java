@@ -43,15 +43,6 @@ public class EnvelopeNode extends ContainerViewNode {
     super(name, namespace, null);
   }
 
-  /**
-   * Constructs a copy of a node, composing it with a new name.
-   * @param source source node to be copied
-   * @param name name to be composed in the new node
-   */
-  private EnvelopeNode(EnvelopeNode source, String name) {
-    super(name, source.getNamespace(), null, source.getChildren());
-  }
-
   @Override
   protected List<View.Event> onEvaluate(Object model, ScopedViewContext context)
       throws Exception {
@@ -60,11 +51,6 @@ public class EnvelopeNode extends ContainerViewNode {
     events.addAll(evaluateChildren(model, context));
     events.add(newEvent(View.Event.Type.END_OBJECT));
     return events;
-  }
-
-  @Override
-  public EnvelopeNode copy(String name) {
-    return new EnvelopeNode(this, name);
   }
 
 }

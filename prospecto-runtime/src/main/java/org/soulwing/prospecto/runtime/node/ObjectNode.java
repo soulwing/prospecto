@@ -41,16 +41,6 @@ public class ObjectNode extends ContainerViewNode {
     super(name, namespace, modelType);
   }
 
-  /**
-   * Constructs a copy of a node, composed with a new name.
-   * @param source source object node that will be copied
-   * @param name name to compose in the new node
-   */
-  private ObjectNode(ObjectNode source, String name) {
-    super(name, source.getNamespace(), source.getModelType(),
-        source.getChildren());
-  }
-
   @Override
   protected List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
@@ -66,11 +56,6 @@ public class ObjectNode extends ContainerViewNode {
 
   protected Object getModelObject(Object source) throws Exception {
     return getAccessor().get(source);
-  }
-
-  @Override
-  public ObjectNode copy(String name) {
-    return new ObjectNode(this, name);
   }
 
 }

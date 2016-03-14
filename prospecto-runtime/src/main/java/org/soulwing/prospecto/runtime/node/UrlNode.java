@@ -42,15 +42,6 @@ public class UrlNode extends ValueViewNode {
     super(name, namespace);
   }
 
-  /**
-   * Constructs a copy of a node, composed with a new name.
-   * @param source source node that will be copied
-   * @param name name to compose in the new node
-   */
-  private UrlNode(UrlNode source, String name) {
-    super(name, source.getNamespace());
-  }
-
   @Override
   protected View.Event.Type getEventType() {
     return View.Event.Type.URL;
@@ -66,11 +57,6 @@ public class UrlNode extends ValueViewNode {
   protected Object toViewValue(Object model, ViewContext context)
       throws Exception {
     return model;
-  }
-
-  @Override
-  public UrlNode copy(String name) {
-    return new UrlNode(this, name);
   }
 
 }

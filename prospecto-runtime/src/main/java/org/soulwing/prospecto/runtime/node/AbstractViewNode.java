@@ -104,8 +104,6 @@ public abstract class AbstractViewNode implements ViewNode {
   protected abstract List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception;
 
-  public abstract AbstractViewNode copy(String name);
-
   protected View.Event newEvent(View.Event.Type type) {
     return newEvent(type, name, null);
   }

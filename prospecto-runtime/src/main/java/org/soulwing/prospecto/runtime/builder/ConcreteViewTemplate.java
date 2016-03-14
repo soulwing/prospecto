@@ -21,10 +21,15 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
+import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
@@ -32,7 +37,7 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  *
  * @author Carl Harris
  */
-public class ConcreteViewTemplate implements ViewTemplate {
+public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private final AbstractViewNode root;
   private final ScopedViewContextFactory viewContextFactory;
@@ -60,8 +65,30 @@ public class ConcreteViewTemplate implements ViewTemplate {
   }
 
   @Override
-  public AbstractViewNode generateSubView(String name) {
-    return root.copy(name);
+  public AbstractViewNode object(String name, String namespace) {
+    assertRootIsContainerViewNode(name);
+    ObjectNode node = new ObjectNode(name, namespace, root.getModelType());
+    assert root instanceof ContainerViewNode;
+    node.addChildren(((ContainerViewNode) root).getChildren());
+    return node;
+  }
+
+  @Override
+  public AbstractViewNode arrayOfObjects(String name, String elementName,
+      String namespace) {
+    assertRootIsContainerViewNode(name);
+    ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,
+        root.getModelType());
+    assert root instanceof ContainerViewNode;
+    node.addChildren(((ContainerViewNode) root).getChildren());
+    return node;
+  }
+
+  private void assertRootIsContainerViewNode(String name) {
+    if (!(root instanceof ContainerViewNode)) {
+      throw new ViewTemplateException("referenced view template for node '"
+          + name + "' must have a root node of object or array-of-object type");
+    }
   }
 
 }

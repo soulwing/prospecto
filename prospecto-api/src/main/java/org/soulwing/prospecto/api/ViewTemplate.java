@@ -50,16 +50,4 @@ public interface ViewTemplate {
    */
   View generateView(Object model, ViewContext context);
 
-  /**
-   * Generates a subview using this template.
-   * <p>
-   * A subview can be incorporated as a node in another template. This allows
-   * view templates to be reused and composed as needed.
-   *
-   * @param name name of the node in the template in which the subview will be
-   *    composed
-   * @return root view node of the subview
-   */
-  ViewNode generateSubView(String name);
-
 }

@@ -54,15 +54,6 @@ public class ArrayOfValueNode extends AbstractViewNode {
     this.elementName = elementName;
   }
 
-  /**
-   * Constructs a copy of a node, composing it with a new name.
-   * @param source source node to be copied
-   * @param name name to be composed in the new node
-   */
-  private ArrayOfValueNode(ArrayOfValueNode source, String name) {
-    this(name, source.elementName, source.getNamespace());
-  }
-
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
@@ -98,11 +89,6 @@ public class ArrayOfValueNode extends AbstractViewNode {
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
     return accessor.iterator(source);
-  }
-
-  @Override
-  public ArrayOfValueNode copy(String name) {
-    return new ArrayOfValueNode(this, name);
   }
 
 }

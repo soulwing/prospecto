@@ -51,23 +51,7 @@ public class ArrayOfObjectNode extends ContainerViewNode {
    */
   public ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType) {
-    this(name, elementName, namespace, modelType,
-        new ArrayList<AbstractViewNode>());
-  }
-
-  /**
-   * Constructs a copy of a node, composing it with a new name.
-   * @param source source node to be copied
-   * @param name name to be composed in the new node
-   */
-  private ArrayOfObjectNode(ArrayOfObjectNode source, String name) {
-    this(name, source.elementName, source.getNamespace(), source.getModelType(),
-        source.getChildren());
-  }
-
-  private ArrayOfObjectNode(String name, String elementName,
-      String namespace, Class<?> modelType, List<AbstractViewNode> children) {
-    super(name, namespace, modelType, children);
+    super(name, namespace, modelType, new ArrayList<AbstractViewNode>());
     this.elementName = elementName;
   }
 
@@ -105,11 +89,6 @@ public class ArrayOfObjectNode extends ContainerViewNode {
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
     return accessor.iterator(source);
-  }
-
-  @Override
-  public ArrayOfObjectNode copy(String name) {
-    return new ArrayOfObjectNode(this, name);
   }
 
 }

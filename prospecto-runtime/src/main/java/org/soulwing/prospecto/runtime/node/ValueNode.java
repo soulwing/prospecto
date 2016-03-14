@@ -41,15 +41,6 @@ public class ValueNode extends ValueViewNode {
   }
 
   /**
-   * Constructs a copy of a node, composed with a new name.
-   * @param source source node that will be copied
-   * @param name name to compose in the new node
-   */
-  private ValueNode(ValueNode source, String name) {
-    super(name, source.getNamespace());
-  }
-
-  /**
    * Gets this node's value type converter.
    * @return value type converter or {@code null} if none is configured.
    */
@@ -84,11 +75,6 @@ public class ValueNode extends ValueViewNode {
       }
     }
     return model;
-  }
-
-  @Override
-  public ValueNode copy(String name) {
-    return new ValueNode(this, name);
   }
 
 }

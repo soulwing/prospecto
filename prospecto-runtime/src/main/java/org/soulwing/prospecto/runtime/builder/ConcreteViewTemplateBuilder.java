@@ -21,11 +21,9 @@ package org.soulwing.prospecto.runtime.builder;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.ViewTemplateException;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
@@ -127,12 +125,12 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
     configureCurrentNode();
-    ViewNode subViewNode = template.generateSubView(name);
-    assertIsObjectContainerNode(name, subViewNode);
-    ObjectNode node = new ObjectNode(name, namespace, subViewNode.getModelType());
-    node.addChildren(((ContainerViewNode) subViewNode).getChildren());
-    nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
+    final AbstractViewNode node = ((ComposableViewTemplate) template)
+        .object(name, namespace);
+    nodeConfigurator = new ViewNodeConfigurator(node,
+        this.sourceType, name);
     target.addChild(node);
     return this;
   }
@@ -174,23 +172,13 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
     configureCurrentNode();
-    ViewNode subViewNode = template.generateSubView(name);
-    assertIsObjectContainerNode(name, subViewNode);
-    ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,
-        subViewNode.getModelType());
-    node.addChildren(((ContainerViewNode) subViewNode).getChildren());
+    final AbstractViewNode node = ((ComposableViewTemplate) template)
+        .arrayOfObjects(name, elementName, namespace);
     nodeConfigurator = new ViewNodeConfigurator(node, this.sourceType, name);
     target.addChild(node);
     return this;
-  }
-
-  private void assertIsObjectContainerNode(String name, ViewNode subViewNode) {
-    if (!(subViewNode instanceof ObjectNode)
-        && !(subViewNode instanceof ArrayOfObjectNode)) {
-      throw new ViewTemplateException("referenced view template for node '"
-          + name + "' must have a root node of object or array-of-object type");
-    }
   }
 
   @Override
