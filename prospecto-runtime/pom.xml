@@ -35,6 +35,10 @@
       <artifactId>prospecto-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-legacy</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
