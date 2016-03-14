@@ -66,6 +66,17 @@
           </webResources>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.wildfly.plugins</groupId>
+        <artifactId>wildfly-maven-plugin</artifactId>
+        <version>1.1.0.Alpha7</version>
+        <configuration>
+          <version>9.0.2.Final</version>
+          <javaOpts>
+            <javaOpt>-XX:MaxPermSize=256m</javaOpt>
+          </javaOpts>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -95,8 +106,8 @@
 
   <properties>
     <persistence.unit>prospectoDemo</persistence.unit>
-    <persistence.dataSource>java:/jdbc/datasources/ProspectoDemoDS</persistence.dataSource>
-    <hibernate.dialect>org.hibernate.dialect.PostgreSQL9Dialect</hibernate.dialect>
+    <persistence.dataSource>java:jboss/datasources/ExampleDS</persistence.dataSource>
+    <hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
     <deployment.contextRoot>/prospecto-demo</deployment.contextRoot>
   </properties>
 
