@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessType;

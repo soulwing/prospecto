@@ -21,7 +21,6 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
