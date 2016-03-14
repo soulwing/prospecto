@@ -44,7 +44,6 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ConcreteViewTemplate}.
@@ -60,8 +59,7 @@ public class ConcreteViewTemplateTest {
   private static final String NAMESPACE = "namespace";
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   private ScopedViewContextFactory viewContextFactory;
