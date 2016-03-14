@@ -26,7 +26,6 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import org.soulwing.prospecto.UrlResolverProducer;
-import org.soulwing.prospecto.spi.UrlResolverProvider;
 
 /**
  * A {@link ServletContextListener} that initializes the
