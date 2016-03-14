@@ -37,7 +37,7 @@ import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
  *
  * @author Carl Harris
  */
-public abstract class AbstractViewNode implements ViewNode {
+public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   private final MutableScope scope = new ConcreteMutableScope();
 
