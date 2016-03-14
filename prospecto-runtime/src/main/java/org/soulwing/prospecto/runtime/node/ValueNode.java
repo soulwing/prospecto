@@ -27,9 +27,10 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class ValueNode extends ValueViewNode {
+public class ValueNode extends ValueViewNode implements Convertable {
 
-  private ValueTypeConverter<?> converter;
+  private final ConverterSupport converterSupport =
+      new ConverterSupport();
 
   /**
    * Constructs a new instance.
@@ -44,16 +45,18 @@ public class ValueNode extends ValueViewNode {
    * Gets this node's value type converter.
    * @return value type converter or {@code null} if none is configured.
    */
+  @Override
   public ValueTypeConverter<?> getConverter() {
-    return converter;
+    return converterSupport.getConverter();
   }
 
   /**
    * Sets this node's value type converter.
    * @param converter the value type converter to set
    */
+  @Override
   public void setConverter(ValueTypeConverter<?> converter) {
-    this.converter = converter;
+    converterSupport.setConverter(converter);
   }
 
   @Override
@@ -65,16 +68,7 @@ public class ValueNode extends ValueViewNode {
   @Override
   protected Object toViewValue(Object model, ViewContext context)
       throws Exception {
-    if (model == null) return null;
-    if (converter != null) {
-      return converter.toValue(model);
-    }
-    for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
-      if (converter.supports(model.getClass())) {
-        return converter.toValue(model);
-      }
-    }
-    return model;
+    return converterSupport.toViewValue(model, context);
   }
 
 }
