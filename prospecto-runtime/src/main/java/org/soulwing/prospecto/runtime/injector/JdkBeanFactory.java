@@ -38,7 +38,7 @@ public class JdkBeanFactory implements BeanFactory {
   public <T> T construct(Class<T> beanClass, Object... properties)
       throws Exception {
     if (properties.length % 2 != 0) {
-      throw new ViewTemplateException("properties must be name-value pairs");
+      throw new IllegalArgumentException("properties must be name-value pairs");
     }
     final Map<String, Object> map = new HashMap<>();
     for (int i = 0; i < properties.length / 2; i++) {
