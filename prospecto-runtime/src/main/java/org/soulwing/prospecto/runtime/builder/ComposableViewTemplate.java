@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
@@ -34,7 +33,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    * Extracts a view node of object type from the root of this template for
    * use as a subview in another template.
    * @param name name for the node (as it will appear in the calling template)
-   * @param namespace namespace namespace for {@code name} and {@code elementName};
+   * @param namespace namespace for {@code name} and {@code elementName};
    *    used in only some view types (e.g. XML)
    * @return new view node containing the children of the root node of this
    *    template
@@ -48,12 +47,13 @@ public interface ComposableViewTemplate extends ViewTemplate {
    * @param name name for the node (as it will appear in the calling template)
    * @param elementName name for the elements in the array; used in only some
    *    some view types (e.g. XML)
-   * @param namespace namespace namespace for {@code name} and {@code elementName};
-   *    used in only some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName}; used
+   *    in only some view types (e.g. XML)
    * @return new view node containing the children of the root node of this
    *    template
    * @see ViewTemplateBuilder#arrayOfObjects(String, String, String, ViewTemplate)
    */
-  AbstractViewNode arrayOfObjects(String name, String elementName, String namespace);
+  AbstractViewNode arrayOfObjects(String name, String elementName,
+      String namespace);
 
 }
