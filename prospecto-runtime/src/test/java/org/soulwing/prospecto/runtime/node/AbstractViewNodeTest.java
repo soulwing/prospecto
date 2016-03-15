@@ -19,25 +19,22 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
@@ -103,16 +100,6 @@ public class AbstractViewNodeTest {
 
     assertThat(node.evaluate(MODEL, viewContext), is(empty()));
   }
-
-
-  private static Matcher<ViewNodeEvent> viewNodeEvent(MockViewNode node,
-      Object model, ScopedViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("model", sameInstance(model)),
-        hasProperty("context", sameInstance(viewContext)));
-  }
-
 
   class MockViewNode extends AbstractViewNode {
 

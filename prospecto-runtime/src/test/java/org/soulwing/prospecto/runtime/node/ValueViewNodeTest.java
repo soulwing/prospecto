@@ -19,16 +19,14 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeValueEvent;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -36,7 +34,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -92,14 +89,6 @@ public class ValueViewNodeTest {
     assertThat(events.get(0).getName(), is(equalTo(NAME)));
     assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(0).getValue(), is(sameInstance(VIEW_VALUE)));
-  }
-
-  private static Matcher<ViewNodeValueEvent> viewNodeValueEvent(
-      MockViewNode node, Object value, ScopedViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("value", sameInstance(value)),
-        hasProperty("context", sameInstance(viewContext)));
   }
 
   class MockViewNode extends ValueViewNode {

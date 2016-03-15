@@ -19,18 +19,16 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeElementEvent;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -38,9 +36,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -156,15 +151,6 @@ public class ArrayOfObjectNodeTest {
       assertThat(context, is(sameInstance(viewContext)));
       return Collections.singletonList(childEvent);
     }
-  }
-
-  private static Matcher<ViewNodeElementEvent> viewNodeElementEvent(
-      ViewNode node, Object model, Object element, ViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("model", sameInstance(model)),
-        hasProperty("element", sameInstance(element)),
-        hasProperty("context", sameInstance(viewContext)));
   }
 
 }

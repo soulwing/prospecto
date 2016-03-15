@@ -19,14 +19,12 @@
 package org.soulwing.prospecto.runtime.handler;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeValueEvent;
 
 import java.util.Arrays;
 
-import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -105,14 +103,5 @@ public class ViewNodeValueHandlerSupportTest {
     assertThat(ViewNodeValueHandlerSupport.injectedValue(event),
         is(sameInstance(HANDLER2_VALUE)));
   }
-
-  private static Matcher<ViewNodeValueEvent> viewNodeValueEvent(
-      ViewNode node, Object value, ViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("value", sameInstance(value)),
-        hasProperty("context", sameInstance(viewContext)));
-  }
-
 
 }
