@@ -1,5 +1,5 @@
 /*
- * File created on Mar 14, 2016
+ * File created on Mar 15, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,53 +16,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.converter;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
- * DESCRIBE THE TYPE HERE
+ * A utility that provides support for model value to view value conversion.
+ *
  * @author Carl Harris
  */
 public class ConverterSupport {
 
-  private ValueTypeConverter<?> converter;
-
   /**
-   * Gets the {@code converter} property.
-   * @return property value
-   */
-  public ValueTypeConverter<?> getConverter() {
-    return converter;
-  }
-
-  /**
-   * Sets the {@code converter} property.
-   * @param converter the property value to set
-   */
-  public void setConverter(ValueTypeConverter<?> converter) {
-    this.converter = converter;
-  }
-
-  /**
-   * Converts a model value to a view value.
+   * Converts a model value to a view value for a node.
    * @param model model value
+   * @param node the subject node
    * @param context view context
    * @return view value
    * @throws Exception
    */
-  public Object toViewValue(Object model, ViewContext context)
-      throws Exception {
+  public static Object toViewValue(Object model, ViewNode node,
+      ViewContext context) throws Exception {
     if (model == null) return null;
-    if (converter != null) {
-      return converter.toValue(model);
+
+    final ValueTypeConverter<?> localConverter = node.get(ValueTypeConverter.class);
+    if (localConverter != null) {
+      return localConverter.toValue(model);
     }
+
     for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
       if (converter.supports(model.getClass())) {
         return converter.toValue(model);
       }
     }
+
     return model;
   }
 

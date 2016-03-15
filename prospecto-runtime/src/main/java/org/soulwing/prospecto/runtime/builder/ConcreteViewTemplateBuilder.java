@@ -26,13 +26,13 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
+import org.soulwing.prospecto.runtime.converter.Convertible;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.Convertable;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
@@ -244,11 +244,11 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
-    if (!(cursor.getNode() instanceof Convertable)) {
+    if (!(cursor.getNode() instanceof Convertible)) {
       throw new ViewTemplateException("node '" + cursor.getNode().getName()
           + "' does not support a converter");
     }
-    ((Convertable) cursor.getNode()).setConverter(converter);
+    cursor.getNode().put(converter);
     return this;
   }
 

@@ -23,14 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.converter.ConverterSupport;
+import org.soulwing.prospecto.runtime.converter.Convertible;
 import org.soulwing.prospecto.runtime.handler.ViewNodeElementHandlerSupport;
 import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
 
@@ -39,10 +39,9 @@ import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
  *
  * @author Carl Harris
  */
-public class ArrayOfValueNode extends AbstractViewNode implements Convertable {
+public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
 
   private final String elementName;
-  private final ConverterSupport converterSupport = new ConverterSupport();
 
   private MultiValuedAccessor accessor;
 
@@ -61,24 +60,6 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertable {
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
     this.accessor = AccessorFactory.multiValue(accessor);
-  }
-
-  /**
-   * Gets this node's value type converter.
-   * @return value type converter or {@code null} if none is configured.
-   */
-  @Override
-  public ValueTypeConverter<?> getConverter() {
-    return converterSupport.getConverter();
-  }
-
-  /**
-   * Sets this node's value type converter.
-   * @param converter the value type converter to set
-   */
-  @Override
-  public void setConverter(ValueTypeConverter<?> converter) {
-    converterSupport.setConverter(converter);
   }
 
   @Override
@@ -112,9 +93,9 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertable {
     return accessor.iterator(source);
   }
 
-  private Object toViewValue(Object model, ViewContext context)
+  private Object toViewValue(Object model, ScopedViewContext context)
       throws Exception {
-    return converterSupport.toViewValue(model, context);
+    return ConverterSupport.toViewValue(model, this, context);
   }
 
 }

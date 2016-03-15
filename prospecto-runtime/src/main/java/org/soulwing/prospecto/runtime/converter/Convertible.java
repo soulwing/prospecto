@@ -1,5 +1,5 @@
 /*
- * File created on Mar 14, 2016
+ * File created on Mar 15, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,19 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.converter;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
- * A node that has a {@link ValueTypeConverter}.
+ * A marker for an object that can use a {@link ValueTypeConverter}.
  *
  * @author Carl Harris
  */
-public interface Convertable {
-
-  ValueTypeConverter<?> getConverter();
-
-  void setConverter(ValueTypeConverter<?> converter);
-
+public interface Convertible {
 }
