@@ -30,33 +30,31 @@ public class ViewNodeElementEvent {
 
   private final ViewNode source;
   private final Object model;
-  private final Object elementModel;
+  private final Object element;
   private final ViewContext context;
 
   /**
    * Constructs a copy of an event, composed with a different element model.
    * @param source the source event
-   * @param elementModel the new element model to compose in the event
+   * @param element the new element model to compose in the event
    */
-  public ViewNodeElementEvent(ViewNodeElementEvent source,
-      Object elementModel) {
-    this(source.getSource(), source.getModel(), elementModel,
-        source.getContext());
+  public ViewNodeElementEvent(ViewNodeElementEvent source, Object element) {
+    this(source.getSource(), source.getModel(), element, source.getContext());
   }
 
   /**
    * Constructs a new instance.
    * @param source view node source of the event
    * @param model model associated with source view node
-   * @param elementModel model of the element to that will be used when visiting
+   * @param element model of the element to that will be used when visiting
    *    {@code elementNode}
    * @param context view context
    */
-  public ViewNodeElementEvent(ViewNode source,
-      Object model, Object elementModel, ViewContext context) {
+  public ViewNodeElementEvent(ViewNode source, Object model, Object element,
+      ViewContext context) {
     this.source = source;
     this.model = model;
-    this.elementModel = elementModel;
+    this.element = element;
     this.context = context;
   }
 
@@ -77,11 +75,11 @@ public class ViewNodeElementEvent {
   }
 
   /**
-   * Gets the model of the element to that will be visited.
+   * Gets the subject element.
    * @return element model
    */
-  public Object getElementModel() {
-    return elementModel;
+  public Object getElement() {
+    return element;
   }
 
   /**

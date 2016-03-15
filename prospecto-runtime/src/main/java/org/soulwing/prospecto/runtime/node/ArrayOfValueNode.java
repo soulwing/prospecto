@@ -68,7 +68,7 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
     final List<View.Event> events = new LinkedList<>();
     final Iterator<Object> i = getModelIterator(model);
     final ViewNodeElementHandlerSupport elementHandlers =
-        new ViewNodeElementHandlerSupport(context.getViewNodeElementHandlers());
+        new ViewNodeElementHandlerSupport();
 
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
@@ -77,9 +77,9 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
           model, elementModel, context);
       if (elementHandlers.willVisitElement(elementEvent)) {
         final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
-            elementHandlers.didVisitElement(elementEvent), context);
+            elementHandlers.extractedElement(elementEvent), context);
         events.add(newEvent(View.Event.Type.VALUE, elementName,
-            toViewValue(ViewNodeValueHandlerSupport.extractValue(valueEvent),
+            toViewValue(ViewNodeValueHandlerSupport.extractedValue(valueEvent),
             context)));
       }
     }

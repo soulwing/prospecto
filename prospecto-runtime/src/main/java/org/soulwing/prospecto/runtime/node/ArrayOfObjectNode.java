@@ -76,7 +76,7 @@ public class ArrayOfObjectNode extends ContainerViewNode {
     final List<View.Event> events = new LinkedList<>();
     final Iterator<Object> i = getModelIterator(model);
     final ViewNodeElementHandlerSupport handlers =
-        new ViewNodeElementHandlerSupport(context.getViewNodeElementHandlers());
+        new ViewNodeElementHandlerSupport();
 
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
@@ -84,9 +84,9 @@ public class ArrayOfObjectNode extends ContainerViewNode {
       final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
           model, elementModel, context);
       if (handlers.willVisitElement(elementEvent)) {
-        handlers.didVisitElement(elementEvent);
+        handlers.extractedElement(elementEvent);
         events.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
-        events.addAll(evaluateChildren(handlers.didVisitElement(elementEvent),
+        events.addAll(evaluateChildren(handlers.extractedElement(elementEvent),
             context));
         events.add(newEvent(View.Event.Type.END_OBJECT, elementName));
       }

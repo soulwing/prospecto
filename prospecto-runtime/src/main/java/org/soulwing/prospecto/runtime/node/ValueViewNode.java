@@ -50,7 +50,7 @@ abstract class ValueViewNode extends AbstractViewNode {
         getModelValue(source, context), context);
 
     return Collections.singletonList(newEvent(getEventType(), getName(),
-        toViewValue(ViewNodeValueHandlerSupport.extractValue(valueEvent),
+        toViewValue(ViewNodeValueHandlerSupport.extractedValue(valueEvent),
         context)));
   }
 

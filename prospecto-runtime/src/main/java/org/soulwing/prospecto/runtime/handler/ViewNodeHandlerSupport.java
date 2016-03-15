@@ -56,7 +56,6 @@ public class ViewNodeHandlerSupport {
    * <p>
    * Handlers are notified in order.
    * @param event the subject event
-   * @return {@code false} if any handler vetoed visitation of the node
    */
   public static void nodeVisited(ViewNodeEvent event) {
     for (final ViewNodeHandler handler :

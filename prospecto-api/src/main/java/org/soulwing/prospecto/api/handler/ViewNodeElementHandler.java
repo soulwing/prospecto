@@ -45,8 +45,8 @@ public interface ViewNodeElementHandler {
    * @return a <em>value</em> to use as a substitute for the element view model
    *    contained in the event; if the handler does not wish to substitute the
    *    view model it <em>must</em> return the
-   *    {@linkplain ViewNodeElementEvent#getElementModel() subject element model}.
+   *    {@linkplain ViewNodeElementEvent#getElement() subject element model}.
    */
-  Object onVisitElement(ViewNodeElementEvent event);
+  Object onExtractElement(ViewNodeElementEvent event);
 
 }

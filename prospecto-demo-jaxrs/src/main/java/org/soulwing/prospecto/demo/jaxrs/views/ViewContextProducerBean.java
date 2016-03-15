@@ -110,8 +110,8 @@ public class ViewContextProducerBean {
       }
 
       @Override
-      public Object onVisitElement(ViewNodeElementEvent event) {
-        final Object elementModel = event.getElementModel();
+      public Object onExtractElement(ViewNodeElementEvent event) {
+        final Object elementModel = event.getElement();
         logger.debug("visited element at path {}: {}",
             event.getContext().currentViewPathAsString(),
             elementModel);

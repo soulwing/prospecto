@@ -31,14 +31,18 @@ import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
  */
 public class ViewNodeElementHandlerSupport {
 
-  private final Iterable<ViewNodeElementHandler> handlers;
-
-  public ViewNodeElementHandlerSupport(Iterable<ViewNodeElementHandler> handlers) {
-    this.handlers = handlers;
-  }
-
-  public boolean willVisitElement(ViewNodeElementEvent event) {
-    final Iterator<ViewNodeElementHandler> handlers = this.handlers.iterator();
+  /**
+   * Notifies {@link ViewNodeElementHandler} instances in the given event's view
+   * context that an element associated with node is to be visited.
+   * <p>
+   * Handlers are notified in order until a handler vetoes visitation of the
+   * element in the subject event or until all handlers have been visited.
+   * @param event the subject event
+   * @return {@code false} if any handler vetoed visitation of the element
+   */
+  public static boolean willVisitElement(ViewNodeElementEvent event) {
+    final Iterator<ViewNodeElementHandler> handlers =
+        event.getContext().getViewNodeElementHandlers().iterator();
     boolean visiting = true;
     while (visiting && handlers.hasNext()) {
       visiting = handlers.next().beforeVisitElement(event);
@@ -46,12 +50,24 @@ public class ViewNodeElementHandlerSupport {
     return visiting;
   }
 
-  public Object didVisitElement(ViewNodeElementEvent event) {
-    for (final ViewNodeElementHandler handler : handlers) {
-      final Object elementModel = handler.onVisitElement(event);
+  /**
+   * Notifies {@link ViewNodeElementHandler} instances in the given event's view
+   * context that an element associated with the a node has been extracted.
+   * <p>
+   * The first handler is allowed to replace the element in the subject event.
+   * Successive handlers are allowed to replace the element produced by their
+   * immediate predecessors.
+   * @param event the subject event
+   * @return element returned by the last handler in the context (or the
+   *   element in the subject event if there are no handlers)
+   */
+  public static Object extractedElement(ViewNodeElementEvent event) {
+    for (final ViewNodeElementHandler handler :
+        event.getContext().getViewNodeElementHandlers()) {
+      final Object elementModel = handler.onExtractElement(event);
       event = new ViewNodeElementEvent(event, elementModel);
     }
-    return event.getElementModel();
+    return event.getElement();
   }
 
 }
