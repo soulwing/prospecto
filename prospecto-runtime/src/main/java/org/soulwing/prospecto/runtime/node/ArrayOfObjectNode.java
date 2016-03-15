@@ -73,26 +73,24 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   protected List<View.Event> onEvaluate(Object model,
        ScopedViewContext context)
       throws Exception {
-    final List<View.Event> events = new LinkedList<>();
+    final List<View.Event> viewEvents = new LinkedList<>();
     final Iterator<Object> i = getModelIterator(model);
-    final ViewNodeElementHandlerSupport handlers =
-        new ViewNodeElementHandlerSupport();
 
-    events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
+    viewEvents.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
       Object elementModel = i.next();
       final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
           model, elementModel, context);
-      if (handlers.willVisitElement(elementEvent)) {
-        handlers.extractedElement(elementEvent);
-        events.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
-        events.addAll(evaluateChildren(handlers.extractedElement(elementEvent),
+      if (ViewNodeElementHandlerSupport.willVisitElement(elementEvent)) {
+        viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
+        viewEvents.addAll(evaluateChildren(
+            ViewNodeElementHandlerSupport.extractedElement(elementEvent),
             context));
-        events.add(newEvent(View.Event.Type.END_OBJECT, elementName));
+        viewEvents.add(newEvent(View.Event.Type.END_OBJECT, elementName));
       }
     }
-    events.add(newEvent(View.Event.Type.END_ARRAY));
-    return events;
+    viewEvents.add(newEvent(View.Event.Type.END_ARRAY));
+    return viewEvents;
   }
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {

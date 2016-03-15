@@ -91,10 +91,10 @@ public class ViewNodeElementHandlerSupportTest {
         oneOf(viewContext).getViewNodeElementHandlers();
         will(returnValue(Arrays.asList(handler, handler)));
         oneOf(handler).onExtractElement(with(
-            viewNodeValueEvent(node, MODEL, ELEMENT, viewContext)));
+            viewNodeElementEvent(node, MODEL, ELEMENT, viewContext)));
         will(returnValue(HANDLER1_ELEMENT));
         oneOf(handler).onExtractElement(with(
-            viewNodeValueEvent(node, MODEL, HANDLER1_ELEMENT, viewContext)));
+            viewNodeElementEvent(node, MODEL, HANDLER1_ELEMENT, viewContext)));
         will(returnValue(HANDLER2_ELEMENT));
       }
     });
@@ -103,7 +103,7 @@ public class ViewNodeElementHandlerSupportTest {
         is(sameInstance(HANDLER2_ELEMENT)));
   }
 
-  private static Matcher<ViewNodeElementEvent> viewNodeValueEvent(
+  private static Matcher<ViewNodeElementEvent> viewNodeElementEvent(
       ViewNode node, Object model, Object element, ViewContext viewContext) {
     return allOf(
         hasProperty("source", sameInstance(node)),
