@@ -86,20 +86,17 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   public final List<View.Event> evaluate(Object model,
       ScopedViewContext context) throws Exception {
 
-    final ViewNodeEvent event = new ViewNodeEvent(this, model, context);
-    final ViewNodeHandlerSupport handlers = new ViewNodeHandlerSupport(
-        context.getViewNodeHandlers());
-
-    final List<View.Event> events = new LinkedList<>();
+    final ViewNodeEvent nodeEvent = new ViewNodeEvent(this, model, context);
+    final List<View.Event> viewEvents = new LinkedList<>();
 
     context.push(name, modelType);
-    if (handlers.willVisitNode(event)) {
-      events.addAll(onEvaluate(model, context));
-      handlers.nodeVisited(event);
+    if (ViewNodeHandlerSupport.willVisitNode(nodeEvent)) {
+      viewEvents.addAll(onEvaluate(model, context));
+      ViewNodeHandlerSupport.nodeVisited(nodeEvent);
     }
     context.pop();
 
-    return events;
+    return viewEvents;
   }
 
   protected abstract List<View.Event> onEvaluate(Object source,

@@ -31,14 +31,18 @@ import org.soulwing.prospecto.api.handler.ViewNodeHandler;
  */
 public class ViewNodeHandlerSupport {
 
-  private final Iterable<ViewNodeHandler> handlers;
-
-  public ViewNodeHandlerSupport(Iterable<ViewNodeHandler> handlers) {
-    this.handlers = handlers;
-  }
-
-  public boolean willVisitNode(ViewNodeEvent event) {
-    final Iterator<ViewNodeHandler> handlers = this.handlers.iterator();
+  /**
+   * Notifies {@link ViewNodeHandler} instances in the given event's view
+   * context that a node is to be visited.
+   * <p>
+   * Handlers are notified in order until a handler vetoes visitation of the
+   * subject node or until all handlers have been visited.
+   * @param event the subject event
+   * @return {@code false} if any handler vetoed visitation of the node
+   */
+  public static boolean willVisitNode(ViewNodeEvent event) {
+    final Iterator<ViewNodeHandler> handlers =
+        event.getContext().getViewNodeHandlers().iterator();
     boolean visiting = true;
     while (visiting && handlers.hasNext()) {
       visiting = handlers.next().beforeVisit(event);
@@ -46,8 +50,17 @@ public class ViewNodeHandlerSupport {
     return visiting;
   }
 
-  public void nodeVisited(ViewNodeEvent event) {
-    for (final ViewNodeHandler handler : this.handlers) {
+  /**
+   * Notifies {@link ViewNodeHandler} instances in the given event's view
+   * context that a node has been visited.
+   * <p>
+   * Handlers are notified in order.
+   * @param event the subject event
+   * @return {@code false} if any handler vetoed visitation of the node
+   */
+  public static void nodeVisited(ViewNodeEvent event) {
+    for (final ViewNodeHandler handler :
+        event.getContext().getViewNodeHandlers()) {
       handler.afterVisit(event);
     }
   }
