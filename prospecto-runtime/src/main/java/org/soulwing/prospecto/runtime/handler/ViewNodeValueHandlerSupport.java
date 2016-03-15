@@ -18,9 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.handler;
 
-import java.util.Iterator;
-
-import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 
@@ -32,22 +29,40 @@ import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
  */
 public class ViewNodeValueHandlerSupport {
 
-  private final Iterable<ViewNodeValueHandler> handlers;
-
-  public ViewNodeValueHandlerSupport(Iterable<ViewNodeValueHandler> handlers) {
-    this.handlers = handlers;
-  }
-
-  public Object valueToExtract(ViewNodeValueEvent event) {
-    for (final ViewNodeValueHandler handler : handlers) {
+  /**
+   * Notifies the {@link ViewNodeValueHandler} instances associated with the
+   * view context of the given event that a model value has been extracted.
+   * <p>
+   * The first handler is allowed to replace the value in the subject event.
+   * Successive handlers are allowed to replace the value produced by their
+   * immediate predecessors.
+   * @param event the subject event
+   * @return value returned by the last handler in the context (or the
+   *   value in the subject event if there are no handlers)
+   */
+  public static Object extractedValue(ViewNodeValueEvent event) {
+    for (final ViewNodeValueHandler handler :
+        event.getContext().getViewNodeValueHandlers()) {
       Object value = handler.onExtractValue(event);
       event = new ViewNodeValueEvent(event, value);
     }
     return event.getValue();
   }
 
-  public Object valueToInject(ViewNodeValueEvent event) {
-    for (final ViewNodeValueHandler handler : handlers) {
+  /**
+   * Notifies the {@link ViewNodeValueHandler} instances associated with the
+   * view context of the given event that a model value is to be injected.
+   * <p>
+   * The first handler is allowed to replace the value in the subject event.
+   * Successive handlers are allowed to replace the value produced by their
+   * immediate predecessors.
+   * @param event the subject event
+   * @return value returned by the last handler in the context (or the
+   *   value in the subject event if there are no handlers)
+   */
+  public static Object injectedValue(ViewNodeValueEvent event) {
+    for (final ViewNodeValueHandler handler :
+        event.getContext().getViewNodeValueHandlers()) {
       Object value = handler.onInjectValue(event);
       event = new ViewNodeValueEvent(event, value);
     }

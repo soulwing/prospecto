@@ -69,8 +69,6 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
     final Iterator<Object> i = getModelIterator(model);
     final ViewNodeElementHandlerSupport elementHandlers =
         new ViewNodeElementHandlerSupport(context.getViewNodeElementHandlers());
-    final ViewNodeValueHandlerSupport valueHandlers =
-        new ViewNodeValueHandlerSupport(context.getViewNodeValueHandlers());
 
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
@@ -81,7 +79,8 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
         final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
             elementHandlers.didVisitElement(elementEvent), context);
         events.add(newEvent(View.Event.Type.VALUE, elementName,
-            toViewValue(valueHandlers.valueToExtract(valueEvent), context)));
+            toViewValue(ViewNodeValueHandlerSupport.extractValue(valueEvent),
+            context)));
       }
     }
     events.add(newEvent(View.Event.Type.END_ARRAY));

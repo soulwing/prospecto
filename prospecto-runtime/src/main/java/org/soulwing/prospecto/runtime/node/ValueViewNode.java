@@ -46,14 +46,12 @@ abstract class ValueViewNode extends AbstractViewNode {
   protected final List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
 
-    final ViewNodeValueHandlerSupport handlers =
-        new ViewNodeValueHandlerSupport(context.getViewNodeValueHandlers());
-
     final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
         getModelValue(source, context), context);
 
     return Collections.singletonList(newEvent(getEventType(), getName(),
-        toViewValue(handlers.valueToExtract(valueEvent), context)));
+        toViewValue(ViewNodeValueHandlerSupport.extractValue(valueEvent),
+        context)));
   }
 
   protected View.Event.Type getEventType() {
