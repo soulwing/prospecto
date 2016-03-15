@@ -28,7 +28,6 @@ import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.handler.ViewNodeHandlerSupport;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 

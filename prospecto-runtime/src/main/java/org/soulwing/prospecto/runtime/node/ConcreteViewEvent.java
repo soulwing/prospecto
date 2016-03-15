@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 15, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.event;
+package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.View;
 
@@ -25,7 +25,7 @@ import org.soulwing.prospecto.api.View;
  *
  * @author Carl Harris
  */
-public class ConcreteViewEvent implements View.Event {
+class ConcreteViewEvent implements View.Event {
 
   private final Type type;
   private final String name;
