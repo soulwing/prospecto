@@ -67,17 +67,15 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
       throws Exception {
     final List<View.Event> events = new LinkedList<>();
     final Iterator<Object> i = getModelIterator(model);
-    final ViewNodeElementHandlerSupport elementHandlers =
-        new ViewNodeElementHandlerSupport();
 
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
       final Object elementModel = i.next();
       final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
           model, elementModel, context);
-      if (elementHandlers.willVisitElement(elementEvent)) {
+      if (ViewNodeElementHandlerSupport.willVisitElement(elementEvent)) {
         final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
-            elementHandlers.extractedElement(elementEvent), context);
+            ViewNodeElementHandlerSupport.extractedElement(elementEvent), context);
         events.add(newEvent(View.Event.Type.VALUE, elementName,
             toViewValue(ViewNodeValueHandlerSupport.extractedValue(valueEvent),
             context)));
