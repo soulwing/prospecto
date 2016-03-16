@@ -26,8 +26,8 @@ import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 import org.soulwing.prospecto.jaxrs.api.MapPathTemplateResolver;
 
 /**
- * A {@link PathTemplateResolver} that resolves a simple entity path
- * containing an ID.
+ * A {@link org.soulwing.prospecto.jaxrs.api.PathTemplateResolver} that
+ * resolves a simple entity path containing an ID.
  *
  * @author Carl Harris
  */
