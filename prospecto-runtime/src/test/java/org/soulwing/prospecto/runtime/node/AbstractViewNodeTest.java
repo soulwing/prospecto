@@ -71,7 +71,7 @@ public class AbstractViewNodeTest {
       {
         oneOf(viewContext).push(NAME, MODEL_TYPE);
         oneOf(viewContext).pop();
-        oneOf(viewContext).getViewNodeHandlers();
+        exactly(2).of(viewContext).getViewNodeHandlers();
         will(returnValue(Arrays.asList(handler, handler)));
         exactly(2).of(handler).beforeVisit(
             with(viewNodeEvent(node, MODEL, viewContext)));
