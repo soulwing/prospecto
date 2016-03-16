@@ -23,6 +23,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
@@ -37,6 +39,7 @@ import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
  * @author Carl Harris
  */
 @Path("/orders")
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class PurchaseOrderResource {
 
   @Inject

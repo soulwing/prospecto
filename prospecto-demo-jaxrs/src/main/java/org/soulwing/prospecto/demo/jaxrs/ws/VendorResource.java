@@ -23,6 +23,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
@@ -38,13 +40,14 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
  * @author Carl Harris
  */
 @Path("/vendors")
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class VendorResource {
 
   @Inject
   private VendorService vendorService;
 
   @GET
-  public View getOrders() {
+  public View getVendors() {
     return vendorService.findAllVendors();
   }
 
@@ -52,7 +55,7 @@ public class VendorResource {
   @Path("/{id}")
   @ReferencedBy({ AnyModelSequence.class, Vendor.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
-  public View getOrder(@PathParam("id") Long orderId) {
+  public View getVendor(@PathParam("id") Long orderId) {
     try {
       return vendorService.findVendorById(orderId);
     }
