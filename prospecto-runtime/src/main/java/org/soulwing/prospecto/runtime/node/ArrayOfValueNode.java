@@ -26,8 +26,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
+import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
@@ -67,7 +67,7 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
-    this.accessor = AccessorFactory.multiValue(accessor);
+    this.accessor = MultiValuedAccessorFactory.newAccessor(accessor);
   }
 
   @Override
