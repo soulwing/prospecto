@@ -39,6 +39,10 @@
   </description>
   <url>https://github.com/soulwing/${project.artifactId}</url>
 
+  <properties>
+    <web.demo.module>prospecto-demo-jaxrs</web.demo.module>
+  </properties>
+
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -61,6 +65,24 @@
     <url>git@github.com:soulwing/${project.artifactId}.git</url>
     <tag>HEAD</tag>
   </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.wildfly.plugins</groupId>
+        <artifactId>wildfly-maven-plugin</artifactId>
+        <version>1.1.0.Alpha7</version>
+        <configuration>
+          <version>9.0.2.Final</version>
+          <targetDir>${project.basedir}/${web.demo.module}/target</targetDir>
+          <filename>${web.demo.module}-${project.version}.war</filename>
+          <javaOpts>
+            <javaOpt>-XX:MaxPermSize=256m</javaOpt>
+          </javaOpts>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
