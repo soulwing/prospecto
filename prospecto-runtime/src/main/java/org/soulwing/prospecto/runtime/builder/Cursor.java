@@ -90,13 +90,6 @@ interface Cursor {
   void advance(AbstractViewNode node, String modelName);
 
   /**
-   * Updates the cursor node without repositioning it.
-   * <p>
-   * The current values of the cursor properties are used to update the node.
-   */
-  void update();
-
-  /**
    * Creates a copy of this cursor with a different model type.
    * @param modelType the new model type
    * @return model type

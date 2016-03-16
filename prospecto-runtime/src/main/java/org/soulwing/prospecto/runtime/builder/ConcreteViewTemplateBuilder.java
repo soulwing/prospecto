@@ -211,14 +211,12 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder source(String name) {
     cursor.setModelName(name);
-    cursor.update();
     return this;
   }
 
   @Override
   public ViewTemplateBuilder accessType(AccessType accessType) {
     cursor.setAccessType(accessType);
-    cursor.update();
     return this;
   }
 

@@ -359,7 +359,6 @@ public class ConcreteViewTemplateBuilderTest {
     context.checking(new Expectations() {
       {
         oneOf(cursor).setModelName(MODEL_NAME);
-        oneOf(cursor).update();
       }
     });
 
@@ -371,7 +370,6 @@ public class ConcreteViewTemplateBuilderTest {
     context.checking(new Expectations() {
       {
         oneOf(cursor).setAccessType(ACCESS_TYPE);
-        oneOf(cursor).update();
       }
     });
 
