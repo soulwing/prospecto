@@ -19,17 +19,21 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.arrayViewNode;
+import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.viewNode;
 
-import java.util.Iterator;
-
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
+import org.soulwing.prospecto.api.ViewTemplateBuilder;
+import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
+import org.soulwing.prospecto.runtime.node.ObjectNode;
 
 /**
  * Tests for {@link ConcreteViewTemplateBuilderProvider}.
@@ -38,56 +42,62 @@ import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
  */
 public class ConcreteViewTemplateBuilderProviderTest {
 
-  private static final Object MODEL = new Object();
   private static final String NAME = "name";
   private static final String ELEMENT_NAME = "elementName";
   private static final String NAMESPACE = "namespace";
+  private static final Class<?> MODEL_TYPE = Object.class;
 
-  private ViewContext viewContext = new ConcreteViewContext();
+  @Rule
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ConcreteViewTemplateBuilderProvider provider =
-      new ConcreteViewTemplateBuilderProvider();
+  @Mock
+  private ViewTemplateBuilderFactory builderFactory;
 
-  @Test
-  public void testObjectTemplate() throws Exception {
-    final ViewTemplate template =
-        provider.object(NAME, NAMESPACE, Object.class).build();
-    final View view = template.generateView(new Object(), viewContext);
-    final Iterator<View.Event> events = view.iterator();
-    assertThat(events.hasNext(), is(true));
-    View.Event event = events.next();
-    assertThat(event.getType(), is(equalTo(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(event.getName(), is(equalTo(NAME)));
-    assertThat(event.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(event.getValue(), is(nullValue()));
+  @Mock
+  private ViewTemplateBuilder builder;
+
+  private ConcreteViewTemplateBuilderProvider provider;
+
+  @Before
+  public void setUp() throws Exception {
+    provider = new ConcreteViewTemplateBuilderProvider(builderFactory);
   }
 
   @Test
-  public void testArrayOfObjectsTemplate() throws Exception {
-    final ViewTemplate template = provider.arrayOfObjects(NAME, ELEMENT_NAME,
-        NAMESPACE, Object.class).build();
-    final View view = template.generateView(new Object[0], viewContext);
-    final Iterator<View.Event> events = view.iterator();
-    assertThat(events.hasNext(), is(true));
-    View.Event event = events.next();
-    assertThat(event.getType(), is(equalTo(View.Event.Type.BEGIN_ARRAY)));
-    assertThat(event.getName(), is(equalTo(NAME)));
-    assertThat(event.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(event.getValue(), is(nullValue()));
+  public void testObject() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(builderFactory).newBuilder(with(MODEL_TYPE), with(
+            viewNode(ObjectNode.class, NAME, NAMESPACE)));
+        will(returnValue(builder));
+      }
+    });
+
+    assertThat(provider.object(NAME, NAMESPACE, MODEL_TYPE),
+        is(sameInstance(builder)));
+  }
+
+  @Test
+  public void testArrayOfObjects() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(builderFactory).newBuilder(with(MODEL_TYPE), with(
+            arrayViewNode(ArrayOfObjectNode.class, NAME, ELEMENT_NAME,
+                NAMESPACE)));
+        will(returnValue(builder));
+      }
+    });
+
+    assertThat(provider.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE,
+        MODEL_TYPE), is(sameInstance(builder)));
   }
 
   @Test
   public void testArrayOfValuesTemplate() throws Exception {
-    final ViewTemplate template = provider.arrayOfValues(NAME, ELEMENT_NAME,
-        NAMESPACE);
-    final View view = template.generateView(new Object[0], viewContext);
-    final Iterator<View.Event> events = view.iterator();
-    assertThat(events.hasNext(), is(true));
-    View.Event event = events.next();
-    assertThat(event.getType(), is(equalTo(View.Event.Type.BEGIN_ARRAY)));
-    assertThat(event.getName(), is(equalTo(NAME)));
-    assertThat(event.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(event.getValue(), is(nullValue()));
+    final ConcreteViewTemplate template = (ConcreteViewTemplate)
+        provider.arrayOfValues(NAME, ELEMENT_NAME, NAMESPACE);
+    assertThat((ArrayOfValueNode) template.getRoot(), is(
+        arrayViewNode(ArrayOfValueNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
   }
 
 }

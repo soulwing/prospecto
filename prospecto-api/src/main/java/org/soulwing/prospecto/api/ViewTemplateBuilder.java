@@ -341,7 +341,7 @@ public interface ViewTemplateBuilder {
    */
   ViewTemplateBuilder converter(
       Class<? extends ValueTypeConverter> converterClass,
-      Map<String, Object> configuration);
+      Map configuration);
 
   /**
    * Specifies a converter that will be used to transform the model property

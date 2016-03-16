@@ -56,6 +56,14 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
     this.elementName = elementName;
   }
 
+  /**
+   * Gets the {@code elementName} property.
+   * @return property value
+   */
+  public String getElementName() {
+    return elementName;
+  }
+
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);

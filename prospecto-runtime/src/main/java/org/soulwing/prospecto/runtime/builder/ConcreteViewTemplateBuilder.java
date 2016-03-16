@@ -25,7 +25,6 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
@@ -45,22 +44,32 @@ import org.soulwing.prospecto.runtime.node.ValueNode;
  */
 public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
-  private final BeanFactory beanFactory = new JdkBeanFactory();
-
   private final ViewTemplateBuilder parent;
   private final ContainerViewNode target;
   private final Cursor cursor;
+  private final BeanFactory beanFactory;
+  private final ViewTemplateBuilderFactory builderFactory;
 
-  public ConcreteViewTemplateBuilder(Class<?> modelType,
-      ContainerViewNode target) {
-    this(null, new Cursor(modelType), modelType, target);
+
+  ConcreteViewTemplateBuilder(Class<?> modelType,
+      ContainerViewNode target, ViewTemplateBuilderFactory builderFactory) {
+    this(null, new ConcreteCursor(modelType), target, builderFactory);
   }
 
-  private ConcreteViewTemplateBuilder(ViewTemplateBuilder parent,
-      Cursor cursor, Class<?> modelType, ContainerViewNode target) {
+  ConcreteViewTemplateBuilder(ViewTemplateBuilder parent,
+      Cursor cursor, ContainerViewNode target,
+      ViewTemplateBuilderFactory builderFactory) {
+    this(parent, cursor, target, new JdkBeanFactory(), builderFactory);
+  }
+
+  ConcreteViewTemplateBuilder(ViewTemplateBuilder parent,
+      Cursor cursor, ContainerViewNode target, BeanFactory beanFactory,
+      ViewTemplateBuilderFactory builderFactory) {
     this.parent = parent;
-    this.cursor = new Cursor(cursor, modelType);
+    this.cursor = cursor;
     this.target = target;
+    this.beanFactory = beanFactory;
+    this.builderFactory = builderFactory;
   }
 
   @Override
@@ -106,7 +115,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
     ObjectNode node = new ObjectNode(name, namespace, modelType);
     target.addChild(node);
     cursor.advance(node);
-    return new ConcreteViewTemplateBuilder(this, cursor, modelType, node);
+    return builderFactory.newBuilder(this, cursor.copy(modelType), node);
   }
 
   @Override
@@ -154,7 +163,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
         namespace, modelType);
     target.addChild(node);
     cursor.advance(node);
-    return new ConcreteViewTemplateBuilder(this, cursor, modelType, node);
+    return builderFactory.newBuilder(this, cursor.copy(modelType), node);
   }
 
   @Override
@@ -178,8 +187,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
     EnvelopeNode node = new EnvelopeNode(name, namespace);
     target.addChild(node);
     cursor.advance(node, cursor.getModelName());
-    return new ConcreteViewTemplateBuilder(this, cursor, cursor.getModelType(),
-        node);
+    return builderFactory.newBuilder(this, cursor, node);
   }
 
   @Override
@@ -230,8 +238,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder converter(
-      Class<? extends ValueTypeConverter> converterClass,
-      Map<String, Object> configuration) {
+      Class<? extends ValueTypeConverter> converterClass, Map configuration) {
     try {
       final ValueTypeConverter<?> converter = beanFactory.construct(
           converterClass, configuration);
@@ -244,11 +251,12 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
-    if (!(cursor.getNode() instanceof Convertible)) {
-      throw new ViewTemplateException("node '" + cursor.getNode().getName()
+    final AbstractViewNode node = cursor.getNode();
+    if (!(node instanceof Convertible)) {
+      throw new ViewTemplateException("node '" + node.getName()
           + "' does not support a converter");
     }
-    cursor.getNode().put(converter);
+    node.put(converter);
     return this;
   }
 
@@ -275,100 +283,6 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplate build() {
     cursor.advance();
     return new ConcreteViewTemplate(target);
-  }
-
-  static class Cursor {
-    private final Class<?> modelType;
-
-    private AbstractViewNode node;
-    private String modelName;
-    private AccessType accessType = AccessType.PROPERTY;
-
-    Cursor(Class<?> modelType) {
-      this.modelType = modelType;
-    }
-
-    Cursor(Cursor cursor, Class<?> modelType) {
-      this.modelType = modelType;
-      this.accessType = cursor.accessType;
-    }
-
-    /**
-     * Gets the {@code modelType} property.
-     * @return property value
-     */
-    public Class<?> getModelType() {
-      return modelType;
-    }
-
-    /**
-     * Gets the {@code node} property.
-     * @return property value
-     */
-    public AbstractViewNode getNode() {
-      return node;
-    }
-
-    /**
-     * Gets the {@code modelName} property.
-     * @return property value
-     */
-    public String getModelName() {
-      return modelName;
-    }
-
-    /**
-     * Sets the {@code modelName} property.
-     * @param modelName the property value to set
-     */
-    public void setModelName(String modelName) {
-      this.modelName = modelName;
-    }
-
-    /**
-     * Gets the {@code accessType} property.
-     * @return property value
-     */
-    public AccessType getAccessType() {
-      return accessType;
-    }
-
-    /**
-     * Sets the {@code accessType} property.
-     * @param accessType the property value to set
-     */
-    public void setAccessType(AccessType accessType) {
-      this.accessType = accessType;
-    }
-
-    public void advance() {
-      advance(null, null);
-    }
-
-    public void advance(AbstractViewNode node) {
-      advance(node, node.getName());
-    }
-
-    public void advance(AbstractViewNode node, String modelName) {
-      update();
-      this.node = node;
-      this.modelName = modelName;
-    }
-
-    public void update() {
-      if (modelName == null) return;
-      if (modelType == null) {
-        throw new AssertionError("modelType is required");
-      }
-      try {
-        node.setAccessor(AccessorFactory.accessor(modelType, modelName,
-            accessType));
-      }
-      catch (Exception ex) {
-        throw new ViewTemplateException(ex);
-      }
-    }
-
   }
 
 }

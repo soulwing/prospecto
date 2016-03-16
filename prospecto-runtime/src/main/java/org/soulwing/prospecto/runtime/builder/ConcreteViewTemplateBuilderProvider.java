@@ -34,17 +34,28 @@ import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 public class ConcreteViewTemplateBuilderProvider
     implements ViewTemplateBuilderProvider {
 
+  private final ViewTemplateBuilderFactory builderFactory;
+
+  public ConcreteViewTemplateBuilderProvider() {
+    this(new ConcreteViewTemplateBuilderFactory());
+  }
+
+  ConcreteViewTemplateBuilderProvider(
+      ViewTemplateBuilderFactory builderFactory) {
+    this.builderFactory = builderFactory;
+  }
+
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException {
-    return new ConcreteViewTemplateBuilder(modelType,
+    return builderFactory.newBuilder(modelType,
         new RootObjectNode(name, namespace, modelType));
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) throws ViewTemplateException {
-    return new ConcreteViewTemplateBuilder(modelType,
+    return builderFactory.newBuilder(modelType,
         new RootArrayOfObjectNode(name, elementName, namespace,
             modelType));
   }

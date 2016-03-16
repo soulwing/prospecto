@@ -51,6 +51,10 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
     this.viewContextFactory = viewContextFactory;
   }
 
+  public AbstractViewNode getRoot() {
+    return root;
+  }
+
   @Override
   public View generateView(Object source, ViewContext context)
       throws ViewException {
