@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
+import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
@@ -31,69 +32,51 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 class ConcreteCursor implements Cursor {
 
   private final Class<?> modelType;
+  private final AccessorFactory accessorFactory;
 
   private AbstractViewNode node;
   private String modelName;
   private AccessType accessType = AccessType.PROPERTY;
 
   ConcreteCursor(Class<?> modelType) {
-    this.modelType = modelType;
+    this(modelType, new ReflectionAccessorFactory());
   }
 
-  ConcreteCursor(Cursor cursor, Class<?> modelType) {
-    this.modelType = modelType;
+  ConcreteCursor(ConcreteCursor cursor, Class<?> modelType) {
+    this(modelType, cursor.accessorFactory);
     this.accessType = cursor.getAccessType();
   }
 
-  /**
-   * Gets the {@code modelType} property.
-   * @return property value
-   */
-  @Override
-  public Class<?> getModelType() {
-    return modelType;
+  ConcreteCursor(Class<?> modelType, AccessorFactory accessorFactory) {
+    this.modelType = modelType;
+    this.accessorFactory = accessorFactory;
   }
 
-  /**
-   * Gets the {@code node} property.
-   * @return property value
-   */
   @Override
   public AbstractViewNode getNode() {
     return node;
   }
 
-  /**
-   * Gets the {@code modelName} property.
-   * @return property value
-   */
+  @Override
+  public Class<?> getModelType() {
+    return modelType;
+  }
+
   @Override
   public String getModelName() {
     return modelName;
   }
 
-  /**
-   * Sets the {@code modelName} property.
-   * @param modelName the property value to set
-   */
   @Override
   public void setModelName(String modelName) {
     this.modelName = modelName;
   }
 
-  /**
-   * Gets the {@code accessType} property.
-   * @return property value
-   */
   @Override
   public AccessType getAccessType() {
     return accessType;
   }
 
-  /**
-   * Sets the {@code accessType} property.
-   * @param accessType the property value to set
-   */
   @Override
   public void setAccessType(AccessType accessType) {
     this.accessType = accessType;
@@ -116,14 +99,10 @@ class ConcreteCursor implements Cursor {
     this.modelName = modelName;
   }
 
-  @Override
-  public void update() {
+  private void update() {
     if (modelName == null) return;
-    if (modelType == null) {
-      throw new AssertionError("modelType is required");
-    }
     try {
-      node.setAccessor(AccessorFactory.accessor(modelType, modelName,
+      node.setAccessor(accessorFactory.newAccessor(modelType, modelName,
           accessType));
     }
     catch (Exception ex) {

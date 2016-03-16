@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 16, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,61 +18,16 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.util.Collection;
-
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
- * Static factory methods that produce accessors.
+ * A factory that produces {@link Accessor} objects.
  *
  * @author Carl Harris
  */
-public class AccessorFactory {
+public interface AccessorFactory {
 
-  public static Accessor accessor(Class<?> declaringClass, String name,
-      AccessType accessType) throws NoSuchFieldException, NoSuchMethodException,
-      IntrospectionException {
-    switch (accessType) {
-      case FIELD:
-        return field(declaringClass, name);
-      case PROPERTY:
-        return property(declaringClass, name);
-      default:
-        throw new IllegalArgumentException("unrecognized access type: "
-            + accessType.name());
-    }
-  }
-
-  public static Accessor field(Class<?> declaringClass, String name)
-      throws NoSuchFieldException {
-    return new FieldAccessor(declaringClass.getDeclaredField(name));
-  }
-
-  public static Accessor property(Class<?> declaringClass, String name)
-      throws NoSuchMethodException, IntrospectionException {
-    for (final PropertyDescriptor descriptor :
-        Introspector.getBeanInfo(declaringClass).getPropertyDescriptors()) {
-      if (descriptor.getName().equals(name)) {
-        return new PropertyAccessor(descriptor.getReadMethod(),
-            descriptor.getWriteMethod());
-      }
-    }
-    throw new IllegalArgumentException(declaringClass.getName()
-        + " has no property named '" + name + "'");
-  }
-
-  public static MultiValuedAccessor multiValue(Accessor accessor) {
-    if (Collection.class.isAssignableFrom(accessor.getDataType())) {
-      return new CollectionAccessor(accessor);
-    }
-    if (Object[].class.isAssignableFrom(accessor.getDataType())) {
-      return new ArrayAccessor(accessor);
-    }
-    throw new IllegalArgumentException("expected an array or a collection");
-  }
+  Accessor newAccessor(Class<?> declaringClass, String name,
+      AccessType accessType) throws Exception;
 
 }
