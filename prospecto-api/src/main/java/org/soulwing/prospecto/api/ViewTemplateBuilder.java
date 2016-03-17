@@ -271,6 +271,17 @@ public interface ViewTemplateBuilder {
   /**
    * Adds a subtype discriminator at the cursor.
    * <p>
+   * When the view is evaluated a {@link DiscriminatorStrategy} will be
+   * retrieved from the view context to produce the discriminator name/value.
+   * If no strategy is configured a default implementation will be provided.
+   *
+   * @return this builder
+   */
+  ViewTemplateBuilder discriminator();
+
+  /**
+   * Adds a subtype discriminator at the cursor.
+   * <p>
    * A discriminator should generally be added as the first child of an object
    * or array-of-objects node that has multiple subtypes.
    * @param discriminatorClass discriminator strategy class

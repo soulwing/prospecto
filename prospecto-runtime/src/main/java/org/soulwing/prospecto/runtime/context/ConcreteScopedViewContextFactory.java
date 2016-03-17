@@ -18,7 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.context;
 
+import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
 
 /**
  * A {@link ScopedViewContextFactory} that produces {@link ConcreteViewContext}
@@ -31,7 +34,14 @@ public class ConcreteScopedViewContextFactory
 
   @Override
   public ScopedViewContext newContext(ViewContext source) {
-    return new ConcreteViewContext(source);
+    final ConcreteViewContext viewContext = new ConcreteViewContext(source);
+    final MutableScope scope = viewContext.newScope();
+    viewContext.getScopes().add(scope);
+
+    if (viewContext.getOptional(DiscriminatorStrategy.class) == null) {
+      scope.put(new SimpleClassNameDiscriminatorStrategy());
+    }
+    return viewContext;
   }
 
 }

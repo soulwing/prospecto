@@ -55,10 +55,17 @@ public class DiscriminatorNode extends ValueViewNode {
   @Override
   protected Object getModelValue(Object source, ScopedViewContext context)
       throws Exception {
-    final DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
-    assert strategy != null;
-    return strategy.toDiscriminator(getBase(), source.getClass());
+    return getStrategy(context).toDiscriminator(getBase(), source.getClass());
   }
+
+  private DiscriminatorStrategy getStrategy(ScopedViewContext context) {
+    DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
+    if (strategy == null) {
+      strategy = context.get(DiscriminatorStrategy.class);
+    }
+    return strategy;
+  }
+
 
   @Override
   protected View.Event.Type getEventType() {

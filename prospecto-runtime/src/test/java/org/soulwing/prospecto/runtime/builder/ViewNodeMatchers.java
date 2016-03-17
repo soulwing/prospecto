@@ -23,6 +23,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.instanceOf;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewNode;
 
@@ -65,6 +67,22 @@ public class ViewNodeMatchers {
         arrayViewNode(nodeClass, name, elementName, namespace),
         hasProperty("modelType", equalTo(modelType))
     );
+  }
+
+  public static <T extends ViewNode> Matcher<T> hasAttributeOfType(
+      final Class<T> nodeClass, final Class<?> attributeType) {
+    return new BaseMatcher<T>() {
+      @Override
+      public boolean matches(Object item) {
+        return ((ViewNode) item).get(attributeType) != null;
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("has an attribute of type "
+            + attributeType.getName());
+      }
+    };
   }
 
 }

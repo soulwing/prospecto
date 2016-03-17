@@ -206,6 +206,11 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder discriminator() {
+    return discriminator(null);
+  }
+
+  @Override
   public ViewTemplateBuilder discriminator(
       Class<? extends DiscriminatorStrategy> discriminatorClass,
       Object... configuration) {
@@ -234,7 +239,9 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
     DiscriminatorNode node = new DiscriminatorNode();
-    node.put(discriminator);
+    if (discriminator != null) {
+      node.put(discriminator);
+    }
     target.addChild(node);
     cursor.advance(node, null);
     node.setBase(cursor.getModelType());

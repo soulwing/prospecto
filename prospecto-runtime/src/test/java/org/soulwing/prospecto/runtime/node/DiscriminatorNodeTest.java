@@ -63,13 +63,29 @@ public class DiscriminatorNodeTest {
   @Before
   public void setUp() throws Exception {
     node.setBase(MockModel.class);
-    node.put(discriminatorStrategy);
   }
 
   @Test
-  public void testGetModelValue() throws Exception {
+  public void testGetModelValueUsingExplicitStrategy() throws Exception {
     context.checking(new Expectations() {
       {
+        oneOf(discriminatorStrategy).toDiscriminator(
+            with(MockModel.class), with(subtypeOf(MockModel.class)));
+        will(returnValue(DISCRIMINATOR));
+      }
+    });
+
+    node.put(discriminatorStrategy);
+    final Object modelValue = node.getModelValue(model, viewContext);
+    assertThat(modelValue, is(sameInstance((Object) DISCRIMINATOR)));
+  }
+
+  @Test
+  public void testGetModelValueUsingContextStrategy() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(viewContext).get(DiscriminatorStrategy.class);
+        will(returnValue(discriminatorStrategy));
         oneOf(discriminatorStrategy).toDiscriminator(
             with(MockModel.class), with(subtypeOf(MockModel.class)));
         will(returnValue(DISCRIMINATOR));

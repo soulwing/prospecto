@@ -19,11 +19,13 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.arrayViewNode;
+import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.hasAttributeOfType;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.viewNode;
 
 import java.util.HashMap;
@@ -370,6 +372,13 @@ public class ConcreteViewTemplateBuilderTest {
   }
 
   @Test
+  public void testDiscriminator() throws Exception {
+    context.checking(discriminatorExpectations(true));
+    assertThat(builder.discriminator(),
+        is(sameInstance((Object) builder)));
+  }
+
+  @Test
   public void testDiscriminatorStrategyClassArray() throws Exception {
     final Object[] args = new Object[0];
 
@@ -380,7 +389,7 @@ public class ConcreteViewTemplateBuilderTest {
       }
     });
 
-    context.checking(discriminatorExpectations());
+    context.checking(discriminatorExpectations(false));
     assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
         is(sameInstance((Object) builder)));
   }
@@ -396,24 +405,27 @@ public class ConcreteViewTemplateBuilderTest {
       }
     });
 
-    context.checking(discriminatorExpectations());
+    context.checking(discriminatorExpectations(false));
     assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
         is(sameInstance((Object) builder)));
   }
 
   @Test
   public void testDiscriminatorStrategy() throws Exception {
-    context.checking(discriminatorExpectations());
+    context.checking(discriminatorExpectations(false));
     assertThat(builder.discriminator(discriminatorStrategy),
         is(sameInstance((Object) builder)));
   }
 
-  private Expectations discriminatorExpectations()
+  private Expectations discriminatorExpectations(final boolean useDefault)
       throws Exception {
     return new Expectations() {
       {
         oneOf(target).addChild(
-            with(viewNode(DiscriminatorNode.class, null, null)));
+            with(allOf(
+                viewNode(DiscriminatorNode.class, null, null),
+                useDefault ? any(DiscriminatorNode.class) :
+                    hasAttributeOfType(DiscriminatorNode.class, DiscriminatorStrategy.class))));
         oneOf(cursor).getModelType();
         will(returnValue(MODEL_TYPE));
         oneOf(cursor).advance(
