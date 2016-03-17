@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -67,6 +68,27 @@ public class ConcreteViewContextTest {
 
   interface MockScope2Type {
   }
+
+  @Test
+  public void testAppendScope() throws Exception {
+    final Scope scope0 = context.addScope();
+    final Scope scope1 = context.addScope();
+    final List<Scope> scopes = context.getScopes();
+    assertThat(scopes.size(), is(equalTo(2)));
+    assertThat(scopes.get(0), is(sameInstance(scope0)));
+    assertThat(scopes.get(1), is(sameInstance(scope1)));
+  }
+
+  @Test
+  public void testInsertScope() throws Exception {
+    final Scope scope0 = context.addScope(0);
+    final Scope scope1 = context.addScope(0);
+    final List<Scope> scopes = context.getScopes();
+    assertThat(scopes.size(), is(equalTo(2)));
+    assertThat(scopes.get(0), is(sameInstance(scope1)));
+    assertThat(scopes.get(1), is(sameInstance(scope0)));
+  }
+
 
   @Test(expected = RuntimeException.class)
   public void testGetByTypeWhenNotFound() throws Exception {

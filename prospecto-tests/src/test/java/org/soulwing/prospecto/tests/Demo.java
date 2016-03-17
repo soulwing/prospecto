@@ -88,8 +88,7 @@ public class Demo {
      * thread.
      */
     final ViewContext context = ViewContextProducer.newContext();
-    MutableScope scope = context.newScope();
-    context.getScopes().add(scope);
+    MutableScope scope = context.addScope();
 
     scope.put(new MockUrlResolverProvider().getResolver());
 

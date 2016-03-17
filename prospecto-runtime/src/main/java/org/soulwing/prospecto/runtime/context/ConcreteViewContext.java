@@ -96,6 +96,20 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
+  public MutableScope addScope() {
+    MutableScope scope = newScope();
+    scopes.add(scope);
+    return scope;
+  }
+
+  @Override
+  public MutableScope addScope(int index) {
+    MutableScope scope = newScope();
+    scopes.add(index, scope);
+    return scope;
+  }
+
+  @Override
   public List<Scope> getScopes() {
     return scopes;
   }

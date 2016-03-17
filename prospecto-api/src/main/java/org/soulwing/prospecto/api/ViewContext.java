@@ -51,6 +51,21 @@ public interface ViewContext {
   MutableScope newScope();
 
   /**
+   * Creates a new mutable scope appending it to the list of scopes on this
+   * context.
+   * @return new mutable scope instance
+   */
+  MutableScope addScope();
+
+  /**
+   * Creates a new mutable scope inserting in the list of scopes on this
+   * context at the specified index.
+   * *
+   * @return new mutable scope instance
+   */
+  MutableScope addScope(int index);
+
+  /**
    * Gets the sequence of scopes that will be consulted when a requested
    * context object is not found in any of the internal scopes managed by the
    * context itself. The scopes are consulted in order until a requested
