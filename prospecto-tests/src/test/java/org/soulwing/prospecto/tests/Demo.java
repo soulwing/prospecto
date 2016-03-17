@@ -89,8 +89,9 @@ public class Demo {
      */
     final ViewContext context = ViewContextProducer.newContext();
     MutableScope scope = context.newScope();
-    scope.put(new MockUrlResolverProvider().getResolver());
     context.getScopes().add(scope);
+
+    scope.put(new MockUrlResolverProvider().getResolver());
 
     context.getValueTypeConverters().add(
       new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
