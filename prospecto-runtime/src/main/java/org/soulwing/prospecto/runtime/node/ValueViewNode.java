@@ -39,19 +39,36 @@ abstract class ValueViewNode extends AbstractViewNode {
    * @param namespace namespace for {@code name}
    */
   protected ValueViewNode(String name, String namespace) {
-    super(name, namespace, null);
+    this(name, namespace, null);
   }
+
+  /**
+   * Constructs a new instance
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType model type associated with this node
+   */
+  protected ValueViewNode(String name, String namespace, Class<?> modelType) {
+    super(name, namespace, modelType);
+  }
+
 
   @Override
   protected final List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
 
+    final Object model = getModelValue(source, context);
     final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
-        getModelValue(source, context), context);
+        model, context);
 
-    return Collections.singletonList(newEvent(getEventType(), getName(),
+    return Collections.singletonList(newEvent(getEventType(),
+        getEventName(model, context),
         toViewValue(ViewNodeValueHandlerSupport.extractedValue(valueEvent),
         context)));
+  }
+
+  protected String getEventName(Object model, ScopedViewContext context) {
+    return getName();
   }
 
   protected View.Event.Type getEventType() {

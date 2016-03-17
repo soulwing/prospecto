@@ -21,6 +21,7 @@ package org.soulwing.prospecto.api;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 
 /**
  * A builder for a {@link ViewTemplate}.
@@ -233,6 +234,81 @@ public interface ViewTemplateBuilder {
       String namespace, ViewTemplate template);
 
   /**
+   * Adds an envelope node at the cursor.
+   * <p>
+   * An envelope inserts an extra node of type object in the view, but the
+   * source model for properties of the object is the parent node.
+   * @param name name for the node in the view
+   * @return template builder for new envelope
+   */
+  ViewTemplateBuilder envelope(String name);
+
+  /**
+   * Adds an envelope node at the cursor.
+   * <p>
+   * An envelope inserts an extra node of type object in the view, but the
+   * source model for properties of the object is the parent node.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}; used in only some view
+   *    types (e.g. XML)
+   * @return template builder for new envelope
+   */
+  ViewTemplateBuilder envelope(String name, String namespace);
+
+  /**
+   * Introduces a subtype of the type associated with the parent object or
+   * array-of-objects node.
+   * <p>
+   * This allows properties of a subtype to be included in the object or
+   * array-of-objects node being described.
+   *
+   * @param subtype class which must be a descendant of the model type specified
+   *   for the parent object or array-of-objects node
+   * @return template builder for the new subtype
+   */
+  ViewTemplateBuilder subtype(Class<?> subtype);
+
+  /**
+   * Adds a subtype discriminator at the cursor.
+   * <p>
+   * A discriminator should generally be added as the first child of an object
+   * or array-of-objects node that has multiple subtypes.
+   * @param discriminatorClass discriminator strategy class
+   * @param configuration name-value pairs that will be used to configure the
+   *   strategy instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return this builder
+   */
+  ViewTemplateBuilder discriminator(
+      Class<? extends DiscriminatorStrategy> discriminatorClass,
+      Object... configuration);
+
+  /**
+   * Adds a subtype discriminator at the cursor.
+   * <p>
+   * A discriminator should generally be added as the first child of an object
+   * or array-of-objects node that has multiple subtypes.
+   * @param discriminatorClass discriminator strategy class
+   * @param configuration name-value pairs that will be used to configure the
+   *   strategy instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return this builder
+   */
+  ViewTemplateBuilder discriminator(
+      Class<? extends DiscriminatorStrategy> discriminatorClass,
+      Map configuration);
+
+  /**
+   * Adds a subtype discriminator at the cursor.
+   * <p>
+   * A discriminator should generally be added as the first child of an object
+   * or array-of-objects node that has multiple subtypes.
+   * @param discriminator discriminator strategy
+   * @return this builder
+   */
+  ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator);
+
+  /**
    * Adds a URL node at the cursor.
    * <p>
    * When generating a view from a template that includes a URL node, the
@@ -262,34 +338,12 @@ public interface ViewTemplateBuilder {
    * {@link ViewContext} must contain a {@link UrlResolver}.
    *
    * @param name name for the node in the view
-   * @param namespace namespace for {@code name}; used in only some view 
+   * @param namespace namespace for {@code name}; used in only some view
    *    types (e.g. XML)
    * @return this builder
    * @see UrlResolver
    */
   ViewTemplateBuilder url(String name, String namespace);
-
-  /**
-   * Adds an envelope node at the cursor.
-   * <p>
-   * An envelope inserts an extra node of type object in the view, but the
-   * source model for properties of the object is the parent node.
-   * @param name name for the node in the view
-   * @return this builder
-   */
-  ViewTemplateBuilder envelope(String name);
-
-  /**
-   * Adds an envelope node at the cursor.
-   * <p>
-   * An envelope inserts an extra node of type object in the view, but the
-   * source model for properties of the object is the parent node.
-   * @param name name for the node in the view
-   * @param namespace namespace for {@code name}; used in only some view
-   *    types (e.g. XML)
-   * @return this builder
-   */
-  ViewTemplateBuilder envelope(String name, String namespace);
 
   /**
    * Specifies the name of the model property that is the source for the node

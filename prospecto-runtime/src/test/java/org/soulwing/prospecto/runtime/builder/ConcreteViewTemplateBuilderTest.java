@@ -41,6 +41,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
@@ -48,8 +49,10 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.DiscriminatorNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
@@ -67,6 +70,10 @@ public class ConcreteViewTemplateBuilderTest {
   private static final Class<?> MODEL_TYPE = Object.class;
   private static final String MODEL_NAME = "modelName";
   private static final AccessType ACCESS_TYPE = AccessType.PROPERTY;
+
+  private static final Class<DiscriminatorStrategy> DISCRIMINATOR_CLASS =
+      DiscriminatorStrategy.class;
+
   private static final Class<ValueTypeConverter> CONVERTER_CLASS =
       ValueTypeConverter.class;
 
@@ -94,6 +101,9 @@ public class ConcreteViewTemplateBuilderTest {
 
   @Mock
   private ValueTypeConverter<?> converter;
+
+  @Mock
+  private DiscriminatorStrategy discriminatorStrategy;
 
   @Mock
   private ViewTemplateBuilder childBuilder;
@@ -298,6 +308,36 @@ public class ConcreteViewTemplateBuilderTest {
   }
 
   @Test
+  public void testSubtype() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getModelType();
+        will(returnValue(MODEL_TYPE));
+        oneOf(target).addChild(
+            with(viewNode(SubtypeNode.class, null, null, MODEL_TYPE)));
+        oneOf(cursor).copy(MODEL_TYPE);
+        will(returnValue(cursor));
+        oneOf(builderFactory).newBuilder(with(builder), with(cursor),
+            with(viewNode(SubtypeNode.class, null, null, MODEL_TYPE)));
+        will(returnValue(childBuilder));
+      }
+    });
+    assertThat(builder.subtype(MODEL_TYPE), is(sameInstance(childBuilder)));
+  }
+
+  @Test(expected =  ViewTemplateException.class)
+  public void testSubtypeWhenNotSubtype() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getModelType();
+        will(returnValue(String.class));
+      }
+    });
+
+    builder.subtype(Object.class);
+  }
+
+  @Test
   public void testEnvelopeName() throws Exception {
     context.checking(envelopeExpectations(NAME, null));
     assertThat(builder.envelope(NAME), is(sameInstance(childBuilder)));
@@ -325,6 +365,61 @@ public class ConcreteViewTemplateBuilderTest {
         oneOf(builderFactory).newBuilder(with(builder), with(cursor),
             with(viewNode(EnvelopeNode.class, name, namespace)));
         will(returnValue(childBuilder));
+      }
+    };
+  }
+
+  @Test
+  public void testDiscriminatorStrategyClassArray() throws Exception {
+    final Object[] args = new Object[0];
+
+    context.checking(new Expectations() {
+      {
+        oneOf(beanFactory).construct(DISCRIMINATOR_CLASS, args);
+        will(returnValue(discriminatorStrategy));
+      }
+    });
+
+    context.checking(discriminatorExpectations(MODEL_TYPE));
+    assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
+        is(sameInstance((Object) builder)));
+  }
+
+  @Test
+  public void testDiscriminatorStrategyClassMap() throws Exception {
+    final Map args = new HashMap();
+
+    context.checking(new Expectations() {
+      {
+        oneOf(beanFactory).construct(DISCRIMINATOR_CLASS, args);
+        will(returnValue(discriminatorStrategy));
+      }
+    });
+
+    context.checking(discriminatorExpectations(MODEL_TYPE));
+    assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
+        is(sameInstance((Object) builder)));
+  }
+
+  @Test
+  public void testDiscriminatorStrategy() throws Exception {
+    context.checking(discriminatorExpectations(MODEL_TYPE));
+    assertThat(builder.discriminator(discriminatorStrategy),
+        is(sameInstance((Object) builder)));
+  }
+
+  private Expectations discriminatorExpectations(final Class<?> modelType)
+      throws Exception {
+    return new Expectations() {
+      {
+        oneOf(target).addChild(
+            with(viewNode(DiscriminatorNode.class, null, null, modelType)));
+        oneOf(cursor).getModelType();
+        will(returnValue(MODEL_TYPE));
+        oneOf(cursor).advance(
+            with(viewNode(DiscriminatorNode.class, null, null, modelType)),
+            with(nullValue(String.class)));
+
       }
     };
   }

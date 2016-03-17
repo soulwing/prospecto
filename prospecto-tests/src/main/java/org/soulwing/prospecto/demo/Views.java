@@ -23,6 +23,7 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
+import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
 
 /**
  * Demo views.
@@ -67,9 +68,23 @@ public interface Views {
           .arrayOfValues("approvers", "approver")
           .end()
         .value("vendor")
-            .converter(PropertyExtractingValueTypeConverter.class,
-                "modelType", Vendor.class,
-                "propertyName", "name")
+          .converter(PropertyExtractingValueTypeConverter.class,
+              "modelType", Vendor.class,
+              "propertyName", "name")
+        .object("purchaser", Purchaser.class)
+          .discriminator(SimpleClassNameDiscriminatorStrategy.class,
+              "suffix", "Purchaser",
+              "decapitalize", true)
+          .value("id")
+          .subtype(DepartmentPurchaser.class)
+            .value("name")
+            .value("departmentId")
+            .end()
+          .subtype(PersonPurchaser.class)
+            .value("surname")
+            .value("givenName")
+            .end()
+          .end()
         .arrayOfObjects("items", "item", PurchaseItem.class)
           .value("description")
           .value("quantity")

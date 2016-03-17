@@ -31,6 +31,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
+import org.soulwing.prospecto.demo.DepartmentPurchaser;
 import org.soulwing.prospecto.demo.MockUrlResolverProvider;
 import org.soulwing.prospecto.demo.PurchaseItem;
 import org.soulwing.prospecto.demo.PurchaseOrder;
@@ -46,6 +47,10 @@ public class Demo {
 
   @Test
   public void test() throws Exception {
+
+    final DepartmentPurchaser purchaser = new DepartmentPurchaser();
+    purchaser.setId(5L);
+    purchaser.setDepartmentId("072500");
 
     final Vendor vendor = new Vendor();
     vendor.setId(1L);
@@ -69,6 +74,7 @@ public class Demo {
     order.setFob(PurchaseOrder.FreeOnBoard.ORIGIN);
     order.setDueDate(new Date());
     order.setVendor(vendor);
+    order.setPurchaser(purchaser);
     order.getItems().add(item1);
     order.getItems().add(item2);
     order.getApprovers().add("Machelle Hall");

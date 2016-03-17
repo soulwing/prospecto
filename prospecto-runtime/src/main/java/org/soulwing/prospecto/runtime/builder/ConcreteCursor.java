@@ -44,6 +44,7 @@ class ConcreteCursor implements Cursor {
 
   ConcreteCursor(ConcreteCursor cursor, Class<?> modelType) {
     this(modelType, cursor.accessorFactory);
+    this.node = cursor.node;
     this.accessType = cursor.getAccessType();
   }
 

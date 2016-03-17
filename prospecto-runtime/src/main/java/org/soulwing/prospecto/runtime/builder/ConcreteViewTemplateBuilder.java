@@ -25,6 +25,7 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
@@ -32,8 +33,10 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.DiscriminatorNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
 
@@ -191,6 +194,53 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder subtype(Class<?> subtype) {
+    final Class<?> base = cursor.getModelType();
+    if (!base.isAssignableFrom(subtype)) {
+      throw new ViewTemplateException(subtype + " is not a subtype of "
+          + base);
+    }
+    SubtypeNode node = new SubtypeNode(subtype);
+    target.addChild(node);
+    return builderFactory.newBuilder(this, cursor.copy(subtype), node);
+  }
+
+  @Override
+  public ViewTemplateBuilder discriminator(
+      Class<? extends DiscriminatorStrategy> discriminatorClass,
+      Object... configuration) {
+    try {
+      return discriminator(beanFactory.construct(discriminatorClass,
+          configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder discriminator(
+      Class<? extends DiscriminatorStrategy> discriminatorClass,
+      Map configuration) {
+    try {
+      return discriminator(beanFactory.construct(discriminatorClass,
+          configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
+    DiscriminatorNode node = new DiscriminatorNode(cursor.getModelType());
+    node.put(discriminator);
+    target.addChild(node);
+    cursor.advance(node, null);
+    return this;
+  }
+
+  @Override
   public ViewTemplateBuilder url() {
     return url(UrlNode.DEFAULT_NAME, null);
   }
@@ -225,9 +275,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
       Class<? extends ValueTypeConverter> converterClass,
       Object... configuration) {
     try {
-      final ValueTypeConverter<?> converter = beanFactory.construct(
-          converterClass, configuration);
-      return converter(converter);
+      return converter(beanFactory.construct(converterClass, configuration));
     }
     catch (Exception ex) {
       throw new ViewTemplateException(ex);
@@ -238,9 +286,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder converter(
       Class<? extends ValueTypeConverter> converterClass, Map configuration) {
     try {
-      final ValueTypeConverter<?> converter = beanFactory.construct(
-          converterClass, configuration);
-      return converter(converter);
+      return converter(beanFactory.construct(converterClass, configuration));
     }
     catch (Exception ex) {
       throw new ViewTemplateException(ex);

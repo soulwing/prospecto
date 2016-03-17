@@ -81,6 +81,9 @@ abstract class AbstractViewWriter implements ViewWriter {
           case VALUE:
             onValue(event);
             break;
+          case DISCRIMINATOR:
+            onDiscriminator(event);
+            break;
           case URL:
             onUrl(event);
             break;
@@ -161,6 +164,14 @@ abstract class AbstractViewWriter implements ViewWriter {
    * @throws Exception
    */
   protected abstract void onUrl(View.Event event) throws Exception;
+
+  /**
+   * Notifies the recipient that the next {@code event} is of type
+   * {@link View.Event.Type#DISCRIMINATOR}.
+   * @param event the subject event
+   * @throws Exception
+   */
+  protected abstract void onDiscriminator(View.Event event) throws Exception;
 
   /**
    * Gets the source view for this writer.

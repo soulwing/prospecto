@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.api;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -54,7 +53,9 @@ public interface View extends Iterable<View.Event> {
      * type of an event of type {@link #URL} is a String.
      */
     enum Type {
-      VALUE, URL, BEGIN_OBJECT, END_OBJECT, BEGIN_ARRAY, END_ARRAY
+      VALUE, URL, DISCRIMINATOR,
+      BEGIN_OBJECT, END_OBJECT,
+      BEGIN_ARRAY, END_ARRAY
     }
 
     /**

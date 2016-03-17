@@ -43,6 +43,8 @@ public class PurchaseOrder {
 
   private Vendor vendor;
 
+  private Purchaser purchaser;
+
   private String terms;
 
   private FreeOnBoard fob;
@@ -113,6 +115,22 @@ public class PurchaseOrder {
    */
   public void setVendor(Vendor vendor) {
     this.vendor = vendor;
+  }
+
+  /**
+   * Gets the {@code purchaser} property.
+   * @return property value
+   */
+  public Purchaser getPurchaser() {
+    return purchaser;
+  }
+
+  /**
+   * Sets the {@code purchaser} property.
+   * @param purchaser the property value to set
+   */
+  public void setPurchaser(Purchaser purchaser) {
+    this.purchaser = purchaser;
   }
 
   /**

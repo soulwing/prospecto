@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -149,6 +150,11 @@ class XmlViewWriter extends AbstractViewWriter {
     writeAttribute(event);
   }
 
+  @Override
+  protected void onDiscriminator(View.Event event) throws Exception {
+    writeDiscriminator(event);
+  }
+
   private void writeStartElement(View.Event event)
       throws XMLStreamException {
     if (firstEvent) {
@@ -169,10 +175,12 @@ class XmlViewWriter extends AbstractViewWriter {
 
     writer.setDefaultNamespace(namespaceStack.peek());
     writer.setPrefix("v", DEFAULT_NAMESPACE);
+    writer.setPrefix("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     writer.writeStartDocument(encoding, XML_VERSION);
     writeStartElement(event.getName(), namespaceStack.peek(), DEFAULT_VIEW_NAME);
     writer.writeDefaultNamespace(namespaceStack.peek());
     writer.writeNamespace("v", DEFAULT_NAMESPACE);
+    writer.writeNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     for (Map.Entry<String, Object> entry : getView().getEnvelope()) {
       writer.writeAttribute(writer.getNamespaceContext().getNamespaceURI("v"),
           entry.getKey(), entry.getValue().toString());
@@ -237,6 +245,11 @@ class XmlViewWriter extends AbstractViewWriter {
   private void writeAttribute(View.Event event) throws XMLStreamException {
     writeAttributeString(event.getName(),
         event.getNamespace() != null ? event.getNamespace() : DEFAULT_NAMESPACE,
+        event.getValue().toString());
+  }
+
+  private void writeDiscriminator(View.Event event) throws XMLStreamException {
+    writeAttributeString("type", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI,
         event.getValue().toString());
   }
 
