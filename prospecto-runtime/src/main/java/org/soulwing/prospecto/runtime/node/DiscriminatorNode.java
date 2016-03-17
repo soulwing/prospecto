@@ -30,8 +30,26 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  */
 public class DiscriminatorNode extends ValueViewNode {
 
-  public DiscriminatorNode(Class<?> base) {
-    super(null, null, base);
+  private Class<?> base;
+
+  public DiscriminatorNode() {
+    super(null, null);
+  }
+
+  /**
+   * Gets the {@code base} property.
+   * @return property value
+   */
+  public Class<?> getBase() {
+    return base;
+  }
+
+  /**
+   * Sets the {@code base} property.
+   * @param base the property value to set
+   */
+  public void setBase(Class<?> base) {
+    this.base = base;
   }
 
   @Override
@@ -39,7 +57,7 @@ public class DiscriminatorNode extends ValueViewNode {
       throws Exception {
     final DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
     assert strategy != null;
-    return strategy.toDiscriminator(getModelType(), source.getClass());
+    return strategy.toDiscriminator(getBase(), source.getClass());
   }
 
   @Override

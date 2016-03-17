@@ -39,19 +39,8 @@ abstract class ValueViewNode extends AbstractViewNode {
    * @param namespace namespace for {@code name}
    */
   protected ValueViewNode(String name, String namespace) {
-    this(name, namespace, null);
+    super(name, namespace, null);
   }
-
-  /**
-   * Constructs a new instance
-   * @param name node name
-   * @param namespace namespace for {@code name}
-   * @param modelType model type associated with this node
-   */
-  protected ValueViewNode(String name, String namespace, Class<?> modelType) {
-    super(name, namespace, modelType);
-  }
-
 
   @Override
   protected final List<View.Event> onEvaluate(Object source,

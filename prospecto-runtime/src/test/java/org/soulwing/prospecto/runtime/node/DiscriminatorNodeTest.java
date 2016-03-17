@@ -58,10 +58,11 @@ public class DiscriminatorNodeTest {
   @Mock
   private MockSubModel model;
 
-  private DiscriminatorNode node = new DiscriminatorNode(MockModel.class);
+  private DiscriminatorNode node = new DiscriminatorNode();
 
   @Before
   public void setUp() throws Exception {
+    node.setBase(MockModel.class);
     node.put(discriminatorStrategy);
   }
 

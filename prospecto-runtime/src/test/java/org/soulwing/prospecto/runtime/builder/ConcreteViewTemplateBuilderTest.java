@@ -380,7 +380,7 @@ public class ConcreteViewTemplateBuilderTest {
       }
     });
 
-    context.checking(discriminatorExpectations(MODEL_TYPE));
+    context.checking(discriminatorExpectations());
     assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
         is(sameInstance((Object) builder)));
   }
@@ -396,28 +396,28 @@ public class ConcreteViewTemplateBuilderTest {
       }
     });
 
-    context.checking(discriminatorExpectations(MODEL_TYPE));
+    context.checking(discriminatorExpectations());
     assertThat(builder.discriminator(DISCRIMINATOR_CLASS, args),
         is(sameInstance((Object) builder)));
   }
 
   @Test
   public void testDiscriminatorStrategy() throws Exception {
-    context.checking(discriminatorExpectations(MODEL_TYPE));
+    context.checking(discriminatorExpectations());
     assertThat(builder.discriminator(discriminatorStrategy),
         is(sameInstance((Object) builder)));
   }
 
-  private Expectations discriminatorExpectations(final Class<?> modelType)
+  private Expectations discriminatorExpectations()
       throws Exception {
     return new Expectations() {
       {
         oneOf(target).addChild(
-            with(viewNode(DiscriminatorNode.class, null, null, modelType)));
+            with(viewNode(DiscriminatorNode.class, null, null)));
         oneOf(cursor).getModelType();
         will(returnValue(MODEL_TYPE));
         oneOf(cursor).advance(
-            with(viewNode(DiscriminatorNode.class, null, null, modelType)),
+            with(viewNode(DiscriminatorNode.class, null, null)),
             with(nullValue(String.class)));
 
       }

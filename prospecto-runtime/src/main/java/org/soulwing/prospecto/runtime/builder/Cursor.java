@@ -91,9 +91,10 @@ interface Cursor {
 
   /**
    * Creates a copy of this cursor with a different model type.
-   * @param modelType the new model type
    * @return model type
+   * @param nextModelType the model type that will be in effect when the
+   *    cursor is next advanced
    */
-  Cursor copy(Class<?> modelType);
+  Cursor copy(Class<?> nextModelType);
 
 }

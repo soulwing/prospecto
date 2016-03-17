@@ -31,9 +31,10 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
  */
 class ConcreteCursor implements Cursor {
 
-  private final Class<?> modelType;
   private final AccessorFactory accessorFactory;
 
+  private Class<?> modelType;
+  private Class<?> nextModelType;
   private AbstractViewNode node;
   private String modelName;
   private AccessType accessType = AccessType.PROPERTY;
@@ -42,15 +43,17 @@ class ConcreteCursor implements Cursor {
     this(modelType, new ReflectionAccessorFactory());
   }
 
-  ConcreteCursor(ConcreteCursor cursor, Class<?> modelType) {
-    this(modelType, cursor.accessorFactory);
+  ConcreteCursor(ConcreteCursor cursor, Class<?> nextModelType) {
+    this(cursor.modelType, cursor.accessorFactory);
+    this.accessType = cursor.accessType;
     this.node = cursor.node;
-    this.accessType = cursor.getAccessType();
+    this.nextModelType = nextModelType;
   }
 
   ConcreteCursor(Class<?> modelType, AccessorFactory accessorFactory) {
     this.modelType = modelType;
     this.accessorFactory = accessorFactory;
+    this.nextModelType = modelType;
   }
 
   @Override
@@ -98,6 +101,7 @@ class ConcreteCursor implements Cursor {
     update();
     this.node = node;
     this.modelName = modelName;
+    this.modelType = nextModelType;
   }
 
   private void update() {
@@ -112,8 +116,8 @@ class ConcreteCursor implements Cursor {
   }
 
   @Override
-  public Cursor copy(Class<?> modelType) {
-    return new ConcreteCursor(this, modelType);
+  public Cursor copy(Class<?> nextModelType) {
+    return new ConcreteCursor(this, nextModelType);
   }
 
 }
