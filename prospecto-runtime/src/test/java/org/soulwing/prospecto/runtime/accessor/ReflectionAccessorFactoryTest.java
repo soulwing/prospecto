@@ -110,6 +110,8 @@ public class ReflectionAccessorFactoryTest {
       return PUBLIC_METHOD_VALUE;
     }
 
+    public void setPublicMethod(Object value) { }
+
   }
 
 }
