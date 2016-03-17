@@ -49,7 +49,6 @@ public interface Views {
               "format", DateTypeConverter.Format.ISO8601_DATE)
         .value("total")
           .source("itemTotal")
-          .accessType(AccessType.PROPERTY)
         .object("vendor", VENDOR_SUMMARY_TEMPLATE)
         .end()
       .build();
@@ -68,7 +67,6 @@ public interface Views {
           .arrayOfValues("approvers", "approver")
           .end()
         .value("vendor")
-          .source("vendor")
           .converter(PropertyExtractingValueTypeConverter.class,
               "modelType", Vendor.class,
               "propertyName", "name")
