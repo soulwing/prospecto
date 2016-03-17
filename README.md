@@ -1,6 +1,8 @@
 Prospecto
 =========
 
+[![Build Status](https://travis-ci.org/soulwing/prospecto.svg?branch=master)](https://travis-ci.org/soulwing/prospecto)
+
 Prospecto is a toolkit for producing client views of a domain model in an
 Java application that provides a RESTful web API.
 
