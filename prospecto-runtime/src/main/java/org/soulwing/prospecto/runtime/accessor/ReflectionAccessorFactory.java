@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 
 import org.soulwing.prospecto.api.AccessType;
 
@@ -55,8 +56,19 @@ public class ReflectionAccessorFactory implements AccessorFactory {
     for (final PropertyDescriptor descriptor :
         Introspector.getBeanInfo(declaringClass).getPropertyDescriptors()) {
       if (descriptor.getName().equals(name)) {
-        return new PropertyAccessor(descriptor.getReadMethod(),
-            descriptor.getWriteMethod());
+        Method readMethod = descriptor.getReadMethod();
+        if (readMethod == null) {
+          throw new NoSuchMethodException(declaringClass.getName() +
+              " does not have a read method for property '" + name + "'");
+        }
+
+        Method writeMethod = descriptor.getWriteMethod();
+        if (writeMethod == null) {
+          throw new NoSuchMethodException(declaringClass.getName() +
+              " does not have a write method for property '" + name + "'");
+        }
+
+        return new PropertyAccessor(readMethod, writeMethod);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()
