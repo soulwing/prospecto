@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 17, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,16 +18,16 @@
  */
 package org.soulwing.prospecto.spi;
 
-import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.ViewReaderFactory;
 
 /**
- * A provider for a {@link ViewWriterFactory}.
+ * A provider for a {@link ViewReaderFactory}.
  * <p>
  * A provider supports a single textual representation format.
  *
  * @author Carl Harris
  */
-public interface ViewWriterFactoryProvider {
+public interface ViewReaderFactoryProvider {
 
   /**
    * Gets the provider name (e.g. 'XML', 'JSON').
@@ -36,10 +36,10 @@ public interface ViewWriterFactoryProvider {
   String getName();
 
   /**
-   * Creates a new factory that will produce writers for the textual
+   * Creates a new factory that will produce readers for the textual
    * representation supported by this provider.
    * @return factory instance
    */
-  ViewWriterFactory newFactory();
+  ViewReaderFactory newFactory();
 
 }

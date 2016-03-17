@@ -62,13 +62,13 @@ public class ReflectionAccessorFactory implements AccessorFactory {
               " does not have a read method for property '" + name + "'");
         }
 
-        Method writeMethod = descriptor.getWriteMethod();
-        if (writeMethod == null) {
-          throw new NoSuchMethodException(declaringClass.getName() +
-              " does not have a write method for property '" + name + "'");
-        }
+//        Method writeMethod = descriptor.getWriteMethod();
+//        if (writeMethod == null) {
+//          throw new NoSuchMethodException(declaringClass.getName() +
+//              " does not have a write method for property '" + name + "'");
+//        }
 
-        return new PropertyAccessor(readMethod, writeMethod);
+        return new PropertyAccessor(readMethod, null);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()

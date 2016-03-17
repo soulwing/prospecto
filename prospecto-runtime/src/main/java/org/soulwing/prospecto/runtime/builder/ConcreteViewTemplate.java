@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
@@ -65,6 +66,11 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
     catch (Exception ex) {
       throw new ViewException(ex);
     }
+  }
+
+  @Override
+  public ModelEditor generateEditor(View view, ViewContext context) {
+    return null;
   }
 
   @Override

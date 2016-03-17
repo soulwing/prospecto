@@ -50,4 +50,6 @@ public interface ViewTemplate {
    */
   View generateView(Object model, ViewContext context);
 
+  ModelEditor generateEditor(View view, ViewContext context);
+
 }
