@@ -37,15 +37,8 @@ public class UrlResolverProducer {
       new Singleton<UrlResolverProducer>() {
         @Override
         protected UrlResolverProducer newInstance() {
-          final ServiceLoader<UrlResolverProvider> providers =
-              ServiceLoader.load(UrlResolverProvider.class);
-          final Iterator<UrlResolverProvider> i = providers.iterator();
-          if (!i.hasNext()) {
-            throw new NoSuchProviderException(
-                UrlResolverProvider.class.getSimpleName());
-          }
-
-          return new UrlResolverProducer(i.next());
+          return new UrlResolverProducer(ServiceLocator.findService(
+              UrlResolverProvider.class));
         }
       };
 
@@ -57,7 +50,7 @@ public class UrlResolverProducer {
 
   /**
    * Initializes the URL resolver provider.
-   * @param properties
+   * @param properties configuration properties for the resolver
    */
   public static void init(Map<String, Object> properties) {
     singleton.getInstance().provider.init(properties);

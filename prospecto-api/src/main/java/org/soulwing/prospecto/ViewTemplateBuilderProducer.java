@@ -37,15 +37,8 @@ public class ViewTemplateBuilderProducer {
       new Singleton<ViewTemplateBuilderProducer>() {
         @Override
         protected ViewTemplateBuilderProducer newInstance() {
-          final ServiceLoader<ViewTemplateBuilderProvider> providers =
-              ServiceLoader.load(ViewTemplateBuilderProvider.class);
-          final Iterator<ViewTemplateBuilderProvider> i = providers.iterator();
-          if (!i.hasNext()) {
-            throw new NoSuchProviderException(
-                ViewTemplateBuilderProvider.class.getSimpleName());
-          }
-
-          return new ViewTemplateBuilderProducer(i.next());
+          return new ViewTemplateBuilderProducer(ServiceLocator.findService(
+              ViewTemplateBuilderProvider.class));
         }
       };
 

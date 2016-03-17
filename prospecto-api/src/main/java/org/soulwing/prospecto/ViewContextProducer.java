@@ -39,15 +39,8 @@ public class ViewContextProducer {
       new Singleton<ViewContextProducer>() {
         @Override
         protected ViewContextProducer newInstance() {
-          final ServiceLoader<ViewContextProvider> providers =
-              ServiceLoader.load(ViewContextProvider.class);
-          final Iterator<ViewContextProvider> i = providers.iterator();
-          if (!i.hasNext()) {
-            throw new NoSuchProviderException(
-                ViewContextProvider.class.getSimpleName());
-          }
-
-          return new ViewContextProducer(i.next());
+          return new ViewContextProducer(ServiceLocator.findService(
+              ViewContextProvider.class));
         }
       };
 

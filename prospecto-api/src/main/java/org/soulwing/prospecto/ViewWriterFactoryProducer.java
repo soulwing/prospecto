@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto;
 
-import java.util.ServiceLoader;
-
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
 
@@ -38,25 +36,28 @@ public class ViewWriterFactoryProducer {
         }
       };
 
-  private final ServiceLoader<ViewWriterFactoryProvider> providers =
-      ServiceLoader.load(ViewWriterFactoryProvider.class);
-
   public static ViewWriterFactory getFactory(String providerName)
       throws NoSuchProviderException {
-    return singleton.getInstance().findFactory(providerName);
+    return singleton.getInstance().newFactory(providerName);
   }
 
   private ViewWriterFactoryProducer() {
   }
 
-  private ViewWriterFactory findFactory(String providerName)
+  private ViewWriterFactory newFactory(String providerName)
       throws NoSuchProviderException {
-    for (ViewWriterFactoryProvider provider : providers) {
-      if (provider.getName().equals(providerName)) {
-        return provider.newFactory();
-      }
-    }
-    throw new NoSuchProviderException(providerName);
+    return findProvider(providerName).newFactory();
+  }
+
+  private ViewWriterFactoryProvider findProvider(final String providerName)
+      throws NoSuchProviderException {
+    return ServiceLocator.findService(ViewWriterFactoryProvider.class,
+        new ServiceLocator.Strategy<ViewWriterFactoryProvider>() {
+          @Override
+          public boolean isSatisfiedBy(ViewWriterFactoryProvider service) {
+            return service.getName().equals(providerName);
+          }
+        });
   }
 
 }
