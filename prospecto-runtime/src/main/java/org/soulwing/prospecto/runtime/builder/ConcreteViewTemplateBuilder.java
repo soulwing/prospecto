@@ -333,6 +333,10 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplate build() {
+    if (parent != null) {
+      throw new ViewTemplateException(
+        "Build invoked on non-root builder; an `end` must be missing somewhere");
+    }
     cursor.advance();
     return new ConcreteViewTemplate(target);
   }

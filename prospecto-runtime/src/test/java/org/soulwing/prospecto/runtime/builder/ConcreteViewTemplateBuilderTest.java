@@ -615,6 +615,16 @@ public class ConcreteViewTemplateBuilderTest {
     assertThat(builder.build(), hasProperty("root", sameInstance(target)));
   }
 
+  @Test(expected = ViewTemplateException.class)
+  public void testBuildOnChild() throws Exception {
+    final ViewTemplateBuilder parent = context.mock(ViewTemplateBuilder.class,
+        "parent");
+    final ViewTemplateBuilder builder =
+        new ConcreteViewTemplateBuilder(parent, cursor, target, beanFactory,
+        builderFactory);
+    builder.build();
+  }
+
   static class MockConvertibleViewNode extends AbstractViewNode
       implements Convertible {
 

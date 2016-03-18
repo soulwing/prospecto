@@ -449,6 +449,8 @@ public interface ViewTemplateBuilder {
    * Builds the template that corresponds to the node tree structure contained
    * in this builder instance.
    * @return view template
+   * @throws ViewTemplateException if this method is invoked when the cursor
+   *    is positioned on a node that not a child of the root node
    */
   ViewTemplate build();
 
