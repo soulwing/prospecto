@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.tests;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
