@@ -42,7 +42,7 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Carl Harris
  */
-public class DateTypeConverter implements ValueTypeConverter<String> {
+public class DateTypeConverter implements ValueTypeConverter<Object> {
 
   public enum Format {
     ISO8601,
@@ -50,6 +50,7 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
     ISO8601_TIME,
     ISO8601_WITH_TIME_ZONE,
     RFC1123,
+    EPOCH,
     CUSTOM
   }
 
@@ -98,7 +99,7 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
-  public String toValue(Object model) throws Exception {
+  public Object toValue(Object model) throws Exception {
     assert model instanceof Date;
     switch (format) {
       default:
@@ -112,6 +113,8 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
         return formatUsing8601WithTimeZone((Date) model);
       case RFC1123:
         return formatUsingPattern(RFC1123_PATTERN, (Date) model);
+      case EPOCH:
+        return ((Date) model).getTime();
       case CUSTOM:
         return formatUsingPattern(
             pattern != null ? pattern : ISO8601_PATTERN, (Date) model);
@@ -119,7 +122,15 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
-  public Date toObject(String value) throws Exception {
+  public Date toObject(Object value) throws Exception {
+    if (value instanceof String)
+      return toObject((String) value);
+    if (value instanceof Long)
+      return toObject((Long) value);
+    throw new IllegalArgumentException("Unable to handle value of type: " + value.getClass());
+  }
+
+  private Date toObject(String value) throws Exception {
     switch (format) {
       default:
       case ISO8601:
@@ -136,6 +147,10 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
         return parseUsingPattern(
             pattern != null ? pattern : ISO8601_PATTERN, value);
     }
+  }
+
+  private Date toObject(Long value) throws Exception {
+    return new Date(value);
   }
 
   private String formatUsingPattern(String pattern, Date date) {
