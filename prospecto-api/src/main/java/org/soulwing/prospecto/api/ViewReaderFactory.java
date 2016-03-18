@@ -27,6 +27,11 @@ import java.io.InputStream;
  */
 public interface ViewReaderFactory {
 
+  /**
+   * Constructs a new reader.
+   * @param inputStream input stream to read
+   * @return reader
+   */
   ViewReader newReader(InputStream inputStream);
 
 }

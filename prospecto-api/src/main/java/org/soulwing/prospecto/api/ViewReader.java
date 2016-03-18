@@ -19,12 +19,16 @@
 package org.soulwing.prospecto.api;
 
 /**
- * DESCRIBE THE TYPE HERE
+ * A reader for a view.
+ * <p>
+ * A reader transforms a structured textual representation (e.g. JSON, XML)
+ * of some information and creates a {@link View} object that represents the
+ * sequence of structural and value events contained in the view.
+ *
  * @author Carl Harris
  */
 public interface ViewReader {
 
   View readView() throws ViewException;
-
 
 }
