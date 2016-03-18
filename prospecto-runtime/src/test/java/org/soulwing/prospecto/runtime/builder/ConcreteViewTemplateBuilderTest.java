@@ -463,8 +463,12 @@ public class ConcreteViewTemplateBuilderTest {
 
   @Test
   public void testSource() throws Exception {
+    final AbstractViewNode node = context.mock(AbstractViewNode.class,
+        "source");
     context.checking(new Expectations() {
       {
+        oneOf(cursor).getNode();
+        will(returnValue(node));
         oneOf(cursor).setModelName(MODEL_NAME);
       }
     });
@@ -472,16 +476,48 @@ public class ConcreteViewTemplateBuilderTest {
     assertThat(builder.source(MODEL_NAME), is(sameInstance((Object) builder)));
   }
 
-  @Test
-  public void testAccessType() throws Exception {
+  @Test(expected = ViewTemplateException.class)
+  public void testSourceOnRootNode() throws Exception {
     context.checking(new Expectations() {
       {
+        oneOf(cursor).getNode();
+        will(returnValue(null));
+      }
+    });
+    final ViewTemplateBuilder builder = new ConcreteViewTemplateBuilder(
+        null, cursor, target, beanFactory,
+        builderFactory);
+    builder.source("source");
+  }
+
+  @Test
+  public void testAccessType() throws Exception {
+    final AbstractViewNode node = context.mock(AbstractViewNode.class,
+        "accessTypeNode");
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getNode();
+        will(returnValue(node));
         oneOf(cursor).setAccessType(ACCESS_TYPE);
       }
     });
 
     assertThat(builder.accessType(ACCESS_TYPE),
         is(sameInstance((Object) builder)));
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testAccessTypeOnRootNode() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getNode();
+        will(returnValue(null));
+      }
+    });
+    final ViewTemplateBuilder builder = new ConcreteViewTemplateBuilder(
+        null, cursor, target, beanFactory,
+        builderFactory);
+    builder.accessType(AccessType.PROPERTY);
   }
 
   @Test
@@ -638,6 +674,5 @@ public class ConcreteViewTemplateBuilderTest {
       return null;
     }
   }
-
 
 }
