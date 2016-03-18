@@ -313,8 +313,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
     final AbstractViewNode node = cursor.getNode();
     if (!(node instanceof Convertible)) {
-      throw new ViewTemplateException("node '" + node.getName()
-          + "' does not support a converter");
+      throw new ViewTemplateException("cursor node does not support a converter");
     }
     node.put(converter);
     return this;
