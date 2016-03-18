@@ -28,6 +28,7 @@ import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.arrayViewN
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.hasAttributeOfType;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.viewNode;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,8 @@ public class ConcreteViewTemplateBuilderTest {
   private static final String NAME = "name";
   private static final String ELEMENT_NAME = "elementName";
   private static final String NAMESPACE = "namespace";
-  private static final Class<?> MODEL_TYPE = Object.class;
+  private static final Class<?> MODEL_TYPE = MockModel.class;
+  private static final Class<?> MODEL_SUBTYPE = MockSubModel.class;
   private static final String MODEL_NAME = "modelName";
   private static final AccessType ACCESS_TYPE = AccessType.PROPERTY;
 
@@ -311,20 +313,23 @@ public class ConcreteViewTemplateBuilderTest {
 
   @Test
   public void testSubtype() throws Exception {
+    final DiscriminatorNode discriminator = context.mock(DiscriminatorNode.class);
     context.checking(new Expectations() {
       {
         oneOf(cursor).getModelType();
         will(returnValue(MODEL_TYPE));
+        oneOf(target).getChildren();
+        will(returnValue(Collections.singletonList(discriminator)));
         oneOf(target).addChild(
-            with(viewNode(SubtypeNode.class, null, null, MODEL_TYPE)));
-        oneOf(cursor).copy(MODEL_TYPE);
+            with(viewNode(SubtypeNode.class, null, null, MODEL_SUBTYPE)));
+        oneOf(cursor).copy(MODEL_SUBTYPE);
         will(returnValue(cursor));
         oneOf(builderFactory).newBuilder(with(builder), with(cursor),
-            with(viewNode(SubtypeNode.class, null, null, MODEL_TYPE)));
+            with(viewNode(SubtypeNode.class, null, null, MODEL_SUBTYPE)));
         will(returnValue(childBuilder));
       }
     });
-    assertThat(builder.subtype(MODEL_TYPE), is(sameInstance(childBuilder)));
+    assertThat(builder.subtype(MODEL_SUBTYPE), is(sameInstance(childBuilder)));
   }
 
   @Test(expected =  ViewTemplateException.class)
@@ -332,11 +337,37 @@ public class ConcreteViewTemplateBuilderTest {
     context.checking(new Expectations() {
       {
         oneOf(cursor).getModelType();
-        will(returnValue(String.class));
+        will(returnValue(MODEL_SUBTYPE));
       }
     });
 
-    builder.subtype(Object.class);
+    builder.subtype(MODEL_SUBTYPE);
+  }
+
+  @Test(expected =  ViewTemplateException.class)
+  public void testSubtypeWhenSameType() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getModelType();
+        will(returnValue(MODEL_TYPE));
+      }
+    });
+
+    builder.subtype(MODEL_TYPE);
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testSubtypeWithoutDiscriminator() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getModelType();
+        will(returnValue(MODEL_TYPE));
+        oneOf(target).getChildren();
+        will(returnValue(Collections.emptyList()));
+      }
+    });
+
+    builder.subtype(MODEL_SUBTYPE);
   }
 
   @Test
@@ -369,6 +400,19 @@ public class ConcreteViewTemplateBuilderTest {
         will(returnValue(childBuilder));
       }
     };
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testDiscriminatorNotFirstChild() throws Exception {
+    final AbstractViewNode child = context.mock(AbstractViewNode.class);
+    context.checking(new Expectations() {
+      {
+        oneOf(target).getChildren();
+        will(returnValue(Collections.singletonList(child)));
+      }
+    });
+
+    builder.discriminator();
   }
 
   @Test
@@ -421,6 +465,8 @@ public class ConcreteViewTemplateBuilderTest {
       throws Exception {
     return new Expectations() {
       {
+        oneOf(target).getChildren();
+        will(returnValue(Collections.emptyList()));
         oneOf(target).addChild(
             with(allOf(
                 viewNode(DiscriminatorNode.class, null, null),
@@ -671,6 +717,12 @@ public class ConcreteViewTemplateBuilderTest {
         ScopedViewContext context) throws Exception {
       return null;
     }
+  }
+
+  interface MockModel {
+  }
+
+  interface MockSubModel extends MockModel {
   }
 
 }

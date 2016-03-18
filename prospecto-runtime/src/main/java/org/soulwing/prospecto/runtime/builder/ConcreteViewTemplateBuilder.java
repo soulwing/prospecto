@@ -18,9 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
@@ -195,14 +197,27 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder subtype(Class<?> subtype) {
-    final Class<?> base = cursor.getModelType();
-    if (!base.isAssignableFrom(subtype)) {
-      throw new ViewTemplateException(subtype + " is not a subtype of "
-          + base);
-    }
+    assertIsSubTypeOfModelType(subtype);
+    assertTargetHasDiscriminator();
     SubtypeNode node = new SubtypeNode(subtype);
     target.addChild(node);
     return builderFactory.newBuilder(this, cursor.copy(subtype), node);
+  }
+
+  private void assertIsSubTypeOfModelType(Class<?> subtype) {
+    final Class<?> base = cursor.getModelType();
+    if (!base.isAssignableFrom(subtype) || base.equals(subtype)) {
+      throw new ViewTemplateException(subtype + " is not a subtype of "
+          + base);
+    }
+  }
+
+  private void assertTargetHasDiscriminator() {
+    for (final ViewNode child : target.getChildren()) {
+      if (child instanceof DiscriminatorNode) return;
+    }
+    throw new ViewTemplateException(
+        "discriminator is required before introducing subtypes");
   }
 
   @Override
@@ -238,6 +253,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
+    assertTargetHasNoChildren();
     DiscriminatorNode node = new DiscriminatorNode();
     if (discriminator != null) {
       node.put(discriminator);
@@ -246,6 +262,19 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
     cursor.advance(node, null);
     node.setBase(cursor.getModelType());
     return this;
+  }
+
+  private void assertTargetHasNoChildren() {
+    final List<AbstractViewNode> children = target.getChildren();
+    for (final ViewNode child : children) {
+      if (child instanceof DiscriminatorNode) {
+        throw new ViewTemplateException("only one discriminator is allowed");
+      }
+    }
+    if (!children.isEmpty()) {
+      throw new ViewTemplateException(
+          "discriminator must be the first child of the parent node");
+    }
   }
 
   @Override

@@ -256,12 +256,15 @@ public interface ViewTemplateBuilder {
   ViewTemplateBuilder envelope(String name, String namespace);
 
   /**
-   * Introduces a subtype of the type associated with the parent object or
+   * Introduces a subtype of the type associated with the current object or
    * array-of-objects node.
    * <p>
    * This allows properties of a subtype to be included in the object or
    * array-of-objects node being described.
-   *
+   * <p>
+   * A discriminator must be added to the object or array-of-objects node
+   * before a subtyoe can be introduced.
+   * s
    * @param subtype class which must be a descendant of the model type specified
    *   for the parent object or array-of-objects node
    * @return template builder for the new subtype
@@ -274,6 +277,9 @@ public interface ViewTemplateBuilder {
    * When the view is evaluated a {@link DiscriminatorStrategy} will be
    * retrieved from the view context to produce the discriminator name/value.
    * If no strategy is configured a default implementation will be provided.
+   * <p>
+   * A discriminator (if present) must be added as the first child of an object
+   * or array-of-objects node that has multiple subtypes.
    *
    * @return this builder
    */
@@ -282,7 +288,7 @@ public interface ViewTemplateBuilder {
   /**
    * Adds a subtype discriminator at the cursor.
    * <p>
-   * A discriminator should generally be added as the first child of an object
+   * A discriminator (if present) must be added as the first child of an object
    * or array-of-objects node that has multiple subtypes.
    * @param discriminatorClass discriminator strategy class
    * @param configuration name-value pairs that will be used to configure the
@@ -297,7 +303,7 @@ public interface ViewTemplateBuilder {
   /**
    * Adds a subtype discriminator at the cursor.
    * <p>
-   * A discriminator should generally be added as the first child of an object
+   * A discriminator (if present) must be added as the first child of an object
    * or array-of-objects node that has multiple subtypes.
    * @param discriminatorClass discriminator strategy class
    * @param configuration name-value pairs that will be used to configure the
@@ -312,7 +318,7 @@ public interface ViewTemplateBuilder {
   /**
    * Adds a subtype discriminator at the cursor.
    * <p>
-   * A discriminator should generally be added as the first child of an object
+   * A discriminator (if present) must be added as the first child of an object
    * or array-of-objects node that has multiple subtypes.
    * @param discriminator discriminator strategy
    * @return this builder

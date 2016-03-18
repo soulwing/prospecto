@@ -72,4 +72,38 @@ public class TemplateErrorsTest {
         .object(NAME, Object.class).converter(converter);
   }
 
+  @Test(expected = ViewTemplateException.class)
+  public void testDiscriminatorNotFirstChild() throws Exception {
+    ViewTemplateBuilderProducer.object(Object.class)
+        .url()
+        .discriminator();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testMultipleDiscriminators() throws Exception {
+    ViewTemplateBuilderProducer.object(Object.class)
+        .discriminator()
+        .discriminator();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testSubtypeWithoutDiscriminator() throws Exception {
+    ViewTemplateBuilderProducer.object(Object.class)
+        .subtype(String.class);
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testSubtypeEqualsType() throws Exception {
+    ViewTemplateBuilderProducer.object(Object.class)
+        .discriminator()
+        .subtype(Object.class);
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testSubtypeIsNotASubtype() throws Exception {
+    ViewTemplateBuilderProducer.object(String.class)
+        .discriminator()
+        .subtype(Object.class);
+  }
+
 }
