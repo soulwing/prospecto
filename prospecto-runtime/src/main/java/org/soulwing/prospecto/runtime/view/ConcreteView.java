@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewNode;
 
 /**
  * A {@link View} implementation.
@@ -36,11 +35,9 @@ public class ConcreteView implements View {
   private final Envelope envelope = new ConcreteEnvelope();
 
   private final List<Event> events;
-  private final ViewNode root;
 
-  public ConcreteView(List<Event> events, ViewNode root) {
+  public ConcreteView(List<Event> events) {
     this.events = events;
-    this.root = root;
   }
 
   @Override

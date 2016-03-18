@@ -61,7 +61,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
       throws ViewException {
     try {
       return new ConcreteView(root.evaluate(source,
-          viewContextFactory.newContext(context)), root);
+          viewContextFactory.newContext(context)));
     }
     catch (Exception ex) {
       throw new ViewException(ex);
