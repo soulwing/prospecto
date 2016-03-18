@@ -94,6 +94,16 @@ public class DateTypeConverterTest {
   }
 
   @Test
+  public void testConvertUsingEpoch() throws Exception {
+    Long timeStamp = 1451649600000L;
+    converter.setFormat(DateTypeConverter.Format.EPOCH);
+    final Date date = new Date(timeStamp);
+    String value = converter.toValue(date);
+    assertThat(value, is(equalTo(timeStamp.toString())));
+    assertThat(converter.toObject(value), is(equalTo(date)));
+  }
+
+  @Test
   public void testConvertUsingCustomPattern() throws Exception {
     converter.setTimeZoneId("GMT");
     converter.setFormat(DateTypeConverter.Format.CUSTOM);

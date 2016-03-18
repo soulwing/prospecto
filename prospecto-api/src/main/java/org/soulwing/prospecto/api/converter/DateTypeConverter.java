@@ -50,6 +50,7 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
     ISO8601_TIME,
     ISO8601_WITH_TIME_ZONE,
     RFC1123,
+    EPOCH,
     CUSTOM
   }
 
@@ -112,6 +113,8 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
         return formatUsing8601WithTimeZone((Date) model);
       case RFC1123:
         return formatUsingPattern(RFC1123_PATTERN, (Date) model);
+      case EPOCH:
+        return "" + ((Date) model).getTime();
       case CUSTOM:
         return formatUsingPattern(
             pattern != null ? pattern : ISO8601_PATTERN, (Date) model);
@@ -132,6 +135,8 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
         return parseUsing8601WithTimeZone(value);
       case RFC1123:
         return parseUsingPattern(RFC1123_PATTERN, value);
+      case EPOCH:
+        return new Date(Long.valueOf(value));
       case CUSTOM:
         return parseUsingPattern(
             pattern != null ? pattern : ISO8601_PATTERN, value);
