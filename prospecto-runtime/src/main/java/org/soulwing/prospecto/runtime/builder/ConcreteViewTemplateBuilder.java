@@ -268,12 +268,20 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder source(String name) {
+    if (cursor.getNode() == null) {
+      throw new ViewTemplateException(
+          "cursor must be positioned on an interior node");
+    }
     cursor.setModelName(name);
     return this;
   }
 
   @Override
   public ViewTemplateBuilder accessType(AccessType accessType) {
+    if (cursor.getNode() == null) {
+      throw new ViewTemplateException(
+          "cursor must be positioned on an interior node");
+    }
     cursor.setAccessType(accessType);
     return this;
   }
