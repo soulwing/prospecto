@@ -64,7 +64,7 @@ public class CalendarTypeConverter implements ValueTypeConverter<String> {
   @Override
   public String toValue(Object model) throws Exception {
     assert model instanceof Calendar;
-    return delegate.toValue(((Calendar) model).getTime());
+    return (String) delegate.toValue(((Calendar) model).getTime());
   }
 
   @Override
