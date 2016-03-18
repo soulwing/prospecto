@@ -569,8 +569,6 @@ public class ConcreteViewTemplateBuilderTest {
       {
         oneOf(cursor).getNode();
         will(returnValue(node));
-        oneOf(node).getName();
-        will(returnValue(NAME));
       }
     });
 
