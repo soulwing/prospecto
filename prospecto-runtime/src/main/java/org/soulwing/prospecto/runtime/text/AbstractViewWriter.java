@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 19, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.writer;
+package org.soulwing.prospecto.runtime.text;
 
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -36,13 +36,13 @@ import org.soulwing.prospecto.api.ViewWriter;
  *
  * @author Carl Harris
  */
-abstract class AbstractViewWriter implements ViewWriter {
+public abstract class AbstractViewWriter implements ViewWriter {
 
   private final View view;
   private final OutputStream outputStream;
 
   /**
-   * Constructs a new writer.
+   * Constructs a new writer
    * @param view the subject view
    *
    */

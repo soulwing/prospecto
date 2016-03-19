@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 19, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.writer;
+package org.soulwing.prospecto.runtime.text.xml;
 
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
@@ -40,6 +40,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
+import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
  * A {@link ViewWriter} that produces an XML representation of a view.
@@ -78,6 +79,17 @@ class XmlViewWriter extends AbstractViewWriter {
 
   private static final XMLOutputFactory outputFactory =
       XMLOutputFactory.newFactory();
+
+  private static final String XSI_TYPE = "type";
+  private static final String XS_INTEGER = "xs:integer";
+  private static final String XS_BYTE = "xs:byte";
+  private static final String XS_DECIMAL = "xs:decimal";
+  private static final String XS_SHORT = "xs:short";
+  private static final String XS_INT = "xs:int";
+  private static final String XS_LONG = "xs:long";
+  private static final String XS_BOOLEAN = "xs:boolean";
+  private static final String XS_DATE_TIME = "xs:dateTime";
+  private static final String XS_STRING = "xs:string";
 
   private final Deque<String> namespaceStack = new LinkedList<>();
 
@@ -193,51 +205,53 @@ class XmlViewWriter extends AbstractViewWriter {
     final String namespace = event.getNamespace();
     final Object value = event.getValue();
     if (value instanceof BigDecimal) {
-      writeString(name, namespace, DatatypeConverter.printDecimal((BigDecimal) value));
+      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDecimal((BigDecimal) value));
     }
     else if (value instanceof BigInteger) {
-      writeString(name, namespace, DatatypeConverter.printInteger((BigInteger) value));
+      writeString(name, namespace, XS_INTEGER, DatatypeConverter.printInteger((BigInteger) value));
     }
     else if (value instanceof Byte) {
-      writeString(name, namespace, DatatypeConverter.printByte((Byte) value));
+      writeString(name, namespace, XS_BYTE, DatatypeConverter.printByte((Byte) value));
     }
     else if (value instanceof Double) {
-      writeString(name, namespace, DatatypeConverter.printDouble((Double) value));
+      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDouble((Double) value));
     }
     else if (value instanceof Float) {
-      writeString(name, namespace, DatatypeConverter.printFloat((Float) value));
+      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printFloat((Float) value));
     }
     else if (value instanceof Short) {
-      writeString(name, namespace, DatatypeConverter.printShort((Short) value));
+      writeString(name, namespace, XS_SHORT, DatatypeConverter.printShort((Short) value));
     }
     else if (value instanceof Integer) {
-      writeString(name, namespace, DatatypeConverter.printInt((Integer) value));
+      writeString(name, namespace, XS_INT, DatatypeConverter.printInt((Integer) value));
     }
     else if (value instanceof Long) {
-      writeString(name, namespace, DatatypeConverter.printLong((Long) value));
+      writeString(name, namespace, XS_LONG, DatatypeConverter.printLong((Long) value));
     }
     else if (value instanceof Boolean) {
-      writeString(name, namespace, DatatypeConverter.printBoolean((Boolean) value));
+      writeString(name, namespace, XS_BOOLEAN, DatatypeConverter.printBoolean((Boolean) value));
     }
     else if (value instanceof Date) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime((Date) value);
-      writeString(name, namespace, DatatypeConverter.printDateTime(calendar));
+      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime(calendar));
     }
     else if (value instanceof Calendar) {
-      writeString(name, namespace, DatatypeConverter.printDateTime((Calendar) value));
+      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime((Calendar) value));
     }
     else if (value == null) {
       writeEmptyElement(name, namespace, DEFAULT_NULL_NAME);
     }
     else {
-      writeString(name, namespace, value.toString());
+      writeString(name, namespace, XS_STRING, value.toString());
     }
   }
 
-  private void writeString(String name, String namespace, String value)
-      throws XMLStreamException {
+  private void writeString(String name, String namespace, String type,
+      String value) throws XMLStreamException {
     writeStartElement(name, namespace, DEFAULT_VALUE_NAME);
+    writer.writeAttribute(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI,
+        XSI_TYPE, type);
     writer.writeCharacters(value);
     writer.writeEndElement();
   }
@@ -249,7 +263,7 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeDiscriminator(View.Event event) throws XMLStreamException {
-    writeAttributeString("type", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI,
+    writeAttributeString(XSI_TYPE, XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI,
         event.getValue().toString());
   }
 
