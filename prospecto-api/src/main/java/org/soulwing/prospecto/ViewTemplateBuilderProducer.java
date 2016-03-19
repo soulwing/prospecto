@@ -18,9 +18,6 @@
  */
 package org.soulwing.prospecto;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
-
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
@@ -129,6 +126,59 @@ public class ViewTemplateBuilderProducer {
       throws ViewTemplateException {
     return singleton.getInstance().provider.arrayOfObjects(name, elementName,
         namespace, modelType);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-objects node
+   * using the children of the root node of the given object template.
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfObjects(ViewTemplate template) {
+    return arrayOfObjects(null, null, null, template);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-objects node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfObjects(String name, ViewTemplate template) {
+    return arrayOfObjects(name, null, null, template);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-objects node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfObjects(String name, String elementName,
+      ViewTemplate template) {
+    return arrayOfObjects(name, elementName, null, template);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-objects node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfObjects(String name, String elementName,
+      String namespace, ViewTemplate template) {
+    return singleton.getInstance().provider.arrayOfObjects(name, elementName,
+        namespace, template);
   }
 
   /**
