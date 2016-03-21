@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -41,6 +40,7 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
+import org.soulwing.prospecto.runtime.text.ReaderKeys;
 import org.soulwing.prospecto.runtime.util.PropertyMap;
 
 /**
@@ -49,6 +49,8 @@ import org.soulwing.prospecto.runtime.util.PropertyMap;
  * @author Carl Harris
  */
 public class XmlViewReader extends AbstractViewReader {
+
+  public static final String DEFAULT_URL_NAME = UrlNode.DEFAULT_NAME;
 
   /**
    * A parser stack frame
@@ -133,28 +135,25 @@ public class XmlViewReader extends AbstractViewReader {
   }
 
   private void startElement(StartElement event) throws XMLStreamException {
+    final XmlViewConstants.ElementType elementType = elementType(event);
     final QName type = type(event);
-    boolean valueElement = true;
-    if (type != null) {
-      if (XmlViewConstants.OBJECT_QNAME.equals(type)) {
+    boolean valueElement = false;
+    switch (elementType) {
+      case VALUE:
+        valueElement = true;
+        break;
+      case OBJECT:
         beginObject(name(event.getName()));
-        valueElement = false;
-      }
-      else if (XmlViewConstants.ARRAY_QNAME.equals(type)) {
+        discriminator(event);
+        url(event);
+        break;
+      case ARRAY:
         beginArray(name(event.getName()));
-        valueElement = false;
-      }
-      else if (event.getName().getNamespaceURI().equals(type.getNamespaceURI())) {
-        beginObject(name(event.getName()));
-        discriminator(type.getLocalPart());
-        valueElement = false;
-      }
-    }
-
-    final Attribute url = event.getAttributeByName(
-        new QName(XmlViewConstants.VIEW_NAMESPACE, UrlNode.DEFAULT_NAME));
-    if (url != null) {
-      url(url.getValue());
+        discriminator(event);
+        url(event);
+        break;
+      default:
+        throw new AssertionError("unrecognized element type");
     }
 
     stack.push(new Frame(event.getName(), type, valueElement));
@@ -177,34 +176,21 @@ public class XmlViewReader extends AbstractViewReader {
     }
   }
 
-  private static QName type(StartElement event) {
-    final QName qname = typeToQName(event, event.getNamespaceContext());
-    if (qname == null) return null;
-    if (event.getName().getNamespaceURI().equals(qname.getNamespaceURI())) {
-      return qname;
+  private void discriminator(StartElement event) {
+    final Attribute type = event.getAttributeByName(
+        XmlViewConstants.XSI_TYPE_QNAME);
+    if (type != null) {
+      discriminator(type.getValue());
     }
-    if (XmlViewConstants.XS_NAMESPACE.equals(qname.getNamespaceURI())) {
-      return qname;
-    }
-    if (XmlViewConstants.VIEW_NAMESPACE.equals(qname.getNamespaceURI())) {
-      return qname;
-    }
-    return null;
   }
 
-  private static QName typeToQName(StartElement event,
-      NamespaceContext namespaceContext) {
-    final Attribute type =
-        event.getAttributeByName(XmlViewConstants.XSI_TYPE_QNAME);
-    if (type == null) return null;
-    final String typeName = type.getValue();
-    final int index = typeName.indexOf(':');
-    if (index == -1) {
-      return new QName(event.getName().getNamespaceURI(), typeName);
+  private void url(StartElement event) {
+    final Attribute url = event.getAttributeByName(
+        new QName(XmlViewConstants.VIEW_NAMESPACE,
+            properties.getString(ReaderKeys.URL_NAME, DEFAULT_URL_NAME)));
+    if (url != null) {
+      url(url.getValue());
     }
-    final String prefix = typeName.substring(0, index);
-    final String localPart = typeName.substring(index + 1);
-    return new QName(namespaceContext.getNamespaceURI(prefix), localPart);
   }
 
   private void value(Frame frame) throws XMLStreamException {
@@ -250,6 +236,29 @@ public class XmlViewReader extends AbstractViewReader {
         throw new IllegalArgumentException("unrecognized data type: "
             + type);
     }
+  }
+
+  private static XmlViewConstants.ElementType elementType(StartElement event) {
+    final Attribute attribute = event.getAttributeByName(
+        XmlViewConstants.TYPE_QNAME);
+    if (attribute == null) return XmlViewConstants.ElementType.VALUE;
+    return XmlViewConstants.ElementType.valueOf(
+        attribute.getValue().toUpperCase());
+  }
+
+  private static QName type(StartElement event) {
+    final Attribute type =
+        event.getAttributeByName(XmlViewConstants.XSI_TYPE_QNAME);
+    if (type == null) return null;
+    final String typeName = type.getValue();
+    final int index = typeName.indexOf(':');
+    if (index == -1) {
+      return new QName(event.getName().getNamespaceURI(), typeName);
+    }
+    final String prefix = typeName.substring(0, index);
+    final String localPart = typeName.substring(index + 1);
+    return new QName(event.getNamespaceContext().getNamespaceURI(prefix),
+        localPart);
   }
 
   private static String name(QName qname) {

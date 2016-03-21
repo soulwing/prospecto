@@ -1,11 +1,12 @@
-<v:view xmlns="urn:org.soulwing.prospecto:test"
+<?xml version="1.0" encoding="UTF-8"?>
+<v:object xmlns="urn:org.soulwing.prospecto:test"
   xmlns:v="urn:org.soulwing.prospecto:view"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xsi:type="v:object">
+  v:type="object">
   <string xsi:type="xs:string">string</string>
   <integral xsi:type="xs:long">-1</integral>
   <decimal xsi:type="xs:decimal">2.71828</decimal>
   <boolean xsi:type="xs:boolean">true</boolean>
   <null/>
-</v:view>
+</v:object>

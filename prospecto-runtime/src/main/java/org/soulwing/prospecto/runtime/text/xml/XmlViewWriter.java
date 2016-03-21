@@ -136,7 +136,7 @@ class XmlViewWriter extends AbstractViewWriter {
 
   @Override
   protected void onBeginObject(View.Event event) throws Exception {
-    writeStartElement(event, XmlViewConstants.OBJECT_QNAME);
+    writeStartElement(event);
   }
 
   @Override
@@ -146,7 +146,7 @@ class XmlViewWriter extends AbstractViewWriter {
 
   @Override
   protected void onBeginArray(View.Event event) throws Exception {
-    writeStartElement(event, XmlViewConstants.ARRAY_QNAME);
+    writeStartElement(event);
   }
 
   @Override
@@ -161,7 +161,7 @@ class XmlViewWriter extends AbstractViewWriter {
 
   @Override
   protected void onUrl(View.Event event) throws Exception {
-    writeAttribute(event);
+    writeUrl(event);
   }
 
   @Override
@@ -169,28 +169,21 @@ class XmlViewWriter extends AbstractViewWriter {
     writeDiscriminator(event);
   }
 
-  private void writeStartElement(View.Event event, QName elementType)
+  private void writeStartElement(View.Event event)
       throws XMLStreamException {
     if (firstEvent) {
-      writeRootElement(event, elementType);
+      writeRootElement(event);
       firstEvent = false;
     }
     else {
       writeStartElement(event.getName(), event.getNamespace(),
           event.getType() == View.Event.Type.BEGIN_OBJECT ?
               XmlViewConstants.OBJECT_QNAME : XmlViewConstants.ARRAY_QNAME);
-      writeElementType(elementType);
+      writeElementType(event);
     }
   }
 
-  private void writeElementType(QName elementType) throws XMLStreamException {
-    if (elementType == null) return;
-    writer.writeAttribute(XmlViewConstants.XSI_NAMESPACE,
-        XmlViewConstants.XSI_TYPE_NAME,
-        pname(elementType, writer.getNamespaceContext()));
-  }
-
-  private void writeRootElement(View.Event event, QName elementType)
+  private void writeRootElement(View.Event event)
       throws XMLStreamException {
     namespaceStack.push(event.getNamespace() != null ?
         event.getNamespace() : XmlViewConstants.VIEW_NAMESPACE);
@@ -201,16 +194,25 @@ class XmlViewWriter extends AbstractViewWriter {
     writer.setPrefix(XS_PREFIX, XmlViewConstants.XS_NAMESPACE);
     writer.writeStartDocument(encoding, XML_VERSION);
     writeStartElement(event.getName(), namespaceStack.peek(),
-        XmlViewConstants.VIEW_QNAME);
+        event.getType() == View.Event.Type.BEGIN_OBJECT ?
+            XmlViewConstants.OBJECT_QNAME : XmlViewConstants.ARRAY_QNAME);
     writer.writeDefaultNamespace(namespaceStack.peek());
     writer.writeNamespace(VIEW_PREFIX, XmlViewConstants.VIEW_NAMESPACE);
     writer.writeNamespace(XSI_PREFIX, XmlViewConstants.XSI_NAMESPACE);
     writer.writeNamespace(XS_PREFIX, XmlViewConstants.XS_NAMESPACE);
-    writeElementType(elementType);
+    writeElementType(event);
     for (Map.Entry<String, Object> entry : getView().getEnvelope()) {
       writer.writeAttribute(writer.getNamespaceContext().getNamespaceURI(VIEW_PREFIX),
           entry.getKey(), entry.getValue().toString());
     }
+  }
+
+  private void writeElementType(View.Event event) throws XMLStreamException {
+    if (event.getType() == View.Event.Type.BEGIN_OBJECT)
+      writer.writeAttribute(XmlViewConstants.VIEW_NAMESPACE,
+          XmlViewConstants.TYPE_NAME,
+          event.getType() == View.Event.Type.BEGIN_OBJECT ?
+              XmlViewConstants.OBJECT_NAME : XmlViewConstants.ARRAY_NAME);
   }
 
   private void writeValue(View.Event event) throws XMLStreamException {
@@ -274,6 +276,11 @@ class XmlViewWriter extends AbstractViewWriter {
         event.getNamespace() != null ?
             event.getNamespace() : XmlViewConstants.VIEW_NAMESPACE,
         event.getValue().toString());
+  }
+
+  private void writeUrl(View.Event event) throws XMLStreamException {
+    writeAttributeString(event.getName(),
+        XmlViewConstants.VIEW_NAMESPACE, event.getValue().toString());
   }
 
   private void writeDiscriminator(View.Event event) throws XMLStreamException {

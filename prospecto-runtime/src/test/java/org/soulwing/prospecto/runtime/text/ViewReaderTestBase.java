@@ -27,8 +27,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;
@@ -42,20 +43,18 @@ import org.soulwing.prospecto.api.ViewReader;
  */
 public abstract class ViewReaderTestBase {
 
-  protected static final String STRING_VALUE = "string";
-  protected static final long INTEGRAL_VALUE = -1L;
-  protected static final BigDecimal DECIMAL_VALUE = BigDecimal.valueOf(2.71828);
-  protected static final boolean BOOLEAN_VALUE = true;
-  protected static final String URL_VALUE = "url";
-  protected static final String CUSTOM_NAME = "custom";
-
   private final String fileSuffix;
 
   public ViewReaderTestBase(String fileSuffix) {
     this.fileSuffix = fileSuffix;
   }
 
-  protected abstract ViewReader newViewReader(InputStream inputStream);
+  protected ViewReader newViewReader(InputStream inputStream) {
+    return newViewReader(inputStream, Collections.<String, Object>emptyMap());
+  }
+
+  protected abstract ViewReader newViewReader(InputStream inputStream,
+      Map<String, Object> properties);
 
   @Test
   public void testFlatObjectView() throws Exception {
@@ -75,10 +74,10 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT, "object")));
+        is(eventWith(View.Event.Type.BEGIN_OBJECT, Constants.OBJECT_NAME)));
     validateObjectProperties(events);
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.END_OBJECT, "object")));
+        is(eventWith(View.Event.Type.END_OBJECT, Constants.OBJECT_NAME)));
     assertThat(events.next(),
         is(eventWith(View.Event.Type.END_OBJECT)));
   }
@@ -101,13 +100,13 @@ public abstract class ViewReaderTestBase {
 
   private static void validateObjectProperties(Iterator<View.Event> events) {
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, "string", STRING_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, "string", Constants.STRING_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, "integral", INTEGRAL_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, "integral", Constants.INTEGRAL_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, "decimal", DECIMAL_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, "decimal", Constants.DECIMAL_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, "boolean", BOOLEAN_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, "boolean", Constants.BOOLEAN_VALUE)));
     assertThat(events.next(),
         is(eventWith(View.Event.Type.VALUE, "null", null)));
   }
@@ -120,17 +119,53 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_ARRAY)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, null, STRING_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, null, Constants.STRING_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, null, INTEGRAL_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, null, Constants.INTEGRAL_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, null, DECIMAL_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, null, Constants.DECIMAL_VALUE)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.VALUE, null, BOOLEAN_VALUE)));
+        is(eventWith(View.Event.Type.VALUE, null, Constants.BOOLEAN_VALUE)));
     assertThat(events.next(),
         is(eventWith(View.Event.Type.VALUE, null, null)));
     assertThat(events.next(),
         is(eventWith(View.Event.Type.END_ARRAY)));
+  }
+
+  @Test
+  public void testDefaultDiscriminatorView() throws Exception {
+    final ViewReader reader = newViewReader(
+        getTestResource("defaultDiscriminatorView"));
+    final Iterator<View.Event> events = reader.readView().iterator();
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.DISCRIMINATOR, null,
+        Constants.DISCRIMINATOR_VALUE)));
+  }
+
+  @Test
+  public void testDefaultUrlView() throws Exception {
+    final ViewReader reader = newViewReader(
+        getTestResource("defaultUrlView"));
+    final Iterator<View.Event> events = reader.readView().iterator();
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.URL, null, Constants.URL_VALUE)));
+  }
+
+  @Test
+  public void testCustomUrlView() throws Exception {
+    final ViewReader reader = newViewReader(
+        getTestResource("customUrlView"),
+        Collections.<String, Object>singletonMap(
+            ReaderKeys.URL_NAME, Constants.CUSTOM_NAME));
+    final Iterator<View.Event> events = reader.readView().iterator();
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
+    assertThat(events.next(),
+        is(eventWith(View.Event.Type.URL, null, Constants.URL_VALUE)));
   }
 
 

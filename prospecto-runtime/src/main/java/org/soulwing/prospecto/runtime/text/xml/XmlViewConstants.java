@@ -28,21 +28,31 @@ import javax.xml.namespace.QName;
  */
 public interface XmlViewConstants {
 
+  enum ElementType {
+    VALUE,
+    OBJECT,
+    ARRAY;
+  }
+
   String VIEW_NAMESPACE = "urn:org.soulwing.prospecto:view";
 
   String XS_NAMESPACE = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
   String XSI_NAMESPACE = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 
+  String TYPE_NAME = "type";
+
   String NULL_NAME = "null";
 
-  String VALUE_NAME = "value";
+  String VALUE_NAME = ElementType.VALUE.name().toLowerCase();
 
-  String OBJECT_NAME = "object";
+  String OBJECT_NAME = ElementType.OBJECT.name().toLowerCase();
 
-  String ARRAY_NAME = "array";
+  String ARRAY_NAME = ElementType.ARRAY.name().toLowerCase();
 
   String VIEW_NAME = "view";
+
+  QName TYPE_QNAME = new QName(VIEW_NAMESPACE, TYPE_NAME);
 
   QName NULL_QNAME = new QName(VIEW_NAMESPACE, NULL_NAME);
 

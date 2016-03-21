@@ -24,10 +24,13 @@ import static org.hamcrest.Matchers.is;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
+import org.soulwing.prospecto.runtime.text.Constants;
+import org.soulwing.prospecto.runtime.text.ReaderKeys;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
 /**
@@ -42,80 +45,23 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
   }
 
   @Override
-  protected ViewReader newViewReader(InputStream inputStream) {
-    return new JsonViewReader(inputStream);
+  protected ViewReader newViewReader(InputStream inputStream,
+      Map<String, Object> properties) {
+    return new JsonViewReader(inputStream, properties);
   }
 
   @Test
-  public void testDefaultStringDiscriminatorView() throws Exception {
+  public void testCustomDiscriminatorView() throws Exception {
     final JsonViewReader reader = new JsonViewReader(
-        getTestResource("defaultStringDiscriminatorView"));
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, null, STRING_VALUE)));
-  }
-
-  @Test
-  public void testDefaultNumericDiscriminatorView() throws Exception {
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("defaultNumericDiscriminatorView"));
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, null, INTEGRAL_VALUE)));
-  }
-
-  @Test
-  public void testCustomStringDiscriminatorView() throws Exception {
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("customStringDiscriminatorView"),
+        getTestResource("customDiscriminatorView"),
         Collections.<String, Object>singletonMap(
-            JsonViewReader.DISCRIMINATOR_NAME_KEY, CUSTOM_NAME));
+            ReaderKeys.DISCRIMINATOR_NAME, Constants.CUSTOM_NAME));
     final Iterator<View.Event> events = reader.readView().iterator();
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, null, STRING_VALUE)));
-  }
-
-  @Test
-  public void testCustomNumericDiscriminatorView() throws Exception {
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("customNumericDiscriminatorView"),
-        Collections.<String, Object>singletonMap(
-            JsonViewReader.DISCRIMINATOR_NAME_KEY, CUSTOM_NAME));
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, null, INTEGRAL_VALUE)));
-  }
-
-  @Test
-  public void testDefaultUrlView() throws Exception {
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("defaultUrlView"));
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.URL, null, URL_VALUE)));
-  }
-
-  @Test
-  public void testCustomUrlView() throws Exception {
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("customUrlView"),
-        Collections.<String, Object>singletonMap(
-            JsonViewReader.URL_NAME_KEY, CUSTOM_NAME));
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.URL, null, URL_VALUE)));
+        is(eventWith(View.Event.Type.DISCRIMINATOR, null,
+            Constants.DISCRIMINATOR_VALUE)));
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * File created on Mar 19, 2016
+ * File created on Mar 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,29 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.text.xml;
-
-import java.io.InputStream;
-import java.util.Map;
-
-import org.soulwing.prospecto.api.ViewReader;
-import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
+package org.soulwing.prospecto.runtime.text;
 
 /**
- * Unit tests for {@link XmlViewReader}.
+ * Keys used for configuration properties of a
+ * {@link org.soulwing.prospecto.api.ViewReader}.
  *
  * @author Carl Harris
  */
-public class XmlViewReaderTest extends ViewReaderTestBase {
+public interface ReaderKeys {
 
-  public XmlViewReaderTest() {
-    super(".xml");
-  }
+  String DISCRIMINATOR_NAME = "discriminatorName";
 
-  @Override
-  protected ViewReader newViewReader(InputStream inputStream,
-      Map<String, Object> properties) {
-    return new XmlViewReader(inputStream, properties);
-  }
+  String URL_NAME = "urlName";
 
 }

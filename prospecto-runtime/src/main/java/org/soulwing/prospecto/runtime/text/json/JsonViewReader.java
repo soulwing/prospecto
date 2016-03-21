@@ -29,6 +29,7 @@ import javax.json.stream.JsonParserFactory;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
+import org.soulwing.prospecto.runtime.text.ReaderKeys;
 import org.soulwing.prospecto.runtime.util.PropertyMap;
 
 /**
@@ -38,12 +39,8 @@ import org.soulwing.prospecto.runtime.util.PropertyMap;
  */
 class JsonViewReader extends AbstractViewReader {
 
-  public static final String DISCRIMINATOR_NAME_KEY = "discriminatorName";
-
   public static final String DEFAULT_DISCRIMINATOR_NAME =
       Discriminator.DEFAULT_NAME;
-
-  public static final String URL_NAME_KEY = "urlName";
 
   public static final String DEFAULT_URL_NAME = UrlNode.DEFAULT_NAME;
 
@@ -109,12 +106,12 @@ class JsonViewReader extends AbstractViewReader {
 
   private boolean isDiscriminator() {
     return name != null && name.equals(properties.getString(
-        DISCRIMINATOR_NAME_KEY, DEFAULT_DISCRIMINATOR_NAME));
+        ReaderKeys.DISCRIMINATOR_NAME, DEFAULT_DISCRIMINATOR_NAME));
   }
 
   private boolean isUrl() {
     return name != null && name.equals(properties.getString(
-        URL_NAME_KEY, DEFAULT_URL_NAME));
+        ReaderKeys.URL_NAME, DEFAULT_URL_NAME));
   }
 
   private String getName() {
