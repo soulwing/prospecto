@@ -149,7 +149,7 @@ public class AbstractViewReaderTest {
     };
   }
 
-  static class MockViewReader extends AbstractViewReader {
+  class MockViewReader extends AbstractViewReader {
 
     public MockViewReader(ViewEventFactory eventFactory) {
       super(eventFactory);
