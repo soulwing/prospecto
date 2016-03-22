@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,40 +18,36 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.lang.reflect.Field;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
 
 /**
- * An accessor that directly accesses fields via the Reflection API.
+ * An abstract base for {@link Accessor} implementations.
  *
  * @author Carl Harris
  */
-class FieldAccessor extends AbstractAccessor {
+abstract class AbstractAccessor implements Accessor {
 
+  private final EnumSet<AccessMode> accessModes;
 
-  private final Field field;
-
-  public FieldAccessor(Field field) {
-    super(EnumSet.allOf(AccessMode.class));
-    this.field = field;
-    field.setAccessible(true);
+  protected AbstractAccessor(EnumSet<AccessMode> accessModes) {
+    this.accessModes = accessModes;
   }
 
   @Override
-  public Class<?> getDataType() {
-    return field.getType();
+  public boolean canWrite() {
+    return accessModes.contains(AccessMode.WRITE);
   }
 
   @Override
-  public Object get(Object source) throws IllegalAccessException {
-    return field.get(source);
+  public boolean canRead() {
+    return accessModes.contains(AccessMode.READ);
   }
 
   @Override
-  public void set(Object target, Object value) throws IllegalAccessException {
-    field.set(target, value);
+  public EnumSet<AccessMode> getAccessModes() {
+    return accessModes;
   }
 
 }

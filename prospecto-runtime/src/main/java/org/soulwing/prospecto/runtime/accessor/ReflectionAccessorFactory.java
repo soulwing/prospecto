@@ -22,7 +22,9 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.EnumSet;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 
 /**
@@ -53,22 +55,22 @@ public class ReflectionAccessorFactory implements AccessorFactory {
 
   private static Accessor property(Class<?> declaringClass, String name)
       throws NoSuchMethodException, IntrospectionException {
+    final EnumSet<AccessMode> accessModes = EnumSet.noneOf(AccessMode.class);
+
     for (final PropertyDescriptor descriptor :
         Introspector.getBeanInfo(declaringClass).getPropertyDescriptors()) {
       if (descriptor.getName().equals(name)) {
         Method readMethod = descriptor.getReadMethod();
-        if (readMethod == null) {
-          throw new NoSuchMethodException(declaringClass.getName() +
-              " does not have a read method for property '" + name + "'");
+        if (readMethod != null) {
+          accessModes.add(AccessMode.READ);
         }
 
-//        Method writeMethod = descriptor.getWriteMethod();
-//        if (writeMethod == null) {
-//          throw new NoSuchMethodException(declaringClass.getName() +
-//              " does not have a write method for property '" + name + "'");
-//        }
+        Method writeMethod = descriptor.getWriteMethod();
+        if (writeMethod != null) {
+          accessModes.add(AccessMode.WRITE);
+        }
 
-        return new PropertyAccessor(readMethod, null);
+        return new PropertyAccessor(readMethod, writeMethod, accessModes);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()

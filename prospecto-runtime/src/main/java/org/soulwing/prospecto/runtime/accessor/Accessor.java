@@ -18,7 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import org.soulwing.prospecto.api.ViewException;
+import java.util.EnumSet;
+
+import org.soulwing.prospecto.api.AccessMode;
 
 /**
  * An accessor for a property of a model.
@@ -26,6 +28,28 @@ import org.soulwing.prospecto.api.ViewException;
  * @author Carl Harris
  */
 public interface Accessor {
+
+  /**
+   * Gets the supported access modes of this accessor.
+   * @return set of supported access modes
+   */
+  EnumSet<AccessMode> getAccessModes();
+
+  /**
+   * Tests whether this accessor can be called to read (get) a value.
+   * <p>
+   * This is basically shorthand for {@code getAccessModes().contains(AccessMode.READ)}
+   * @return {@code true} if this accessor supports {@link AccessMode#READ}.
+   */
+  boolean canRead();
+
+  /**
+   * Tests whether this accessor can be called to write (set) a value.
+   * <p>
+   * This is basically shorthand for {@code getAccessModes().contains(AccessMode.WRITE)}
+   * @return {@code true} if this accessor supports {@link AccessMode#WRITE}.
+   */
+  boolean canWrite();
 
   /**
    * Gets the declared data type of the property.
@@ -42,9 +66,9 @@ public interface Accessor {
 
   /**
    * Sets the property value.
-   * @param source model object into which the property value is to be injected
+   * @param target model object into which the property value is to be injected
    * @param value property value to inject
    */
-  void set(Object source, Object value) throws Exception;
+  void set(Object target, Object value) throws Exception;
 
 }

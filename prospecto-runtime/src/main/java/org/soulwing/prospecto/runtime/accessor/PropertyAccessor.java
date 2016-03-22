@@ -20,18 +20,23 @@ package org.soulwing.prospecto.runtime.accessor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.EnumSet;
+
+import org.soulwing.prospecto.api.AccessMode;
 
 /**
  * A accessor that uses JavaBeans-style accessor methods via the Reflection API.
  *
  * @author Carl Harris
  */
-class PropertyAccessor implements Accessor {
+class PropertyAccessor extends AbstractAccessor {
 
   private final Method getter;
   private final Method setter;
 
-  public PropertyAccessor(Method getter, Method setter) {
+  public PropertyAccessor(Method getter, Method setter,
+      EnumSet<AccessMode> accessModes) {
+    super(accessModes);
     this.getter = getter;
     this.setter = setter;
     if (getter != null) {
@@ -40,6 +45,7 @@ class PropertyAccessor implements Accessor {
     if (setter != null) {
       this.setter.setAccessible(true);
     }
+
   }
 
   @Override
@@ -50,13 +56,21 @@ class PropertyAccessor implements Accessor {
   @Override
   public Object get(Object source)
       throws IllegalAccessException, InvocationTargetException {
+    if (getter == null) {
+      throw new UnsupportedOperationException(AccessMode.READ
+          + " access is not supported by this accessor");
+    }
     return getter.invoke(source);
   }
 
   @Override
-  public void set(Object source, Object value)
+  public void set(Object target, Object value)
       throws IllegalAccessException, InvocationTargetException {
-    setter.invoke(source, value);
+    if (setter == null) {
+      throw new UnsupportedOperationException(AccessMode.WRITE
+          + " access is not supported by this accessor");
+    }
+    setter.invoke(target, value);
   }
 
 }
