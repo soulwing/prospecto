@@ -18,16 +18,21 @@
  */
 package org.soulwing.prospecto.api.converter;
 
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
 import org.soulwing.prospecto.api.ViewTemplateException;
 
 /**
- * DESCRIBE THE TYPE HERE
+ * A converter that extracts a single String, Number, Boolean, Enum, or
+ * Date property from a model object.
+ *
  * @author Carl Harris
  */
 public class PropertyExtractingValueTypeConverter
@@ -42,26 +47,49 @@ public class PropertyExtractingValueTypeConverter
   public void init() throws Exception {
     assertNotNull(modelType, "modelType is required");
     assertNotNull(propertyName, "propertyName is required");
+    getter = findGetter(modelType, propertyName);
+    assertValidValueType(propertyName, getter.getReturnType());
+  }
+
+  private static Method findGetter(Class<?> modelType, String propertyName)
+      throws IntrospectionException {
     for (final PropertyDescriptor descriptor :
         Introspector.getBeanInfo(modelType).getPropertyDescriptors()) {
       if (descriptor.getName().equals(propertyName)) {
-        getter = descriptor.getReadMethod();
-        return;
+        return descriptor.getReadMethod();
       }
     }
     throw new IllegalArgumentException(modelType.getName()
         + " has no property named '" + propertyName + "'");
   }
 
-  private void assertNotNull(Object obj, String message) {
+  private static void assertNotNull(Object obj, String message) {
     if (obj != null) return;
     throw new IllegalArgumentException(message);
+  }
+
+  private static void assertValidValueType(String propertyName,
+      Class<?> valueType) {
+    if (String.class.equals(valueType)) return;
+    if (Number.class.isAssignableFrom(valueType)) return;
+    if (Boolean.class.equals(valueType)) return;
+    if (Enum.class.isAssignableFrom(valueType)) return;
+    if (Date.class.isAssignableFrom(valueType)) return;
+    if (Calendar.class.isAssignableFrom(valueType)) return;
+    throw new IllegalArgumentException("property '" + propertyName
+        + "' must be of type String, Number, Boolean, Enum, or Date; not "
+        + valueType.getName());
   }
 
   @Override
   public boolean supports(Class<?> type) {
     return supportSubTypes ?
         modelType.isAssignableFrom(type) : modelType.equals(type);
+  }
+
+  @Override
+  public Class<?> getViewType() {
+    return getter.getReturnType();
   }
 
   @Override

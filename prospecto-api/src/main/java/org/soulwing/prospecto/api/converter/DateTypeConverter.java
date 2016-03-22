@@ -98,6 +98,11 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
+  public Class<String> getViewType() {
+    return String.class;
+  }
+
+  @Override
   public String toValue(Object model) throws Exception {
     assert model instanceof Date;
     switch (format) {
@@ -119,22 +124,22 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
-  public Date toObject(String value) throws Exception {
+  public Date toObject(Object value) throws Exception {
     switch (format) {
       default:
       case ISO8601:
-        return parseUsingPattern(ISO8601_PATTERN, value);
+        return parseUsingPattern(ISO8601_PATTERN, value.toString());
       case ISO8601_DATE:
-        return parseUsingPattern(ISO8601_DATE_PATTERN, value);
+        return parseUsingPattern(ISO8601_DATE_PATTERN, value.toString());
       case ISO8601_TIME:
-        return parseUsingPattern(ISO8601_TIME_PATTERN, value);
+        return parseUsingPattern(ISO8601_TIME_PATTERN, value.toString());
       case ISO8601_WITH_TIME_ZONE:
-        return parseUsing8601WithTimeZone(value);
+        return parseUsing8601WithTimeZone(value.toString());
       case RFC1123:
-        return parseUsingPattern(RFC1123_PATTERN, value);
+        return parseUsingPattern(RFC1123_PATTERN, value.toString());
       case CUSTOM:
         return parseUsingPattern(
-            pattern != null ? pattern : ISO8601_PATTERN, value);
+            pattern != null ? pattern : ISO8601_PATTERN, value.toString());
     }
   }
 

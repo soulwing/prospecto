@@ -19,7 +19,6 @@
 package org.soulwing.prospecto.api.converter;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -62,13 +61,18 @@ public class CalendarTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
+  public Class<String> getViewType() {
+    return delegate.getViewType();
+  }
+
+  @Override
   public String toValue(Object model) throws Exception {
     assert model instanceof Calendar;
     return delegate.toValue(((Calendar) model).getTime());
   }
 
   @Override
-  public Calendar toObject(String value) throws Exception {
+  public Calendar toObject(Object value) throws Exception {
     final Calendar calendar = Calendar.getInstance();
     calendar.setTime(delegate.toObject(value));
     return calendar;

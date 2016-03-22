@@ -62,7 +62,7 @@ package org.soulwing.prospecto.api.converter;
  * performance.
  *
  * @param <V> value type; must be one of String, Number (or any of its
- * subtypes), Boolean, Enum (or any of its subtypes)
+ * subtypes), Boolean, Enum, or Date (or any of its subtypes)
  *
  * @author Carl Harris
  */
@@ -75,6 +75,12 @@ public interface ValueTypeConverter<V> {
    *    {@code type} and an instance of type {@code V}
    */
   boolean supports(Class<?> type);
+
+  /**
+   * Gets the view type produced by this converter
+   * @return view type; which must be one of String, Boolean, Number, or Date
+   */
+  Class<?> getViewType();
 
   /**
    * Converts a model object (generally of a simple type) to a suitable
@@ -91,7 +97,7 @@ public interface ValueTypeConverter<V> {
    * @return model object
    * @throws Exception if conversion fails
    */
-  Object toObject(V value) throws Exception;
+  Object toObject(Object value) throws Exception;
 
 }
 
