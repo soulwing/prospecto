@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A static utility for producing a {@link MultiValuedAccessor}.
@@ -28,6 +29,9 @@ import java.util.Collection;
 public class MultiValuedAccessorFactory {
 
   public static MultiValuedAccessor newAccessor(Accessor accessor) {
+    if (List.class.isAssignableFrom(accessor.getDataType())) {
+      return new ListAccessor(accessor);
+    }
     if (Collection.class.isAssignableFrom(accessor.getDataType())) {
       return new CollectionAccessor(accessor);
     }

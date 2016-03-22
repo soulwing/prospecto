@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Mar 22, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,23 +18,16 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.Iterator;
-
 /**
- * An accessor for a multi-valued property such as an array or a collection.
+ * A {@link MultiValuedAccessor} that supports an ordered collection that
+ * allows duplicates.
  *
  * @author Carl Harris
  */
-public interface MultiValuedAccessor {
+public interface IndexedMultiValuedAccessor extends MultiValuedAccessor {
 
-  boolean canRead();
+  void add(Object target, int index, Object value) throws Exception;
 
-  boolean canWrite();
-
-  Iterator<Object> iterator(Object source) throws Exception;
-
-  void add(Object target, Object value) throws Exception;
-
-  void remove(Object target, Object value) throws Exception;
+  void remove(Object target, int index) throws Exception;
 
 }

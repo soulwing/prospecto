@@ -21,8 +21,6 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.soulwing.prospecto.api.ViewException;
-
 /**
  * An accessor for the elements of a collection.
  *
@@ -30,16 +28,41 @@ import org.soulwing.prospecto.api.ViewException;
  */
 public class CollectionAccessor implements MultiValuedAccessor {
 
-  private Accessor delegate;
+  protected Accessor delegate;
 
   public CollectionAccessor(Accessor delegate) {
     this.delegate = delegate;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public Iterator<Object> iterator(Object source) throws Exception {
-    return ((Collection<Object>) delegate.get(source)).iterator();
+  public boolean canRead() {
+    return delegate.canRead();
   }
+
+  @Override
+  public boolean canWrite() {
+    return delegate.canWrite();
+  }
+
+  @Override
+  public Iterator<Object> iterator(Object source) throws Exception {
+    return get(source).iterator();
+  }
+
+  @Override
+  public void add(Object target, Object value) throws Exception {
+    get(target).add(value);
+  }
+
+  @Override
+  public void remove(Object target, Object value) throws Exception {
+    get(target).remove(value);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Collection<Object> get(Object source) throws Exception {
+    return (Collection<Object>) delegate.get(source);
+  }
+
 
 }

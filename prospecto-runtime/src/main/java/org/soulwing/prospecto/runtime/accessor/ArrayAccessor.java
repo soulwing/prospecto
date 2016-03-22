@@ -21,14 +21,12 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.soulwing.prospecto.api.ViewException;
-
 /**
  * An accessor for the elements of an array.
  *
  * @author Carl Harris
  */
-public class ArrayAccessor implements MultiValuedAccessor {
+public class ArrayAccessor implements IndexedMultiValuedAccessor {
 
   private Accessor delegate;
 
@@ -37,8 +35,66 @@ public class ArrayAccessor implements MultiValuedAccessor {
   }
 
   @Override
+  public boolean canRead() {
+    return delegate.canRead();
+  }
+
+  @Override
+  public boolean canWrite() {
+    return delegate.canWrite();
+  }
+
+  @Override
   public Iterator<Object> iterator(Object source) throws Exception {
     return Arrays.asList((Object[]) delegate.get(source)).iterator();
+  }
+
+  @Override
+  public void add(Object target, Object value) throws Exception {
+    add(target, ((Object[]) delegate.get(target)).length, value);
+  }
+
+  @Override
+  public void remove(Object target, Object value) throws Exception {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void add(Object target, int index, Object value) throws Exception {
+    Object[] array = (Object[]) delegate.get(target);
+    assertIndexIsInRange(array, index, array.length);
+    Object[] arrayCopy = Arrays.copyOf(array, array.length + 1);
+    if (index < array.length) {
+      System.arraycopy(arrayCopy, index, arrayCopy, index + 1,
+        array.length - index);
+    }
+    arrayCopy[index] = value;
+    delegate.set(target, arrayCopy);
+  }
+
+  @Override
+  public void remove(Object target, int index) throws Exception {
+    Object[] array = (Object[]) delegate.get(target);
+    assertIndexIsInRange(array, index, array.length - 1);
+    Object[] arrayCopy = array.length - 1 > 0 ?
+        Arrays.copyOf(array, array.length - 1) : new Object[0];
+    if (array.length - 1 > 0) {
+      if (index - 1 >= 0) {
+        System.arraycopy(array, 0, arrayCopy, 0, index - 1);
+      }
+      System.arraycopy(array, index + 1, arrayCopy, index,
+          arrayCopy.length - index);
+    }
+    delegate.set(target, arrayCopy);
+  }
+
+  private static void assertIndexIsInRange(Object[] array, int index,
+      int extent) {
+    if (index < 0 || index > extent) {
+      throw new ArrayIndexOutOfBoundsException("index " + index + " is not in"
+          + " range [0, " + extent + "]");
+    }
+
   }
 
 }
