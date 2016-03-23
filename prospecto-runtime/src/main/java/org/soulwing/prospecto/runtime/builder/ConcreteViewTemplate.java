@@ -26,6 +26,8 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
+import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
+import org.soulwing.prospecto.runtime.editor.ModelEditorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
@@ -41,6 +43,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private final AbstractViewNode root;
   private final ScopedViewContextFactory viewContextFactory;
+  private final ModelEditorFactory modelEditorFactory;
 
   public ConcreteViewTemplate(AbstractViewNode root) {
     this(root, new ConcreteScopedViewContextFactory());
@@ -48,9 +51,17 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   ConcreteViewTemplate(AbstractViewNode root,
       ScopedViewContextFactory viewContextFactory) {
+    this(root, viewContextFactory, new ConcreteModelEditorFactory());
+  }
+
+  ConcreteViewTemplate(AbstractViewNode root,
+      ScopedViewContextFactory viewContextFactory,
+      ModelEditorFactory modelEditorFactory) {
     this.root = root;
     this.viewContextFactory = viewContextFactory;
+    this.modelEditorFactory = modelEditorFactory;
   }
+
 
   public AbstractViewNode getRoot() {
     return root;
@@ -69,8 +80,8 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ModelEditor generateEditor(View view, ViewContext context) {
-    return null;
+  public ModelEditor generateEditor(View source, ViewContext context) {
+    return modelEditorFactory.newEditor(root, source, context);
   }
 
   @Override
