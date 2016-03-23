@@ -46,7 +46,9 @@ public class ArrayAccessor implements IndexedMultiValuedAccessor {
 
   @Override
   public Iterator<Object> iterator(Object source) throws Exception {
-    return Arrays.asList((Object[]) delegate.get(source)).iterator();
+    final Object[] array = (Object[]) delegate.get(source);
+    if (array == null) return null;
+    return Arrays.asList(array).iterator();
   }
 
   @Override

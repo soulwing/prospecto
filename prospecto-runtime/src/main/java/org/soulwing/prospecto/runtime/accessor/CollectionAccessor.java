@@ -46,7 +46,9 @@ public class CollectionAccessor implements MultiValuedAccessor {
 
   @Override
   public Iterator<Object> iterator(Object source) throws Exception {
-    return get(source).iterator();
+    final Collection<Object> collection = get(source);
+    if (collection == null) return null;
+    return collection.iterator();
   }
 
   @Override
