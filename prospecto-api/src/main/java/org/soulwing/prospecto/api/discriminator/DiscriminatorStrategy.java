@@ -41,10 +41,11 @@ public interface DiscriminatorStrategy {
    * Determines the subtype that corresponds to a given discriminator.
    * @param base base type
    * @param discriminator discriminator
+   * @param <T> base type
    * @return type that corresponds to {@code discriminator}
    * @throws ClassNotFoundException
    */
-  Class<?> toSubtype(Class<?> base, Discriminator discriminator)
+  <T> Class<T> toSubtype(Class<T> base, Discriminator discriminator)
       throws ClassNotFoundException;
 
 }

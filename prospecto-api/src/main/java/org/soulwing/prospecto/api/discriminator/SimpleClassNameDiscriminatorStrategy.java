@@ -45,7 +45,8 @@ public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrate
   @Override
   public Discriminator toDiscriminator(Class<?> base, Class<?> subtype) {
     if (!base.isAssignableFrom(subtype)) {
-      throw new AssertionError(subtype + " is not a subtype of " + base);
+      throw new IllegalArgumentException(subtype + " is not a subtype of "
+          + base);
     }
     String value = subtype.getSimpleName();
     if (prefix != null && value.startsWith(prefix)) {
@@ -61,7 +62,8 @@ public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrate
   }
 
   @Override
-  public Class<?> toSubtype(Class<?> base, Discriminator discriminator)
+  @SuppressWarnings("unchecked")
+  public <T> Class<T> toSubtype(Class<T> base, Discriminator discriminator)
       throws ClassNotFoundException {
     String simpleClassName = discriminator.getValue().toString();
     if (simpleClassName.isEmpty()) {
@@ -76,8 +78,13 @@ public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrate
     if (suffix != null) {
       simpleClassName = simpleClassName + suffix;
     }
-    return base.getClassLoader().loadClass(
-        base.getPackage().getName() + "." + simpleClassName);
+    final String name = base.getPackage().getName() + "." + simpleClassName;
+    final Class<?> subtype = base.getClassLoader().loadClass(name);
+    if (!(base.isAssignableFrom(subtype))) {
+      throw new IllegalArgumentException(
+          name + " is not a subtype of " + base.getName());
+    }
+    return (Class<T>) subtype;
   }
 
   private String recapitalize(String name) {

@@ -95,5 +95,18 @@ public class SimpleClassNameDiscriminatorStrategyTest {
         .equals(PrefixMockModelSuffix.class), is(true));
   }
 
+  @Test(expected =  IllegalArgumentException.class)
+  public void testToDiscriminatorWhenNotSubtype() throws Exception {
+    strategy.toDiscriminator(
+        MockModel.class, Object.class);
+  }
+
+  @Test(expected =  IllegalArgumentException.class)
+  public void testToSubtypeWhenNotSubtype() throws Exception {
+    strategy.toSubtype(MockModel.class,
+        strategy.toDiscriminator(OTHERModel.class, OTHERModel.class));
+  }
+
+
 }
 
