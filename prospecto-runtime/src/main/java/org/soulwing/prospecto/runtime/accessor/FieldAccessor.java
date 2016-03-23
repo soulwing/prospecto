@@ -33,8 +33,8 @@ class FieldAccessor extends AbstractAccessor {
 
   private final Field field;
 
-  public FieldAccessor(Field field) {
-    super(EnumSet.allOf(AccessMode.class));
+  public FieldAccessor(String name, Field field) {
+    super(name, EnumSet.allOf(AccessMode.class));
     this.field = field;
     field.setAccessible(true);
   }
@@ -42,6 +42,11 @@ class FieldAccessor extends AbstractAccessor {
   @Override
   public Class<?> getDataType() {
     return field.getType();
+  }
+
+  @Override
+  protected Accessor newAccessor(Class<?> type, String name) throws Exception {
+    return ReflectionAccessorFactory.field(type, name);
   }
 
   @Override

@@ -29,10 +29,17 @@ import org.soulwing.prospecto.api.AccessMode;
  */
 abstract class AbstractAccessor implements Accessor {
 
+  private final String name;
   private final EnumSet<AccessMode> accessModes;
 
-  protected AbstractAccessor(EnumSet<AccessMode> accessModes) {
+  protected AbstractAccessor(String name, EnumSet<AccessMode> accessModes) {
+    this.name = name;
     this.accessModes = accessModes;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
   @Override
@@ -49,5 +56,13 @@ abstract class AbstractAccessor implements Accessor {
   public EnumSet<AccessMode> getAccessModes() {
     return accessModes;
   }
+
+  @Override
+  public Accessor forSubtype(Class<?> subtype) throws Exception {
+    return newAccessor(subtype, name);
+  }
+
+  protected abstract Accessor newAccessor(Class<?> type, String name)
+      throws Exception;
 
 }

@@ -48,12 +48,12 @@ public class ReflectionAccessorFactory implements AccessorFactory {
     }
   }
 
-  private static Accessor field(Class<?> declaringClass, String name)
+  static Accessor field(Class<?> declaringClass, String name)
       throws NoSuchFieldException {
-    return new FieldAccessor(declaringClass.getDeclaredField(name));
+    return new FieldAccessor(name, declaringClass.getDeclaredField(name));
   }
 
-  private static Accessor property(Class<?> declaringClass, String name)
+  static Accessor property(Class<?> declaringClass, String name)
       throws NoSuchMethodException, IntrospectionException {
     final EnumSet<AccessMode> accessModes = EnumSet.noneOf(AccessMode.class);
 
@@ -70,12 +70,11 @@ public class ReflectionAccessorFactory implements AccessorFactory {
           accessModes.add(AccessMode.WRITE);
         }
 
-        return new PropertyAccessor(readMethod, writeMethod, accessModes);
+        return new PropertyAccessor(name, readMethod, writeMethod, accessModes);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()
         + " has no property named '" + name + "'");
   }
-
 
 }

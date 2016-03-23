@@ -34,9 +34,9 @@ class PropertyAccessor extends AbstractAccessor {
   private final Method getter;
   private final Method setter;
 
-  public PropertyAccessor(Method getter, Method setter,
+  public PropertyAccessor(String name, Method getter, Method setter,
       EnumSet<AccessMode> accessModes) {
-    super(accessModes);
+    super(name, accessModes);
     this.getter = getter;
     this.setter = setter;
     if (getter != null) {
@@ -45,12 +45,16 @@ class PropertyAccessor extends AbstractAccessor {
     if (setter != null) {
       this.setter.setAccessible(true);
     }
-
   }
 
   @Override
   public Class<?> getDataType() {
     return getter.getReturnType();
+  }
+
+  @Override
+  protected Accessor newAccessor(Class<?> type, String name) throws Exception {
+    return ReflectionAccessorFactory.property(type, name);
   }
 
   @Override

@@ -30,6 +30,12 @@ import org.soulwing.prospecto.api.AccessMode;
 public interface Accessor {
 
   /**
+   * Gets the name of the property.
+   * @return property name
+   */
+  String getName();
+
+  /**
    * Gets the supported access modes of this accessor.
    * @return set of supported access modes
    */
@@ -58,6 +64,16 @@ public interface Accessor {
   Class<?> getDataType();
 
   /**
+   * Creates a copy of this accessor for a particular subtype of the base
+   * type.
+   * @param subtype the subject subtype
+   * @return accessor with same configuration, but with {!code subtype} as
+   *    the new base type
+   * @throws Exception
+   */
+  Accessor forSubtype(Class<?> subtype) throws Exception;
+
+  /**
    * Gets the property value.
    * @param source model object from which the property value is to be extracted
    * @return property value
@@ -70,5 +86,6 @@ public interface Accessor {
    * @param value property value to inject
    */
   void set(Object target, Object value) throws Exception;
+
 
 }
