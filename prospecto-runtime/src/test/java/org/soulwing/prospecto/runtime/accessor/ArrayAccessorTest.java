@@ -140,6 +140,11 @@ public class ArrayAccessorTest {
     private boolean readable = true;
 
     @Override
+    public String getName() {
+      return null;
+    }
+
+    @Override
     public EnumSet<AccessMode> getAccessModes() {
       return null;
     }
@@ -156,6 +161,11 @@ public class ArrayAccessorTest {
 
     @Override
     public Class<?> getDataType() {
+      return null;
+    }
+
+    @Override
+    public Accessor forSubtype(Class<?> subtype) throws Exception {
       return null;
     }
 
