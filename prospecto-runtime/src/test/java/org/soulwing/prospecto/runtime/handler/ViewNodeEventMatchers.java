@@ -25,9 +25,8 @@ import static org.hamcrest.Matchers.sameInstance;
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -37,19 +36,11 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  */
 public class ViewNodeEventMatchers {
 
-  public static Matcher<ViewNodeElementEvent> viewNodeElementEvent(
-      ViewNode node, Object model, Object element, ViewContext viewContext) {
+  public static Matcher<ViewNodePropertyEvent> viewNodePropertyEvent(
+      ViewNode node, Object model, Object value, ViewContext viewContext) {
     return allOf(
         hasProperty("source", sameInstance(node)),
         hasProperty("model", sameInstance(model)),
-        hasProperty("element", sameInstance(element)),
-        hasProperty("context", sameInstance(viewContext)));
-  }
-
-  public static Matcher<ViewNodeValueEvent> viewNodeValueEvent(
-      ViewNode node, Object value, ViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
         hasProperty("value", sameInstance(value)),
         hasProperty("context", sameInstance(viewContext)));
   }

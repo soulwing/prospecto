@@ -37,9 +37,6 @@ import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListener;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 
 /**
  * Unit tests for {@link ConcreteViewContext}.
@@ -335,37 +332,20 @@ public class ConcreteViewContextTest {
         context.mock(Scope.class);
     final ViewListener listener =
         context.mock(ViewListener.class);
-    final ViewNodeHandler viewNodeHandler =
-        context.mock(ViewNodeHandler.class);
-    final ViewNodeElementHandler viewNodeElementHandler =
-        context.mock(ViewNodeElementHandler.class);
-    final ViewNodeValueHandler viewNodeValueHandler =
-        context.mock(ViewNodeValueHandler.class);
     final ValueTypeConverter valueTypeConverter =
         context.mock(ValueTypeConverter.class);
 
     viewContext.getScopes().add(scope);
     viewContext.getListeners().append(listener);
-    viewContext.getViewNodeHandlers().add(viewNodeHandler);
-    viewContext.getViewNodeElementHandlers().add(viewNodeElementHandler);
-    viewContext.getViewNodeValueHandlers().add(viewNodeValueHandler);
     viewContext.getValueTypeConverters().add(valueTypeConverter);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().clear();
     viewContext.getListeners().toList().clear();
-    viewContext.getViewNodeHandlers().clear();
-    viewContext.getViewNodeElementHandlers().clear();
-    viewContext.getViewNodeValueHandlers().clear();
     viewContext.getValueTypeConverters().clear();
 
     assertThat(contextCopy.getScopes(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
-    assertThat(contextCopy.getViewNodeHandlers(), contains(viewNodeHandler));
-    assertThat(contextCopy.getViewNodeElementHandlers(),
-        contains(viewNodeElementHandler));
-    assertThat(contextCopy.getViewNodeValueHandlers(),
-        contains(viewNodeValueHandler));
     assertThat(contextCopy.getValueTypeConverters(),
         contains(valueTypeConverter));
   }

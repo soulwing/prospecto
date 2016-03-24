@@ -24,9 +24,6 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListeners;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 
 /**
  * A context used when evaluating view template with a model to produce a view.
@@ -89,41 +86,6 @@ public interface ViewContext {
    * @return listener collection
    */
   ViewListeners getListeners();
-
-  /**
-   * Gets the sequence of view node handlers that will be applied when a
-   * {@link ViewTemplate} is used to generate a {@link View}.
-   * <p>
-   * The returned list can be manipulated directly to add or remove handlers
-   * as needed. Manipulating the list while a view is being generated using
-   * this context has no effect.
-   *
-   * @return view node handlers
-   */
-  List<ViewNodeHandler> getViewNodeHandlers();
-
-  /**
-   * Gets the sequence of view node element handlers that will be applied when a
-   * {@link ViewTemplate} is used to generate a {@link View}.
-   * <p>
-   * The list of handlers can be manipulated directly to add or remove handlers
-   * as needed. Manipulating the list while a view is being generated using
-   * this context has no effect.
-   *
-   * @return view node element handlers
-   */
-  List<ViewNodeElementHandler> getViewNodeElementHandlers();
-
-  /**
-   * Gets the sequence of view node value handlers that will be applied when a
-   * {@link ViewTemplate} is used to generate a {@link View}.
-   * <p>
-   * The list of handlers can be manipulated directly to add or remove handlers
-   * as needed. Manipulating the list while a view is being generated using
-   * this context has no effect.
-   * @return view node value handlers
-   */
-  List<ViewNodeValueHandler> getViewNodeValueHandlers();
 
   /**
    * Gets the set of {@link ValueTypeConverter} instances that will be consulted
