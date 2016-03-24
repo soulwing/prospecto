@@ -22,9 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeValueEvent;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodePropertyEvent;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -34,9 +33,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link ValueViewNode}.
@@ -56,7 +55,7 @@ public class ValueViewNodeTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private ViewNodeValueHandler handler;
+  private NotifiableViewListeners listeners;
 
   @Mock
   private Accessor accessor;
@@ -75,11 +74,13 @@ public class ValueViewNodeTest {
   public void testOnEvaluate() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(viewContext).getViewNodeValueHandlers();
-        will(returnValue(Collections.singletonList(handler)));
-        oneOf(handler).onExtractValue(
-            with(viewNodeValueEvent(node, MODEL_VALUE, viewContext)));
+        exactly(2).of(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).fireOnExtractValue(
+            with(viewNodePropertyEvent(node, MODEL, MODEL_VALUE, viewContext)));
         will(returnValue(MODEL_VALUE));
+        oneOf(listeners).firePropertyVisited(
+            with(viewNodePropertyEvent(node, MODEL, VIEW_VALUE, viewContext)));
       }
     });
 

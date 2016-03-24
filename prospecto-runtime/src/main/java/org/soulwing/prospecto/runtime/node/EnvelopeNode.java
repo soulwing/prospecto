@@ -32,7 +32,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class EnvelopeNode extends ContainerViewNode {
+public class EnvelopeNode extends ObjectNode {
 
   /**
    * Constructs a new instance.

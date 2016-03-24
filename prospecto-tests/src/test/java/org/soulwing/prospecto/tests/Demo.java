@@ -30,7 +30,6 @@ import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewWriterFactory;
-import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.demo.DepartmentPurchaser;
 import org.soulwing.prospecto.demo.MockUrlResolverProvider;
 import org.soulwing.prospecto.demo.PurchaseItem;
@@ -72,6 +71,7 @@ public class Demo {
     final PurchaseOrder order = new PurchaseOrder();
     order.setId(2L);
     order.setFob(PurchaseOrder.FreeOnBoard.ORIGIN);
+    order.setCreationDate(new Date());
     order.setDueDate(new Date());
     order.setVendor(vendor);
     order.setPurchaser(purchaser);
@@ -92,8 +92,8 @@ public class Demo {
 
     scope.put(new MockUrlResolverProvider().getResolver());
 
-    context.getValueTypeConverters().add(
-      new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
+//    context.getValueTypeConverters().add(
+//      new DateTypeConverter(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE));
 
     final View summaryView = Views.PO_SUMMARY_TEMPLATE.generateView(orders, context);
     summaryView.getEnvelope().putProperty("offset", 0);

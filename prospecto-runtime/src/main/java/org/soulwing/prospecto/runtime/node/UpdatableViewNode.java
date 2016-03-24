@@ -1,5 +1,5 @@
 /*
- * File created on Mar 17, 2016
+ * File created on Mar 22, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,24 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.runtime.node;
+
+import java.util.Deque;
+
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * An editor for a model.
- * <p>
- * An editor applies the model state in a source view to the model that backs
- * a target view.
+ * A view node that can used to update a corresponding target model object.
  *
  * @author Carl Harris
  */
-public interface ModelEditor {
+public interface UpdatableViewNode {
 
-  /**
-   * Updates the given model.
-   * @param model model (which must be an instance of the type associated with
-   *    the root of the target view).
-   * @throws ModelEditorException
-   */
-  void update(Object model) throws ModelEditorException;
+  boolean supportsUpdateEvent(View.Event event);
+
+  void onUpdate(Object target, View.Event triggerEvent,
+      Deque<View.Event> events,
+      ScopedViewContext context) throws Exception;
 
 }

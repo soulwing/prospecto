@@ -1,0 +1,26 @@
+{
+  "id":2,
+  "fob":"ORIGIN",
+  "creationDate":1458598866329,
+  "dueDate":"2016-04-21",
+  "total":61.92,
+  "purchaser":{
+    "type":"department",
+    "id":5,
+    "name":"CNS",
+    "departmentId":"072500"
+  },
+  "items":[
+    {
+      "id":3,
+      "description":"Stapler; Swingline; Green",
+      "quantity":2,
+      "unitPrice":16.99
+    },
+    {
+      "description":"Staple Remover; Bostich",
+      "quantity":2,
+      "unitPrice":7.99
+    }
+  ]
+}

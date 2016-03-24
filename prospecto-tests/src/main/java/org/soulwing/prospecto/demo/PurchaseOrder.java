@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A demo type representing a purchase order.
@@ -199,11 +200,26 @@ public class PurchaseOrder {
 
   public BigDecimal getItemTotal() {
     BigDecimal total = BigDecimal.ZERO;
-    for (final PurchaseItem item : items) {
-      BigDecimal ext = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-      total = total.add(ext);
+    if (items != null) {
+      for (final PurchaseItem item : items) {
+        BigDecimal ext = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+        total = total.add(ext);
+      }
     }
     return total;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (id == null) return false;
+    if (!(obj instanceof PurchaseOrder)) return false;
+    return id.equals(((PurchaseOrder) obj).id);
   }
 
 }

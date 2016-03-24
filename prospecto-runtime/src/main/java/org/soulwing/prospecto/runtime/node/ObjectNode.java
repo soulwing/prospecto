@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,15 +48,45 @@ public class ObjectNode extends ContainerViewNode {
 
     final List<View.Event> events = new LinkedList<>();
 
-    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
-    events.addAll(evaluateChildren(getModelObject(source), context));
-    events.add(newEvent(View.Event.Type.END_OBJECT));
-
+    final Object model = getModelObject(source);
+    if (model != null) {
+      events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+      events.addAll(evaluateChildren(model, context));
+      events.add(newEvent(View.Event.Type.END_OBJECT));
+    }
+    else {
+      events.add(newEvent(View.Event.Type.VALUE));
+    }
     return events;
+  }
+
+  @Override
+  public void onUpdate(Object target, View.Event event,
+      Deque<View.Event> events,
+      ScopedViewContext context) throws Exception {
+    Object model = getModelObject(target);
+    final Object child = createChild(getModelType(), events, context);
+    if (model == null || !model.equals(child)) {
+      // FIXME -- need to tell some handler that we created or replaced a child
+      model = child;
+      setModelObject(target, model);
+    }
+
+    updateChildren(model, event, events, context);
+  }
+
+  @Override
+  public boolean supportsUpdateEvent(View.Event event) {
+    return event.getType() == View.Event.Type.BEGIN_OBJECT
+        || event.getType() == View.Event.Type.VALUE;
   }
 
   protected Object getModelObject(Object source) throws Exception {
     return getAccessor().get(source);
+  }
+
+  protected void setModelObject(Object target, Object value) throws Exception {
+    getAccessor().set(target, value);
   }
 
 }

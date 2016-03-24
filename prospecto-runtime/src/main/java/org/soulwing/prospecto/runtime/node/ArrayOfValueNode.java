@@ -23,16 +23,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
-import org.soulwing.prospecto.runtime.handler.ViewNodeElementHandlerSupport;
-import org.soulwing.prospecto.runtime.handler.ViewNodeValueHandlerSupport;
 
 /**
  * A view node that represents an array of values.
@@ -79,14 +76,13 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
       final Object elementModel = i.next();
-      final ViewNodeElementEvent elementEvent = new ViewNodeElementEvent(this,
+      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(this,
           model, elementModel, context);
-      if (ViewNodeElementHandlerSupport.willVisitElement(elementEvent)) {
-        final ViewNodeValueEvent valueEvent = new ViewNodeValueEvent(this,
-            ViewNodeElementHandlerSupport.extractedElement(elementEvent), context);
+      if (context.getListeners().fireShouldVisitProperty(elementEvent)) {
         events.add(newEvent(View.Event.Type.VALUE, elementName,
-            toViewValue(ViewNodeValueHandlerSupport.extractedValue(valueEvent),
-            context)));
+            toViewValue(
+                context.getListeners().fireOnExtractValue(elementEvent),
+                context)));
       }
     }
     events.add(newEvent(View.Event.Type.END_ARRAY));

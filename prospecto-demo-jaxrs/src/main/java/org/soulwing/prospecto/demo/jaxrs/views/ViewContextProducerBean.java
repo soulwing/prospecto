@@ -30,12 +30,11 @@ import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
-import org.soulwing.prospecto.api.handler.ViewNodeElementEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeAcceptor;
 import org.soulwing.prospecto.api.handler.ViewNodeEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeValueEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeListener;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyListener;
 import org.soulwing.prospecto.demo.jaxrs.domain.Money;
 import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
@@ -83,9 +82,9 @@ public class ViewContextProducerBean {
   }
 
   private void configureContext(ViewContext context) {
-    context.getViewNodeHandlers().add(new ViewNodeHandler() {
+    context.getListeners().append(new ViewNodeAcceptor() {
       @Override
-      public boolean beforeVisit(ViewNodeEvent event) {
+      public boolean shouldVisitNode(ViewNodeEvent event) {
         String role = event.getSource().get("roleRequired", String.class);
         if (role == null) return true;
         logger.info("role required for node {}: {}",
@@ -94,44 +93,26 @@ public class ViewContextProducerBean {
             .currentUser().hasRole(role);
       }
 
+    });
+
+    context.getListeners().append(new ViewNodeListener() {
       @Override
-      public void afterVisit(ViewNodeEvent event) {
+      public void nodeVisited(ViewNodeEvent event) {
         logger.debug("visited node {}",
             event.getContext().currentViewPathAsString());
-
       }
     });
 
-    context.getViewNodeElementHandlers().add(new ViewNodeElementHandler() {
+    context.getListeners().append(new ViewNodePropertyListener() {
       @Override
-      public boolean beforeVisitElement(ViewNodeElementEvent event) {
-        return true;
-      }
-
-      @Override
-      public Object onExtractElement(ViewNodeElementEvent event) {
-        final Object elementModel = event.getElement();
+      public void propertyVisited(ViewNodePropertyEvent event) {
+        final Object elementModel = event.getValue();
         logger.debug("visited element at path {}: {}",
             event.getContext().currentViewPathAsString(),
             elementModel);
-        return elementModel;
       }
     });
 
-    context.getViewNodeValueHandlers().add(new ViewNodeValueHandler() {
-      @Override
-      public Object onExtractValue(ViewNodeValueEvent event) {
-        logger.debug("extracted value at path {}: {}",
-            event.getContext().currentViewPathAsString(),
-            event.getValue());
-        return event.getValue();
-      }
-
-      @Override
-      public Object onInjectValue(ViewNodeValueEvent event) {
-        return null;
-      }
-    });
   }
 
 }

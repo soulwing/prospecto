@@ -34,8 +34,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link ObjectNode}.
@@ -64,6 +66,9 @@ public class ObjectNodeTest {
   private ScopedViewContext viewContext;
 
   @Mock
+  private NotifiableViewListeners listeners;
+
+  @Mock
   private View.Event childEvent;
 
   private MockViewNode child = new MockViewNode();
@@ -77,16 +82,21 @@ public class ObjectNodeTest {
 
   @Test
   public void testOnEvaluate() throws Exception {
+    context.checking(onEvaluateExpectations());
     context.checking(new Expectations() {
       {
-        allowing(viewContext).put(MODEL);
-        allowing(viewContext).remove(MODEL);
-        allowing(viewContext).getViewNodeHandlers();
-        will(returnValue(Collections.emptyList()));
-        allowing(viewContext).push(CHILD_NAME, MODEL_TYPE);
-        allowing(viewContext).pop();
         oneOf(accessor).get(MODEL);
         will(returnValue(MODEL));
+
+        allowing(viewContext).put(MODEL);
+        allowing(viewContext).remove(MODEL);
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        will(returnValue(true));
+        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(viewContext).push(CHILD_NAME, MODEL_TYPE);
+        allowing(viewContext).pop();
       }
     });
 
@@ -102,6 +112,31 @@ public class ObjectNodeTest {
     assertThat(events.get(2).getName(), is(equalTo(NAME)));
     assertThat(events.get(2).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(2).getValue(), is(nullValue()));
+  }
+
+  @Test
+  public void testOnEvaluateWhenNull() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(null));
+      }
+    });
+
+    node.addChild(child);
+    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
+    assertThat(events.size(), is(1));
+    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.VALUE)));
+    assertThat(events.get(0).getName(), is(equalTo(NAME)));
+    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
+    assertThat(events.get(0).getValue(), is(nullValue()));
+  }
+
+  private Expectations onEvaluateExpectations() throws Exception {
+    return new Expectations() {
+      {
+      }
+    };
   }
 
   class MockViewNode extends AbstractViewNode {

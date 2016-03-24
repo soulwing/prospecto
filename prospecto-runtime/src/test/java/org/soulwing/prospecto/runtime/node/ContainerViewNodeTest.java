@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -32,8 +33,9 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link ContainerViewNode}.
@@ -56,7 +58,7 @@ public class ContainerViewNodeTest {
   private View.Event event;
 
   @Mock
-  private ViewNodeHandler handler;
+  private NotifiableViewListeners listeners;
 
   private static final Object MODEL = new Object();
 
@@ -69,8 +71,11 @@ public class ContainerViewNodeTest {
   public void testEvaluateChildren() throws Exception {
     context.checking(new Expectations() {
       {
-        allowing(viewContext).getViewNodeHandlers();
-        will(returnValue(Collections.emptyList()));
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        will(returnValue(true));
+        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
         allowing(viewContext).push(NAME, MODEL_TYPE);
         allowing(viewContext).pop();
         oneOf(viewContext).put(MODEL);
@@ -97,6 +102,16 @@ public class ContainerViewNodeTest {
       return Collections.singletonList(event);
     }
 
+    @Override
+    public void onUpdate(Object target, View.Event triggerEvent,
+        Deque<View.Event> events, ScopedViewContext context) throws Exception {
+
+    }
+
+    @Override
+    public boolean supportsUpdateEvent(View.Event event) {
+      return false;
+    }
 
   }
 }

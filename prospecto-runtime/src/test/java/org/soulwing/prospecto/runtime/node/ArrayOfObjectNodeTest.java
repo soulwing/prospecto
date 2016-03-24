@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeElementEvent;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodePropertyEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,9 +36,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link ObjectNode}.
@@ -57,7 +58,7 @@ public class ArrayOfObjectNodeTest {
   private static final Class<?> MODEL_TYPE = Collection.class;
 
   private static final Object MODEL = new Object();
-  private static final Object ELEMENT = new Object();
+  private static final Object VALUE = new Object();
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -69,7 +70,7 @@ public class ArrayOfObjectNodeTest {
   private ScopedViewContext viewContext;
 
   @Mock
-  private ViewNodeElementHandler handler;
+  private NotifiableViewListeners listeners;
 
   @Mock
   private View.Event childEvent;
@@ -96,22 +97,22 @@ public class ArrayOfObjectNodeTest {
     context.checking(new Expectations() {
       {
         oneOf(accessor).get(MODEL);
-        will(returnValue(Collections.singletonList(ELEMENT)));
-
-        allowing(viewContext).getViewNodeElementHandlers();
-        will(returnValue(Collections.singletonList(handler)));
-        oneOf(handler).beforeVisitElement(with(
-            viewNodeElementEvent(node, MODEL, ELEMENT, viewContext)));
+        will(returnValue(Collections.singletonList(VALUE)));
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).fireShouldVisitProperty(
+            with(viewNodePropertyEvent(node, MODEL, VALUE, viewContext)));
         will(returnValue(true));
-        oneOf(handler).onExtractElement(with(
-            viewNodeElementEvent(node, MODEL, ELEMENT, viewContext)));
-        will(returnValue(ELEMENT));
+        oneOf(listeners).fireOnExtractValue(
+            with(viewNodePropertyEvent(node, MODEL, VALUE, viewContext)));
+        will(returnValue(VALUE));
 
-        allowing(viewContext).put(ELEMENT);
-        allowing(viewContext).remove(ELEMENT);
-        allowing(viewContext).getViewNodeHandlers();
-        will(returnValue(Collections.emptyList()));
-        allowing(viewContext).push(CHILD_NAME, ELEMENT.getClass());
+        allowing(viewContext).put(VALUE);
+        allowing(viewContext).remove(VALUE);
+        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        will(returnValue(true));
+        allowing(viewContext).push(CHILD_NAME, VALUE.getClass());
         allowing(viewContext).pop();
       }
     });
@@ -138,16 +139,34 @@ public class ArrayOfObjectNodeTest {
     assertThat(events.get(4).getValue(), is(nullValue()));
   }
 
+  @Test
+  public void testOnEvaluateWhenNull() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(null));
+      }
+    });
+
+    node.addChild(child);
+    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
+    assertThat(events.size(), is(1));
+    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.VALUE)));
+    assertThat(events.get(0).getName(), is(equalTo(NAME)));
+    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
+    assertThat(events.get(0).getValue(), is(nullValue()));
+  }
+
   class MockViewNode extends AbstractViewNode {
 
     MockViewNode() {
-      super(CHILD_NAME, CHILD_NAMESPACE, ELEMENT.getClass());
+      super(CHILD_NAME, CHILD_NAMESPACE, VALUE.getClass());
     }
 
     @Override
     protected List<View.Event> onEvaluate(Object source,
         ScopedViewContext context) throws Exception {
-      assertThat(source, is(sameInstance(ELEMENT)));
+      assertThat(source, is(sameInstance(VALUE)));
       assertThat(context, is(sameInstance(viewContext)));
       return Collections.singletonList(childEvent);
     }

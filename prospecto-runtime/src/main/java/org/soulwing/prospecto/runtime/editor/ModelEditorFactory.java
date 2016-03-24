@@ -1,5 +1,5 @@
 /*
- * File created on Mar 17, 2016
+ * File created on Mar 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,24 +16,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.runtime.editor;
+
+import org.soulwing.prospecto.api.ModelEditor;
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
- * An editor for a model.
- * <p>
- * An editor applies the model state in a source view to the model that backs
- * a target view.
+ * A factory that produces {@link ModelEditor} objects.
  *
  * @author Carl Harris
  */
-public interface ModelEditor {
+public interface ModelEditorFactory {
 
   /**
-   * Updates the given model.
-   * @param model model (which must be an instance of the type associated with
-   *    the root of the target view).
-   * @throws ModelEditorException
+   * Constructs a new instance.
+   * @param target root node of the target view template
+   * @param source source view
+   * @param context view context
+   * @return model editor
    */
-  void update(Object model) throws ModelEditorException;
+  ModelEditor newEditor(AbstractViewNode target, View source,
+      ViewContext context);
 
 }

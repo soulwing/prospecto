@@ -1,5 +1,5 @@
 /*
- * File created on Mar 11, 2016
+ * File created on Mar 22, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -26,7 +26,7 @@ import java.util.Iterator;
  *
  * @author Carl Harris
  */
-class IteratorUtil {
+public class IteratorUtil {
 
   @SuppressWarnings("unchecked")
   public static Iterator<Object> iterator(Object source) throws Exception {

@@ -33,7 +33,9 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link EnvelopeNode}.
@@ -57,6 +59,9 @@ public class EnvelopeNodeTest {
   private ScopedViewContext viewContext;
 
   @Mock
+  private NotifiableViewListeners listeners;
+
+  @Mock
   private View.Event childEvent;
 
   private MockViewNode child = new MockViewNode();
@@ -69,8 +74,11 @@ public class EnvelopeNodeTest {
       {
         allowing(viewContext).put(MODEL);
         allowing(viewContext).remove(MODEL);
-        allowing(viewContext).getViewNodeHandlers();
-        will(returnValue(Collections.emptyList()));
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        will(returnValue(true));
+        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
         allowing(viewContext).push(CHILD_NAME, null);
         allowing(viewContext).pop();
       }

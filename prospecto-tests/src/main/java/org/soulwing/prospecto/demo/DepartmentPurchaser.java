@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.demo;
 
+import java.util.Objects;
+
 /**
  * DESCRIBE THE TYPE HERE
  * @author Carl Harris
@@ -73,5 +75,19 @@ public class DepartmentPurchaser implements Purchaser {
   public void setName(String name) {
     this.name = name;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (id == null) return false;
+    if (!(obj instanceof DepartmentPurchaser)) return false;
+    return id.equals(((DepartmentPurchaser) obj).id);
+  }
+
 
 }

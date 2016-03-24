@@ -1,5 +1,5 @@
 /*
- * File created on Mar 17, 2016
+ * File created on Mar 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,21 +19,25 @@
 package org.soulwing.prospecto.api;
 
 /**
- * An editor for a model.
- * <p>
- * An editor applies the model state in a source view to the model that backs
- * a target view.
+ * An exception thrown by a {@link ModelEditor}.
  *
  * @author Carl Harris
  */
-public interface ModelEditor {
+public class ModelEditorException extends RuntimeException {
 
-  /**
-   * Updates the given model.
-   * @param model model (which must be an instance of the type associated with
-   *    the root of the target view).
-   * @throws ModelEditorException
-   */
-  void update(Object model) throws ModelEditorException;
+  public ModelEditorException() {
+  }
+
+  public ModelEditorException(String message) {
+    super(message);
+  }
+
+  public ModelEditorException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public ModelEditorException(Throwable cause) {
+    super(cause);
+  }
 
 }

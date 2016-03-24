@@ -18,10 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewNode;
@@ -29,7 +31,6 @@ import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.handler.ViewNodeHandlerSupport;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 
 /**
@@ -90,9 +91,9 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     final List<View.Event> viewEvents = new LinkedList<>();
 
     context.push(name, modelType);
-    if (ViewNodeHandlerSupport.willVisitNode(nodeEvent)) {
+    if (context.getListeners().fireShouldVisitNode(nodeEvent)) {
       viewEvents.addAll(onEvaluate(model, context));
-      ViewNodeHandlerSupport.nodeVisited(nodeEvent);
+      context.getListeners().fireNodeVisited(nodeEvent);
     }
     context.pop();
 
@@ -113,6 +114,18 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   protected View.Event newEvent(View.Event.Type type, String name,
       Object value) {
     return new ConcreteViewEvent(type, name, namespace, value);
+  }
+
+  public final void update(Object target, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    if (!(this instanceof UpdatableViewNode)) return;
+    if (!((UpdatableViewNode) this).supportsUpdateEvent(triggerEvent)) {
+      throw new ModelEditorException("unexpected event type "
+          + triggerEvent.getType());
+    }
+    context.push(name, modelType);
+    ((UpdatableViewNode) this).onUpdate(target, triggerEvent, events, context);
+    context.pop();
   }
 
   @Override

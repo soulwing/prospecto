@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeEvent;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,8 +34,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link AbstractViewNode}.
@@ -56,27 +55,27 @@ public class AbstractViewNodeTest {
   private ScopedViewContext viewContext;
 
   @Mock
-  private View.Event event;
+  private NotifiableViewListeners listeners;
 
   @Mock
-  private ViewNodeHandler handler;
+  private View.Event event;
 
   private static final Object MODEL = new Object();
 
   private MockViewNode node = new MockViewNode();
 
   @Test
-  public void testEvaluateWhenAllHandlersAccept() throws Exception {
+  public void testEvaluateWhenAllNodeAccepted() throws Exception {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).push(NAME, MODEL_TYPE);
         oneOf(viewContext).pop();
-        exactly(2).of(viewContext).getViewNodeHandlers();
-        will(returnValue(Arrays.asList(handler, handler)));
-        exactly(2).of(handler).beforeVisit(
+        exactly(2).of(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).fireShouldVisitNode(
             with(viewNodeEvent(node, MODEL, viewContext)));
-        will(onConsecutiveCalls(returnValue(true), returnValue(true)));
-        exactly(2).of(handler).afterVisit(
+        will(returnValue(true));
+        oneOf(listeners).fireNodeVisited(
             with(viewNodeEvent(node, MODEL, viewContext)));
       }
     });
@@ -85,16 +84,16 @@ public class AbstractViewNodeTest {
   }
 
   @Test
-  public void testEvaluateWhenAnyHandlerRejects() throws Exception {
+  public void testEvaluateWhenNodeRejected() throws Exception {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).push(NAME, MODEL_TYPE);
         oneOf(viewContext).pop();
-        oneOf(viewContext).getViewNodeHandlers();
-        will(returnValue(Arrays.asList(handler, handler)));
-        exactly(2).of(handler).beforeVisit(
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).fireShouldVisitNode(
             with(viewNodeEvent(node, MODEL, viewContext)));
-        will(onConsecutiveCalls(returnValue(true), returnValue(false)));
+        will(returnValue(false));
       }
     });
 

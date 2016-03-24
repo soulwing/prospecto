@@ -50,6 +50,14 @@ public interface ViewTemplate {
    */
   View generateView(Object model, ViewContext context);
 
-  ModelEditor generateEditor(View view, ViewContext context);
+  /**
+   * Generates a model editor using the given source view.
+   * <p>
+   * The given {@code view} is assumed not to have an outer envelope.
+   * @param source source view (typically produced by a {@link ViewReader}
+   * @param context view context
+   * @return model editor
+   */
+  ModelEditor generateEditor(View source, ViewContext context);
 
 }

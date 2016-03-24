@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
+
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
@@ -28,7 +30,8 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class DiscriminatorNode extends ValueViewNode {
+public class DiscriminatorNode extends ValueViewNode
+    implements UpdatableViewNode {
 
   private Class<?> base;
 
@@ -58,15 +61,6 @@ public class DiscriminatorNode extends ValueViewNode {
     return getStrategy(context).toDiscriminator(getBase(), source.getClass());
   }
 
-  private DiscriminatorStrategy getStrategy(ScopedViewContext context) {
-    DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
-    if (strategy == null) {
-      strategy = context.get(DiscriminatorStrategy.class);
-    }
-    return strategy;
-  }
-
-
   @Override
   protected View.Event.Type getEventType() {
     return View.Event.Type.DISCRIMINATOR;
@@ -81,6 +75,24 @@ public class DiscriminatorNode extends ValueViewNode {
   protected Object toViewValue(Object model, ScopedViewContext context)
       throws Exception {
     return ((Discriminator) model).getValue();
+  }
+
+  @Override
+  public boolean supportsUpdateEvent(View.Event event) {
+    return event.getType() == View.Event.Type.DISCRIMINATOR;
+  }
+
+  @Override
+  public void onUpdate(Object target, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+  }
+
+  private DiscriminatorStrategy getStrategy(ScopedViewContext context) {
+    DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
+    if (strategy == null) {
+      strategy = context.get(DiscriminatorStrategy.class);
+    }
+    return strategy;
   }
 
 

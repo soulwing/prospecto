@@ -55,7 +55,26 @@ public interface View extends Iterable<View.Event> {
     enum Type {
       VALUE, URL, DISCRIMINATOR,
       BEGIN_OBJECT, END_OBJECT,
-      BEGIN_ARRAY, END_ARRAY
+      BEGIN_ARRAY, END_ARRAY;
+
+      /**
+       * Gets the complement of this type.
+       * @return complementary type
+       */
+      public Type complement() {
+        switch (this) {
+          case BEGIN_OBJECT:
+            return END_OBJECT;
+          case END_OBJECT:
+            return BEGIN_OBJECT;
+          case BEGIN_ARRAY:
+            return END_ARRAY;
+          case END_ARRAY:
+            return BEGIN_ARRAY;
+          default:
+            return this;
+        }
+      }
     }
 
     /**

@@ -205,7 +205,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertIsSubTypeOfModelType(Class<?> subtype) {
-    final Class<?> base = cursor.getModelType();
+    final Class<?> base = target.getModelType();
     if (!base.isAssignableFrom(subtype) || base.equals(subtype)) {
       throw new ViewTemplateException(subtype + " is not a subtype of "
           + base);
@@ -213,9 +213,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertTargetHasDiscriminator() {
-    for (final ViewNode child : target.getChildren()) {
-      if (child instanceof DiscriminatorNode) return;
-    }
+    if (target.get(DiscriminatorStrategy.class) != null) return;
     throw new ViewTemplateException(
         "discriminator is required before introducing subtypes");
   }
@@ -254,13 +252,10 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
     assertTargetHasNoChildren();
-    DiscriminatorNode node = new DiscriminatorNode();
+    target.put(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, true);
     if (discriminator != null) {
-      node.put(discriminator);
+      target.put(discriminator);
     }
-    target.addChild(node);
-    cursor.advance(node, null);
-    node.setBase(cursor.getModelType());
     return this;
   }
 

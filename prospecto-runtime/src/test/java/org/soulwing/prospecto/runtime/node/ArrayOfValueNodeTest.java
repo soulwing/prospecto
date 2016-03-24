@@ -22,8 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeElementEvent;
-import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeValueEvent;
+import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodePropertyEvent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,10 +36,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link ObjectNode}.
@@ -68,10 +66,7 @@ public class ArrayOfValueNodeTest {
   private ScopedViewContext viewContext;
 
   @Mock
-  private ViewNodeElementHandler elementHandler;
-
-  @Mock
-  private ViewNodeValueHandler valueHandler;
+  private NotifiableViewListeners listeners;
 
   @Mock
   private ValueTypeConverter<?> converter;
@@ -100,20 +95,13 @@ public class ArrayOfValueNodeTest {
       {
         oneOf(accessor).get(MODEL);
         will(returnValue(Collections.singletonList(ELEMENT)));
-
-        exactly(2).of(viewContext).getViewNodeElementHandlers();
-        will(returnValue(Collections.singletonList(elementHandler)));
-        oneOf(elementHandler).beforeVisitElement(with(
-            viewNodeElementEvent(node, MODEL, ELEMENT, viewContext)));
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).fireShouldVisitProperty(
+            with(viewNodePropertyEvent(node, MODEL, ELEMENT, viewContext)));
         will(returnValue(true));
-        oneOf(elementHandler).onExtractElement(with(
-            viewNodeElementEvent(node, MODEL, ELEMENT, viewContext)));
-        will(returnValue(ELEMENT));
-
-        oneOf(viewContext).getViewNodeValueHandlers();
-        will(returnValue(Collections.singletonList(valueHandler)));
-        oneOf(valueHandler).onExtractValue(with(
-            viewNodeValueEvent(node, ELEMENT, viewContext)));
+        oneOf(listeners).fireOnExtractValue(
+            with(viewNodePropertyEvent(node, MODEL, ELEMENT, viewContext)));
         will(returnValue(ELEMENT));
 
         oneOf(viewContext).getValueTypeConverters();

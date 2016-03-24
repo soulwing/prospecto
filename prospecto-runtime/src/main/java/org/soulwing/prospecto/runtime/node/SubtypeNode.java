@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,6 +54,17 @@ public class SubtypeNode extends ContainerViewNode {
       viewEvents.addAll(evaluateChildren(source, context));
     }
     return viewEvents;
+  }
+
+  @Override
+  public void onUpdate(Object target, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean supportsUpdateEvent(View.Event event) {
+    return false;
   }
 
 }

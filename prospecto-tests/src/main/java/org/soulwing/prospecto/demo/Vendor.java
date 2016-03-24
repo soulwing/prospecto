@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.demo;
 
+import java.util.Objects;
+
 /**
  * A demo type representing a vendor.
  *
@@ -78,4 +80,18 @@ public class Vendor {
   public void setTaxId(String taxId) {
     this.taxId = taxId;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (id == null) return false;
+    if (!(obj instanceof Vendor)) return false;
+    return id.equals(((Vendor) obj).id);
+  }
+
 }

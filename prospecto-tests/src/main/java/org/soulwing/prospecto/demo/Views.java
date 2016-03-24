@@ -44,6 +44,7 @@ public interface Views {
       .arrayOfObjects("orders", "order", NAMESPACE, PurchaseOrder.class)
         .value("id")
         .value("fob")
+        .value("creationDate")
         .value("dueDate")
           .converter(DateTypeConverter.class,
               "format", DateTypeConverter.Format.ISO8601_DATE)
@@ -57,6 +58,7 @@ public interface Views {
       .object("order", NAMESPACE, PurchaseOrder.class)
         .value("id")
         .value("fob")
+        .value("creationDate")
         .value("dueDate")
             .converter(DateTypeConverter.class,
                 "format", DateTypeConverter.Format.ISO8601_DATE)

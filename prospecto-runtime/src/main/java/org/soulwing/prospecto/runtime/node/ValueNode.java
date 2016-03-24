@@ -18,6 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
+
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
@@ -27,7 +31,8 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  *
  * @author Carl Harris
  */
-public class ValueNode extends ValueViewNode implements Convertible {
+public class ValueNode extends ValueViewNode
+    implements Convertible, UpdatableViewNode {
 
   /**
    * Constructs a new instance.
@@ -48,6 +53,22 @@ public class ValueNode extends ValueViewNode implements Convertible {
   protected Object toViewValue(Object model, ScopedViewContext context)
       throws Exception {
     return ConverterSupport.toViewValue(model, this, context);
+  }
+
+  @Override
+  public void onUpdate(Object target, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    final Accessor accessor = getAccessor().forSubtype(target.getClass());
+    if (accessor.canWrite()) {
+      final Object value = ConverterSupport.toModelValue(accessor.getDataType(),
+          triggerEvent.getValue(), this, context);
+      accessor.set(target, value);
+    }
+  }
+
+  @Override
+  public boolean supportsUpdateEvent(View.Event event) {
+    return event.getType() == View.Event.Type.VALUE;
   }
 
 }
