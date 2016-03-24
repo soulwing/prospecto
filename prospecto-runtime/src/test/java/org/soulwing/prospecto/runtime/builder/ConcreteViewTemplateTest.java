@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,8 +39,10 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
@@ -63,6 +66,9 @@ public class ConcreteViewTemplateTest {
 
   @Mock
   private ScopedViewContextFactory viewContextFactory;
+
+  @Mock
+  private NotifiableViewListeners listeners;
 
   @Mock
   private ViewContext viewContext;
@@ -129,8 +135,11 @@ public class ConcreteViewTemplateTest {
         will(returnValue(scopedViewContext));
         allowing(scopedViewContext).push(null, Object.class);
         allowing(scopedViewContext).pop();
-        allowing(scopedViewContext).getViewNodeHandlers();
-        will(returnValue(Collections.emptyList()));
+        allowing(scopedViewContext).getListeners();
+        will(returnValue(listeners));
+        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        will(returnValue(true));
+        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
       }
     };
   }
@@ -152,6 +161,17 @@ public class ConcreteViewTemplateTest {
         throw exception;
       }
       return Collections.singletonList(event);
+    }
+
+    @Override
+    public void onUpdate(Object target, View.Event triggerEvent,
+        Deque<View.Event> events, ScopedViewContext context) throws Exception {
+
+    }
+
+    @Override
+    public boolean supportsUpdateEvent(View.Event event) {
+      return false;
     }
 
   }
