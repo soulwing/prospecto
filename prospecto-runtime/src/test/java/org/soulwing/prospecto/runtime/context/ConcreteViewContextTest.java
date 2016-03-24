@@ -36,6 +36,7 @@ import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.handler.ViewListener;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
@@ -56,9 +57,9 @@ public class ConcreteViewContextTest {
   private static final String SCOPE2_MOCK = "scope2Mock";
 
   @Rule
-  public final JUnitRuleMockery mockery = new JUnitRuleMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ConcreteViewContext context = new ConcreteViewContext();
+  private ConcreteViewContext viewContext = new ConcreteViewContext();
 
   interface MockScope0Type {
   }
@@ -71,9 +72,9 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testAppendScope() throws Exception {
-    final Scope scope0 = context.addScope();
-    final Scope scope1 = context.addScope();
-    final List<Scope> scopes = context.getScopes();
+    final Scope scope0 = viewContext.addScope();
+    final Scope scope1 = viewContext.addScope();
+    final List<Scope> scopes = viewContext.getScopes();
     assertThat(scopes.size(), is(equalTo(2)));
     assertThat(scopes.get(0), is(sameInstance(scope0)));
     assertThat(scopes.get(1), is(sameInstance(scope1)));
@@ -81,9 +82,9 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testInsertScope() throws Exception {
-    final Scope scope0 = context.addScope(0);
-    final Scope scope1 = context.addScope(0);
-    final List<Scope> scopes = context.getScopes();
+    final Scope scope0 = viewContext.addScope(0);
+    final Scope scope1 = viewContext.addScope(0);
+    final List<Scope> scopes = viewContext.getScopes();
     assertThat(scopes.size(), is(equalTo(2)));
     assertThat(scopes.get(0), is(sameInstance(scope1)));
     assertThat(scopes.get(1), is(sameInstance(scope0)));
@@ -92,189 +93,189 @@ public class ConcreteViewContextTest {
 
   @Test(expected = RuntimeException.class)
   public void testGetByTypeWhenNotFound() throws Exception {
-    context.get(Object.class);
+    viewContext.get(Object.class);
   }
 
   @Test(expected = RuntimeException.class)
   public void testGetByNameWhenNotFound() throws Exception {
-    context.get("name", Object.class);
+    viewContext.get("name", Object.class);
   }
 
   @Test
   public void testGetOptionalByTypeWhenNotFound() throws Exception {
-    assertThat(context.getOptional(Object.class), is(nullValue()));
+    assertThat(viewContext.getOptional(Object.class), is(nullValue()));
   }
 
   @Test
   public void testGetOptionalByNameWhenNotFound() throws Exception {
-    assertThat(context.getOptional("name", Object.class), is(nullValue()));
+    assertThat(viewContext.getOptional("name", Object.class), is(nullValue()));
   }
 
   @Test
   public void testScopesPutAndGetByType() throws Exception {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
-    final MutableScope scope0 = context.newScope();
-    context.getScopes().add(scope0);
+    final MutableScope scope0 = viewContext.newScope();
+    viewContext.getScopes().add(scope0);
     scope0.put(SCOPE0);
     scope0.put(scope0Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
 
     final MockScope1Type scope1Mock = new MockScope1Type() {};
 
-    context.push(SCOPE1, null);
-    context.put(SCOPE1);
-    context.put(scope1Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    viewContext.push(SCOPE1, null);
+    viewContext.put(SCOPE1);
+    viewContext.put(scope1Mock);
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
 
     final MockScope2Type scope2Mock = new MockScope2Type() {};
 
-    context.push(SCOPE2, null);
-    context.put(SCOPE2);
-    context.put(scope2Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE2)));
-    assertThat(context.get(MockScope2Type.class), is(sameInstance(scope2Mock)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    viewContext.push(SCOPE2, null);
+    viewContext.put(SCOPE2);
+    viewContext.put(scope2Mock);
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE2)));
+    assertThat(viewContext.get(MockScope2Type.class), is(sameInstance(scope2Mock)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
 
-    context.pop();
-    assertThat(context.get(String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    viewContext.pop();
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
 
-    context.pop();
-    assertThat(context.get(String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    viewContext.pop();
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
   }
 
   @Test
   public void testScopesPutAndGetByName() throws Exception {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
-    final MutableScope scope0 = context.newScope();
-    context.getScopes().add(scope0);
+    final MutableScope scope0 = viewContext.newScope();
+    viewContext.getScopes().add(scope0);
     scope0.put(SCOPE0, SCOPE0);
     scope0.put(SCOPE0_MOCK, scope0Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
-    assertThat(context.get(SCOPE0_MOCK, MockScope0Type.class),
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(SCOPE0_MOCK, MockScope0Type.class),
         is(sameInstance(scope0Mock)));
 
     final MockScope1Type scope1Mock = new MockScope1Type() {};
 
-    context.push(SCOPE1, null);
-    context.put(SCOPE1, SCOPE1);
-    context.put(SCOPE1_MOCK, scope1Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE1_MOCK, MockScope1Type.class),
+    viewContext.push(SCOPE1, null);
+    viewContext.put(SCOPE1, SCOPE1);
+    viewContext.put(SCOPE1_MOCK, scope1Mock);
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(SCOPE1_MOCK, MockScope1Type.class),
         is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
-    assertThat(context.get(SCOPE0_MOCK, MockScope0Type.class),
+    assertThat(viewContext.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(SCOPE0_MOCK, MockScope0Type.class),
         is(sameInstance(scope0Mock)));
 
     final MockScope2Type scope2Mock = new MockScope2Type() {};
 
-    context.push(SCOPE2, null);
-    context.put(SCOPE2, SCOPE2);
-    context.put(SCOPE2_MOCK, scope2Mock);
-    assertThat(context.get(String.class), is(sameInstance(SCOPE2)));
-    assertThat(context.get(SCOPE2, String.class), is(sameInstance(SCOPE2)));
-    assertThat(context.get(MockScope2Type.class), is(sameInstance(scope2Mock)));
-    assertThat(context.get(SCOPE2_MOCK, MockScope2Type.class),
+    viewContext.push(SCOPE2, null);
+    viewContext.put(SCOPE2, SCOPE2);
+    viewContext.put(SCOPE2_MOCK, scope2Mock);
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE2)));
+    assertThat(viewContext.get(SCOPE2, String.class), is(sameInstance(SCOPE2)));
+    assertThat(viewContext.get(MockScope2Type.class), is(sameInstance(scope2Mock)));
+    assertThat(viewContext.get(SCOPE2_MOCK, MockScope2Type.class),
         is(sameInstance(scope2Mock)));
-    assertThat(context.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE1_MOCK, MockScope1Type.class),
+    assertThat(viewContext.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(SCOPE1_MOCK, MockScope1Type.class),
         is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
-    assertThat(context.get(SCOPE0_MOCK, MockScope0Type.class),
+    assertThat(viewContext.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(SCOPE0_MOCK, MockScope0Type.class),
         is(sameInstance(scope0Mock)));
 
-    context.pop();
-    assertThat(context.get(String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
-    assertThat(context.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE1_MOCK, MockScope1Type.class),
+    viewContext.pop();
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(SCOPE1, String.class), is(sameInstance(SCOPE1)));
+    assertThat(viewContext.get(MockScope1Type.class), is(sameInstance(scope1Mock)));
+    assertThat(viewContext.get(SCOPE1_MOCK, MockScope1Type.class),
         is(sameInstance(scope1Mock)));
-    assertThat(context.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
-    assertThat(context.get(SCOPE0_MOCK, MockScope0Type.class),
+    assertThat(viewContext.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(SCOPE0_MOCK, MockScope0Type.class),
         is(sameInstance(scope0Mock)));
 
-    context.pop();
-    assertThat(context.get(String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
-    assertThat(context.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
-    assertThat(context.get(SCOPE0_MOCK, MockScope0Type.class),
+    viewContext.pop();
+    assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(SCOPE0, String.class), is(sameInstance(SCOPE0)));
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(scope0Mock)));
+    assertThat(viewContext.get(SCOPE0_MOCK, MockScope0Type.class),
         is(sameInstance(scope0Mock)));
   }
 
   @Test
   public void testCurrentViewPath() throws Exception {
-    assertThat(context.currentViewPath(), is(empty()));
-    context.push(SCOPE0, null);
-    assertThat(context.currentViewPath(),
+    assertThat(viewContext.currentViewPath(), is(empty()));
+    viewContext.push(SCOPE0, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0))));
 
-    context.push(SCOPE1, null);
-    assertThat(context.currentViewPath(),
+    viewContext.push(SCOPE1, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0, SCOPE1))));
 
-    context.push(SCOPE2, null);
-    assertThat(context.currentViewPath(),
+    viewContext.push(SCOPE2, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0, SCOPE1, SCOPE2))));
 
-    context.pop();
-    assertThat(context.currentViewPath(),
+    viewContext.pop();
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0, SCOPE1))));
 
-    context.pop();
-    assertThat(context.currentViewPath(),
+    viewContext.pop();
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0))));
 
-    context.pop();
-    assertThat(context.currentViewPath(), is(empty()));
+    viewContext.pop();
+    assertThat(viewContext.currentViewPath(), is(empty()));
   }
 
   @Test
   public void testCurrentModelPathWithUnnamedNode() throws Exception {
-    context.push(SCOPE0, null);
-    assertThat(context.currentViewPath(),
+    viewContext.push(SCOPE0, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0))));
 
-    context.push(null, null);
-    assertThat(context.currentViewPath(),
+    viewContext.push(null, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0, null))));
 
-    context.push(SCOPE2, null);
-    assertThat(context.currentViewPath(),
+    viewContext.push(SCOPE2, null);
+    assertThat(viewContext.currentViewPath(),
         is(equalTo(Arrays.asList(SCOPE0, null, SCOPE2))));
   }
 
   @Test
   public void testCurrentViewPathAsString() throws Exception {
-    assertThat(context.currentViewPathAsString(),
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + "")));
 
-    context.push(SCOPE0, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(SCOPE0, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0)));
 
-    context.push(SCOPE1, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(SCOPE1, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
             + ViewContext.PATH_DELIMITER + SCOPE1)));
 
-    context.push(SCOPE2, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(SCOPE2, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
             + ViewContext.PATH_DELIMITER + SCOPE1
             + ViewContext.PATH_DELIMITER + SCOPE2)));
@@ -283,17 +284,17 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testCurrentViewPathAsStringWithUnnamedNode() throws Exception {
-    context.push(SCOPE0, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(SCOPE0, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0)));
 
-    context.push(null, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(null, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
             + ViewContext.PATH_DELIMITER)));
 
-    context.push(SCOPE2, null);
-    assertThat(context.currentViewPathAsString(),
+    viewContext.push(SCOPE2, null);
+    assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
             + ViewContext.PATH_DELIMITER
             + ViewContext.PATH_DELIMITER + SCOPE2)));
@@ -301,60 +302,65 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testCurrentModelPath() throws Exception {
-    assertThat(context.currentModelPath(), is(empty()));
+    assertThat(viewContext.currentModelPath(), is(empty()));
 
-    context.push(null, MockScope0Type.class);
-    assertThat(context.currentModelPath(),
+    viewContext.push(null, MockScope0Type.class);
+    assertThat(viewContext.currentModelPath(),
         is(equalTo(Arrays.<Class<?>>asList(MockScope0Type.class))));
 
-    context.push(null, null);
-    assertThat(context.currentModelPath(),
+    viewContext.push(null, null);
+    assertThat(viewContext.currentModelPath(),
         is(equalTo(Arrays.<Class<?>>asList(MockScope0Type.class))));
 
-    context.push(null, MockScope2Type.class);
-    assertThat(context.currentModelPath(),
+    viewContext.push(null, MockScope2Type.class);
+    assertThat(viewContext.currentModelPath(),
         is(equalTo(Arrays.asList(MockScope0Type.class,
             MockScope2Type.class))));
 
-    context.pop();
-    assertThat(context.currentModelPath(),
+    viewContext.pop();
+    assertThat(viewContext.currentModelPath(),
         is(equalTo(Arrays.<Class<?>>asList(MockScope0Type.class))));
 
-    context.pop();
-    assertThat(context.currentModelPath(),
+    viewContext.pop();
+    assertThat(viewContext.currentModelPath(),
         is(equalTo(Arrays.<Class<?>>asList(MockScope0Type.class))));
 
-    context.pop();
-    assertThat(context.currentModelPath(), is(empty()));
+    viewContext.pop();
+    assertThat(viewContext.currentModelPath(), is(empty()));
   }
 
   @Test
   public void testCopy() throws Exception {
     final Scope scope =
-        mockery.mock(Scope.class);
+        context.mock(Scope.class);
+    final ViewListener listener =
+        context.mock(ViewListener.class);
     final ViewNodeHandler viewNodeHandler =
-        mockery.mock(ViewNodeHandler.class);
+        context.mock(ViewNodeHandler.class);
     final ViewNodeElementHandler viewNodeElementHandler =
-        mockery.mock(ViewNodeElementHandler.class);
+        context.mock(ViewNodeElementHandler.class);
     final ViewNodeValueHandler viewNodeValueHandler =
-        mockery.mock(ViewNodeValueHandler.class);
+        context.mock(ViewNodeValueHandler.class);
     final ValueTypeConverter valueTypeConverter =
-        mockery.mock(ValueTypeConverter.class);
+        context.mock(ValueTypeConverter.class);
 
-    context.getScopes().add(scope);
-    context.getViewNodeHandlers().add(viewNodeHandler);
-    context.getViewNodeElementHandlers().add(viewNodeElementHandler);
-    context.getViewNodeValueHandlers().add(viewNodeValueHandler);
-    context.getValueTypeConverters().add(valueTypeConverter);
+    viewContext.getScopes().add(scope);
+    viewContext.getListeners().append(listener);
+    viewContext.getViewNodeHandlers().add(viewNodeHandler);
+    viewContext.getViewNodeElementHandlers().add(viewNodeElementHandler);
+    viewContext.getViewNodeValueHandlers().add(viewNodeValueHandler);
+    viewContext.getValueTypeConverters().add(valueTypeConverter);
 
-    ViewContext contextCopy = new ConcreteViewContext(context);
-    context.getScopes().clear();
-    context.getViewNodeHandlers().clear();
-    context.getViewNodeElementHandlers().clear();
-    context.getViewNodeValueHandlers().clear();
-    context.getValueTypeConverters().clear();
+    ViewContext contextCopy = new ConcreteViewContext(viewContext);
+    viewContext.getScopes().clear();
+    viewContext.getListeners().toList().clear();
+    viewContext.getViewNodeHandlers().clear();
+    viewContext.getViewNodeElementHandlers().clear();
+    viewContext.getViewNodeValueHandlers().clear();
+    viewContext.getValueTypeConverters().clear();
 
     assertThat(contextCopy.getScopes(), contains(scope));
+    assertThat(contextCopy.getListeners().toList(), contains(listener));
     assertThat(contextCopy.getViewNodeHandlers(), contains(viewNodeHandler));
     assertThat(contextCopy.getViewNodeElementHandlers(),
         contains(viewNodeElementHandler));

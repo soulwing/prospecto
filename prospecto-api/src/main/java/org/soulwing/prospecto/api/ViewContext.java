@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.handler.ViewListeners;
 import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeHandler;
 import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
@@ -78,6 +79,16 @@ public interface ViewContext {
    * @return scopes
    */
   List<Scope> getScopes();
+
+  /**
+   * Gets the collection of listeners associated with this context.
+   * <p>
+   * The returned colleciton can be manipulated directly to add or remove
+   * listeners as needed. Manipulating the collection during view generation
+   * or model update has no effect.
+   * @return listener collection
+   */
+  ViewListeners getListeners();
 
   /**
    * Gets the sequence of view node handlers that will be applied when a
