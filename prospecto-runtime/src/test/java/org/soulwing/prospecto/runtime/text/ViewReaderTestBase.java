@@ -35,6 +35,7 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
+import org.soulwing.prospecto.api.discriminator.Discriminator;
 
 /**
  * Common infrastructure and tests for view reader test classes.
@@ -140,7 +141,7 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, null,
+        is(eventWith(View.Event.Type.DISCRIMINATOR, Discriminator.DEFAULT_NAME,
         Constants.DISCRIMINATOR_VALUE)));
   }
 
