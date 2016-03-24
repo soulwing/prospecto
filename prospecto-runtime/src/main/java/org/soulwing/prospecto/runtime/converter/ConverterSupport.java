@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
-import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
@@ -72,7 +71,7 @@ public class ConverterSupport {
    * @return model value
    * @throws Exception
    */
-  public static Object toModelValue(Class<?> type, Object value, Scope node,
+  public static Object toModelValue(Class<?> type, Object value, ViewNode node,
       ViewContext context) throws Exception {
     if (value == null) return null;
 
