@@ -30,10 +30,6 @@ import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.api.handler.ViewListeners;
-import org.soulwing.prospecto.api.handler.ViewNodeElementHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeHandler;
-import org.soulwing.prospecto.api.handler.ViewNodeValueHandler;
 import org.soulwing.prospecto.runtime.handler.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
@@ -51,14 +47,6 @@ public class ConcreteViewContext implements ScopedViewContext {
 
   private final NotifiableViewListeners listeners =
       new LinkedListNotifiableViewListeners();
-
-  private final List<ViewNodeHandler> viewNodeHandlers = new ArrayList<>();
-
-  private final List<ViewNodeElementHandler> viewNodeElementHandlers =
-      new ArrayList<>();
-
-  private final List<ViewNodeValueHandler> viewNodeValueHandlers =
-      new ArrayList<>();
 
   private final List<ValueTypeConverter<?>> valueTypeConverters =
       new ArrayList<>();
@@ -91,9 +79,6 @@ public class ConcreteViewContext implements ScopedViewContext {
   public ConcreteViewContext(ViewContext source) {
     this.scopes.addAll(source.getScopes());
     this.listeners.toList().addAll(source.getListeners().toList());
-    this.viewNodeHandlers.addAll(source.getViewNodeHandlers());
-    this.viewNodeElementHandlers.addAll(source.getViewNodeElementHandlers());
-    this.viewNodeValueHandlers.addAll(source.getViewNodeValueHandlers());
     this.valueTypeConverters.addAll(source.getValueTypeConverters());
   }
 
@@ -122,23 +107,8 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public ViewListeners getListeners() {
+  public NotifiableViewListeners getListeners() {
     return listeners;
-  }
-
-  @Override
-  public List<ViewNodeHandler> getViewNodeHandlers() {
-    return viewNodeHandlers;
-  }
-
-  @Override
-  public List<ViewNodeElementHandler> getViewNodeElementHandlers() {
-    return viewNodeElementHandlers;
-  }
-
-  @Override
-  public List<ViewNodeValueHandler> getViewNodeValueHandlers() {
-    return viewNodeValueHandlers;
   }
 
   @Override

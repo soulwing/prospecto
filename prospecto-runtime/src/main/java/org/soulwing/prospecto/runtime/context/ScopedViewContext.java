@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 
 /**
  * A {@link ViewContext} onto which additional scopes can be pushed and popped
@@ -27,6 +28,13 @@ import org.soulwing.prospecto.api.ViewContext;
  * @author Carl Harris
  */
 public interface ScopedViewContext extends ViewContext {
+
+  /**
+   * Gets the collection of view listeners.
+   * @return view listners
+   */
+  @Override
+  NotifiableViewListeners getListeners();
 
   /**
    * Pushes a new frame onto the context stack.
