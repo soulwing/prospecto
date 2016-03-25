@@ -50,12 +50,12 @@ class FieldAccessor extends AbstractAccessor {
   }
 
   @Override
-  public Object get(Object source) throws IllegalAccessException {
+  protected Object onGet(Object source) throws IllegalAccessException {
     return field.get(source);
   }
 
   @Override
-  public void set(Object target, Object value) throws IllegalAccessException {
+  protected void onSet(Object target, Object value) throws IllegalAccessException {
     field.set(target, value);
   }
 

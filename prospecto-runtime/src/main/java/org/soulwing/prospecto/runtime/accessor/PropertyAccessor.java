@@ -58,22 +58,14 @@ class PropertyAccessor extends AbstractAccessor {
   }
 
   @Override
-  public Object get(Object source)
+  protected Object onGet(Object source)
       throws IllegalAccessException, InvocationTargetException {
-    if (getter == null) {
-      throw new UnsupportedOperationException(AccessMode.READ
-          + " access is not supported by this accessor");
-    }
     return getter.invoke(source);
   }
 
   @Override
-  public void set(Object target, Object value)
+  protected void onSet(Object target, Object value)
       throws IllegalAccessException, InvocationTargetException {
-    if (setter == null) {
-      throw new UnsupportedOperationException(AccessMode.WRITE
-          + " access is not supported by this accessor");
-    }
     setter.invoke(target, value);
   }
 

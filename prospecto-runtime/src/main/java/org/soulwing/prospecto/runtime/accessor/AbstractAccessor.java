@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
@@ -64,5 +65,25 @@ abstract class AbstractAccessor implements Accessor {
 
   protected abstract Accessor newAccessor(Class<?> type, String name)
       throws Exception;
+
+  @Override
+  public Object get(Object source)
+      throws IllegalAccessException, InvocationTargetException {
+    if (!canRead()) return null;
+    return onGet(source);
+  }
+
+  protected abstract Object onGet(Object source) throws IllegalAccessException,
+      InvocationTargetException;
+
+  @Override
+  public void set(Object target, Object value)
+      throws IllegalAccessException, InvocationTargetException {
+    if (!canWrite()) return;
+    onSet(target, value);
+  }
+
+  protected abstract void onSet(Object target, Object value)
+      throws IllegalAccessException, InvocationTargetException;
 
 }
