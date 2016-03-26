@@ -137,6 +137,9 @@ public class ConverterSupport {
     if (BigDecimal.class.isAssignableFrom(type) && value instanceof Number) {
       return new BigDecimal(((Number) value).doubleValue());
     }
+    if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
+      return ((Boolean) value).booleanValue();
+    }
 
     Object result = coerceUsingValueOf(type, value);
     if (result != null) return result;
