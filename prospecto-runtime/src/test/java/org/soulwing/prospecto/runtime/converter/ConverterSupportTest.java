@@ -183,6 +183,11 @@ public class ConverterSupportTest {
   }
 
   @Test
+  public void testCoerceBoolean() throws Exception {
+    coerceAndValidate(Boolean.class, true, true);
+  }
+
+  @Test
   public void testCoerceObjectToValueTypeUsingValueOf() throws Exception {
     final MockValueTypeWithValueOf value =
         new MockValueTypeWithValueOf("value");
