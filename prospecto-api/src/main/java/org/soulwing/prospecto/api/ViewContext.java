@@ -24,6 +24,8 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListeners;
+import org.soulwing.prospecto.api.reference.ReferenceResolver;
+import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 
 /**
  * A context used when evaluating view template with a model to produce a view.
@@ -80,7 +82,7 @@ public interface ViewContext {
   /**
    * Gets the collection of listeners associated with this context.
    * <p>
-   * The returned colleciton can be manipulated directly to add or remove
+   * The returned collection can be manipulated directly to add or remove
    * listeners as needed. Manipulating the collection during view generation
    * or model update has no effect.
    * @return listener collection
@@ -103,6 +105,17 @@ public interface ViewContext {
    * @return value type converters
    */
   List<ValueTypeConverter<?>> getValueTypeConverters();
+
+  /**
+   * Gets the collection of {@link ReferenceResolver} instances that will be
+   * consulted to resolve reference objects in a view.
+   * <p>
+   * The returned collection can be manipulated directly to add or remove
+   * resolvers as needed. Manipulating the collection during view generation
+   * or model update has no effect.
+   * @return resolver collection
+   */
+  ReferenceResolvers getReferenceResolvers();
 
   /**
    * Gets the sequence of view node names that form the path to the current
