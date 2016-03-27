@@ -27,6 +27,7 @@ import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.arrayViewN
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.viewNode;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
@@ -52,6 +54,7 @@ import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.ReferenceNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
@@ -232,6 +235,65 @@ public class ConcreteViewTemplateBuilderTest {
   }
 
   @Test
+  public void testReferenceName() throws Exception {
+    context.checking(referenceExpectations(NAME, null));
+    assertThat(builder.reference(NAME, MODEL_TYPE),
+        is(sameInstance(childBuilder)));
+  }
+
+  @Test
+  public void testReferenceNameNamespace() throws Exception {
+    context.checking(referenceExpectations(NAME, NAMESPACE));
+    assertThat(builder.reference(NAME, NAMESPACE, MODEL_TYPE),
+        is(sameInstance(childBuilder)));
+  }
+
+  private Expectations referenceExpectations(final String name,
+      final String namespace) {
+    return new Expectations() {
+      {
+        oneOf(target).addChild(with(viewNode(
+            ReferenceNode.class, name, namespace, MODEL_TYPE)));
+        oneOf(cursor).advance(with(viewNode(
+            ReferenceNode.class, name, namespace, MODEL_TYPE)));
+        oneOf(cursor).copy(MODEL_TYPE);
+        will(returnValue(cursor));
+        oneOf(builderFactory).newBuilder(
+            with(builder),
+            with(cursor),
+            with(viewNode(ReferenceNode.class, name, namespace, MODEL_TYPE)));
+        will(returnValue(childBuilder));
+      }
+    };
+  }
+
+  @Test
+  public void testReferenceNameTemplate() throws Exception {
+    context.checking(referenceTemplateExpectations(NAME, null));
+    assertThat(builder.reference(NAME, template),
+        is(sameInstance((Object) builder)));
+  }
+
+  @Test
+  public void testReferenceNameNamespaceTemplate() throws Exception {
+    context.checking(referenceTemplateExpectations(NAME, NAMESPACE));
+    assertThat(builder.reference(NAME, NAMESPACE, template),
+        is(sameInstance((Object) builder)));
+  }
+
+  private Expectations referenceTemplateExpectations(final String name,
+      final String namespace) {
+    return new Expectations() {
+      {
+        oneOf(template).reference(name, namespace);
+        will(returnValue(templateNode));
+        oneOf(target).addChild(templateNode);
+        oneOf(cursor).advance(templateNode);
+      }
+    };
+  }
+
+  @Test
   public void testArrayOfObjectsName() throws Exception {
     context.checking(arrayOfObjectsExpectations(NAME, null, null));
     assertThat(builder.arrayOfObjects(NAME, MODEL_TYPE),
@@ -314,7 +376,8 @@ public class ConcreteViewTemplateBuilderTest {
       {
         oneOf(target).getModelType();
         will(returnValue(MODEL_TYPE));
-        oneOf(target).get(DiscriminatorStrategy.class);
+        oneOf(target).get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class);
+        will(returnValue(true));
         will(returnValue(discriminatorStrategy));
         oneOf(target).addChild(
             with(viewNode(SubtypeNode.class, null, null, MODEL_SUBTYPE)));
@@ -358,7 +421,7 @@ public class ConcreteViewTemplateBuilderTest {
       {
         oneOf(target).getModelType();
         will(returnValue(MODEL_TYPE));
-        oneOf(target).get(DiscriminatorStrategy.class);
+        oneOf(target).get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class);
         will(returnValue(null));
       }
     });
@@ -403,6 +466,8 @@ public class ConcreteViewTemplateBuilderTest {
     final AbstractViewNode child = context.mock(AbstractViewNode.class);
     context.checking(new Expectations() {
       {
+        oneOf(target).get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class);
+        will(returnValue(null));
         oneOf(target).getChildren();
         will(returnValue(Collections.singletonList(child)));
       }
@@ -466,6 +531,8 @@ public class ConcreteViewTemplateBuilderTest {
         if (strategy != null) {
           oneOf(target).put(strategy);
         }
+        oneOf(target).get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class);
+        will(returnValue(null));
         oneOf(target).put(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, true);
       }
     };
@@ -553,6 +620,52 @@ public class ConcreteViewTemplateBuilderTest {
         null, cursor, target, beanFactory,
         builderFactory);
     builder.accessType(AccessType.PROPERTY);
+  }
+
+  @Test
+  public void testAllowAccessModes() throws Exception {
+    final AbstractViewNode node = context.mock(AbstractViewNode.class,
+        "allowNode");
+    context.checking(allowExpectations(node,
+        EnumSet.of(AccessMode.READ, AccessMode.WRITE)));
+
+    assertThat(builder.allow(AccessMode.READ, AccessMode.WRITE),
+        is(sameInstance((Object) builder)));
+  }
+
+  @Test
+  public void testAllowEnumSet() throws Exception {
+    final AbstractViewNode node = context.mock(AbstractViewNode.class,
+        "allowNode");
+    context.checking(allowExpectations(node, EnumSet.allOf(AccessMode.class)));
+
+    assertThat(builder.allow(EnumSet.allOf(AccessMode.class)),
+        is(sameInstance((Object) builder)));
+  }
+
+  private Expectations allowExpectations(final AbstractViewNode node,
+      final EnumSet<AccessMode> accessModes) {
+    return new Expectations() {
+      {
+        oneOf(cursor).getNode();
+        will(returnValue(node));
+        oneOf(cursor).setAccessModes(accessModes);
+      }
+    };
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testAllowOnRootNode() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(cursor).getNode();
+        will(returnValue(null));
+      }
+    });
+    final ViewTemplateBuilder builder = new ConcreteViewTemplateBuilder(
+        null, cursor, target, beanFactory,
+        builderFactory);
+    builder.allow(AccessMode.READ);
   }
 
   @Test

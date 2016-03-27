@@ -31,11 +31,15 @@ import org.soulwing.prospecto.api.AccessMode;
 abstract class AbstractAccessor implements Accessor {
 
   private final String name;
-  private final EnumSet<AccessMode> accessModes;
+  private final EnumSet<AccessMode> supportedAccessModes;
 
-  protected AbstractAccessor(String name, EnumSet<AccessMode> accessModes) {
+  private EnumSet<AccessMode> effectiveAccessModes =
+      EnumSet.allOf(AccessMode.class);
+
+  protected AbstractAccessor(String name,
+      EnumSet<AccessMode> supportedAccessModes) {
     this.name = name;
-    this.accessModes = accessModes;
+    this.supportedAccessModes = supportedAccessModes;
   }
 
   @Override
@@ -44,18 +48,27 @@ abstract class AbstractAccessor implements Accessor {
   }
 
   @Override
-  public boolean canWrite() {
-    return accessModes.contains(AccessMode.WRITE);
+  public boolean canRead() {
+    return supportedAccessModes.contains(AccessMode.READ)
+        && effectiveAccessModes.contains(AccessMode.READ);
   }
 
   @Override
-  public boolean canRead() {
-    return accessModes.contains(AccessMode.READ);
+  public boolean canWrite() {
+    return supportedAccessModes.contains(AccessMode.WRITE)
+        && effectiveAccessModes.contains(AccessMode.WRITE);
   }
 
   @Override
   public EnumSet<AccessMode> getAccessModes() {
+    final EnumSet<AccessMode> accessModes = EnumSet.copyOf(supportedAccessModes);
+    accessModes.retainAll(effectiveAccessModes);
     return accessModes;
+  }
+
+  @Override
+  public void setAccessModes(EnumSet<AccessMode> accessModes) {
+    effectiveAccessModes = accessModes;
   }
 
   @Override

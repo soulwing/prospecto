@@ -18,12 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewNode;
@@ -91,9 +89,9 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     final List<View.Event> viewEvents = new LinkedList<>();
 
     context.push(name, modelType);
-    if (context.getListeners().fireShouldVisitNode(nodeEvent)) {
+    if (context.getListeners().shouldVisitNode(nodeEvent)) {
       viewEvents.addAll(onEvaluate(model, context));
-      context.getListeners().fireNodeVisited(nodeEvent);
+      context.getListeners().nodeVisited(nodeEvent);
     }
     context.pop();
 
@@ -114,18 +112,6 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   protected View.Event newEvent(View.Event.Type type, String name,
       Object value) {
     return new ConcreteViewEvent(type, name, namespace, value);
-  }
-
-  public final void update(Object target, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    if (!(this instanceof UpdatableViewNode)) return;
-    if (!((UpdatableViewNode) this).supportsUpdateEvent(triggerEvent)) {
-      throw new ModelEditorException("unexpected event type "
-          + triggerEvent.getType());
-    }
-    context.push(name, modelType);
-    ((UpdatableViewNode) this).onUpdate(target, triggerEvent, events, context);
-    context.pop();
   }
 
   @Override

@@ -18,12 +18,15 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.EnumSet;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
@@ -112,6 +115,7 @@ public class ConcreteCursorTest {
         oneOf(accessorFactory).newAccessor(modelType, modelName, accessType);
         will(returnValue(accessor));
         oneOf(node).setAccessor(accessor);
+        oneOf(accessor).setAccessModes(EnumSet.allOf(AccessMode.class));
       }
     };
   }

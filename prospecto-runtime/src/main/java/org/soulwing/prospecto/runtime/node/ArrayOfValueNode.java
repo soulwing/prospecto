@@ -78,10 +78,10 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
       final Object elementModel = i.next();
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(this,
           model, elementModel, context);
-      if (context.getListeners().fireShouldVisitProperty(elementEvent)) {
+      if (context.getListeners().shouldVisitProperty(elementEvent)) {
         events.add(newEvent(View.Event.Type.VALUE, elementName,
             toViewValue(
-                context.getListeners().fireOnExtractValue(elementEvent),
+                context.getListeners().didExtractValue(elementEvent),
                 context)));
       }
     }

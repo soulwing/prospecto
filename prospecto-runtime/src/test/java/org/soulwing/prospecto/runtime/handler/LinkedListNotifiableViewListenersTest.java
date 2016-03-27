@@ -82,7 +82,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(acceptor0);
     listeners.append(acceptor1);
-    assertThat(listeners.fireShouldVisitNode(event), is(true));
+    assertThat(listeners.shouldVisitNode(event), is(true));
   }
 
   @Test
@@ -102,7 +102,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(acceptor0);
     listeners.append(acceptor1);
-    assertThat(listeners.fireShouldVisitNode(event), is(false));
+    assertThat(listeners.shouldVisitNode(event), is(false));
   }
 
   @Test
@@ -116,7 +116,7 @@ public class LinkedListNotifiableViewListenersTest {
     });
 
     listeners.append(listener);
-    listeners.fireNodeVisited(event);
+    listeners.nodeVisited(event);
   }
 
   @Test
@@ -140,7 +140,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(acceptor0);
     listeners.append(acceptor1);
-    assertThat(listeners.fireShouldVisitProperty(event), is(true));
+    assertThat(listeners.shouldVisitProperty(event), is(true));
   }
 
   @Test
@@ -162,7 +162,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(acceptor0);
     listeners.append(acceptor1);
-    assertThat(listeners.fireShouldVisitProperty(event), is(false));
+    assertThat(listeners.shouldVisitProperty(event), is(false));
   }
 
   @Test
@@ -180,10 +180,10 @@ public class LinkedListNotifiableViewListenersTest {
 
     context.checking(new Expectations() {
       {
-        oneOf(listener0).onExtractValue((ViewNodePropertyEvent)
+        oneOf(listener0).didExtractValue((ViewNodePropertyEvent)
             with(hasProperty("value", sameInstance(value0))));
         will(returnValue(value1));
-        oneOf(listener1).onExtractValue((ViewNodePropertyEvent)
+        oneOf(listener1).didExtractValue((ViewNodePropertyEvent)
             with(hasProperty("value", sameInstance(value1))));
         will(returnValue(value2));
       }
@@ -191,7 +191,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(listener0);
     listeners.append(listener1);
-    assertThat(listeners.fireOnExtractValue(event), is(sameInstance(value2)));
+    assertThat(listeners.didExtractValue(event), is(sameInstance(value2)));
   }
 
   @Test
@@ -209,10 +209,10 @@ public class LinkedListNotifiableViewListenersTest {
 
     context.checking(new Expectations() {
       {
-        oneOf(listener0).onInjectValue((ViewNodePropertyEvent)
+        oneOf(listener0).willInjectValue((ViewNodePropertyEvent)
             with(hasProperty("value", sameInstance(value0))));
         will(returnValue(value1));
-        oneOf(listener1).onInjectValue((ViewNodePropertyEvent)
+        oneOf(listener1).willInjectValue((ViewNodePropertyEvent)
             with(hasProperty("value", sameInstance(value1))));
         will(returnValue(value2));
       }
@@ -220,7 +220,7 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(listener0);
     listeners.append(listener1);
-    assertThat(listeners.fireOnInjectValue(event), is(sameInstance(value2)));
+    assertThat(listeners.willInjectValue(event), is(sameInstance(value2)));
   }
 
   @Test
@@ -238,7 +238,7 @@ public class LinkedListNotifiableViewListenersTest {
     });
 
     listeners.append(listener);
-    listeners.firePropertyVisited(event);
+    listeners.propertyVisited(event);
   }
 
   @Test
@@ -256,7 +256,7 @@ public class LinkedListNotifiableViewListenersTest {
     });
 
     listeners.append(listener);
-    listeners.fireEntityCreated(event);
+    listeners.entityCreated(event);
   }
 
   @Test
@@ -274,7 +274,7 @@ public class LinkedListNotifiableViewListenersTest {
     });
 
     listeners.append(listener);
-    listeners.fireEntityDiscarded(event);
+    listeners.entityDiscarded(event);
   }
 
 }

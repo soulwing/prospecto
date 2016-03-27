@@ -100,17 +100,17 @@ public class ArrayOfObjectNodeTest {
         will(returnValue(Collections.singletonList(VALUE)));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).fireShouldVisitProperty(
+        oneOf(listeners).shouldVisitProperty(
             with(viewNodePropertyEvent(node, MODEL, VALUE, viewContext)));
         will(returnValue(true));
-        oneOf(listeners).fireOnExtractValue(
+        oneOf(listeners).didExtractValue(
             with(viewNodePropertyEvent(node, MODEL, VALUE, viewContext)));
         will(returnValue(VALUE));
 
         allowing(viewContext).put(VALUE);
         allowing(viewContext).remove(VALUE);
-        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
-        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
         will(returnValue(true));
         allowing(viewContext).push(CHILD_NAME, VALUE.getClass());
         allowing(viewContext).pop();

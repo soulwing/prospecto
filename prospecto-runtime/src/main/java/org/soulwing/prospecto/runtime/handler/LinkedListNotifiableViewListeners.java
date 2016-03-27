@@ -43,7 +43,7 @@ public class LinkedListNotifiableViewListeners
   private final List<ViewListener> listeners = new LinkedList<>();
 
   @Override
-  public boolean fireShouldVisitNode(ViewNodeEvent event) {
+  public boolean shouldVisitNode(ViewNodeEvent event) {
     boolean visit = true;
     for (final ViewListener listener : listeners) {
       if (ViewNodeAcceptor.class
@@ -56,7 +56,7 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public void fireNodeVisited(ViewNodeEvent event) {
+  public void nodeVisited(ViewNodeEvent event) {
     for (final ViewListener listener : listeners) {
       if (ViewNodeListener.class
           .isAssignableFrom(listener.getClass())) {
@@ -66,7 +66,7 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public boolean fireShouldVisitProperty(ViewNodePropertyEvent event) {
+  public boolean shouldVisitProperty(ViewNodePropertyEvent event) {
     boolean visit = true;
     for (final ViewListener listener : listeners) {
       if (ViewNodePropertyAcceptor.class
@@ -79,12 +79,12 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public Object fireOnExtractValue(ViewNodePropertyEvent event) {
+  public Object didExtractValue(ViewNodePropertyEvent event) {
     Object value = event.getValue();
     for (final ViewListener listener : listeners) {
       if (ViewNodePropertyInterceptor.class
           .isAssignableFrom(listener.getClass())) {
-        value = ((ViewNodePropertyInterceptor) listener).onExtractValue(
+        value = ((ViewNodePropertyInterceptor) listener).didExtractValue(
             new ViewNodePropertyEvent(event, value));
       }
     }
@@ -92,12 +92,12 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public Object fireOnInjectValue(ViewNodePropertyEvent event) {
+  public Object willInjectValue(ViewNodePropertyEvent event) {
     Object value = event.getValue();
     for (final ViewListener listener : listeners) {
       if (ViewNodePropertyInterceptor.class
           .isAssignableFrom(listener.getClass())) {
-        value = ((ViewNodePropertyInterceptor) listener).onInjectValue(
+        value = ((ViewNodePropertyInterceptor) listener).willInjectValue(
             new ViewNodePropertyEvent(event, value));
       }
     }
@@ -105,7 +105,7 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public void firePropertyVisited(ViewNodePropertyEvent event) {
+  public void propertyVisited(ViewNodePropertyEvent event) {
     for (final ViewListener listener : listeners) {
       if (ViewNodePropertyListener.class
           .isAssignableFrom(listener.getClass())) {
@@ -115,7 +115,7 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public void fireEntityCreated(ViewNodePropertyEvent event) {
+  public void entityCreated(ViewNodePropertyEvent event) {
     for (final ViewListener listener : listeners) {
       if (ViewNodeEntityListener.class.isAssignableFrom(listener.getClass())) {
         ((ViewNodeEntityListener) listener).entityCreated(event);
@@ -124,7 +124,7 @@ public class LinkedListNotifiableViewListeners
   }
 
   @Override
-  public void fireEntityDiscarded(ViewNodePropertyEvent event) {
+  public void entityDiscarded(ViewNodePropertyEvent event) {
     for (final ViewListener listener : listeners) {
       if (ViewNodeEntityListener.class.isAssignableFrom(listener.getClass())) {
         ((ViewNodeEntityListener) listener).entityDiscarded(event);

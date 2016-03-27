@@ -25,10 +25,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.ConcreteMutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that contains other view nodes.
@@ -70,25 +76,26 @@ public abstract class ContainerViewNode extends AbstractViewNode
   }
 
   public AbstractViewNode getChild(Class<?> modelType, String name) {
-    AbstractViewNode node = null;
     Iterator<AbstractViewNode> i = children.iterator();
-    while (node == null && i.hasNext()) {
+    while (i.hasNext()) {
       final AbstractViewNode child = i.next();
       if (child instanceof SubtypeNode
           && modelType.isAssignableFrom(((SubtypeNode) child).getModelType())) {
-        node = ((SubtypeNode) child).getChild(modelType, name);
+        final AbstractViewNode node =
+            ((SubtypeNode) child).getChild(modelType, name);
+        if (node != null) return node;
       }
     }
 
     i = children.iterator();
-    while (node == null && i.hasNext()) {
+    while (i.hasNext()) {
       final AbstractViewNode child = i.next();
       if (name.equals(child.getName())) {
-        node = child;
+        return child;
       }
     }
 
-    return node;
+    return null;
   }
 
   public void addChild(AbstractViewNode child) {
@@ -123,103 +130,64 @@ public abstract class ContainerViewNode extends AbstractViewNode
     return events;
   }
 
-  protected final void updateChildren(Object target, View.Event triggerEvent,
+  @Override
+  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    context.put(target);
+    context.push(getName(), getModelType());
+    final MutableViewEntity entity = newEntity(events, context);
+    final ViewNodeEvent nodeEvent = new ViewNodeEvent(this, entity, context);
+    if (!context.getListeners().shouldVisitNode(nodeEvent)) {
+      return UndefinedValue.INSTANCE;
+    }
     final View.Event.Type endEventType = triggerEvent.getType().complement();
     View.Event event = events.removeFirst();
-    while (event.getType() != endEventType) {
-      if (event.getType() == View.Event.Type.DISCRIMINATOR) {
-        event = events.removeFirst();
-        continue;
-      }
-
-      final String name = event.getName();
-      final AbstractViewNode node = getChild(target.getClass(), name);
-      if (node == null) {
-        // FIXME: configuration should allow us to ignore it also
-        throw new ModelEditorException("unrecognized child name '" + name
-            + "' in event: " + event);
-      }
-
-      // Special case: if the node is a container and we have a VALUE type
-      // event with a null value, we treat this as an indication to remove the
-      // subtree from the model.
-      if (node instanceof ContainerViewNode
-          && View.Event.Type.VALUE.equals(event.getType())) {
-        if (event.getValue() != null) {
-          throw new ModelEditorException("expected an object, not a value");
+    while (event != null && event.getType() != endEventType) {
+      if (event.getType() != View.Event.Type.DISCRIMINATOR
+          && event.getType() != View.Event.Type.URL) {
+        final String name = event.getName();
+        if (name == null) {
+          throw new ModelEditorException("unexpected un-named event: " + event);
         }
-        ((ContainerViewNode) node).clear(target);
+        final AbstractViewNode child = getChild(entity.getType(), name);
+        if (child == null) {
+          // TODO -- configuration should allow it to be ignored
+          throw new ModelEditorException("found no child named '" + name + "'");
+        }
+        if (child instanceof UpdatableViewNode) {
+          final Object value = ((UpdatableViewNode) child)
+              .toModelValue(entity, event, events, context);
+          if (value != UndefinedValue.INSTANCE) {
+            entity.put(name, value, (UpdatableViewNode) child);
+          }
+        }
       }
-      else {
-        node.update(target, event, events, context);
-      }
-
       event = events.removeFirst();
     }
-    context.remove(target);
+
+    final Object valueToInject = context.getListeners().willInjectValue(
+         new ViewNodePropertyEvent(this, parentEntity, entity, context));
+
+    context.getListeners().propertyVisited(
+        new ViewNodePropertyEvent(this, parentEntity, valueToInject, context));
+
+    context.getListeners().nodeVisited(nodeEvent);
+
+    context.pop();
+
+    return valueToInject;
   }
 
-  protected void clear(Object target) throws Exception {
-    // FIXME -- need to tell some handler we're removing it
-    getAccessor().set(target, null);
-  }
-
-  protected <T> T createChild(Class<T> modelType, Deque<View.Event> events,
+  private MutableViewEntity newEntity(Deque<View.Event> events,
       ScopedViewContext context) throws Exception {
-    final T model = newChild(modelType, events.iterator(), context);
-    setChildValues(model, events.iterator(), context);
-    return model;
-  }
-
-  private <T> T newChild(Class<T> modelType, Iterator<View.Event> i,
-      ScopedViewContext context) throws Exception {
-    final Class<T> subtype = getModelSubtype(modelType, i, context);
-    try {
-      return subtype.newInstance();
+    View.Event event = findDiscriminatorEvent(events.iterator());
+    if (event == null) {
+      return new ConcreteMutableViewEntity(getModelType());
     }
-    catch (InstantiationException | IllegalAccessException ex) {
-      throw new ModelEditorException("cannot create an instance of type "
-          + subtype.getName());
-    }
-  }
 
-  private <T> void setChildValues(T model,
-      Iterator<View.Event> i, ScopedViewContext context) throws Exception {
-    while (i.hasNext()) {
-      final View.Event event = i.next();
-      if (View.Event.Type.END_OBJECT.equals(event.getType())) {
-        break;
-      }
-      else if (View.Event.Type.VALUE.equals(event.getType())) {
-        final AbstractViewNode node = getChild(model.getClass(), event.getName());
-        if (node == null) {
-          // FIXME
-          throw new ModelEditorException("can't find node named "
-              + event.getName());
-        }
-        if (node instanceof ValueViewNode) {
-          node.update(model, event, null, context);
-        }
-      }
-      else {
-        skipEvent(event, i);
-      }
-    }
-  }
-
-  private <T> Class<T> getModelSubtype(Class<T> modelType,
-      Iterator<View.Event> i,
-      ScopedViewContext context) throws Exception {
-
-    View.Event event = findDiscriminatorEvent(i);
-    if (event == null) return modelType;
-
-    final DiscriminatorStrategy strategy = getStrategy(context);
-    return strategy == null ?
-        modelType : strategy.toSubtype(modelType,
-            new Discriminator(event.getName(), event.getValue()));
+    final Discriminator discriminator = new Discriminator(event.getName(),
+        event.getValue());
+    return new ConcreteMutableViewEntity(getDiscriminatorStrategy(context)
+        .toSubtype(getModelType(), discriminator));
   }
 
   private View.Event findDiscriminatorEvent(Iterator<View.Event> i) {
@@ -248,15 +216,18 @@ public abstract class ContainerViewNode extends AbstractViewNode
 
   private Discriminator getDiscriminator(Class<?> subtype,
       ScopedViewContext context) {
-    DiscriminatorStrategy strategy = getStrategy(context);
-    if (strategy == null) return null;
+    DiscriminatorStrategy strategy = getDiscriminatorStrategy(context);
     return strategy.toDiscriminator(getModelType(), subtype);
   }
 
-  private DiscriminatorStrategy getStrategy(ScopedViewContext context) {
+  private DiscriminatorStrategy getDiscriminatorStrategy(
+      ScopedViewContext context) {
     DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
     if (strategy == null) {
       strategy = context.get(DiscriminatorStrategy.class);
+    }
+    if (strategy == null) {
+      throw new AssertionError("discriminator strategy is required");
     }
     return strategy;
   }

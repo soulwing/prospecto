@@ -72,10 +72,10 @@ public class AbstractViewNodeTest {
         oneOf(viewContext).pop();
         exactly(2).of(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).fireShouldVisitNode(
+        oneOf(listeners).shouldVisitNode(
             with(viewNodeEvent(node, MODEL, viewContext)));
         will(returnValue(true));
-        oneOf(listeners).fireNodeVisited(
+        oneOf(listeners).nodeVisited(
             with(viewNodeEvent(node, MODEL, viewContext)));
       }
     });
@@ -91,7 +91,7 @@ public class AbstractViewNodeTest {
         oneOf(viewContext).pop();
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).fireShouldVisitNode(
+        oneOf(listeners).shouldVisitNode(
             with(viewNodeEvent(node, MODEL, viewContext)));
         will(returnValue(false));
       }

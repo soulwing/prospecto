@@ -36,11 +36,17 @@ public interface Accessor {
   String getName();
 
   /**
-   * Gets the supported access modes of this accessor.
+   * Gets the effective access modes of this accessor.
    * @return set of supported access modes
    */
   EnumSet<AccessMode> getAccessModes();
 
+  /**
+   * Sets the effective access modes of this accessor.
+   * @param accessModes
+   */
+  void setAccessModes(EnumSet<AccessMode> accessModes);
+  
   /**
    * Tests whether this accessor can be called to read (get) a value.
    * <p>

@@ -76,9 +76,9 @@ public class EnvelopeNodeTest {
         allowing(viewContext).remove(MODEL);
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
         will(returnValue(true));
-        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
         allowing(viewContext).push(CHILD_NAME, null);
         allowing(viewContext).pop();
       }

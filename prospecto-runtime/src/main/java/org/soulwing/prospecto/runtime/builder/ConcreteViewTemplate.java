@@ -32,6 +32,7 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.ReferenceNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
@@ -88,6 +89,15 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   public AbstractViewNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     ObjectNode node = new ObjectNode(name, namespace, root.getModelType());
+    assert root instanceof ContainerViewNode;
+    node.addChildren(((ContainerViewNode) root).getChildren());
+    return node;
+  }
+
+  @Override
+  public AbstractViewNode reference(String name, String namespace) {
+    assertRootIsContainerViewNode(name);
+    ReferenceNode node = new ReferenceNode(name, namespace, root.getModelType());
     assert root instanceof ContainerViewNode;
     node.addChildren(((ContainerViewNode) root).getChildren());
     return node;

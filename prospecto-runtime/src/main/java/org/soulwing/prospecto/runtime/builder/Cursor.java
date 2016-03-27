@@ -18,6 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.EnumSet;
+
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
@@ -70,6 +73,18 @@ interface Cursor {
    * @param accessType the access type to set
    */
   void setAccessType(AccessType accessType);
+
+  /**
+   * Gets the access modes associated with the cursor node.
+   * @return access modes
+   */
+  EnumSet<AccessMode> getAccessModes();
+
+  /**
+   * Sets the access modes associated with the cursor node.
+   * @param accessModes the access modes to set
+   */
+  void setAccessModes(EnumSet<AccessMode> accessModes);
 
   /**
    * Advances the cursor past the last node in the current subtree.

@@ -76,10 +76,10 @@ public class ValueViewNodeTest {
       {
         exactly(2).of(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).fireOnExtractValue(
+        oneOf(listeners).didExtractValue(
             with(viewNodePropertyEvent(node, MODEL, MODEL_VALUE, viewContext)));
         will(returnValue(MODEL_VALUE));
-        oneOf(listeners).firePropertyVisited(
+        oneOf(listeners).propertyVisited(
             with(viewNodePropertyEvent(node, MODEL, VIEW_VALUE, viewContext)));
       }
     });

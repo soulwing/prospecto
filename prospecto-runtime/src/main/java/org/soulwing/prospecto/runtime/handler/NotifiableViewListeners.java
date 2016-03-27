@@ -29,20 +29,20 @@ import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
  */
 public interface NotifiableViewListeners extends ViewListeners {
 
-  boolean fireShouldVisitNode(ViewNodeEvent event);
+  boolean shouldVisitNode(ViewNodeEvent event);
 
-  void fireNodeVisited(ViewNodeEvent event);
+  void nodeVisited(ViewNodeEvent event);
 
-  boolean fireShouldVisitProperty(ViewNodePropertyEvent event);
+  boolean shouldVisitProperty(ViewNodePropertyEvent event);
 
-  Object fireOnExtractValue(ViewNodePropertyEvent event);
+  Object didExtractValue(ViewNodePropertyEvent event);
 
-  Object fireOnInjectValue(ViewNodePropertyEvent event);
+  Object willInjectValue(ViewNodePropertyEvent event);
 
-  void firePropertyVisited(ViewNodePropertyEvent event);
+  void propertyVisited(ViewNodePropertyEvent event);
 
-  void fireEntityCreated(ViewNodePropertyEvent event);
+  void entityCreated(ViewNodePropertyEvent event);
 
-  void fireEntityDiscarded(ViewNodePropertyEvent event);
+  void entityDiscarded(ViewNodePropertyEvent event);
 
 }

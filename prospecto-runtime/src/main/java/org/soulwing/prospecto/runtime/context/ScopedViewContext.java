@@ -20,6 +20,7 @@ package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
+import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
  * A {@link ViewContext} onto which additional scopes can be pushed and popped
@@ -35,6 +36,13 @@ public interface ScopedViewContext extends ViewContext {
    */
   @Override
   NotifiableViewListeners getListeners();
+
+  /**
+   * Gets the collection of resource resolvers.
+   * @return resource resolvers
+   */
+  @Override
+  ReferenceResolverService getReferenceResolvers();
 
   /**
    * Pushes a new frame onto the context stack.

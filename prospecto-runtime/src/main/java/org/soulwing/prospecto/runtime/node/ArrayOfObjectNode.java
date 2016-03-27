@@ -29,12 +29,14 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.IndexedMultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an array of objects.
@@ -90,10 +92,10 @@ public class ArrayOfObjectNode extends ContainerViewNode {
       Object elementModel = i.next();
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(this,
           model, elementModel, context);
-      if (context.getListeners().fireShouldVisitProperty(elementEvent)) {
+      if (context.getListeners().shouldVisitProperty(elementEvent)) {
         viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
         viewEvents.addAll(evaluateChildren(
-            context.getListeners().fireOnExtractValue(elementEvent),
+            context.getListeners().didExtractValue(elementEvent),
             context));
         viewEvents.add(newEvent(View.Event.Type.END_OBJECT, elementName));
       }
@@ -103,57 +105,70 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   }
 
   @Override
-  public boolean supportsUpdateEvent(View.Event event) {
-    return event.getType() == View.Event.Type.BEGIN_ARRAY
-        || event.getType() == View.Event.Type.VALUE;
+  public List<MutableViewEntity> toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    final List<MutableViewEntity> entities = new ArrayList<>();
+    View.Event event = events.removeFirst();
+    while (event != null
+        && View.Event.Type.BEGIN_OBJECT.equals(event.getType())) {
+      entities.add((MutableViewEntity)
+          super.toModelValue(parentEntity, event, events, context));
+      event = events.removeFirst();
+    }
+    if (event == null
+        || event.getType() != triggerEvent.getType().complement()) {
+      throw new ModelEditorException("expected END_ARRAY");
+    }
+    return entities;
   }
 
   @Override
-  public void onUpdate(Object target, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception {
-
-    final Map<Object, Object> touched =
-        createOrUpdateChildren(target, events, context);
-
-    // FIXME -- removing untouched children should be optional
-    removeChildren(target, touched);
+  public void inject(Object target, Object value, ScopedViewContext context)
+      throws Exception {
+    final Map<Object, Object> touched = createOrUpdateChildren(target,
+        (List<?>) value, context);
+    removeChildren(target, touched, context);
   }
 
-  private Map<Object, Object> createOrUpdateChildren(Object target,
-       Deque<View.Event> events, ScopedViewContext context) throws Exception {
+  protected Map<Object, Object> createOrUpdateChildren(Object target,
+      List<?> value, ScopedViewContext context) throws Exception {
+    final List<?> entities = value;
     final Map<Object, Object> touched = new IdentityHashMap<>();
-    View.Event event = events.removeFirst();
+    final Iterator<?> i = ((List) entities).iterator();
     int index = 0;
-    while (View.Event.Type.BEGIN_OBJECT.equals(event.getType())) {
-      final Object child = createChild(getModelType(), events, context);
-      Object model = findChild(target, child);
-      if (model == null) {
-        // FIXME -- adding the child should be optional
-        // FIXME -- need to tell some handler that we created a child
+    while (i.hasNext()) {
+      final MutableViewEntity entity = (MutableViewEntity) i.next();
+      final Object newElement = entity.getType().newInstance();
+      entity.inject(newElement, context);
+      final Object element = findChild(target, newElement);
+      if (element != null) {
+        touched.put(element, element);
+        entity.inject(element, context);
+      }
+      else {
+        context.getListeners().entityCreated(new ViewNodePropertyEvent(
+            this, target, newElement, context));
         if (accessor instanceof IndexedMultiValuedAccessor) {
-          ((IndexedMultiValuedAccessor) accessor).add(target, index, child);
+          ((IndexedMultiValuedAccessor) accessor).add(target, index, newElement);
         }
         else {
-          accessor.add(target, child);
+          accessor.add(target, newElement);
         }
-        model = child;
+        touched.put(newElement, newElement);
       }
-      updateChildren(model, event, events, context);
-      touched.put(model, model);
       index++;
-      event = events.removeFirst();
     }
-    assertExpectedEvent(event, View.Event.Type.END_ARRAY);
     return touched;
   }
 
-  private void removeChildren(Object target, Map<Object, Object> touched)
-      throws Exception {
+  protected void removeChildren(Object target, Map<Object, Object> touched,
+      ScopedViewContext context) throws Exception {
     final List<Object> children = copyModelChildren(target);
     int index = 0;
     for (final Object child : children) {
       if (!touched.containsKey(child)) {
-        // FIXME -- need to tell some handler that we removed a child
+        context.getListeners().entityDiscarded(
+            new ViewNodePropertyEvent(this, target, child, context));
         if (accessor instanceof IndexedMultiValuedAccessor) {
           ((IndexedMultiValuedAccessor) accessor).remove(target, index);
         }
@@ -162,14 +177,6 @@ public class ArrayOfObjectNode extends ContainerViewNode {
         }
       }
       index++;
-    }
-  }
-
-  private static void assertExpectedEvent(View.Event actual,
-      View.Event.Type expected) {
-    if (!expected.equals(actual.getType())) {
-      // FIXME -- better error reporting
-      throw new ModelEditorException("expected " + expected + " got " + actual);
     }
   }
 

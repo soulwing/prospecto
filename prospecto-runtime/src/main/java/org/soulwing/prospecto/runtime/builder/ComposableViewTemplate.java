@@ -42,6 +42,18 @@ public interface ComposableViewTemplate extends ViewTemplate {
   AbstractViewNode object(String name, String namespace);
 
   /**
+   * Extracts a view node of reference type from the root of this template for
+   * use as a subview in another template.
+   * @param name name for the node (as it will appear in the calling template)
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @return new view node containing the children of the root node of this
+   *    template
+   * @see ViewTemplateBuilder#reference(String, String, ViewTemplate)
+   */
+  AbstractViewNode reference(String name, String namespace);
+
+  /**
    * Extracts a view node of array-of-objects type from the root of this
    * template for use as a subview in another template.
    * @param name name for the node (as it will appear in the calling template)

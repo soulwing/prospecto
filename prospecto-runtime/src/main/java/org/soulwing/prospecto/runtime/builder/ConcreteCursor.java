@@ -18,8 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.EnumSet;
+
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.AccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
@@ -38,6 +42,7 @@ class ConcreteCursor implements Cursor {
   private AbstractViewNode node;
   private String modelName;
   private AccessType accessType = AccessType.PROPERTY;
+  private EnumSet<AccessMode> accessModes = EnumSet.allOf(AccessMode.class);
 
   ConcreteCursor(Class<?> modelType) {
     this(modelType, new ReflectionAccessorFactory());
@@ -87,6 +92,16 @@ class ConcreteCursor implements Cursor {
   }
 
   @Override
+  public EnumSet<AccessMode> getAccessModes() {
+    return accessModes;
+  }
+
+  @Override
+  public void setAccessModes(EnumSet<AccessMode> accessModes) {
+    this.accessModes = accessModes;
+  }
+
+  @Override
   public void advance() {
     advance(null, null);
   }
@@ -107,8 +122,10 @@ class ConcreteCursor implements Cursor {
   private void update() {
     if (modelName == null) return;
     try {
-      node.setAccessor(accessorFactory.newAccessor(modelType, modelName,
-          accessType));
+      final Accessor accessor = accessorFactory.newAccessor(modelType,
+          modelName, accessType);
+      accessor.setAccessModes(accessModes);
+      node.setAccessor(accessor);
     }
     catch (Exception ex) {
       throw new ViewTemplateException(ex);

@@ -20,11 +20,16 @@ package org.soulwing.prospecto.runtime.node;
 
 import java.util.Deque;
 
+import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.handler.ViewNodeEvent;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents a value with a simple textual representation.
@@ -32,7 +37,7 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  * @author Carl Harris
  */
 public class ValueNode extends ValueViewNode
-    implements Convertible, UpdatableViewNode {
+    implements Convertible, UpdatableViewNode, MutableViewEntity.Injector {
 
   /**
    * Constructs a new instance.
@@ -56,19 +61,44 @@ public class ValueNode extends ValueViewNode
   }
 
   @Override
-  public void onUpdate(Object target, View.Event triggerEvent,
+  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    final Accessor accessor = getAccessor().forSubtype(target.getClass());
-    if (accessor.canWrite()) {
-      final Object value = ConverterSupport.toModelValue(accessor.getDataType(),
-          triggerEvent.getValue(), this, context);
-      accessor.set(target, value);
+    context.push(getName(), getModelType());
+    try {
+      final Object viewValue = triggerEvent.getValue();
+
+      final ViewNodeEvent nodeEvent = new ViewNodeEvent(this, viewValue, context);
+      if (!context.getListeners().shouldVisitNode(nodeEvent)) {
+        return UndefinedValue.INSTANCE;
+      }
+
+      final Object convertedValue = ConverterSupport.toModelValue(
+          getAccessor().getDataType(), viewValue, this, context);
+
+      final Object valueToInject = context.getListeners().willInjectValue(
+          new ViewNodePropertyEvent(this, parentEntity, convertedValue, context));
+
+      context.getListeners().propertyVisited(
+          new ViewNodePropertyEvent(this, parentEntity, valueToInject, context));
+
+      context.getListeners().nodeVisited(nodeEvent);
+
+      return valueToInject;
     }
+    catch (Exception ex) {
+      throw new ModelEditorException("error at path "
+          + context.currentViewPathAsString(), ex);
+    }
+    finally {
+      context.pop();
+    }
+
   }
 
   @Override
-  public boolean supportsUpdateEvent(View.Event event) {
-    return event.getType() == View.Event.Type.VALUE;
+  public void inject(Object target, Object value, ScopedViewContext context)
+      throws Exception {
+    getAccessor().forSubtype(target.getClass()).set(target, value);
   }
 
 }

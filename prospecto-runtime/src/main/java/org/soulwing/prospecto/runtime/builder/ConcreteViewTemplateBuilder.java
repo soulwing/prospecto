@@ -18,11 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
@@ -35,9 +36,9 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.DiscriminatorNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.ReferenceNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
@@ -140,6 +141,36 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder reference(String name, Class<?> modelType) {
+    return reference(name, null, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder reference(String name, String namespace,
+      Class<?> modelType) {
+    ReferenceNode node = new ReferenceNode(name, namespace, modelType);
+    target.addChild(node);
+    cursor.advance(node);
+    return builderFactory.newBuilder(this, cursor.copy(modelType), node);
+  }
+
+  @Override
+  public ViewTemplateBuilder reference(String name, ViewTemplate template) {
+    return reference(name, null, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder reference(String name, String namespace,
+      ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
+    final AbstractViewNode node = ((ComposableViewTemplate) template)
+        .reference(name, namespace);
+    target.addChild(node);
+    cursor.advance(node);
+    return this;
+  }
+
+  @Override
   public ViewTemplateBuilder arrayOfObjects(String name, Class<?> modelType) {
     return arrayOfObjects(name, null, null, modelType);
   }
@@ -213,7 +244,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertTargetHasDiscriminator() {
-    if (target.get(DiscriminatorStrategy.class) != null) return;
+    if (target.get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) return;
     throw new ViewTemplateException(
         "discriminator is required before introducing subtypes");
   }
@@ -251,6 +282,7 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
+    assertDiscriminatorNotSet();
     assertTargetHasNoChildren();
     target.put(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, true);
     if (discriminator != null) {
@@ -261,14 +293,15 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   private void assertTargetHasNoChildren() {
     final List<AbstractViewNode> children = target.getChildren();
-    for (final ViewNode child : children) {
-      if (child instanceof DiscriminatorNode) {
-        throw new ViewTemplateException("only one discriminator is allowed");
-      }
-    }
     if (!children.isEmpty()) {
       throw new ViewTemplateException(
           "discriminator must be the first child of the parent node");
+    }
+  }
+
+  private void assertDiscriminatorNotSet() {
+    if (target.get(ContainerViewNode.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) {
+      throw new ViewTemplateException("only one discriminator is allowed");
     }
   }
 
@@ -292,21 +325,34 @@ public class ConcreteViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder source(String name) {
-    if (cursor.getNode() == null) {
-      throw new ViewTemplateException(
-          "cursor must be positioned on an interior node");
-    }
+    assertInteriorNode();
     cursor.setModelName(name);
     return this;
   }
 
-  @Override
-  public ViewTemplateBuilder accessType(AccessType accessType) {
+  private void assertInteriorNode() {
     if (cursor.getNode() == null) {
       throw new ViewTemplateException(
           "cursor must be positioned on an interior node");
     }
+  }
+
+  @Override
+  public ViewTemplateBuilder accessType(AccessType accessType) {
+    assertInteriorNode();
     cursor.setAccessType(accessType);
+    return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder allow(AccessMode first, AccessMode... more) {
+    return allow(EnumSet.of(first, more));
+  }
+
+  @Override
+  public ViewTemplateBuilder allow(EnumSet<AccessMode> accessModes) {
+    assertInteriorNode();
+    cursor.setAccessModes(accessModes);
     return this;
   }
 

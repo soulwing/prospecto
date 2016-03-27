@@ -1,5 +1,5 @@
 /*
- * File created on Mar 22, 2016
+ * File created on Mar 25, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -20,19 +20,19 @@ package org.soulwing.prospecto.runtime.node;
 
 import java.util.Deque;
 
+import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A view node that can used to update a corresponding target model object.
- *
+ * A
  * @author Carl Harris
  */
-public interface UpdatableViewNode extends MutableViewEntity.Injector {
+public interface UpdatableRootNode extends UpdatableViewNode {
 
-  Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception;
+  Class<?> getModelType();
+
+  void update(Object target, Deque<View.Event> events,
+      ScopedViewContext context) throws ModelEditorException;
 
 }

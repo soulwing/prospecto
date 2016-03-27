@@ -97,10 +97,10 @@ public class ArrayOfValueNodeTest {
         will(returnValue(Collections.singletonList(ELEMENT)));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).fireShouldVisitProperty(
+        oneOf(listeners).shouldVisitProperty(
             with(viewNodePropertyEvent(node, MODEL, ELEMENT, viewContext)));
         will(returnValue(true));
-        oneOf(listeners).fireOnExtractValue(
+        oneOf(listeners).didExtractValue(
             with(viewNodePropertyEvent(node, MODEL, ELEMENT, viewContext)));
         will(returnValue(ELEMENT));
 

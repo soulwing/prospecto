@@ -1,5 +1,5 @@
 /*
- * File created on Mar 22, 2016
+ * File created on Mar 26, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,23 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.reference;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.api.ModelEditorException;
 
 /**
- * A view node that can used to update a corresponding target model object.
+ * An exception thrown when no resolver can be found for a reference in a view.
  *
  * @author Carl Harris
  */
-public interface UpdatableViewNode extends MutableViewEntity.Injector {
+public class ReferenceResolverNotFoundException extends ModelEditorException {
 
-  Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception;
+  public ReferenceResolverNotFoundException(Class<?> type) {
+    super("cannot find a resolver for reference of type " + type.getName());
+  }
 
 }

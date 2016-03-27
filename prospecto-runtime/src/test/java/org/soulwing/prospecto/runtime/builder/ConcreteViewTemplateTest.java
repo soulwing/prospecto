@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
@@ -137,9 +136,9 @@ public class ConcreteViewTemplateTest {
         allowing(scopedViewContext).pop();
         allowing(scopedViewContext).getListeners();
         will(returnValue(listeners));
-        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
         will(returnValue(true));
-        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
       }
     };
   }
@@ -164,14 +163,9 @@ public class ConcreteViewTemplateTest {
     }
 
     @Override
-    public void onUpdate(Object target, View.Event triggerEvent,
-        Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    public void inject(Object target, Object value, ScopedViewContext context)
+        throws Exception {
 
-    }
-
-    @Override
-    public boolean supportsUpdateEvent(View.Event event) {
-      return false;
     }
 
   }

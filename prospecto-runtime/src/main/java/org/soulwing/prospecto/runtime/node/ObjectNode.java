@@ -18,12 +18,13 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an object.
@@ -61,24 +62,37 @@ public class ObjectNode extends ContainerViewNode {
   }
 
   @Override
-  public void onUpdate(Object target, View.Event event,
-      Deque<View.Event> events,
-      ScopedViewContext context) throws Exception {
-    Object model = getModelObject(target);
-    final Object child = createChild(getModelType(), events, context);
-    if (model == null || !model.equals(child)) {
-      // FIXME -- need to tell some handler that we created or replaced a child
-      model = child;
-      setModelObject(target, model);
+  public void inject(Object target, Object value, ScopedViewContext context)
+      throws Exception {
+
+    final MutableViewEntity entity = (MutableViewEntity) value;
+    final Object currentValue = getModelObject(target);
+    final Object newValue = entity != null ?
+        entity.getType().newInstance() : null;
+
+    if (newValue != null) {
+      entity.inject(newValue, context);
     }
 
-    updateChildren(model, event, events, context);
+    if (newValue != null && currentValue != null
+        && newValue.equals(currentValue)) {
+      entity.inject(currentValue, context);
+    }
+    else {
+      if (currentValue != null) {
+        context.getListeners().entityDiscarded(
+            new ViewNodePropertyEvent(this, target, currentValue, context));
+      }
+      if (newValue != null) {
+        context.getListeners().entityCreated(
+            new ViewNodePropertyEvent(this, target, newValue, context));
+      }
+      setModelObject(target, newValue);
+    }
   }
 
-  @Override
-  public boolean supportsUpdateEvent(View.Event event) {
-    return event.getType() == View.Event.Type.BEGIN_OBJECT
-        || event.getType() == View.Event.Type.VALUE;
+  protected boolean canWrite() {
+    return getAccessor().canWrite();
   }
 
   protected Object getModelObject(Object source) throws Exception {

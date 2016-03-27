@@ -24,7 +24,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -73,9 +72,9 @@ public class ContainerViewNodeTest {
       {
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        allowing(listeners).fireShouldVisitNode(with(any(ViewNodeEvent.class)));
+        allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
         will(returnValue(true));
-        allowing(listeners).fireNodeVisited(with(any(ViewNodeEvent.class)));
+        allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
         allowing(viewContext).push(NAME, MODEL_TYPE);
         allowing(viewContext).pop();
         oneOf(viewContext).put(MODEL);
@@ -103,14 +102,9 @@ public class ContainerViewNodeTest {
     }
 
     @Override
-    public void onUpdate(Object target, View.Event triggerEvent,
-        Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    public void inject(Object target, Object value, ScopedViewContext context)
+        throws Exception {
 
-    }
-
-    @Override
-    public boolean supportsUpdateEvent(View.Event event) {
-      return false;
     }
 
   }

@@ -32,6 +32,8 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.runtime.handler.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
+import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;
+import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 import org.soulwing.prospecto.runtime.util.StringUtil;
 
@@ -50,6 +52,9 @@ public class ConcreteViewContext implements ScopedViewContext {
 
   private final List<ValueTypeConverter<?>> valueTypeConverters =
       new ArrayList<>();
+
+  private final ReferenceResolverService referenceResolvers =
+      new LinkedListReferenceResolverService();
 
   static class ScopeFrame extends ConcreteMutableScope {
 
@@ -80,6 +85,7 @@ public class ConcreteViewContext implements ScopedViewContext {
     this.scopes.addAll(source.getScopes());
     this.listeners.toList().addAll(source.getListeners().toList());
     this.valueTypeConverters.addAll(source.getValueTypeConverters());
+    this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
   }
 
   @Override
@@ -114,6 +120,11 @@ public class ConcreteViewContext implements ScopedViewContext {
   @Override
   public List<ValueTypeConverter<?>> getValueTypeConverters() {
     return valueTypeConverters;
+  }
+
+  @Override
+  public ReferenceResolverService getReferenceResolvers() {
+    return referenceResolvers;
   }
 
   @Override

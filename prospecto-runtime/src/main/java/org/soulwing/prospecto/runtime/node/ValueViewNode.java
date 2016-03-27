@@ -47,12 +47,12 @@ abstract class ValueViewNode extends AbstractViewNode {
 
     final Object value = getModelValue(source, context);
 
-    final Object extractedValue = context.getListeners().fireOnExtractValue(
+    final Object extractedValue = context.getListeners().didExtractValue(
         new ViewNodePropertyEvent(this, source, value, context));
 
     final Object viewValue = toViewValue(extractedValue, context);
 
-    context.getListeners().firePropertyVisited(
+    context.getListeners().propertyVisited(
         new ViewNodePropertyEvent(this, source, viewValue, context));
 
     return Collections.singletonList(newEvent(

@@ -37,6 +37,7 @@ import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListener;
+import org.soulwing.prospecto.api.reference.ReferenceResolver;
 
 /**
  * Unit tests for {@link ConcreteViewContext}.
@@ -334,20 +335,26 @@ public class ConcreteViewContextTest {
         context.mock(ViewListener.class);
     final ValueTypeConverter valueTypeConverter =
         context.mock(ValueTypeConverter.class);
+    final ReferenceResolver resolver =
+        context.mock(ReferenceResolver.class);
 
     viewContext.getScopes().add(scope);
     viewContext.getListeners().append(listener);
     viewContext.getValueTypeConverters().add(valueTypeConverter);
+    viewContext.getReferenceResolvers().append(resolver);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().clear();
     viewContext.getListeners().toList().clear();
     viewContext.getValueTypeConverters().clear();
+    viewContext.getReferenceResolvers().toList().clear();
 
     assertThat(contextCopy.getScopes(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
     assertThat(contextCopy.getValueTypeConverters(),
         contains(valueTypeConverter));
+    assertThat(contextCopy.getReferenceResolvers().toList(),
+        contains(resolver));
   }
 
 }

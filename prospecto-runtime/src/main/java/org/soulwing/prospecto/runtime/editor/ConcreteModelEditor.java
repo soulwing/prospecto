@@ -25,7 +25,7 @@ import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.UpdatableRootNode;
 
 /**
  * A {@link ModelEditor} implementation.
@@ -34,7 +34,7 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
  */
 public class ConcreteModelEditor implements ModelEditor {
 
-  private final AbstractViewNode root;
+  private final UpdatableRootNode root;
   private final View source;
   private final ScopedViewContext context;
 
@@ -44,7 +44,7 @@ public class ConcreteModelEditor implements ModelEditor {
    * @param source source view
    * @param context view context
    */
-  ConcreteModelEditor(AbstractViewNode root, View source,
+  ConcreteModelEditor(UpdatableRootNode root, View source,
       ScopedViewContext context) {
     this.root = root;
     this.source = source;
@@ -56,8 +56,7 @@ public class ConcreteModelEditor implements ModelEditor {
     try {
       assertHasRootModelType(model);
       final Deque<View.Event> events = eventDeque(source);
-      final View.Event triggerEvent = events.removeFirst();
-      root.update(model, triggerEvent, events, context);
+      root.update(model, events, context);
     }
     catch (ModelEditorException ex) {
       throw ex;

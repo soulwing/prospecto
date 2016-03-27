@@ -1,5 +1,5 @@
 /*
- * File created on Mar 22, 2016
+ * File created on Mar 26, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,23 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.reference;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 
 /**
- * A view node that can used to update a corresponding target model object.
+ * A service that resolves {@link ReferenceResolvers} collection.
  *
  * @author Carl Harris
  */
-public interface UpdatableViewNode extends MutableViewEntity.Injector {
+public interface ReferenceResolverService extends ReferenceResolvers {
 
-  Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception;
+  /**
+   * Resolves the given reference entity using the first resolver that claims
+   * to support the given type.
+   * @param type the subject model type
+   * @param reference the subject reference entity
+   * @return solved value
+   * @throws ReferenceResolverNotFoundException if no resolver claims to
+   *    support the given type
+   */
+  Object resolve(Class<?> type, ViewEntity reference);
 
 }
