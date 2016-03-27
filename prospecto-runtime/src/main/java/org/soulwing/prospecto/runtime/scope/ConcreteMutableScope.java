@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.MutableScope;
+import org.soulwing.prospecto.api.scope.MutableScope;
 
 /**
  * A simple {@link MutableScope}.

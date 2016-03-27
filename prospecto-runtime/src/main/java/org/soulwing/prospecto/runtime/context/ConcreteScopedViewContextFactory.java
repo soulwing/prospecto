@@ -18,9 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.context;
 
-import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
+import org.soulwing.prospecto.api.scope.MutableScope;
 
 /**
  * A {@link ScopedViewContextFactory} that produces {@link ConcreteViewContext}

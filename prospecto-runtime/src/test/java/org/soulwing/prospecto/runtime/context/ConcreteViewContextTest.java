@@ -32,12 +32,12 @@ import java.util.List;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.MutableScope;
-import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListener;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
+import org.soulwing.prospecto.api.scope.MutableScope;
+import org.soulwing.prospecto.api.scope.Scope;
 
 /**
  * Unit tests for {@link ConcreteViewContext}.

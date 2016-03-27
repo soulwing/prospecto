@@ -26,6 +26,8 @@ import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewListeners;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
+import org.soulwing.prospecto.api.scope.MutableScope;
+import org.soulwing.prospecto.api.scope.Scope;
 
 /**
  * A context used when evaluating view template with a model to produce a view.

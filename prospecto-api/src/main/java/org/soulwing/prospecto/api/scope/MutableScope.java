@@ -1,5 +1,5 @@
 /*
- * File created on Mar 13, 2016
+ * File created on Mar 27, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.scope;
 
 import java.util.Map;
 

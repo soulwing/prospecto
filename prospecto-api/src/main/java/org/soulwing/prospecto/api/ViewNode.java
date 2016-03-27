@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.api;
 
+import org.soulwing.prospecto.api.scope.Scope;
+
 /**
  * A node in a view hierarchy.
  * <p>

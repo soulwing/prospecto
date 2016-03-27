@@ -26,10 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.MutableScope;
-import org.soulwing.prospecto.api.Scope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.scope.MutableScope;
+import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.runtime.handler.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;

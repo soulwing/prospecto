@@ -23,10 +23,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import org.junit.Test;
-import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
+import org.soulwing.prospecto.api.scope.MutableScope;
 
 /**
  * Unit tests for {@link ConcreteScopedViewContextFactory}.
