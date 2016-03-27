@@ -27,11 +27,20 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.ViewTemplateException;
 
 /**
  * A converter that extracts a single String, Number, Boolean, Enum, or
  * Date property from a model object.
+ * <p>
+ * This type converter deliberately excludes information from the
+ * view representation that would be needed to reconstruct an instance of
+ * the corresponding model object. Therefore, the {@link #toObject(Object)}
+ * method of this converter always returns
+ * {@linkplain UndefinedValue#INSTANCE undefined value}; this means that a
+ * view node that uses this converter will <em>never</em> be used to update the
+ * corresponding model property.
  *
  * @author Carl Harris
  */
@@ -99,7 +108,7 @@ public class PropertyExtractingValueTypeConverter
 
   @Override
   public Object toObject(Object value) throws Exception {
-    throw new UnsupportedOperationException();
+    return UndefinedValue.INSTANCE;
   }
 
   /**
