@@ -43,7 +43,7 @@ import org.soulwing.prospecto.api.ViewWriterFactory;
 @Produces(MediaType.APPLICATION_XML)
 public class XmlViewMessageBodyWriter implements MessageBodyWriter<View> {
 
-  private final ViewWriterFactory writerFactory =
+  private static final ViewWriterFactory writerFactory =
       ViewWriterFactoryProducer.getFactory("XML");
 
   @Override

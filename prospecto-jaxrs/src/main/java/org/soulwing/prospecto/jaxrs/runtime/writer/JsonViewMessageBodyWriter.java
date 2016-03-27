@@ -43,7 +43,7 @@ import org.soulwing.prospecto.api.ViewWriterFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class JsonViewMessageBodyWriter implements MessageBodyWriter<View> {
 
-  private final ViewWriterFactory writerFactory =
+  private static final ViewWriterFactory writerFactory =
       ViewWriterFactoryProducer.getFactory("JSON");
 
   @Override
