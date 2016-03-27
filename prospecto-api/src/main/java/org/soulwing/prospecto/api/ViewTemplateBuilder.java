@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.api;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
@@ -149,6 +150,56 @@ public interface ViewTemplateBuilder {
    * @return this builder
    */
   ViewTemplateBuilder object(String name, String namespace,
+      ViewTemplate template);
+
+  /**
+   * Adds a reference object node at the cursor.
+   * @param name name for the object in the view
+   * @param modelType the data type for the corresponding model
+   * @return template builder for new object node
+   */
+  ViewTemplateBuilder reference(String name, Class<?> modelType);
+
+  /**
+   * Adds a reference object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder reference(String name, ViewTemplate template);
+
+  /**
+   * Adds a reference object node at the cursor.
+   * @param name name for the object in the view
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param modelType the data type for the corresponding model
+   * @return template builder for new object node
+   */
+  ViewTemplateBuilder reference(String name, String namespace,
+      Class<?> modelType);
+
+  /**
+   * Adds a reference object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder reference(String name, String namespace,
       ViewTemplate template);
 
   /**
@@ -377,6 +428,23 @@ public interface ViewTemplateBuilder {
    * @return this builder
    */
   ViewTemplateBuilder accessType(AccessType accessType);
+
+  /**
+   * Specifies the access modes that will be allowed on the model property
+   * associated with the node at the cursor.
+   * @param modes the modes to allow
+   * @return this builder
+   */
+  ViewTemplateBuilder allow(AccessMode mode, AccessMode... modes);
+
+  /**
+   * Specifies the access modes that will be allowed on the model property
+   * associated with the node at the cursor.
+   * @param modes the modes to allow
+   * @return this builder
+   */
+  ViewTemplateBuilder allow(EnumSet<AccessMode> modes);
+
 
   /**
    * Specifies a converter that will be used to transform the model property
