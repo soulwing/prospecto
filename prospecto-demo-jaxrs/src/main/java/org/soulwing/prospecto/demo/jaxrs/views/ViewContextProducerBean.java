@@ -66,7 +66,7 @@ public class ViewContextProducerBean {
 
     final ViewContext context = ViewContextProducer.newContext();
 
-    final MutableScope scope = context.addScope();
+    final MutableScope scope = context.appendScope();
     scope.put(UrlResolverProducer.getResolver());
     scope.put(userContextService);
 

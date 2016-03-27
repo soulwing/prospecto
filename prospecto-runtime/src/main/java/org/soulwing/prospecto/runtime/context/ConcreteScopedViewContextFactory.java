@@ -34,7 +34,7 @@ public class ConcreteScopedViewContextFactory
   @Override
   public ScopedViewContext newContext(ViewContext source) {
     final ConcreteViewContext viewContext = new ConcreteViewContext(source);
-    final MutableScope scope = viewContext.addScope();
+    final MutableScope scope = viewContext.appendScope();
     scope.put(new SimpleClassNameDiscriminatorStrategy());
     return viewContext;
   }

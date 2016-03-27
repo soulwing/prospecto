@@ -70,9 +70,9 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testAppendScope() throws Exception {
-    final Scope scope0 = viewContext.addScope();
-    final Scope scope1 = viewContext.addScope();
-    final List<Scope> scopes = viewContext.getScopes();
+    final Scope scope0 = viewContext.appendScope();
+    final Scope scope1 = viewContext.appendScope();
+    final List<Scope> scopes = viewContext.getScopes().toList();
     assertThat(scopes.size(), is(equalTo(2)));
     assertThat(scopes.get(0), is(sameInstance(scope0)));
     assertThat(scopes.get(1), is(sameInstance(scope1)));
@@ -80,9 +80,9 @@ public class ConcreteViewContextTest {
 
   @Test
   public void testInsertScope() throws Exception {
-    final Scope scope0 = viewContext.addScope(0);
-    final Scope scope1 = viewContext.addScope(0);
-    final List<Scope> scopes = viewContext.getScopes();
+    final Scope scope0 = viewContext.prependScope();
+    final Scope scope1 = viewContext.prependScope();
+    final List<Scope> scopes = viewContext.getScopes().toList();
     assertThat(scopes.size(), is(equalTo(2)));
     assertThat(scopes.get(0), is(sameInstance(scope1)));
     assertThat(scopes.get(1), is(sameInstance(scope0)));
@@ -114,7 +114,7 @@ public class ConcreteViewContextTest {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
     final MutableScope scope0 = viewContext.newScope();
-    viewContext.getScopes().add(scope0);
+    viewContext.getScopes().append(scope0);
     scope0.put(SCOPE0);
     scope0.put(scope0Mock);
     assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
@@ -154,7 +154,7 @@ public class ConcreteViewContextTest {
     final MockScope0Type scope0Mock = new MockScope0Type() {};
 
     final MutableScope scope0 = viewContext.newScope();
-    viewContext.getScopes().add(scope0);
+    viewContext.getScopes().append(scope0);
     scope0.put(SCOPE0, SCOPE0);
     scope0.put(SCOPE0_MOCK, scope0Mock);
     assertThat(viewContext.get(String.class), is(sameInstance(SCOPE0)));
@@ -338,18 +338,18 @@ public class ConcreteViewContextTest {
     final ReferenceResolver resolver =
         context.mock(ReferenceResolver.class);
 
-    viewContext.getScopes().add(scope);
+    viewContext.getScopes().append(scope);
     viewContext.getListeners().append(listener);
     viewContext.getValueTypeConverters().add(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
-    viewContext.getScopes().clear();
+    viewContext.getScopes().toList().clear();
     viewContext.getListeners().toList().clear();
     viewContext.getValueTypeConverters().clear();
     viewContext.getReferenceResolvers().toList().clear();
 
-    assertThat(contextCopy.getScopes(), contains(scope));
+    assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
     assertThat(contextCopy.getValueTypeConverters(),
         contains(valueTypeConverter));

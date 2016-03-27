@@ -27,7 +27,7 @@ import org.soulwing.prospecto.api.handler.ViewListeners;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;
-import org.soulwing.prospecto.api.scope.Scope;
+import org.soulwing.prospecto.api.scope.Scopes;
 
 /**
  * A context used when evaluating view template with a model to produce a view.
@@ -57,36 +57,35 @@ public interface ViewContext {
    * context.
    * @return new mutable scope instance
    */
-  MutableScope addScope();
+  MutableScope appendScope();
 
   /**
-   * Creates a new mutable scope inserting in the list of scopes on this
-   * context at the specified index.
-   * *
+   * Creates a new mutable scope inserting it at the front of the list of scopes
+   * on this context.
+   *
    * @return new mutable scope instance
    */
-  MutableScope addScope(int index);
+  MutableScope prependScope();
 
   /**
-   * Gets the sequence of scopes that will be consulted when a requested
+   * Gets the collection of scopes that will be consulted when a requested
    * context object is not found in any of the internal scopes managed by the
    * context itself. The scopes are consulted in order until a requested
    * object is found or until all available scopes have been exhausted.
    * <p>
-   * The returned list can be manipulated directly to add or remove scopes
-   * as needed. Manipulating the list while a view is being generated using
-   * this context has no effect.
-   *
-   * @return scopes
+   * The returned collection can be manipulated directly to add or remove scopes
+   * as needed. Manipulating the list during view generation or model update
+   * has no effect on the generation/update in progress.
+   * @return scope collection
    */
-  List<Scope> getScopes();
+  Scopes getScopes();
 
   /**
    * Gets the collection of listeners associated with this context.
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * listeners as needed. Manipulating the collection during view generation
-   * or model update has no effect.
+   * or model update has no effect on the generation/update in progress.
    * @return listener collection
    */
   ViewListeners getListeners();

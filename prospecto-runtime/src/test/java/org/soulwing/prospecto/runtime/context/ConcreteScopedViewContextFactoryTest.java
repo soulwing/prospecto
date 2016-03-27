@@ -49,13 +49,11 @@ public class ConcreteScopedViewContextFactoryTest {
   @Test
   public void testExplicitDiscriminatorStrategy() throws Exception {
     DiscriminatorStrategy strategy = new SimpleClassNameDiscriminatorStrategy();
-    MutableScope scope = source.newScope();
-    source.getScopes().add(scope);
+    MutableScope scope = source.appendScope();
     scope.put(strategy);
     final ScopedViewContext viewContext = factory.newContext(source);
     assertThat(viewContext.get(DiscriminatorStrategy.class),
         is(sameInstance(strategy)));
   }
-
 
 }

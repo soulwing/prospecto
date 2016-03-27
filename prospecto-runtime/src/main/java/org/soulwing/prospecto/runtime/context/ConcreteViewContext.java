@@ -30,11 +30,13 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
+import org.soulwing.prospecto.api.scope.Scopes;
 import org.soulwing.prospecto.runtime.handler.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
+import org.soulwing.prospecto.runtime.scope.LinkedListScopes;
 import org.soulwing.prospecto.runtime.util.StringUtil;
 
 /**
@@ -45,7 +47,7 @@ import org.soulwing.prospecto.runtime.util.StringUtil;
  */
 public class ConcreteViewContext implements ScopedViewContext {
 
-  private final List<Scope> scopes = new ArrayList<>();
+  private final Scopes scopes = new LinkedListScopes();
 
   private final NotifiableViewListeners listeners =
       new LinkedListNotifiableViewListeners();
@@ -82,7 +84,7 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   public ConcreteViewContext(ViewContext source) {
-    this.scopes.addAll(source.getScopes());
+    this.scopes.toList().addAll(source.getScopes().toList());
     this.listeners.toList().addAll(source.getListeners().toList());
     this.valueTypeConverters.addAll(source.getValueTypeConverters());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
@@ -94,21 +96,21 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public MutableScope addScope() {
+  public MutableScope appendScope() {
     MutableScope scope = newScope();
-    scopes.add(scope);
+    scopes.append(scope);
     return scope;
   }
 
   @Override
-  public MutableScope addScope(int index) {
+  public MutableScope prependScope() {
     MutableScope scope = newScope();
-    scopes.add(index, scope);
+    scopes.prepend(scope);
     return scope;
   }
 
   @Override
-  public List<Scope> getScopes() {
+  public Scopes getScopes() {
     return scopes;
   }
 
@@ -184,7 +186,7 @@ public class ConcreteViewContext implements ScopedViewContext {
       obj = frames.next().get(type);
     }
     if (obj == null) {
-      final Iterator<Scope> scopes = this.scopes.iterator();
+      final Iterator<Scope> scopes = this.scopes.toList().iterator();
       while (obj == null && scopes.hasNext()) {
         obj = scopes.next().get(type);
       }
@@ -210,7 +212,7 @@ public class ConcreteViewContext implements ScopedViewContext {
       obj = frames.next().get(name, type);
     }
     if (obj == null) {
-      final Iterator<Scope> scopes = this.scopes.iterator();
+      final Iterator<Scope> scopes = this.scopes.toList().iterator();
       while (obj == null && scopes.hasNext()) {
         obj = scopes.next().get(name, type);
       }

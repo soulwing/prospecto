@@ -61,6 +61,9 @@ public class LinkedListNotifiableViewListenersTest {
     listeners.prepend(listener0);
     listeners.append(listener2);
     assertThat(listeners.toList(), contains(listener0, listener1, listener2));
+
+    assertThat(listeners.remove(listener2), is(true));
+    assertThat(listeners.toList(), contains(listener0, listener1));
   }
 
   @Test
