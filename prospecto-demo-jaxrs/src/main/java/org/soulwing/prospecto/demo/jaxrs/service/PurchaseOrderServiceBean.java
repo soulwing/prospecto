@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
@@ -66,6 +67,25 @@ public class PurchaseOrderServiceBean implements PurchaseOrderService {
     if (purchaseOrder == null) {
       throw new NoSuchEntityException(PurchaseOrder.class, id);
     }
+
+    return PurchaseOrderViews.ORDER_DETAIL.generateView(purchaseOrder,
+        viewContext);
+  }
+
+  @Override
+  public View updatePurchaseOrder(Long id, View purchaseOrderView)
+      throws NoSuchEntityException {
+    PurchaseOrder purchaseOrder = entityManager.find(PurchaseOrder.class, id);
+    if (purchaseOrder == null) {
+      throw new NoSuchEntityException(PurchaseOrder.class, id);
+    }
+
+    final ModelEditor editor = PurchaseOrderViews.ORDER_DETAIL.generateEditor(
+        purchaseOrderView, viewContext);
+    editor.update(purchaseOrder);
+
+    entityManager.flush();
+    entityManager.refresh(purchaseOrder);
 
     return PurchaseOrderViews.ORDER_DETAIL.generateView(purchaseOrder,
         viewContext);

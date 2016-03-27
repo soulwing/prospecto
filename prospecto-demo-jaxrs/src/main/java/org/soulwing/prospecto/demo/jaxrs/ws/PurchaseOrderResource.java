@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -39,6 +41,7 @@ import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
  * @author Carl Harris
  */
 @Path("/orders")
+@Consumes({ MediaType.APPLICATION_JSON })
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class PurchaseOrderResource {
 
@@ -57,6 +60,19 @@ public class PurchaseOrderResource {
   public View getOrder(@PathParam("id") Long orderId) {
     try {
       return purchaseOrderService.findPurchaseOrder(orderId);
+    }
+    catch (NoSuchEntityException ex) {
+      throw new NotFoundException();
+    }
+  }
+
+  @PUT
+  @Path("/{id}")
+  public View putOrder(@PathParam("id") Long orderId,
+      View purchaseOrderView) {
+    try {
+      return purchaseOrderService.updatePurchaseOrder(orderId,
+          purchaseOrderView);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException();

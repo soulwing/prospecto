@@ -21,6 +21,8 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.api.MutableScope;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
 import org.soulwing.prospecto.api.handler.ViewNodeAcceptor;
@@ -35,6 +38,8 @@ import org.soulwing.prospecto.api.handler.ViewNodeEvent;
 import org.soulwing.prospecto.api.handler.ViewNodeListener;
 import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.handler.ViewNodePropertyListener;
+import org.soulwing.prospecto.api.reference.ReferenceResolver;
+import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 import org.soulwing.prospecto.demo.jaxrs.domain.Money;
 import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
@@ -48,6 +53,9 @@ public class ViewContextProducerBean {
 
   private static final Logger logger =
       LoggerFactory.getLogger(ViewContextProducerBean.class);
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   @Inject
   private UserContextService userContextService;
@@ -110,6 +118,19 @@ public class ViewContextProducerBean {
         logger.debug("visited element at path {}: {}",
             event.getContext().currentViewPathAsString(),
             elementModel);
+      }
+    });
+
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return AbstractEntity.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        System.out.println("resolving " + reference);
+        return entityManager.find(type, reference.get("id"));
       }
     });
 

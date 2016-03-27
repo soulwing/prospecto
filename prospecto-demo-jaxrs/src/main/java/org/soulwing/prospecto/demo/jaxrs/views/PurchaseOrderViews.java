@@ -19,12 +19,10 @@
 package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.demo.jaxrs.domain.Account;
-import org.soulwing.prospecto.demo.jaxrs.domain.Person;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseItem;
 import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
 
@@ -53,16 +51,19 @@ public interface PurchaseOrderViews {
           .value("version")
           .value("creationDate")
           .value("dueDate")
-          .object("vendor", VendorViews.VENDOR_REFERENCE)
+          .reference("vendor", VendorViews.VENDOR_REFERENCE)
           .value("orderedBy").converter(PersonViews.PERSON_NAME_CONVERTER)
+              .allow(AccessMode.READ)
           .value("comment")
           .value("currency")
           .value("fund")
+              .allow(AccessMode.READ)
               .attribute("roleRequired", "MANAGER")
               .converter(PropertyExtractingValueTypeConverter.class,
                   "modelType", Account.class,
                   "propertyName", "accountId")
           .value("total")
+              .allow(AccessMode.READ)
           .arrayOfObjects("items", "item", ITEM_DETAIL)
       .build();
 

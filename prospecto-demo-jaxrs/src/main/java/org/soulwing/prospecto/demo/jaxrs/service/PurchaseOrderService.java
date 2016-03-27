@@ -31,4 +31,7 @@ public interface PurchaseOrderService {
 
   View findPurchaseOrder(Long id) throws NoSuchEntityException;
 
+  View updatePurchaseOrder(Long id, View purchaseOrderView)
+      throws NoSuchEntityException;
+
 }

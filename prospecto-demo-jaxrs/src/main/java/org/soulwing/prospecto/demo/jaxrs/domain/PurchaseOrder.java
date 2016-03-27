@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -223,7 +222,7 @@ public class PurchaseOrder extends AbstractEntity {
   public Money getTotal() {
     Money total = new Money(currency);
     for (final PurchaseItem item : getItems()) {
-      total = total.add(item.getPrice());
+      total = total.add(new Money(item.getPrice(), currency));
     }
     return total;
   }

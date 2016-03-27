@@ -22,10 +22,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -54,14 +51,9 @@ public class PurchaseItem extends AbstractEntity {
 
   private BigDecimal quantity = BigDecimal.ZERO;
 
-  @Embedded
-  @AttributeOverrides({
-      @AttributeOverride(name = "amount",
-          column = @Column(name = "unit_price_amount")),
-      @AttributeOverride(name = "currency",
-          column = @Column(name = "unit_price_currency"))
-  })
-  private Money unitPrice = new Money();
+  @Column(name = "unit_price")
+  private BigDecimal unitPrice = BigDecimal.ZERO;
+
 
   /**
    * Gets the {@code order} property.
@@ -147,7 +139,7 @@ public class PurchaseItem extends AbstractEntity {
    * Gets the {@code unitPrice} property.
    * @return property value
    */
-  public Money getUnitPrice() {
+  public BigDecimal getUnitPrice() {
     return unitPrice;
   }
 
@@ -155,12 +147,12 @@ public class PurchaseItem extends AbstractEntity {
    * Sets the {@code unitPrice} property.
    * @param unitPrice the property value to set
    */
-  public void setUnitPrice(Money unitPrice) {
+  public void setUnitPrice(BigDecimal unitPrice) {
     this.unitPrice = unitPrice;
   }
 
-  public Money getPrice() {
-    return unitPrice.multiply(quantity);
+  public BigDecimal getPrice() {
+    return unitPrice.multiply(quantity).setScale(2);
   }
 
   @Override
@@ -222,10 +214,7 @@ public class PurchaseItem extends AbstractEntity {
      * @return this builder
      */
     public Builder unitPrice(BigDecimal unitPrice) {
-      if (order.getCurrency() == null) {
-        throw new IllegalStateException("order currency is not set");
-      }
-      item.setUnitPrice(new Money(unitPrice, order.getCurrency()));
+      item.setUnitPrice(unitPrice);
       return this;
     }
 
