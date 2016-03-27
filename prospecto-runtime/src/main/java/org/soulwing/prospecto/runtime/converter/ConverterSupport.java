@@ -81,7 +81,7 @@ public class ConverterSupport {
     }
 
     for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
-      if (converter.supports(value.getClass())) {
+      if (converter.supports(type)) {
         return converter.toObject(coerce(value, converter.getViewType()));
       }
     }
@@ -99,6 +99,9 @@ public class ConverterSupport {
   private static Object coerce(Object value, Class<?> type) throws Exception {
     assert value != null;
     if (type.isInstance(value)) return value;
+    if (boolean.class.isAssignableFrom(type) && value instanceof Boolean) {
+      return value;
+    }
     if (Enum.class.isAssignableFrom(type) && value instanceof String) {
       final Method method = type.getMethod("valueOf", String.class);
       return method.invoke(type, value);
