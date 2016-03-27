@@ -36,7 +36,7 @@ public interface ViewNodePropertyInterceptor extends ViewListener {
    *   does not wish to change the value it <em>must</em> return the
    *   {@linkplain ViewNodePropertyEvent#getValue() subject value}.
    */
-  Object onExtractValue(ViewNodePropertyEvent event);
+  Object didExtractValue(ViewNodePropertyEvent event);
 
   /**
    * Notifies the recipient that a value will be injected into a model from
@@ -48,6 +48,6 @@ public interface ViewNodePropertyInterceptor extends ViewListener {
    *   does not wish to change the value it <em>must</em> return the
    *   {@linkplain ViewNodePropertyEvent#getValue() subject value}.
    */
-  Object onInjectValue(ViewNodePropertyEvent event);
+  Object willInjectValue(ViewNodePropertyEvent event);
 
 }
