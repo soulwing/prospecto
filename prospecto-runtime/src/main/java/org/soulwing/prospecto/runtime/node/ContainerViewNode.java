@@ -135,7 +135,8 @@ public abstract class ContainerViewNode extends AbstractViewNode
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
     context.push(getName(), getModelType());
     final MutableViewEntity entity = newEntity(events, context);
-    final ViewNodeEvent nodeEvent = new ViewNodeEvent(this, entity, context);
+    final ViewNodeEvent nodeEvent = new ViewNodeEvent(
+        ViewNodeEvent.Mode.MODEL_UPDATE, this, entity, context);
     if (!context.getListeners().shouldVisitNode(nodeEvent)) {
       return UndefinedValue.INSTANCE;
     }

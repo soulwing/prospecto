@@ -67,7 +67,8 @@ public class ValueNode extends ValueViewNode
     try {
       final Object viewValue = triggerEvent.getValue();
 
-      final ViewNodeEvent nodeEvent = new ViewNodeEvent(this, viewValue, context);
+      final ViewNodeEvent nodeEvent = new ViewNodeEvent(
+          ViewNodeEvent.Mode.MODEL_UPDATE, this, viewValue, context);
       if (!context.getListeners().shouldVisitNode(nodeEvent)) {
         return UndefinedValue.INSTANCE;
       }

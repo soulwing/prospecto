@@ -73,7 +73,7 @@ public class LinkedListNotifiableViewListenersTest {
     final ViewNodeAcceptor acceptor1 =
         context.mock(ViewNodeAcceptor.class, "acceptor1");
 
-    final ViewNodeEvent event = new ViewNodeEvent(null, null, null);
+    final ViewNodeEvent event = new ViewNodeEvent(null, null, null, null);
     context.checking(new Expectations() {
       {
         oneOf(acceptor0).shouldVisitNode(event);
@@ -95,7 +95,7 @@ public class LinkedListNotifiableViewListenersTest {
     final ViewNodeAcceptor acceptor1 =
         context.mock(ViewNodeAcceptor.class, "acceptor1");
 
-    final ViewNodeEvent event = new ViewNodeEvent(null, null, null);
+    final ViewNodeEvent event = new ViewNodeEvent(null, null, null, null);
     context.checking(new Expectations() {
       {
         oneOf(acceptor0).shouldVisitNode(event);
@@ -111,7 +111,7 @@ public class LinkedListNotifiableViewListenersTest {
   @Test
   public void testFireNodeVisited() throws Exception {
     final ViewNodeListener listener = context.mock(ViewNodeListener.class);
-    final ViewNodeEvent event = new ViewNodeEvent(null, null, null);
+    final ViewNodeEvent event = new ViewNodeEvent(null, null, null, null);
     context.checking(new Expectations() {
       {
         oneOf(listener).nodeVisited(event);

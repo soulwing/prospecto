@@ -28,20 +28,37 @@ import org.soulwing.prospecto.api.ViewNode;
  */
 public class ViewNodeEvent implements ViewListener {
 
+  public enum Mode {
+    VIEW_GENERATION,
+    MODEL_UPDATE
+  }
+
+  private final Mode mode;
   private final ViewNode source;
   private final Object model;
   private final ViewContext context;
 
   /**
    * Constructs a new instance.
+   * @param mode mode for which the source node is being considered
    * @param source view node source of the event
    * @param model model associated with {@code source}
    * @param context view context
    */
-  public ViewNodeEvent(ViewNode source, Object model, ViewContext context) {
+  public ViewNodeEvent(Mode mode, ViewNode source, Object model,
+      ViewContext context) {
+    this.mode = mode;
     this.source = source;
     this.model = model;
     this.context = context;
+  }
+
+  /**
+   * Gets the mode for which the source node is being considered.
+   * @return property value
+   */
+  public Mode getMode() {
+    return mode;
   }
 
   /**
