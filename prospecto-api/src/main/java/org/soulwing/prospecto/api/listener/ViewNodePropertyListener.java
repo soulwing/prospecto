@@ -1,5 +1,5 @@
 /*
- * File created on Mar 23, 2016
+ * File created on Mar 24, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,23 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.handler;
+package org.soulwing.prospecto.api.listener;
 
 /**
- * A listener that is notified before nodes are visited during view generation
+ * An listener that is notified as properties are visited during view generation
  * or model update.
  *
  * @author Carl Harris
  */
-public interface ViewNodeAcceptor extends ViewListener {
+public interface ViewNodePropertyListener extends ViewListener {
 
   /**
-   * Notifies the recipient that a view node will be visited.
-   *
-   * @param event event describing the node
-   * @return {@code true} if this filter wishes to allow the node
-   *    to be visited
+   * Notifies the recipient that a property was visited.
+   * @param event event describing the property
    */
-  boolean shouldVisitNode(ViewNodeEvent event);
+  void propertyVisited(ViewNodePropertyEvent event);
 
 }

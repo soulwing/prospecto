@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.handler;
+package org.soulwing.prospecto.runtime.listener;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasProperty;
@@ -25,8 +25,8 @@ import static org.hamcrest.Matchers.sameInstance;
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.handler.ViewNodeEvent;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

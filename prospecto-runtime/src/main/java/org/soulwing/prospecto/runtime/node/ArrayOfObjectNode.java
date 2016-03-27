@@ -30,7 +30,7 @@ import java.util.Map;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.IndexedMultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;

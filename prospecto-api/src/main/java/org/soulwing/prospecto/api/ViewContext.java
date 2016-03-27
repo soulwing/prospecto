@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.api.handler.ViewListeners;
+import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;

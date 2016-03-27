@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.handler;
+package org.soulwing.prospecto.runtime.listener;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -28,15 +28,15 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.handler.ViewListener;
-import org.soulwing.prospecto.api.handler.ViewNodeAcceptor;
-import org.soulwing.prospecto.api.handler.ViewNodeEntityListener;
-import org.soulwing.prospecto.api.handler.ViewNodeEvent;
-import org.soulwing.prospecto.api.handler.ViewNodeListener;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyAcceptor;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyEvent;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyInterceptor;
-import org.soulwing.prospecto.api.handler.ViewNodePropertyListener;
+import org.soulwing.prospecto.api.listener.ViewListener;
+import org.soulwing.prospecto.api.listener.ViewNodeAcceptor;
+import org.soulwing.prospecto.api.listener.ViewNodeEntityListener;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewNodeListener;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyAcceptor;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyInterceptor;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
 
 /**
  * Unit tests for {@link LinkedListNotifiableViewListeners}.

@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.handler.ViewNodeEventMatchers.viewNodeEvent;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.viewNodeEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.handler.NotifiableViewListeners;
+import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
  * Unit tests for {@link AbstractViewNode}.

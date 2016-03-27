@@ -1,5 +1,5 @@
 /*
- * File created on Mar 24, 2016
+ * File created on Mar 23, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,20 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.handler;
+package org.soulwing.prospecto.api.listener;
 
 /**
- * An listener that is notified as properties are visited during view generation
- * or model update.
+ * Marker interface that identifies a listener type.
  *
  * @author Carl Harris
  */
-public interface ViewNodePropertyListener extends ViewListener {
-
-  /**
-   * Notifies the recipient that a property was visited.
-   * @param event event describing the property
-   */
-  void propertyVisited(ViewNodePropertyEvent event);
-
+public interface ViewListener {
 }

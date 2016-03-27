@@ -16,28 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.handler;
+package org.soulwing.prospecto.runtime.listener;
+
+import org.soulwing.prospecto.api.listener.ViewListeners;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 
 /**
- * A listener that is notified as instances of model types are created or
- * discarded during model update.
+ * A notifiable collection of view listeners.
  *
  * @author Carl Harris
  */
-public interface ViewNodeEntityListener extends ViewListener {
+public interface NotifiableViewListeners extends ViewListeners {
 
-  /**
-   * Notifies the recipient that a model entity was created and added to the
-   * model.
-   * @param event event describing the entity that was created
-   */
+  boolean shouldVisitNode(ViewNodeEvent event);
+
+  void nodeVisited(ViewNodeEvent event);
+
+  boolean shouldVisitProperty(ViewNodePropertyEvent event);
+
+  Object didExtractValue(ViewNodePropertyEvent event);
+
+  Object willInjectValue(ViewNodePropertyEvent event);
+
+  void propertyVisited(ViewNodePropertyEvent event);
+
   void entityCreated(ViewNodePropertyEvent event);
 
-  /**
-   * Notifies the recipient that a model entity was removed from the model
-   * and is to be discarded.
-   * @param event event describing the entity to be discarded
-   */
   void entityDiscarded(ViewNodePropertyEvent event);
 
 }
