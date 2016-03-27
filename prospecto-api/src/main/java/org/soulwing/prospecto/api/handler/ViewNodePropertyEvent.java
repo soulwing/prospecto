@@ -34,7 +34,7 @@ public class ViewNodePropertyEvent implements ViewEvent {
   private final ViewContext context;
 
   /**
-   * Constructs a copy of an event, composed with a different provoperty model.
+   * Constructs a copy of an event, composed with a different property model.
    * @param source the source event
    * @param value the new property value to compose in the event
    */
