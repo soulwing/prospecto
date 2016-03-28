@@ -32,6 +32,7 @@ import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteMutableViewEntity;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -47,6 +48,7 @@ public abstract class ContainerViewNode extends AbstractViewNode
   public static final String DISCRIMINATOR_FLAG_KEY = "hasDiscriminator";
 
   private final List<AbstractViewNode> children;
+  private Accessor accessor;
 
   /**
    * Constructs a new instance.
@@ -69,6 +71,16 @@ public abstract class ContainerViewNode extends AbstractViewNode
       List<AbstractViewNode> children) {
     super(name, namespace, modelType);
     this.children = children;
+  }
+
+  @Override
+  public Accessor getAccessor() {
+    return accessor;
+  }
+
+  @Override
+  public void setAccessor(Accessor accessor) {
+    this.accessor = accessor;
   }
 
   public List<AbstractViewNode> getChildren() {

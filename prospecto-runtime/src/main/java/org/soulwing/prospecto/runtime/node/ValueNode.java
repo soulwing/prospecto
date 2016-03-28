@@ -26,10 +26,10 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents a value with a simple textual representation.
@@ -37,7 +37,9 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  * @author Carl Harris
  */
 public class ValueNode extends ValueViewNode
-    implements Convertible, UpdatableViewNode, MutableViewEntity.Injector {
+    implements Convertible, UpdatableViewNode {
+
+  private Accessor accessor;
 
   /**
    * Constructs a new instance.
@@ -46,6 +48,16 @@ public class ValueNode extends ValueViewNode
    */
   public ValueNode(String name, String namespace) {
     super(name, namespace);
+  }
+
+  @Override
+  public Accessor getAccessor() {
+    return accessor;
+  }
+
+  @Override
+  public void setAccessor(Accessor accessor) {
+    this.accessor = accessor;
   }
 
   @Override

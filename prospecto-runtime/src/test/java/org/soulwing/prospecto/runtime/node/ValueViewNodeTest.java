@@ -29,11 +29,9 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
@@ -58,17 +56,9 @@ public class ValueViewNodeTest {
   private NotifiableViewListeners listeners;
 
   @Mock
-  private Accessor accessor;
-
-  @Mock
   private ScopedViewContext viewContext;
 
   private MockViewNode node = new MockViewNode();
-
-  @Before
-  public void setUp() throws Exception {
-    node.setAccessor(accessor);
-  }
 
   @Test
   public void testOnEvaluate() throws Exception {

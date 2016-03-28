@@ -36,11 +36,13 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  *
  * @author Carl Harris
  */
-public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
+public class ArrayOfValueNode extends AbstractViewNode
+    implements Convertible, ModelAccessingNode {
 
   private final String elementName;
 
-  private MultiValuedAccessor accessor;
+  private Accessor accessor;
+  private MultiValuedAccessor multiValuedAccessor;
 
   /**
    * Constructs a new instance.
@@ -62,9 +64,15 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
   }
 
   @Override
+  public Accessor getAccessor() {
+    return accessor;
+  }
+
+  @Override
   public void setAccessor(Accessor accessor) {
-    super.setAccessor(accessor);
-    this.accessor = MultiValuedAccessorFactory.newAccessor(accessor);
+    this.accessor = accessor;
+    this.multiValuedAccessor = accessor != null ?
+        MultiValuedAccessorFactory.newAccessor(accessor) : null;
   }
 
   @Override
@@ -91,7 +99,7 @@ public class ArrayOfValueNode extends AbstractViewNode implements Convertible {
   }
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
-    return accessor.iterator(source);
+    return multiValuedAccessor.iterator(source);
   }
 
   private Object toViewValue(Object model, ScopedViewContext context)

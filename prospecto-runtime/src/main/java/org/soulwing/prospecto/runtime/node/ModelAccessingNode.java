@@ -1,5 +1,5 @@
 /*
- * File created on Mar 22, 2016
+ * File created on Mar 28, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,22 +18,17 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 
 /**
- * A view node that can used to update a corresponding target model object.
+ * A node with an accessor for a model property.
  *
  * @author Carl Harris
  */
-public interface UpdatableViewNode
-    extends MutableViewEntity.Injector, ModelAccessingNode {
+public interface ModelAccessingNode {
 
-  Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception;
+  Accessor getAccessor();
+
+  void setAccessor(Accessor accessor);
 
 }
