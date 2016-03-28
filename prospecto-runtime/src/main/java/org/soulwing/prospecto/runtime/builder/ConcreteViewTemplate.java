@@ -40,7 +40,7 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  *
  * @author Carl Harris
  */
-public class ConcreteViewTemplate implements ComposableViewTemplate {
+class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private final AbstractViewNode root;
   private final ScopedViewContextFactory viewContextFactory;
@@ -86,7 +86,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public AbstractViewNode object(String name, String namespace) {
+  public ContainerViewNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     ObjectNode node = new ObjectNode(name, namespace, root.getModelType());
     assert root instanceof ContainerViewNode;
@@ -95,7 +95,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public AbstractViewNode reference(String name, String namespace) {
+  public ContainerViewNode reference(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     ReferenceNode node = new ReferenceNode(name, namespace, root.getModelType());
     assert root instanceof ContainerViewNode;
@@ -104,7 +104,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public AbstractViewNode arrayOfObjects(String name, String elementName,
+  public ContainerViewNode arrayOfObjects(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
     ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,

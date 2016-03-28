@@ -1,5 +1,5 @@
 /*
- * File created on Mar 16, 2016
+ * File created on Mar 28, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,20 +18,46 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import java.util.Collection;
 
 /**
- * A {@link ViewTemplateBuilderFactory} that produces
- * {@link RootNodeViewTemplateBuilder} objects.
+ * A mock model used for testing the template builder.
  *
  * @author Carl Harris
  */
-class ConcreteViewTemplateBuilderFactory implements ViewTemplateBuilderFactory {
+public class MockChildModel {
 
-  @Override
-  public ViewTemplateBuilder newBuilder(ContainerViewNode target) {
-    return new RootNodeViewTemplateBuilder(target);
+  private Object mockField;
+
+  private MockChildModel otherMockField;
+
+  public Object getMockProperty() {
+    return null;
   }
+
+  public void setMockProperty(Object mockProperty) {
+  }
+
+  public Object getOtherMockProperty() {
+    return null;
+  }
+
+  public void setOtherMockProperty(Object otherMockProperty) {
+  }
+
+  public Object[] getMockArray() {
+    return null;
+  }
+
+  public void setMockArray(Object[] mockArray) {
+  }
+
+  public Collection getMockCollection() {
+    return null;
+  }
+
+  public void setMockArray(Collection mockArray) {
+  }
+
 
 }

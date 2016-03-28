@@ -1,5 +1,5 @@
 /*
- * File created on Mar 16, 2016
+ * File created on Mar 28, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,20 +18,18 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-
 /**
- * A {@link ViewTemplateBuilderFactory} that produces
- * {@link RootNodeViewTemplateBuilder} objects.
+ * A mock subtype for use in testing the template builder.
  *
  * @author Carl Harris
  */
-class ConcreteViewTemplateBuilderFactory implements ViewTemplateBuilderFactory {
+public class MockChildSubModel extends MockChildModel {
 
-  @Override
-  public ViewTemplateBuilder newBuilder(ContainerViewNode target) {
-    return new RootNodeViewTemplateBuilder(target);
+  public Object getSubProperty() {
+    return null;
+  }
+
+  public void setSubProperty(Object subProperty) {
   }
 
 }

@@ -19,14 +19,19 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 
 /**
  * Matchers for {@link ViewNode} objects.
@@ -69,20 +74,153 @@ public class ViewNodeMatchers {
     );
   }
 
-  public static <T extends ViewNode> Matcher<T> hasAttributeOfType(
-      final Class<T> nodeClass, final Class<?> attributeType) {
-    return new BaseMatcher<T>() {
+  @SafeVarargs
+  public static Matcher<ViewNode> nodeOfType(
+      final Class<? extends ViewNode> nodeType,
+      final Matcher<ViewNode>... matchers) {
+    return new BaseMatcher<ViewNode>() {
       @Override
       public boolean matches(Object item) {
-        return ((ViewNode) item).get(attributeType) != null;
+        return nodeType.isAssignableFrom(item.getClass())
+            && allOf(matchers).matches(item);
       }
 
       @Override
       public void describeTo(Description description) {
-        description.appendText("has an attribute of type "
-            + attributeType.getName());
+        description.appendText("node of type ")
+            .appendValue(nodeType.getSimpleName())
+            .appendText(" and all of ")
+            .appendDescriptionOf(allOf(matchers));
+      }
+
+      @Override
+      public void describeMismatch(Object item, Description description) {
+        if (!nodeType.isAssignableFrom(item.getClass())) {
+          description.appendText("instead was type ")
+              .appendValue(item.getClass().getSimpleName());
+        }
+        else {
+          allOf(matchers).describeMismatch(item, description);
+        }
       }
     };
+  }
+
+  public static <T extends ViewNode> Matcher<T> named(String name) {
+    return hasProperty("name", equalTo(name));
+  }
+
+  public static <T extends ViewNode> Matcher<T> elementsNamed(String elementName) {
+    return hasProperty("elementName", equalTo(elementName));
+  }
+
+  public static Matcher<ViewNode> inDefaultNamespace() {
+    return hasProperty("namespace", nullValue(String.class));
+  }
+
+  public static Matcher<ViewNode> inNamespace(String namespace) {
+    return hasProperty("namespace", equalTo(namespace));
+  }
+
+  public static Matcher<ViewNode> forModelType(Class<?> modelType) {
+    return hasProperty("modelType", equalTo(modelType));
+  }
+
+  public static Matcher<ViewNode> havingAttribute(
+      final Class<?> attributeType) {
+    return havingAttribute(attributeType, any(attributeType));
+  }
+
+  public static Matcher<ViewNode> havingAttribute(
+      final Class<?> attributeType, final Matcher<?> matcher) {
+    return new BaseMatcher<ViewNode>() {
+      @Override
+      public boolean matches(Object item) {
+        final Object attribute = ((ViewNode) item).get(attributeType);
+        return attribute != null
+            && matcher.matches(attribute);
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("has attribute of type ")
+            .appendValue(attributeType.getSimpleName())
+            .appendText(" and ")
+            .appendDescriptionOf(matcher);
+      }
+
+      @Override
+      public void describeMismatch(Object item, Description description) {
+        if (((ViewNode) item).get(attributeType) == null) {
+          description.appendText("but has no attribute of type ")
+              .appendValue(attributeType.getSimpleName());
+        }
+        else {
+          matcher.describeMismatch(item, description);
+        }
+      }
+    };
+  }
+
+  public static Matcher<ViewNode> havingAttribute(final String name,
+      final Class<?> attributeType) {
+    return havingAttribute(name, attributeType, any(attributeType));
+  }
+
+  public static Matcher<ViewNode> havingAttribute(
+      final String name, final Class<?> attributeType,
+      final Matcher<?> matcher) {
+    return new BaseMatcher<ViewNode>() {
+      @Override
+      public boolean matches(Object item) {
+        final Object attribute = ((ViewNode) item).get(name, attributeType);
+        return attribute != null
+            && matcher.matches(attribute);
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("has attribute '")
+            .appendValue(name)
+            .appendText("' of type ")
+            .appendValue(attributeType.getSimpleName())
+            .appendText(" and ")
+            .appendDescriptionOf(matcher);
+      }
+
+      @Override
+      public void describeMismatch(Object item, Description description) {
+        if (((ViewNode) item).get(name, attributeType) == null) {
+          description.appendText("but has no attribute '")
+              .appendValue(name)
+              .appendText("' of type ")
+              .appendValue(attributeType.getSimpleName());
+        }
+        else {
+          matcher.describeMismatch(item, description);
+        }
+      }
+    };
+  }
+
+  @SafeVarargs
+  public static Matcher<ViewNode> accessing(
+      Matcher<Accessor>... matchers) {
+    return hasProperty("accessor", allOf(matchers));
+  }
+
+  public static Matcher<ViewNode> accessingNothing() {
+    return hasProperty("accessor", nullValue(Accessor.class));
+  }
+
+  @SafeVarargs
+  public static Matcher<ViewNode> containing(
+      Matcher<ViewNode>... matchers) {
+    return hasProperty("children", contains(matchers));
+  }
+
+  public static Matcher<ViewNode> containingNothing() {
+    return hasProperty("children", empty());
   }
 
 }

@@ -71,7 +71,7 @@ public class ConcreteViewTemplateBuilderProviderTest {
   public void testObject() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(builderFactory).newBuilder(with(MODEL_TYPE), with(
+        oneOf(builderFactory).newBuilder(with(
             viewNode(ObjectNode.class, NAME, NAMESPACE)));
         will(returnValue(builder));
       }
@@ -85,7 +85,7 @@ public class ConcreteViewTemplateBuilderProviderTest {
   public void testArrayOfObjects() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(builderFactory).newBuilder(with(MODEL_TYPE), with(
+        oneOf(builderFactory).newBuilder(with(
             arrayViewNode(ArrayOfObjectNode.class, NAME, ELEMENT_NAME,
                 NAMESPACE)));
         will(returnValue(builder));

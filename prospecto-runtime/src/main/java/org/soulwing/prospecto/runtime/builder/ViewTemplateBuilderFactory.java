@@ -29,20 +29,9 @@ interface ViewTemplateBuilderFactory {
 
   /**
    * Creates a new root template builder.
-   * @param modelType model type to associate with the root container node.
    * @param target root container node
    * @return builder
    */
-  ViewTemplateBuilder newBuilder(Class<?> modelType, ContainerViewNode target);
-
-  /**
-   * Creates a new child template builder.
-   * @param parent parent builder
-   * @param cursor cursor that points at target
-   * @param target container node for nodes produced by the builder
-   * @return builder
-   */
-  ViewTemplateBuilder newBuilder(ViewTemplateBuilder parent, Cursor cursor,
-      ContainerViewNode target);
+  ViewTemplateBuilder newBuilder(ContainerViewNode target);
 
 }

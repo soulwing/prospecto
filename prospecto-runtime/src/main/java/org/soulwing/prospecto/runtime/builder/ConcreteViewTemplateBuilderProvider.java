@@ -49,14 +49,14 @@ public class ConcreteViewTemplateBuilderProvider
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException {
-    return builderFactory.newBuilder(modelType,
+    return builderFactory.newBuilder(
         new RootObjectNode(name, namespace, modelType));
   }
 
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) throws ViewTemplateException {
-    return builderFactory.newBuilder(modelType,
+    return builderFactory.newBuilder(
         new RootArrayOfObjectNode(name, elementName, namespace,
             modelType));
   }

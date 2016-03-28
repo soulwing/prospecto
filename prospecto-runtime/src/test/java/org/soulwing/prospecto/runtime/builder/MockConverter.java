@@ -1,5 +1,5 @@
 /*
- * File created on Mar 16, 2016
+ * File created on Mar 28, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,20 +18,42 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
- * A {@link ViewTemplateBuilderFactory} that produces
- * {@link RootNodeViewTemplateBuilder} objects.
  *
  * @author Carl Harris
  */
-class ConcreteViewTemplateBuilderFactory implements ViewTemplateBuilderFactory {
+public class MockConverter implements ValueTypeConverter<Object> {
+
+  private String mockProperty;
+
+  public String getMockProperty() {
+    return mockProperty;
+  }
+
+  public void setMockProperty(String mockProperty) {
+    this.mockProperty = mockProperty;
+  }
 
   @Override
-  public ViewTemplateBuilder newBuilder(ContainerViewNode target) {
-    return new RootNodeViewTemplateBuilder(target);
+  public boolean supports(Class<?> type) {
+    return false;
+  }
+
+  @Override
+  public Class<?> getViewType() {
+    return null;
+  }
+
+  @Override
+  public Object toValue(Object model) throws Exception {
+    return null;
+  }
+
+  @Override
+  public Object toObject(Object value) throws Exception {
+    return null;
   }
 
 }
