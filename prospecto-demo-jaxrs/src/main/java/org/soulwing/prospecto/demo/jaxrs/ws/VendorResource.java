@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,6 +42,7 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
  * @author Carl Harris
  */
 @Path("/vendors")
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class VendorResource {
 
@@ -55,13 +58,27 @@ public class VendorResource {
   @Path("/{id}")
   @ReferencedBy({ AnyModelSequence.class, Vendor.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
-  public View getVendor(@PathParam("id") Long orderId) {
+  public View getVendor(@PathParam("id") Long id) {
     try {
-      return vendorService.findVendorById(orderId);
+      return vendorService.findVendorById(id);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException();
     }
   }
+
+  @PUT
+  @Path("/{id}")
+  public View putVendor(@PathParam("id") Long id,
+      View vendorView) {
+    try {
+      return vendorService.updateVendor(id, vendorView);
+    }
+    catch (NoSuchEntityException ex) {
+      throw new NotFoundException();
+    }
+  }
+
+
 
 }

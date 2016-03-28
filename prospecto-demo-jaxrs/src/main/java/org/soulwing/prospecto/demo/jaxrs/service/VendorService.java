@@ -31,4 +31,6 @@ public interface VendorService {
 
   View findVendorById(Long id) throws NoSuchEntityException;
 
+  View updateVendor(Long id, View vendorView) throws NoSuchEntityException;
+
 }

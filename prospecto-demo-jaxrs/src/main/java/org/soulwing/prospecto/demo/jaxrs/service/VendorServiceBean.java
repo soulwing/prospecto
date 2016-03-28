@@ -26,11 +26,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
 import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
-import org.soulwing.prospecto.demo.jaxrs.views.PurchaseOrderViews;
 import org.soulwing.prospecto.demo.jaxrs.views.VendorViews;
 
 /**
@@ -62,6 +61,25 @@ public class VendorServiceBean implements VendorService {
     if (vendor == null) {
       throw new NoSuchEntityException(Vendor.class, id);
     }
+
+    return VendorViews.VENDOR_DETAIL.generateView(vendor, viewContext);
+  }
+
+  @Override
+  public View updateVendor(Long id, View vendorView)
+      throws NoSuchEntityException {
+    Vendor vendor = entityManager.find(Vendor.class, id);
+    if (vendor == null) {
+      throw new NoSuchEntityException(Vendor.class, id);
+    }
+
+    final ModelEditor editor = VendorViews.VENDOR_DETAIL.generateEditor(
+        vendorView, viewContext);
+    editor.update(vendor);
+    vendor.setId(id);
+
+    entityManager.flush();
+    entityManager.refresh(vendor);
 
     return VendorViews.VENDOR_DETAIL.generateView(vendor, viewContext);
   }

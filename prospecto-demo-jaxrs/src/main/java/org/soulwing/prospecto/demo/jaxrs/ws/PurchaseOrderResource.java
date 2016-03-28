@@ -41,7 +41,7 @@ import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
  * @author Carl Harris
  */
 @Path("/orders")
-@Consumes({ MediaType.APPLICATION_JSON })
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class PurchaseOrderResource {
 
@@ -57,9 +57,9 @@ public class PurchaseOrderResource {
   @Path("/{id}")
   @ReferencedBy(PurchaseOrder.class)
   @TemplateResolver(EntityPathTemplateResolver.class)
-  public View getOrder(@PathParam("id") Long orderId) {
+  public View getOrder(@PathParam("id") Long id) {
     try {
-      return purchaseOrderService.findPurchaseOrder(orderId);
+      return purchaseOrderService.findPurchaseOrder(id);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException();
@@ -68,11 +68,10 @@ public class PurchaseOrderResource {
 
   @PUT
   @Path("/{id}")
-  public View putOrder(@PathParam("id") Long orderId,
+  public View putOrder(@PathParam("id") Long id,
       View purchaseOrderView) {
     try {
-      return purchaseOrderService.updatePurchaseOrder(orderId,
-          purchaseOrderView);
+      return purchaseOrderService.updatePurchaseOrder(id, purchaseOrderView);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException();

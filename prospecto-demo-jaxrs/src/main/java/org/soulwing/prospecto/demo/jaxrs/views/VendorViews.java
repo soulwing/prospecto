@@ -38,7 +38,7 @@ public interface VendorViews {
       .build();
 
   ViewTemplate VENDOR_DETAIL = ViewTemplateBuilderProducer
-      .object("vendor", Namespace.URI, Vendor.class)
+      .object(Vendor.class)
           .value("id").accessType(AccessType.PROPERTY)
           .value("version").accessType(AccessType.PROPERTY)
           .value("name")

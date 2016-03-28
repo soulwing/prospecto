@@ -45,11 +45,12 @@ public interface PurchaseOrderViews {
       .build();
 
   ViewTemplate ORDER_DETAIL = ViewTemplateBuilderProducer
-      .object("order", Namespace.URI, PurchaseOrder.class)
+      .object(PurchaseOrder.class)
           .url()
           .value("id")
           .value("version")
           .value("creationDate")
+              .allow(AccessMode.READ)
           .value("dueDate")
           .reference("vendor", VendorViews.VENDOR_REFERENCE)
           .value("orderedBy").converter(PersonViews.PERSON_NAME_CONVERTER)

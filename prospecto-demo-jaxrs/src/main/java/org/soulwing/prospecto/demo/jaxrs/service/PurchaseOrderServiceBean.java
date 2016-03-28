@@ -83,6 +83,7 @@ public class PurchaseOrderServiceBean implements PurchaseOrderService {
     final ModelEditor editor = PurchaseOrderViews.ORDER_DETAIL.generateEditor(
         purchaseOrderView, viewContext);
     editor.update(purchaseOrder);
+    purchaseOrder.setId(id);
 
     entityManager.flush();
     entityManager.refresh(purchaseOrder);
