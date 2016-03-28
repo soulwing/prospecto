@@ -1255,5 +1255,4 @@ public class ViewTemplateBuilderTest {
         .build();
   }
 
-
 }

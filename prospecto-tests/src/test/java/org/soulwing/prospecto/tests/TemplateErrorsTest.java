@@ -48,12 +48,6 @@ public class TemplateErrorsTest {
   public void testSourceAtRootNode() throws Exception {
     ViewTemplateBuilderProducer.object(Object.class).source(SOURCE);
   }
-
-  @Test(expected = ViewTemplateException.class)
-  public void testAccessTypeAtRootNode() throws Exception {
-    ViewTemplateBuilderProducer.object(Object.class).accessType(ACCESS_TYPE);
-  }
-
   @Test(expected = ViewTemplateException.class)
   public void testBuildOnChildBuilder() throws Exception {
     ViewTemplateBuilderProducer.object(Object.class)
@@ -63,13 +57,18 @@ public class TemplateErrorsTest {
 
   @Test(expected = ViewTemplateException.class)
   public void testConverterAtRootNode() throws Exception {
-    ViewTemplateBuilderProducer.object(Object.class).converter(converter);
+    ViewTemplateBuilderProducer.object(Object.class)
+        .converter(converter)
+        .build();
   }
 
   @Test(expected = ViewTemplateException.class)
   public void testConverterOnContainerNode() throws Exception {
     ViewTemplateBuilderProducer.object(Object.class)
-        .object(NAME, Object.class).converter(converter);
+        .object(NAME, Object.class)
+        .converter(converter)
+        .end()
+        .build();
   }
 
   @Test(expected = ViewTemplateException.class)
