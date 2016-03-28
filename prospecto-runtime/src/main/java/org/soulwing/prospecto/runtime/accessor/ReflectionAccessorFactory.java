@@ -25,52 +25,41 @@ import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
-import org.soulwing.prospecto.api.AccessType;
 
 /**
  * An {@link AccessorFactory} that produces accessors using the Reflection API.
  *
  * @author Carl Harris
  */
-public class ReflectionAccessorFactory implements AccessorFactory {
+public class ReflectionAccessorFactory {
 
-  @Override
-  public Accessor newAccessor(Class<?> declaringClass, String name,
-      AccessType accessType) throws Exception {
-    switch (accessType) {
-      case FIELD:
-        return field(declaringClass, name);
-      case PROPERTY:
-        return property(declaringClass, name);
-      default:
-        throw new IllegalArgumentException("unrecognized access type: "
-            + accessType.name());
-    }
+
+  static Accessor field(Class<?> declaringClass, String name,
+      EnumSet<AccessMode> allowedModes) throws NoSuchFieldException {
+    return new FieldAccessor(name, declaringClass.getDeclaredField(name),
+        allowedModes);
   }
 
-  static Accessor field(Class<?> declaringClass, String name)
-      throws NoSuchFieldException {
-    return new FieldAccessor(name, declaringClass.getDeclaredField(name));
-  }
-
-  static Accessor property(Class<?> declaringClass, String name)
-      throws NoSuchMethodException, IntrospectionException {
-    final EnumSet<AccessMode> accessModes = EnumSet.noneOf(AccessMode.class);
+  static Accessor property(Class<?> declaringClass, String name,
+      EnumSet<AccessMode> allowedModes) throws NoSuchMethodException,
+      IntrospectionException {
+    final EnumSet<AccessMode> supportedModes = EnumSet.noneOf(AccessMode.class);
 
     for (final PropertyDescriptor descriptor :
         Introspector.getBeanInfo(declaringClass).getPropertyDescriptors()) {
       if (descriptor.getName().equals(name)) {
         Method readMethod = descriptor.getReadMethod();
         if (readMethod != null) {
-          accessModes.add(AccessMode.READ);
+          supportedModes.add(AccessMode.READ);
         }
 
         Method writeMethod = descriptor.getWriteMethod();
         if (writeMethod != null) {
-          accessModes.add(AccessMode.WRITE);
+          supportedModes.add(AccessMode.WRITE);
         }
 
-        return new PropertyAccessor(name, readMethod, writeMethod, accessModes);
+        return new PropertyAccessor(name, readMethod, writeMethod,
+            supportedModes, allowedModes);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()

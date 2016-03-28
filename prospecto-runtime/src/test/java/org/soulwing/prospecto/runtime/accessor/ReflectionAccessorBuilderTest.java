@@ -24,70 +24,84 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import org.junit.Test;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.ViewTemplateException;
 
 /**
- * Unit tests for {@link ReflectionAccessorFactory}.
+ * Unit tests for {@link ReflectionAccessorBuilder}.
  *
  * @author Carl Harris
  */
-public class ReflectionAccessorFactoryTest {
+public class ReflectionAccessorBuilderTest {
 
   private static final Object PRIVATE_FIELD_VALUE = new Object();
   private static final Object PUBLIC_FIELD_VALUE = new Object();
   private static final Object PUBLIC_METHOD_VALUE = new Object();
   private static final Object PRIVATE_METHOD_VALUE = new Object();
 
-  private ReflectionAccessorFactory accessorFactory =
-      new ReflectionAccessorFactory();
+  private ReflectionAccessorBuilder accessorBuilder =
+      new ReflectionAccessorBuilder(MockModel.class);
 
   private MockModel model = new MockModel();
 
   @Test
   public void testPrivateFieldAccessor() throws Exception {
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "privateField", AccessType.FIELD);
+    final Accessor accessor = accessorBuilder
+        .propertyName("privateField")
+        .accessType(AccessType.FIELD)
+        .build();
     assertThat(accessor.get(model), is(sameInstance(PRIVATE_FIELD_VALUE)));
   }
 
   @Test
   public void testPublicFieldAccessor() throws Exception {
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "publicField", AccessType.FIELD);
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicField")
+        .accessType(AccessType.FIELD)
+        .build();
     assertThat(accessor.get(model), is(sameInstance(PUBLIC_FIELD_VALUE)));
   }
 
-  @Test(expected = NoSuchFieldException.class)
+  @Test(expected = ViewTemplateException.class)
   public void testProtectedFieldInSuperAccessor() throws Exception {
     // this isn't supported, but it could be; just need to go up the class
     // ancestors. Does anyone care?
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "protectedFieldInSuper", AccessType.FIELD);
+    accessorBuilder
+        .propertyName("protectedFieldInSuper")
+        .accessType(AccessType.FIELD)
+        .build();
   }
 
-  @Test(expected = NoSuchFieldException.class)
+  @Test(expected = ViewTemplateException.class)
   public void testPublicFieldInSuperAccessor() throws Exception {
     // this isn't supported, but it could be; just need to go up the class
     // ancestors. Does anyone care?
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "publicFieldInSuper", AccessType.FIELD);
+    accessorBuilder
+        .propertyName("publicFieldInSuper")
+        .accessType(AccessType.FIELD)
+        .build();
   }
 
   @Test
   public void testPublicMethodAccessor() throws Exception {
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "publicMethod", AccessType.PROPERTY);
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
+
     assertThat(accessor.get(model), is(sameInstance(PUBLIC_METHOD_VALUE)));
   }
 
-  @Test(expected = NoSuchMethodException.class)
+  @Test(expected = ViewTemplateException.class)
   public void testPrivateMethodAccessor() throws Exception {
     // this isn't supported but could be; need to do our own accessor method
     // introspection. Does anyone care?
-    final Accessor accessor = accessorFactory.newAccessor(MockModel.class,
-        "privateMethod", AccessType.PROPERTY);
-    assertThat(accessor.get(model), is(sameInstance(PRIVATE_METHOD_VALUE)));
+    accessorBuilder
+        .propertyName("privateMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
   }
 
+  @SuppressWarnings("unused")
   abstract class MockSuperModel {
 
     protected Object protectedFieldInSuper = new Object();
@@ -97,6 +111,7 @@ public class ReflectionAccessorFactoryTest {
 
   }
 
+  @SuppressWarnings("unused")
   public class MockModel extends MockSuperModel {
 
     private Object privateField = PRIVATE_FIELD_VALUE;

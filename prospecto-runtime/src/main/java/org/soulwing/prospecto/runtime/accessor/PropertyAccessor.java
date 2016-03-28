@@ -36,8 +36,8 @@ class PropertyAccessor extends AbstractAccessor {
   private final Method setter;
 
   public PropertyAccessor(String name, Method getter, Method setter,
-      EnumSet<AccessMode> accessModes) {
-    super(name, AccessType.PROPERTY, accessModes);
+      EnumSet<AccessMode> supportedModes, EnumSet<AccessMode> allowedModes) {
+    super(name, AccessType.PROPERTY, supportedModes, allowedModes);
     this.getter = getter;
     this.setter = setter;
     if (getter != null) {
@@ -55,7 +55,7 @@ class PropertyAccessor extends AbstractAccessor {
 
   @Override
   protected Accessor newAccessor(Class<?> type, String name) throws Exception {
-    return ReflectionAccessorFactory.property(type, name);
+    return ReflectionAccessorFactory.property(type, name, getAccessModes());
   }
 
   @Override

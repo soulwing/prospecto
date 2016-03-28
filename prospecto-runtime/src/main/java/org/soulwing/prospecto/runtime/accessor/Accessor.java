@@ -49,12 +49,6 @@ public interface Accessor {
   EnumSet<AccessMode> getAccessModes();
 
   /**
-   * Sets the effective access modes of this accessor.
-   * @param accessModes
-   */
-  void setAccessModes(EnumSet<AccessMode> accessModes);
-  
-  /**
    * Tests whether this accessor can be called to read (get) a value.
    * <p>
    * This is basically shorthand for {@code getAccessModes().contains(AccessMode.READ)}

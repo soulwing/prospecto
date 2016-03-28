@@ -156,11 +156,6 @@ public class ArrayAccessorTest {
     }
 
     @Override
-    public void setAccessModes(EnumSet<AccessMode> accessModes) {
-
-    }
-
-    @Override
     public boolean canRead() {
       return readable;
     }
