@@ -141,6 +141,11 @@ public class ArrayAccessorTest {
     private boolean readable = true;
 
     @Override
+    public Class<?> getModelType() {
+      return null;
+    }
+
+    @Override
     public String getName() {
       return null;
     }

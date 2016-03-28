@@ -34,9 +34,10 @@ class FieldAccessor extends AbstractAccessor {
 
   private final Field field;
 
-  public FieldAccessor(String name, Field field,
+  public FieldAccessor(Class<?> modelType, String name, Field field,
       EnumSet<AccessMode> allowedModes) {
-    super(name, AccessType.FIELD, EnumSet.allOf(AccessMode.class), allowedModes);
+    super(modelType, name, AccessType.FIELD, EnumSet.allOf(AccessMode.class),
+        allowedModes);
     this.field = field;
     field.setAccessible(true);
   }

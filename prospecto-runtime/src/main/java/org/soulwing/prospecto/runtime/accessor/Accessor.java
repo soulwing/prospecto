@@ -31,6 +31,12 @@ import org.soulwing.prospecto.api.AccessType;
 public interface Accessor {
 
   /**
+   * Gets the model type in which the property is located
+   * @return model type
+   */
+  Class<?> getModelType();
+
+  /**
    * Gets the name of the property.
    * @return property name
    */

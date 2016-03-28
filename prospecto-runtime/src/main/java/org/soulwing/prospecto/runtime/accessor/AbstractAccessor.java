@@ -30,8 +30,9 @@ import org.soulwing.prospecto.api.UndefinedValue;
  *
  * @author Carl Harris
  */
-abstract class AbstractAccessor implements Accessor {
+public abstract class AbstractAccessor implements Accessor {
 
+  private final Class<?> modelType;
   private final String name;
   private final AccessType accessType;
   private final EnumSet<AccessMode> supportedModes;
@@ -39,12 +40,19 @@ abstract class AbstractAccessor implements Accessor {
   private EnumSet<AccessMode> allowedModes =
       EnumSet.allOf(AccessMode.class);
 
-  protected AbstractAccessor(String name, AccessType accessType,
-      EnumSet<AccessMode> supportedModes, EnumSet<AccessMode> allowedModes) {
+  protected AbstractAccessor(Class<?> modelType, String name,
+      AccessType accessType, EnumSet<AccessMode> supportedModes,
+      EnumSet<AccessMode> allowedModes) {
+    this.modelType = modelType;
     this.name = name;
     this.accessType = accessType;
     this.supportedModes = supportedModes;
     this.allowedModes = allowedModes;
+  }
+
+  @Override
+  public Class<?> getModelType() {
+    return modelType;
   }
 
   @Override

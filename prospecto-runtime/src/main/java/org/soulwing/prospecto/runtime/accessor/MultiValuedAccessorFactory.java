@@ -21,6 +21,8 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.util.Collection;
 import java.util.List;
 
+import org.soulwing.prospecto.api.ViewTemplateException;
+
 /**
  * A static utility for producing a {@link MultiValuedAccessor}.
  *
@@ -38,7 +40,7 @@ public class MultiValuedAccessorFactory {
     if (Object[].class.isAssignableFrom(accessor.getDataType())) {
       return new ArrayAccessor(accessor);
     }
-    throw new IllegalArgumentException("expected an array or a collection");
+    throw new ViewTemplateException("expected an array or a collection");
   }
 
 }

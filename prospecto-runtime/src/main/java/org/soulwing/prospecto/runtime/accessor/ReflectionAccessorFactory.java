@@ -36,8 +36,8 @@ public class ReflectionAccessorFactory {
 
   static Accessor field(Class<?> declaringClass, String name,
       EnumSet<AccessMode> allowedModes) throws NoSuchFieldException {
-    return new FieldAccessor(name, declaringClass.getDeclaredField(name),
-        allowedModes);
+    return new FieldAccessor(declaringClass, name,
+        declaringClass.getDeclaredField(name), allowedModes);
   }
 
   static Accessor property(Class<?> declaringClass, String name,
@@ -58,8 +58,8 @@ public class ReflectionAccessorFactory {
           supportedModes.add(AccessMode.WRITE);
         }
 
-        return new PropertyAccessor(name, readMethod, writeMethod,
-            supportedModes, allowedModes);
+        return new PropertyAccessor(declaringClass, name, readMethod,
+            writeMethod, supportedModes, allowedModes);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()

@@ -35,9 +35,10 @@ class PropertyAccessor extends AbstractAccessor {
   private final Method getter;
   private final Method setter;
 
-  public PropertyAccessor(String name, Method getter, Method setter,
+  public PropertyAccessor(Class<?> modelType, String name,
+      Method getter, Method setter,
       EnumSet<AccessMode> supportedModes, EnumSet<AccessMode> allowedModes) {
-    super(name, AccessType.PROPERTY, supportedModes, allowedModes);
+    super(modelType, name, AccessType.PROPERTY, supportedModes, allowedModes);
     this.getter = getter;
     this.setter = setter;
     if (getter != null) {
