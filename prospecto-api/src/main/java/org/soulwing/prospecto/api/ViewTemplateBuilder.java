@@ -445,7 +445,6 @@ public interface ViewTemplateBuilder {
    */
   ViewTemplateBuilder allow(EnumSet<AccessMode> modes);
 
-
   /**
    * Specifies a converter that will be used to transform the model property
    * associated with the node at the cursor.
