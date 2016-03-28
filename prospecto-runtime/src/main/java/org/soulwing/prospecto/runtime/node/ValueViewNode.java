@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.node;
 import java.util.Collections;
 import java.util.List;
 
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -46,6 +47,9 @@ abstract class ValueViewNode extends AbstractViewNode {
       ScopedViewContext context) throws Exception {
 
     final Object value = getModelValue(source, context);
+    if (value == UndefinedValue.INSTANCE) {
+      return Collections.emptyList();
+    }
 
     final Object extractedValue = context.getListeners().didExtractValue(
         new ViewNodePropertyEvent(this, source, value, context));

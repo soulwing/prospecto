@@ -67,8 +67,8 @@ public class RootObjectNode extends ObjectNode
   }
 
   @Override
-  protected boolean canWrite() {
-    return false;
+  protected boolean canRead() {
+    return true;
   }
 
   @Override

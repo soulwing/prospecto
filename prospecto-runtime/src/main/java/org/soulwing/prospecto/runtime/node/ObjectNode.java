@@ -18,9 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -46,10 +48,10 @@ public class ObjectNode extends ContainerViewNode {
   @Override
   protected List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
-
     final List<View.Event> events = new LinkedList<>();
-
     final Object model = getModelObject(source);
+    if (model == UndefinedValue.INSTANCE) return Collections.emptyList();
+
     if (model != null) {
       events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
       events.addAll(evaluateChildren(model, context));
@@ -91,8 +93,8 @@ public class ObjectNode extends ContainerViewNode {
     }
   }
 
-  protected boolean canWrite() {
-    return getAccessor().canWrite();
+  protected boolean canRead() {
+    return getAccessor().canRead();
   }
 
   protected Object getModelObject(Object source) throws Exception {
