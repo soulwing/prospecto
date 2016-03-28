@@ -109,7 +109,7 @@ public class AbstractAccessorTest {
   static class MockAccessor extends AbstractAccessor {
 
     protected MockAccessor(EnumSet<AccessMode> supportedAccessModes) {
-      super(null, supportedAccessModes);
+      super(null, null, supportedAccessModes);
     }
 
     @Override

@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.AccessType;
 
 /**
  * An accessor for a property of a model.
@@ -34,6 +35,12 @@ public interface Accessor {
    * @return property name
    */
   String getName();
+
+  /**
+   * Gets the access type.
+   * @return access type
+   */
+  AccessType getAccessType();
 
   /**
    * Gets the effective access modes of this accessor.

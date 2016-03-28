@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.AccessType;
 
 /**
  * An accessor that directly accesses fields via the Reflection API.
@@ -34,7 +35,7 @@ class FieldAccessor extends AbstractAccessor {
   private final Field field;
 
   public FieldAccessor(String name, Field field) {
-    super(name, EnumSet.allOf(AccessMode.class));
+    super(name, AccessType.FIELD, EnumSet.allOf(AccessMode.class));
     this.field = field;
     field.setAccessible(true);
   }

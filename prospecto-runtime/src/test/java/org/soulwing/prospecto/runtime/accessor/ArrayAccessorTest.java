@@ -26,6 +26,7 @@ import java.util.EnumSet;
 
 import org.junit.Test;
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.AccessType;
 
 /**
  * Unit tests for {@link ArrayAccessor}.
@@ -141,6 +142,11 @@ public class ArrayAccessorTest {
 
     @Override
     public String getName() {
+      return null;
+    }
+
+    @Override
+    public AccessType getAccessType() {
       return null;
     }
 

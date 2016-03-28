@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.AccessType;
 
 /**
  * A accessor that uses JavaBeans-style accessor methods via the Reflection API.
@@ -36,7 +37,7 @@ class PropertyAccessor extends AbstractAccessor {
 
   public PropertyAccessor(String name, Method getter, Method setter,
       EnumSet<AccessMode> accessModes) {
-    super(name, accessModes);
+    super(name, AccessType.PROPERTY, accessModes);
     this.getter = getter;
     this.setter = setter;
     if (getter != null) {

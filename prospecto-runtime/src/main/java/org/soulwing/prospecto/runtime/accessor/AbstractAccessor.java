@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.UndefinedValue;
 
 /**
  * An abstract base for {@link Accessor} implementations.
@@ -31,20 +33,27 @@ import org.soulwing.prospecto.api.AccessMode;
 abstract class AbstractAccessor implements Accessor {
 
   private final String name;
+  private final AccessType accessType;
   private final EnumSet<AccessMode> supportedAccessModes;
 
   private EnumSet<AccessMode> effectiveAccessModes =
       EnumSet.allOf(AccessMode.class);
 
-  protected AbstractAccessor(String name,
+  protected AbstractAccessor(String name, AccessType accessType,
       EnumSet<AccessMode> supportedAccessModes) {
     this.name = name;
+    this.accessType = accessType;
     this.supportedAccessModes = supportedAccessModes;
   }
 
   @Override
   public String getName() {
     return name;
+  }
+
+  @Override
+  public AccessType getAccessType() {
+    return accessType;
   }
 
   @Override
@@ -82,7 +91,7 @@ abstract class AbstractAccessor implements Accessor {
   @Override
   public Object get(Object source)
       throws IllegalAccessException, InvocationTargetException {
-    if (!canRead()) return null;
+    if (!canRead()) return UndefinedValue.INSTANCE;
     return onGet(source);
   }
 
