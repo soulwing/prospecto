@@ -18,6 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Deque;
+
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -39,15 +43,17 @@ public class ReferenceNode extends ObjectNode {
   }
 
   @Override
+  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    MutableViewEntity entity = (MutableViewEntity) super.toModelValue(
+        parentEntity, triggerEvent, events, context);
+    return context.getReferenceResolvers().resolve(getModelType(), entity);
+  }
+
+  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-
-    final MutableViewEntity entity = (MutableViewEntity) value;
-
-    final Object resolvedValue =
-        context.getReferenceResolvers().resolve(getModelType(), entity);
-
-    setModelObject(target, resolvedValue);
+    setModelObject(target, value);
   }
 
   protected Object getModelObject(Object source) throws Exception {
