@@ -26,22 +26,10 @@ import java.util.Iterator;
  *
  * @author Carl Harris
  */
-public class CollectionAccessor implements MultiValuedAccessor {
-
-  protected Accessor delegate;
+public class CollectionAccessor extends AbstractMultiValuedAccessor {
 
   public CollectionAccessor(Accessor delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public boolean canRead() {
-    return delegate.canRead();
-  }
-
-  @Override
-  public boolean canWrite() {
-    return delegate.canWrite();
+    super(delegate);
   }
 
   @Override

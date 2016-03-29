@@ -20,12 +20,14 @@ package org.soulwing.prospecto.runtime.accessor;
 
 import java.util.Iterator;
 
+import org.soulwing.prospecto.api.collection.CollectionManager;
+
 /**
  * An accessor for a multi-valued property such as an array or a collection.
  *
  * @author Carl Harris
  */
-public interface MultiValuedAccessor {
+public interface MultiValuedAccessor extends CollectionManager {
 
   /**
    * Determines whether the accessor can be read.

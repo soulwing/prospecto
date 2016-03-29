@@ -18,13 +18,16 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
+import org.soulwing.prospecto.api.collection.ListManager;
+
 /**
  * A {@link MultiValuedAccessor} that supports an ordered collection that
  * allows duplicates.
  *
  * @author Carl Harris
  */
-public interface IndexedMultiValuedAccessor extends MultiValuedAccessor {
+public interface IndexedMultiValuedAccessor extends MultiValuedAccessor,
+    ListManager {
 
   void add(Object target, int index, Object value) throws Exception;
 

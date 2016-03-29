@@ -26,22 +26,11 @@ import java.util.Iterator;
  *
  * @author Carl Harris
  */
-public class ArrayAccessor implements IndexedMultiValuedAccessor {
-
-  private Accessor delegate;
+public class ArrayAccessor extends AbstractMultiValuedAccessor
+    implements IndexedMultiValuedAccessor {
 
   public ArrayAccessor(Accessor delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public boolean canRead() {
-    return delegate.canRead();
-  }
-
-  @Override
-  public boolean canWrite() {
-    return delegate.canWrite();
+    super(delegate);
   }
 
   @Override
