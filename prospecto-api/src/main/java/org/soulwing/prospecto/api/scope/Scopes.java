@@ -43,7 +43,7 @@ public interface Scopes {
   /**
    * Removes the given scope from the collection.
    * <p>
-   * Any existing scope identical to {@code listener} is removed
+   * Any existing scope identical to {@code scope} is removed
    * @param scope the scope to remove
    * @return {@code true} if a scope was removed
    */
