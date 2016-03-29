@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.runtime.collection.CollectionManagerService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
@@ -43,6 +44,13 @@ public interface ScopedViewContext extends ViewContext {
    */
   @Override
   ReferenceResolverService getReferenceResolvers();
+
+  /**
+   * Gets the collection of collection managers.
+   * @return collection managers
+   */
+  @Override
+  CollectionManagerService getCollectionManagers();
 
   /**
    * Pushes a new frame onto the context stack.

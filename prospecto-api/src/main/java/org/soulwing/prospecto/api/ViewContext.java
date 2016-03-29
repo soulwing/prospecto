@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.collection.CollectionManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.listener.ViewListeners;
-import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scopes;
@@ -108,8 +108,8 @@ public interface ViewContext {
   List<ValueTypeConverter<?>> getValueTypeConverters();
 
   /**
-   * Gets the collection of {@link ReferenceResolver} instances that will be
-   * consulted to resolve reference objects in a view.
+   * Gets the collection of reference resolvers that will be consulted to
+   * resolve reference objects in a view.
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * resolvers as needed. Manipulating the collection during view generation
@@ -117,6 +117,17 @@ public interface ViewContext {
    * @return resolver collection
    */
   ReferenceResolvers getReferenceResolvers();
+
+  /**
+   * Gets the collection of collection managers that will be consulted to
+   * manage collections in a view during model update.
+   * <p>
+   * The returned collection can be manipulated directly to add or remove
+   * managers as needed. Manipulating the collection during view generation
+   * or model update has no effect.
+   * @return
+   */
+  CollectionManagers getCollectionManagers();
 
   /**
    * Gets the sequence of view node names that form the path to the current

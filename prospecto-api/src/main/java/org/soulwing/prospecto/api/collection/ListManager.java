@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,22 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
-
-import org.soulwing.prospecto.api.View;
+package org.soulwing.prospecto.api.collection;
 
 /**
- * A service that provides access to purchase orders.
+ * An object that during model update manages the relationship between an object
+ * and an array/collection composed in the object.
  *
  * @author Carl Harris
  */
-public interface PurchaseOrderService {
+public interface ListManager<T, E> extends CollectionManager<T, E> {
 
-  View findAllOrders();
+  void add(T owner, int index, E element) throws Exception;
 
-  View findPurchaseOrder(Long id) throws NoSuchEntityException;
-
-  View updatePurchaseOrder(Long id, View purchaseOrderView)
-      throws NoSuchEntityException;
+  void remove(T owner, int index) throws Exception;
 
 }
