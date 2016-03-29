@@ -25,8 +25,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.soulwing.prospecto.api.ViewTemplateException;
-
 /**
  * A {@link BeanFactory} that uses JDK-provided introspection facilities.
  *
