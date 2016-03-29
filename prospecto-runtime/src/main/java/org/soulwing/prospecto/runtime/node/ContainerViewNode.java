@@ -112,6 +112,7 @@ public abstract class ContainerViewNode extends AbstractViewNode
 
   public void addChild(AbstractViewNode child) {
     children.add(child);
+    child.setParent(this);
   }
 
   public void addChildren(List<AbstractViewNode> children) {

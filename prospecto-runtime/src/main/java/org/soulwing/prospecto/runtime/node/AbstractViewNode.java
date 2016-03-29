@@ -44,6 +44,7 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   private final String namespace;
   private final Class<?> modelType;
 
+  private AbstractViewNode parent;
   private Accessor accessor;
 
   /**
@@ -52,11 +53,19 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
    * @param namespace namespace (may be {@code null})
    * @param modelType associated model type (may be {@code null})
    */
-  protected AbstractViewNode(String name, String namespace,
-      Class<?> modelType) {
+  protected AbstractViewNode(String name,
+      String namespace, Class<?> modelType) {
     this.name = name;
     this.namespace = namespace;
     this.modelType = modelType;
+  }
+
+  public AbstractViewNode getParent() {
+    return parent;
+  }
+
+  public void setParent(AbstractViewNode parent) {
+    this.parent = parent;
   }
 
   @Override

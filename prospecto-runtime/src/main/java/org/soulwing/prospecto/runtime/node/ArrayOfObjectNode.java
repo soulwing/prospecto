@@ -30,9 +30,10 @@ import java.util.Map;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.collection.ListManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.accessor.IndexedMultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -105,8 +106,9 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   }
 
   @Override
-  public List<MutableViewEntity> toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+  public List<MutableViewEntity> toModelValue(ViewEntity parentEntity,
+      View.Event triggerEvent, Deque<View.Event> events,
+      ScopedViewContext context) throws Exception {
     final List<MutableViewEntity> entities = new ArrayList<>();
     View.Event event = events.removeFirst();
     while (event != null
@@ -125,34 +127,57 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
+    final CollectionManager manager = getCollectionManager(context);
     final Map<Object, Object> touched = createOrUpdateChildren(target,
-        (List<?>) value, context);
-    removeChildren(target, touched, context);
+        (List<?>) value, manager, context);
+    removeChildren(target, touched, manager, context);
   }
 
+  @SuppressWarnings("unchecked")
+  private CollectionManager getCollectionManager(ScopedViewContext context) {
+    assert getParent() != null;
+    CollectionManager manager = get(CollectionManager.class);
+    if (manager != null) {
+      if (!manager.supports(getParent().getModelType(), getModelType())) {
+        throw new ModelEditorException(
+            "collection manager does not support expected types");
+      }
+      return manager;
+    }
+
+    manager = context.getCollectionManagers().findManager(
+        getParent().getModelType(), getModelType());
+    if (manager != null) return manager;
+
+    return accessor;
+  }
+
+  @SuppressWarnings("unchecked")
   protected Map<Object, Object> createOrUpdateChildren(Object target,
-      List<?> value, ScopedViewContext context) throws Exception {
-    final List<?> entities = value;
+      List<?> entities, CollectionManager manager, ScopedViewContext context)
+      throws Exception {
     final Map<Object, Object> touched = new IdentityHashMap<>();
     final Iterator<?> i = ((List) entities).iterator();
     int index = 0;
     while (i.hasNext()) {
       final MutableViewEntity entity = (MutableViewEntity) i.next();
-      final Object newElement = entity.getType().newInstance();
-      entity.inject(newElement, context);
-      final Object element = findChild(target, newElement);
+      final Object element = manager.find(target, entity);
       if (element != null) {
         touched.put(element, element);
         entity.inject(element, context);
       }
       else {
+        Object newElement = manager.newElement(target, entity);
+        if (newElement == null) {
+          newElement = accessor.newElement(target, entity);
+        }
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
             this, target, newElement, context));
-        if (accessor instanceof IndexedMultiValuedAccessor) {
-          ((IndexedMultiValuedAccessor) accessor).add(target, index, newElement);
+        if (manager instanceof ListManager) {
+          ((ListManager) manager).add(target, index, newElement);
         }
         else {
-          accessor.add(target, newElement);
+          manager.add(target, newElement);
         }
         touched.put(newElement, newElement);
       }
@@ -161,34 +186,24 @@ public class ArrayOfObjectNode extends ContainerViewNode {
     return touched;
   }
 
+  @SuppressWarnings("unchecked")
   protected void removeChildren(Object target, Map<Object, Object> touched,
-      ScopedViewContext context) throws Exception {
+      CollectionManager manager, ScopedViewContext context) throws Exception {
     final List<Object> children = copyModelChildren(target);
     int index = 0;
     for (final Object child : children) {
       if (!touched.containsKey(child)) {
         context.getListeners().entityDiscarded(
             new ViewNodePropertyEvent(this, target, child, context));
-        if (accessor instanceof IndexedMultiValuedAccessor) {
-          ((IndexedMultiValuedAccessor) accessor).remove(target, index);
+        if (manager instanceof ListManager) {
+          ((ListManager) manager).remove(target, index);
         }
         else {
-          accessor.remove(target, child);
+          manager.remove(target, child);
         }
       }
       index++;
     }
-  }
-
-  private Object findChild(Object source, Object obj) throws Exception {
-    final Iterator<Object> i = getModelIterator(source);
-    while (i.hasNext()) {
-      Object candidate = i.next();
-      if (candidate.equals(obj)) {
-        return candidate;
-      }
-    }
-    return null;
   }
 
   private List<Object> copyModelChildren(Object source) throws Exception {
