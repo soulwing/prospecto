@@ -267,7 +267,8 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder envelope(String name, String namespace) {
-    final EnvelopeNode node = new EnvelopeNode(name, namespace);
+    final EnvelopeNode node = new EnvelopeNode(name, namespace,
+        target.getModelType());
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
@@ -419,22 +420,22 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   public final ViewTemplateBuilder end() {
-    if (accessorBuilder != null
-        && this.node instanceof ModelAccessingNode) {
-      ((ModelAccessingNode) this.node).setAccessor(accessorBuilder.build());
-    }
+    injectAccessor();
     return onEnd();
   }
 
   protected abstract ViewTemplateBuilder onEnd();
 
-  private void addChildToTarget(AbstractViewNode node) {
+  protected void addChildToTarget(AbstractViewNode node) {
+    injectAccessor();
+    target.addChild(node);
+  }
+
+  protected void injectAccessor() {
     if (accessorBuilder != null
         && this.node instanceof ModelAccessingNode) {
       ((ModelAccessingNode) this.node).setAccessor(accessorBuilder.build());
     }
-    target.addChild(node);
   }
-
 
 }

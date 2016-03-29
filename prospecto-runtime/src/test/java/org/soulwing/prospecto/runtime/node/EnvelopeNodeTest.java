@@ -66,7 +66,7 @@ public class EnvelopeNodeTest {
 
   private MockViewNode child = new MockViewNode();
 
-  private EnvelopeNode node = new EnvelopeNode(NAME, NAMESPACE);
+  private EnvelopeNode node = new EnvelopeNode(NAME, NAMESPACE, MODEL.getClass());
 
   @Test
   public void testOnEvaluate() throws Exception {

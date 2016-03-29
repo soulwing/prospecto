@@ -107,4 +107,8 @@ class EnvelopeNodeViewTemplateBuilder extends ContainerNodeViewTemplateBuilder {
     return delegate.converter(converter);
   }
 
+  @Override
+  protected void injectAccessor() {
+  }
+
 }

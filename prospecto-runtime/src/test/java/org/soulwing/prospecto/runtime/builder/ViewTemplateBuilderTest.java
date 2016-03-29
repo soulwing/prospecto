@@ -50,6 +50,7 @@ import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
@@ -80,6 +81,7 @@ public class ViewTemplateBuilderTest {
   private static final String MOCK_COLLECTION = "mockCollection";
   private static final String ELEMENT_NAME = "elementName";
   private static final String URL_NAME = "urlName";
+  private static final String ENVELOPE_NAME = "envelopeName";
 
   private static final String ATTRIBUTE_NAME = "attributeName";
   private static final Object ATTRIBUTE_VALUE = new Object() { };
@@ -1253,6 +1255,96 @@ public class ViewTemplateBuilderTest {
         .arrayOfObjects(MOCK_PROPERTY, Object.class)
         .end()
         .build();
+  }
+
+  @Test
+  public void testObjectEnvelope() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .envelope(ENVELOPE_NAME)
+                .value(MOCK_PROPERTY)
+                .value(OTHER_MOCK_PROPERTY)
+            .end()
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(EnvelopeNode.class,
+                    named(ENVELOPE_NAME), inDefaultNamespace(),
+                    accessingNothing(),
+                    containing(
+                        nodeOfType(ValueNode.class,
+                            named(MOCK_PROPERTY), inDefaultNamespace(),
+                            accessing(
+                                propertyNamed(MOCK_PROPERTY),
+                                onModelType(MockModel.class)
+                            )
+                        ),
+                        nodeOfType(ValueNode.class,
+                            named(OTHER_MOCK_PROPERTY), inDefaultNamespace(),
+                            accessing(
+                                propertyNamed(OTHER_MOCK_PROPERTY),
+                                onModelType(MockModel.class)
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    ));
+
+
+  }
+
+  @Test
+  public void testObjectEnvelopeEnvelope() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .envelope(ENVELOPE_NAME)
+                .envelope(ENVELOPE_NAME)
+                    .value(MOCK_PROPERTY)
+                    .value(OTHER_MOCK_PROPERTY)
+                .end()
+            .end()
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(EnvelopeNode.class,
+                    named(ENVELOPE_NAME), inDefaultNamespace(),
+                    accessingNothing(),
+                    containing(
+                        nodeOfType(EnvelopeNode.class,
+                            named(ENVELOPE_NAME), inDefaultNamespace(),
+                            accessingNothing(),
+                            containing(
+                                nodeOfType(ValueNode.class,
+                                    named(MOCK_PROPERTY), inDefaultNamespace(),
+                                    accessing(
+                                        propertyNamed(MOCK_PROPERTY),
+                                        onModelType(MockModel.class)
+                                    )
+                                ),
+                                nodeOfType(ValueNode.class,
+                                    named(OTHER_MOCK_PROPERTY),
+                                    inDefaultNamespace(),
+                                    accessing(
+                                        propertyNamed(OTHER_MOCK_PROPERTY),
+                                        onModelType(MockModel.class)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    ));
+
   }
 
 }

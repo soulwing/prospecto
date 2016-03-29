@@ -38,9 +38,10 @@ public class EnvelopeNode extends ObjectNode {
    * Constructs a new instance.
    * @param name node name
    * @param namespace namespace for {@code name}
+   * @param modelType model type
    */
-  public EnvelopeNode(String name, String namespace) {
-    super(name, namespace, null);
+  public EnvelopeNode(String name, String namespace, Class<?> modelType) {
+    super(name, namespace, modelType);
   }
 
   @Override
