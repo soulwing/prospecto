@@ -94,11 +94,6 @@ public class RootObjectNode extends ObjectNode
   }
 
   @Override
-  protected boolean canRead() {
-    return true;
-  }
-
-  @Override
   protected Object getModelObject(Object source) throws Exception {
     return source;
   }
