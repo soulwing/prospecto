@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,11 +26,40 @@ import java.util.List;
  *
  * @author Carl Harris
  */
-public class ListAccessor extends CollectionAccessor
-    implements IndexedMultiValuedAccessor {
+public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
 
   public ListAccessor(Accessor delegate) {
     super(delegate);
+  }
+
+  @Override
+  public Iterator<Object> iterator(Object source) throws Exception {
+    return get(source).iterator();
+  }
+
+  @Override
+  public int size(Object source) throws Exception {
+    return get(source).size();
+  }
+
+  @Override
+  public Object get(Object source, int index) throws Exception {
+    return get(source).get(index);
+  }
+
+  @Override
+  public void set(Object target, int index, Object value) throws Exception {
+    get(target).set(index, value);
+  }
+
+  @Override
+  public void add(Object target, Object value) throws Exception {
+    get(target).add(value);
+  }
+
+  @Override
+  public void remove(Object target, Object value) throws Exception {
+    get(target).remove(value);
   }
 
   @Override

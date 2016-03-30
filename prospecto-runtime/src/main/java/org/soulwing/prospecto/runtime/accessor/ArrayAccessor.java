@@ -26,8 +26,7 @@ import java.util.Iterator;
  *
  * @author Carl Harris
  */
-public class ArrayAccessor extends AbstractMultiValuedAccessor
-    implements IndexedMultiValuedAccessor {
+public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
 
   public ArrayAccessor(Accessor delegate) {
     super(delegate);
@@ -38,6 +37,21 @@ public class ArrayAccessor extends AbstractMultiValuedAccessor
     final Object[] array = (Object[]) delegate.get(source);
     if (array == null) return null;
     return Arrays.asList(array).iterator();
+  }
+
+  @Override
+  public int size(Object source) throws Exception {
+    return ((Object[]) delegate.get(source)).length;
+  }
+
+  @Override
+  public Object get(Object source, int index) throws Exception {
+    return ((Object[]) delegate.get(source))[index];
+  }
+
+  @Override
+  public void set(Object target, int index, Object value) throws Exception {
+    ((Object[]) delegate.get(target))[index] = value;
   }
 
   @Override

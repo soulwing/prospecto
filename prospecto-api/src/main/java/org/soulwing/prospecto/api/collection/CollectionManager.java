@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.api.collection;
 
+import java.util.Iterator;
+
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
@@ -29,6 +31,10 @@ import org.soulwing.prospecto.api.ViewEntity;
 public interface CollectionManager<T, E> {
 
   boolean supports(Class<?> ownerClass, Class<?> elementClass);
+
+  Iterator<E> iterator(T owner) throws Exception;
+
+  int size(T owner) throws Exception;
 
   E find(T owner, ViewEntity elementEntity) throws Exception;
 

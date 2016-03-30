@@ -40,6 +40,11 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
   }
 
   @Override
+  public int size(Object source) throws Exception {
+    return get(source).size();
+  }
+
+  @Override
   public void add(Object target, Object value) throws Exception {
     get(target).add(value);
   }

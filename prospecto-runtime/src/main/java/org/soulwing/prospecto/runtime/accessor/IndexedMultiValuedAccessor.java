@@ -28,9 +28,4 @@ import org.soulwing.prospecto.api.collection.ListManager;
  */
 public interface IndexedMultiValuedAccessor extends MultiValuedAccessor,
     ListManager {
-
-  void add(Object target, int index, Object value) throws Exception;
-
-  void remove(Object target, int index) throws Exception;
-
 }

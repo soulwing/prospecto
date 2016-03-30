@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.api.collection;
 
+import org.soulwing.prospecto.api.ViewEntity;
+
 /**
  * An object that during model update manages the relationship between an object
  * and an array/collection composed in the object.
@@ -25,6 +27,12 @@ package org.soulwing.prospecto.api.collection;
  * @author Carl Harris
  */
 public interface ListManager<T, E> extends CollectionManager<T, E> {
+
+  int indexOf(T owner, ViewEntity elementEntity) throws Exception;
+
+  E get(T owner, int index) throws Exception;
+
+  void set(T owner, int index, E element) throws Exception;
 
   void add(T owner, int index, E element) throws Exception;
 
