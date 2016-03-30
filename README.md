@@ -59,8 +59,8 @@ purchase orders, with JPA annotations for persistence.
 The `startup` package contains a bean that loads some demo data into the 
 database when the application starts.
 
-In the `service` package you'll find a `PurchaseOrderService` and
-`VendorService` that are used to access instances of the entities in the domain
+In the `service` package you'll find a `LeagueService` and a
+`DivisionService` that are used to access some of the entities in the domain
 model. Notice that the return values for the methods on the service are of type
 `View`.  You also see a `UserContextService` in this package. We'll get to that 
 later.
@@ -73,14 +73,14 @@ idea of what they do. Each view template can be used to produce a `View`
 from some model data. Some templates are referenced in other templates; 
 templates can be composed to promote use and stay DRY. 
 
-Now let's see how a template is used in `PurchaseOrderServiceBean`.  In each
+Now let's see how a template is used in `LeagueServiceBean`.  In each
 of the methods in this bean, we use an entity manager to load some entities 
 from the database. We then use a view template to generate a `View` instance
 that contains the information in the retrieved entities. The template is used
 to extract the various properties from the model data and put it into a form
 that an be easily rendered as JSON, XML, YAML, or practically any other 
 structured textual representation.  You'll see a similar implementation in
-`VendorServiceBean`.
+`DivisionServiceBean`.
 
 When we generate a view from a template, we provide a _view context_. The
 context object provides access to a powerful API that can be used to instrument
