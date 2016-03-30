@@ -165,13 +165,24 @@ public abstract class ContainerViewNode extends AbstractViewNode
         final AbstractViewNode child = getChild(entity.getType(), name);
         if (child == null) {
           // TODO -- configuration should allow it to be ignored
-          throw new ModelEditorException("found no child named '" + name + "'");
+          throw new ModelEditorException("found no child named '" + name + "'"
+              + " in node " + this.getName());
         }
         if (child instanceof UpdatableViewNode) {
-          final Object value = ((UpdatableViewNode) child)
-              .toModelValue(entity, event, events, context);
-          if (value != UndefinedValue.INSTANCE) {
-            entity.put(name, value, (UpdatableViewNode) child);
+          if (child instanceof ContainerViewNode
+              && event.getType() == View.Event.Type.VALUE) {
+            if (event.getValue() != null) {
+              throw new ModelEditorException(
+                  "scalar value for object node must be null");
+            }
+            entity.put(name, null, (UpdatableViewNode) child);
+          }
+          else {
+            final Object value = ((UpdatableViewNode) child)
+                .toModelValue(entity, event, events, context);
+            if (value != UndefinedValue.INSTANCE) {
+              entity.put(name, value, (UpdatableViewNode) child);
+            }
           }
         }
       }
