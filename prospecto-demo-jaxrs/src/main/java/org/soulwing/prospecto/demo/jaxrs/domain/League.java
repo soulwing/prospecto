@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,27 +18,35 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
- * An entity that represents a vendor.
- *
+ * An entity that describes a league.
  * @author Carl Harris
  */
 @Entity
-@Table(name = "vendor")
+@Table(name = "league")
 @Access(AccessType.FIELD)
-public class Vendor extends AbstractEntity {
+public class League extends AbstractEntity {
 
-  @Column(name = "vendor_name")
+  @Column(nullable = false)
   private String name;
 
-  @Column(name = "tax_id")
-  private String taxId;
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+      mappedBy = "league")
+  @OrderBy("ageLimit, name")
+  private Set<Division> divisions = new HashSet<>();
 
   /**
    * Gets the {@code name} property.
@@ -57,67 +65,31 @@ public class Vendor extends AbstractEntity {
   }
 
   /**
-   * Gets the {@code taxId} property.
+   * Gets the {@code divisions} property.
    * @return property value
    */
-  public String getTaxId() {
-    return taxId;
+  public Set<Division> getDivisions() {
+    return divisions;
   }
 
-  /**
-   * Sets the {@code taxId} property.
-   * @param taxId the property value to set
-   */
-  public void setTaxId(String taxId) {
-    this.taxId = taxId;
+  public boolean addDivision(Division division) {
+    division.setLeague(this);
+    return divisions.add(division);
+  }
+
+  public boolean removeDivision(Division division) {
+    final boolean removed = divisions.remove(division);
+    if (removed) {
+      division.setLeague(null);
+    }
+    return removed;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj == this) return true;
-    if (!(obj instanceof Vendor)) return false;
+    if (!(obj instanceof League)) return false;
     return super.equals(obj);
-  }
-
-  /**
-   * A builder that produces a {@link Vendor}.
-   */
-  public static class Builder {
-
-    private final Vendor vendor = new Vendor();
-
-    public static Builder with() {
-      return new Builder();
-    }
-
-    /**
-     * Configures the {@code name} property
-     * @param name the property value to set
-     * @return this builder
-     */
-    public Builder name(String name) {
-      vendor.setName(name);
-      return this;
-    }
-
-    /**
-     * Configures the {@code taxId} property
-     * @param taxId the property value to set
-     * @return this builder
-     */
-    public Builder taxId(String taxId) {
-      vendor.setTaxId(taxId);
-      return this;
-    }
-
-    /**
-     * Creates the entity.
-     * @return entity instance
-     */
-    public Vendor build() {
-      return vendor;
-    }
-
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import javax.inject.Inject;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -27,58 +28,55 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
+import org.soulwing.prospecto.demo.jaxrs.domain.Division;
+import org.soulwing.prospecto.demo.jaxrs.service.DivisionService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
-import org.soulwing.prospecto.demo.jaxrs.service.VendorService;
+import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
- * A JAX-RS resource for {@link Vendor} entities.
+ * A JAX-RS resource used to access the {@link DivisionService}.
  *
  * @author Carl Harris
  */
-@Path("/vendors")
-@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class VendorResource {
+@Path("/divisions")
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+public class DivisionResource {
 
   @Inject
-  private VendorService vendorService;
-
-  @GET
-  public View getVendors() {
-    return vendorService.findAllVendors();
-  }
+  private DivisionService divisionService;
 
   @GET
   @Path("/{id}")
-  @ReferencedBy({ AnyModelSequence.class, Vendor.class })
+  @ReferencedBy({ AnyModelSequence.class, Division.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
-  public View getVendor(@PathParam("id") Long id) {
+  public View getDivision(@PathParam("id") Long id) {
     try {
-      return vendorService.findVendorById(id);
+      return divisionService.findDivisionById(id);
     }
     catch (NoSuchEntityException ex) {
-      throw new NotFoundException();
+      throw new NotFoundException(ex);
     }
   }
 
   @PUT
   @Path("/{id}")
-  public View putVendor(@PathParam("id") Long id,
-      View vendorView) {
+  public View putDivision(@PathParam("id") Long id, View divisionView) {
     try {
-      return vendorService.updateVendor(id, vendorView);
+      return divisionService.updateDivision(id, divisionView);
     }
     catch (NoSuchEntityException ex) {
-      throw new NotFoundException();
+      throw new NotFoundException(ex);
+    }
+    catch (UpdateConflictException ex) {
+      throw new ClientErrorException(Response.Status.CONFLICT, ex);
     }
   }
-
-
 
 }

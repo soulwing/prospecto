@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -21,56 +21,36 @@ package org.soulwing.prospecto.demo.jaxrs.domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
 /**
- * An entity that represents a person.
+ * An entity that describes a person.
  *
  * @author Carl Harris
  */
-@Entity
-@Table(name = "person")
+@MappedSuperclass
 @Access(AccessType.FIELD)
 public class Person extends AbstractEntity {
 
-  public enum Type {
-    EMPLOYEE,
-    CUSTOMER,
-    OTHER
-  }
+  @Column(nullable = false)
+  private Token surname;
+
+  @Column(name = "given_names", nullable = false)
+  private TokenList givenNames;
+
+  @Column(name = "preferred_name")
+  private Token preferredName;
 
   @Enumerated(EnumType.STRING)
-  private Type type;
-
-  private String surname;
-
-  @Column(name = "given_name")
-  private String givenName;
-
-  /**
-   * Gets the {@code type} property.
-   * @return property value
-   */
-  public Type getType() {
-    return type;
-  }
-
-  /**
-   * Sets the {@code type} property.
-   * @param type the property value to set
-   */
-  public void setType(Type type) {
-    this.type = type;
-  }
+  private Gender gender;
 
   /**
    * Gets the {@code surname} property.
    * @return property value
    */
-  public String getSurname() {
+  public Token getSurname() {
     return surname;
   }
 
@@ -78,28 +58,56 @@ public class Person extends AbstractEntity {
    * Sets the {@code surname} property.
    * @param surname the property value to set
    */
-  public void setSurname(String surname) {
+  public void setSurname(Token surname) {
     this.surname = surname;
   }
 
   /**
-   * Gets the {@code givenName} property.
+   * Gets the {@code givenNames} property.
    * @return property value
    */
-  public String getGivenName() {
-    return givenName;
+  public TokenList getGivenNames() {
+    return givenNames;
   }
 
   /**
-   * Sets the {@code givenName} property.
-   * @param givenName the property value to set
+   * Sets the {@code givenNames} property.
+   * @param givenNames the property value to set
    */
-  public void setGivenName(String givenName) {
-    this.givenName = givenName;
+  public void setGivenNames(TokenList givenNames) {
+    this.givenNames = givenNames;
   }
 
-  public String getDisplayName() {
-    return getGivenName() + " " + getSurname();
+  /**
+   * Gets the {@code preferredName} property.
+   * @return property value
+   */
+  public Token getPreferredName() {
+    return preferredName;
+  }
+
+  /**
+   * Sets the {@code preferredName} property.
+   * @param preferredName the property value to set
+   */
+  public void setPreferredName(Token preferredName) {
+    this.preferredName = preferredName;
+  }
+
+  /**
+   * Gets the {@code gender} property.
+   * @return property value
+   */
+  public Gender getGender() {
+    return gender;
+  }
+
+  /**
+   * Sets the {@code gender} property.
+   * @param gender the property value to set
+   */
+  public void setGender(Gender gender) {
+    this.gender = gender;
   }
 
   @Override
@@ -107,59 +115,6 @@ public class Person extends AbstractEntity {
     if (obj == this) return true;
     if (!(obj instanceof Person)) return false;
     return super.equals(obj);
-  }
-
-  /**
-   * A builder that produces an {@link Person}.
-   */
-  public static class Builder {
-    final Person person = new Person();
-
-    private Builder() {
-    }
-
-    public static Builder with() {
-      return new Builder();
-    }
-
-    /**
-     * Configures the {@code type} property
-     * @param type the property value to set
-     * @return this builder
-     */
-    public Builder type(Type type) {
-      person.setType(type);
-      return this;
-    }
-
-    /**
-     * Configures the {@code surname} property
-     * @param surname the property value to set
-     * @return this builder
-     */
-    public Builder surname(String surname) {
-      person.setSurname(surname);
-      return this;
-    }
-
-    /**
-     * Configures the {@code givenName} property
-     * @param givenName the property value to set
-     * @return this builder
-     */
-    public Builder givenName(String givenName) {
-      person.setGivenName(givenName);
-      return this;
-    }
-
-    /**
-     * Creates the entity.
-     * @return entity instance
-     */
-    public Person build() {
-      return person;
-    }
-
   }
 
 }

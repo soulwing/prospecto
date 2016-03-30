@@ -1,5 +1,5 @@
 /*
- * File created on Mar 13, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,49 +18,42 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 /**
- * A currency descriptor.
+ * An entity that represents a player's parent/guardian.
  *
  * @author Carl Harris
  */
-public enum Currency {
+@Entity
+public class Parent extends Contact {
 
+  public enum Relationship {
+    MOTHER,
+    FATHER,
+    GUARDIAN,
+    OTHER
+  }
 
-  USD(2, '$', true),
-  EUR(2, '\u20A0', false);
+  @Enumerated(EnumType.STRING)
+  private Relationship relationship;
 
-  private final int scale;
-  private final char symbol;
-  private final boolean prefix;
-
-  Currency(int scale, char symbol, boolean prefix) {
-    this.scale = scale;
-    this.symbol = symbol;
-    this.prefix = prefix;
+  /**
+   * Gets the {@code relationship} property.
+   * @return property value
+   */
+  public Relationship getRelationship() {
+    return relationship;
   }
 
   /**
-   * Gets the {@code scale} property.
-   * @return property value
+   * Sets the {@code relationship} property.
+   * @param relationship the property value to set
    */
-  public int getScale() {
-    return scale;
-  }
-
-  /**
-   * Gets the {@code symbol} property.
-   * @return property value
-   */
-  public char getSymbol() {
-    return symbol;
-  }
-
-  /**
-   * Gets the {@code prefix} property.
-   * @return property value
-   */
-  public boolean isPrefix() {
-    return prefix;
+  public void setRelationship(Relationship relationship) {
+    this.relationship = relationship;
   }
 
 }

@@ -18,7 +18,9 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.startup;
 
-import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -27,12 +29,15 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.soulwing.prospecto.demo.jaxrs.domain.Account;
-import org.soulwing.prospecto.demo.jaxrs.domain.Currency;
-import org.soulwing.prospecto.demo.jaxrs.domain.Money;
-import org.soulwing.prospecto.demo.jaxrs.domain.Person;
-import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
-import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
+import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
+import org.soulwing.prospecto.demo.jaxrs.domain.Division;
+import org.soulwing.prospecto.demo.jaxrs.domain.Gender;
+import org.soulwing.prospecto.demo.jaxrs.domain.League;
+import org.soulwing.prospecto.demo.jaxrs.domain.Parent;
+import org.soulwing.prospecto.demo.jaxrs.domain.Player;
+import org.soulwing.prospecto.demo.jaxrs.domain.Team;
+import org.soulwing.prospecto.demo.jaxrs.domain.Token;
+import org.soulwing.prospecto.demo.jaxrs.domain.TokenList;
 
 /**
  * A startup bean that populates the database with some demo data.
@@ -48,87 +53,86 @@ public class DemoDataLoader {
   @PostConstruct
   public void init() {
 
-    Account suppliesAndMaterials = Account.Builder.with()
-        .accountId("C35172")
-        .description("Supplies and Materials")
-        .build();
+    League league = new League();
+    league.setName("Blacksburg Dixie Softball");
 
-    Person nadine = Person.Builder.with()
-        .type(Person.Type.EMPLOYEE)
-        .surname("Bennett")
-        .givenName("Nadine")
-        .build();
+    Division division = new Division();
+    division.setName("Ponytails");
+    division.setAgeLimit(12);
+    division.setGender(Gender.FEMALE);
 
-    Person meggan = Person.Builder.with()
-        .type(Person.Type.EMPLOYEE)
-        .surname("Marshall")
-        .givenName("Meggan")
-        .build();
+    league.addDivision(division);
 
-    Vendor officeMax = Vendor.Builder.with()
-        .name("Office Max")
-        .taxId("9018-82828")
-        .build();
+    Contact manager = newContact("Marshall", "Megan");
 
-    Vendor staples = Vendor.Builder.with()
-        .name("Staples")
-        .taxId("7272-12381")
-        .build();
+    Team team = new Team();
+    team.setName("Bulldogs");
+    team.setManager(manager);
 
-    PurchaseOrder order1 = PurchaseOrder.Builder.with()
-        .dueDate(new Date())
-        .vendor(officeMax)
-        .orderedBy(nadine)
-        .currency(Currency.USD)
-        .fund(suppliesAndMaterials)
-        .item()
-          .itemId("76382")
-          .description("Stapler, manufacturer:Swingline, color:Red")
-          .quantity(BigDecimal.valueOf(2))
-          .unitPrice(BigDecimal.valueOf(15.99))
-          .end()
-        .item()
-          .itemId("13138")
-          .description("Staples, manufacturer:Bostich")
-          .quantity(BigDecimal.valueOf(3))
-          .unitPrice(BigDecimal.valueOf(7.99))
-          .end()
-        .build();
+    division.addTeam(team);
 
-    PurchaseOrder order2 = PurchaseOrder.Builder.with()
-        .dueDate(new Date())
-        .vendor(staples)
-        .orderedBy(meggan)
-        .currency(Currency.USD)
-        .fund(suppliesAndMaterials)
-        .item()
-          .itemId("9483")
-          .description("Copy paper, case")
-          .quantity(BigDecimal.valueOf(2))
-          .unitPrice(BigDecimal.valueOf(42.50))
-          .end()
-        .item()
-          .itemId("9483")
-          .description("Ink Jet Printer Paper, Bright White, 1 case; Georgia Pacific")
-          .quantity(BigDecimal.valueOf(1))
-          .unitPrice(BigDecimal.valueOf(51.50))
-          .end()
-        .item()
-          .itemId("855170")
-          .description("Sharpie, Ultra; Black; box of 8")
-          .quantity(BigDecimal.valueOf(4))
-          .unitPrice(BigDecimal.valueOf(11.98))
-          .end()
-        .build();
 
-    entityManager.persist(suppliesAndMaterials);
-    entityManager.persist(nadine);
-    entityManager.persist(meggan);
-    entityManager.persist(officeMax);
-    entityManager.persist(staples);
-    entityManager.persist(order1);
-    entityManager.persist(order2);
+    Player player = newPlayer("Martin", "Cherylanne Bailey Wyche",
+        "Squirrel", "2003-07-30",
+        newParent(Parent.Relationship.FATHER, "Martin", "Josh"),
+        newParent(Parent.Relationship.MOTHER, "Martin", "Nadine Bennett"));
+
+    division.addPlayer(player);
+
+    entityManager.persist(manager);
+    entityManager.persist(league);
     entityManager.flush();
+  }
+
+
+
+  private static Player newPlayer(String surname, String givenNames,
+      String preferredName, String birthDate, Parent... parents) {
+    final Player player = new Player();
+    player.setSurname(Token.valueOf(surname));
+    player.setGivenNames(TokenList.valueOf(givenNames));
+    player.setPreferredName(preferredName == null ?
+        player.getGivenNames().toList().get(0) : Token.valueOf(preferredName));
+    player.setGender(Gender.FEMALE);
+    player.setBirthDate(stringToDate(birthDate));
+    for (final Parent parent : parents) {
+      player.addParent(parent);
+    }
+    return player;
+  }
+
+  private static Parent newParent(Parent.Relationship relationship,
+      String surname, String givenNames) {
+    final Parent parent = new Parent();
+    parent.setRelationship(relationship);
+    parent.setSurname(Token.valueOf(surname));
+    parent.setGivenNames(TokenList.valueOf(givenNames));
+    switch (relationship) {
+      case MOTHER:
+        parent.setGender(Gender.FEMALE);
+        break;
+      case FATHER:
+        parent.setGender(Gender.MALE);
+        break;
+    }
+    return parent;
+  }
+
+  private static Contact newContact(String surname, String givenNames) {
+    final Contact contact = new Contact();
+    contact.setSurname(Token.valueOf(surname));
+    contact.setGivenNames(TokenList.valueOf(givenNames));
+    return contact;
+  }
+
+  private static Date stringToDate(String text) {
+    final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    try {
+      return df.parse(text);
+    }
+    catch (ParseException ex) {
+      throw new IllegalArgumentException(ex);
+    }
   }
 
 }

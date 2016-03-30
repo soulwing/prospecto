@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,32 +19,50 @@
 package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
-import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
 import org.soulwing.prospecto.demo.jaxrs.domain.Person;
+import org.soulwing.prospecto.demo.jaxrs.domain.Phone;
+import org.soulwing.prospecto.demo.jaxrs.domain.PhysicalAddress;
 
 /**
- * Views of the {@link Person} entity.
+ * Views of {@link Person} entities.
  *
  * @author Carl Harris
  */
 public interface PersonViews {
 
-  ValueTypeConverter<?> PERSON_NAME_CONVERTER =
-      PropertyExtractingValueTypeConverter.Builder.with()
-          .modelType(Person.class)
-          .propertyName("displayName")
-          .build();
-
-  ViewTemplate PERSON_DETAIL = ViewTemplateBuilderProducer
-      .object("person", Namespace.URI, Person.class)
-          .value("id").accessType(AccessType.PROPERTY)
-          .value("version").accessType(AccessType.PROPERTY)
-          .value("type")
+  ViewTemplate CONTACT_REFERENCE = ViewTemplateBuilderProducer
+      .object(Contact.class)
+          .url()
+          .value("id")
           .value("surname")
-          .value("givenName")
+          .value("givenNames")
+      .build();
+
+  ViewTemplate CONTACT_DETAIL = ViewTemplateBuilderProducer
+      .object(Contact.class)
+          .url()
+          .value("id")
+          .value("version")
+          .value("surname")
+          .value("givenNames")
+          .value("preferredName")
+          .value("gender")
+          .value("emailAddress")
+          .object("mailingAddress", PhysicalAddress.class)
+              .value("streetAddress")
+              .value("municipality")
+              .value("state")
+              .value("postalCode")
+          .end()
+          .arrayOfObjects("phones", Phone.class)
+              .value("id")
+              .value("version")
+              .value("label")
+              .value("number")
+              .value("textEnabled")
+          .end()
       .build();
 
 }

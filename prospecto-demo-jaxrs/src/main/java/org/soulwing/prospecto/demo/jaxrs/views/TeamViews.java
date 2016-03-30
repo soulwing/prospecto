@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,21 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.views;
 
-import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.ViewTemplateBuilderProducer;
+import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
- * A service that provides access to vendors.
- *
+ * Views for the {@link org.soulwing.prospecto.demo.jaxrs.domain.Team} type.
  * @author Carl Harris
  */
-public interface VendorService {
+public interface TeamViews {
 
-  View findAllVendors();
-
-  View findVendorById(Long id) throws NoSuchEntityException;
-
-  View updateVendor(Long id, View vendorView) throws NoSuchEntityException;
+  ViewTemplate TEAM_SUMMARY = ViewTemplateBuilderProducer
+      .object(Team.class)
+          .value("id")
+          .value("version")
+          .value("name")
+          .reference("manager", PersonViews.CONTACT_REFERENCE)
+      .build();
 
 }

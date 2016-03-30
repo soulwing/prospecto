@@ -29,18 +29,13 @@ import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
-import org.soulwing.prospecto.api.converter.PropertyExtractingValueTypeConverter;
 import org.soulwing.prospecto.api.listener.ViewNodeAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodeListener;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
-import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.scope.MutableScope;
-import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
-import org.soulwing.prospecto.demo.jaxrs.domain.Money;
 import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
 /**
@@ -59,6 +54,12 @@ public class ViewContextProducerBean {
 
   @Inject
   private UserContextService userContextService;
+
+  @Inject
+  private EntityReferenceResolver referenceResolver;
+
+  @Inject
+  private JpaViewNodeEntityListener entityListener;
 
   @Produces
   @ApplicationScoped
@@ -79,12 +80,11 @@ public class ViewContextProducerBean {
         .format(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE)
         .build());
 
-    context.getValueTypeConverters().add(
-        PropertyExtractingValueTypeConverter.Builder.with()
-            .modelType(Money.class)
-            .propertyName("amount")
-            .build());
-
+    context.getCollectionManagers().append(new LeagueDivisionCollectionManager());
+    context.getCollectionManagers().append(new DivisionTeamCollectionManager());
+    context.getReferenceResolvers().append(referenceResolver);
+    context.getListeners().append(entityListener);
+        
     configureContext(context);
     return context;
   }
@@ -118,19 +118,6 @@ public class ViewContextProducerBean {
         logger.debug("visited element at path {}: {}",
             event.getContext().currentViewPathAsString(),
             elementModel);
-      }
-    });
-
-    context.getReferenceResolvers().append(new ReferenceResolver() {
-      @Override
-      public boolean supports(Class<?> type) {
-        return AbstractEntity.class.isAssignableFrom(type);
-      }
-
-      @Override
-      public Object resolve(Class<?> type, ViewEntity reference) {
-        System.out.println("resolving " + reference);
-        return entityManager.find(type, reference.get("id"));
       }
     });
 

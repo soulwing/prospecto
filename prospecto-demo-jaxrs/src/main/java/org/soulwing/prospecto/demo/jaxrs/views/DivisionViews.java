@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,37 +19,40 @@
 package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
-import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.demo.jaxrs.domain.Vendor;
+import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 
 /**
- * Views of the {@link Vendor} entity.
- *
+ * Views for the {@link org.soulwing.prospecto.demo.jaxrs.domain.Division} type.
  * @author Carl Harris
  */
-public interface VendorViews {
+public interface DivisionViews {
 
-  ViewTemplate VENDORS_SUMMARY = ViewTemplateBuilderProducer
-      .arrayOfObjects("vendors", "vendor", Namespace.URI, Vendor.class)
-          .url()
-          .value("name")
-          .value("taxId")
-      .build();
-
-  ViewTemplate VENDOR_DETAIL = ViewTemplateBuilderProducer
-      .object(Vendor.class)
-          .value("id").accessType(AccessType.PROPERTY)
-          .value("version").accessType(AccessType.PROPERTY)
-          .value("name")
-          .value("taxId")
-      .build();
-
-  ViewTemplate VENDOR_REFERENCE = ViewTemplateBuilderProducer
-      .object(Vendor.class)
+  ViewTemplate DIVISION_REFERENCE = ViewTemplateBuilderProducer
+      .object(Division.class)
           .url()
           .value("id")
           .value("name")
+      .build();
+
+  ViewTemplate DIVISION_SUMMARY = ViewTemplateBuilderProducer
+      .object(Division.class)
+          .url()
+          .value("id")
+          .value("version")
+          .value("name")
+          .value("ageLimit")
+          .value("gender")
+      .build();
+
+  ViewTemplate DIVISION_DETAIL = ViewTemplateBuilderProducer
+      .object(Division.class)
+          .value("id")
+          .value("version")
+          .value("name")
+          .value("ageLimit")
+          .value("gender")
+          .arrayOfObjects("teams", "team", TeamViews.TEAM_SUMMARY)
       .build();
 
 }

@@ -1,5 +1,5 @@
 /*
- * File created on Mar 12, 2016
+ * File created on Mar 29, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,62 +19,70 @@
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import javax.inject.Inject;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.demo.jaxrs.domain.PurchaseOrder;
+import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
-import org.soulwing.prospecto.demo.jaxrs.service.PurchaseOrderService;
+import org.soulwing.prospecto.demo.jaxrs.service.PersonService;
+import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
- * A JAX-RS resource for {@link PurchaseOrder} entities.
+ * A JAX-RS resource used to access the {@link PersonService} to
+ * access contacts.
  *
  * @author Carl Harris
  */
-@Path("/orders")
+@Path("/contacts")
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class PurchaseOrderResource {
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+public class ContactResource {
 
   @Inject
-  private PurchaseOrderService purchaseOrderService;
+  private PersonService personService;
 
-  @GET
-  public View getOrders() {
-    return purchaseOrderService.findAllOrders();
+  @POST
+  public View postContact(View contactView) {
+    return personService.createContact(contactView);
   }
 
   @GET
   @Path("/{id}")
-  @ReferencedBy(PurchaseOrder.class)
+  @ReferencedBy({ AnyModelSequence.class, Contact.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
-  public View getOrder(@PathParam("id") Long id) {
+  public View getContact(@PathParam("id") Long id) {
     try {
-      return purchaseOrderService.findPurchaseOrder(id);
+      return personService.findContactById(id);
     }
     catch (NoSuchEntityException ex) {
-      throw new NotFoundException();
+      throw new NotFoundException(ex);
     }
   }
 
   @PUT
   @Path("/{id}")
-  public View putOrder(@PathParam("id") Long id,
-      View purchaseOrderView) {
+  public View putContact(@PathParam("id") Long id, View contactView) {
     try {
-      return purchaseOrderService.updatePurchaseOrder(id, purchaseOrderView);
+      return personService.updateContact(id, contactView);
     }
     catch (NoSuchEntityException ex) {
-      throw new NotFoundException();
+      throw new NotFoundException(ex);
+    }
+    catch (UpdateConflictException ex) {
+      throw new ClientErrorException(Response.Status.CONFLICT, ex);
     }
   }
 
