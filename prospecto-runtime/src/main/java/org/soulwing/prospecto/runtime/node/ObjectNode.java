@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -66,35 +65,12 @@ public class ObjectNode extends ContainerViewNode {
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-
-    final MutableViewEntity entity = (MutableViewEntity) value;
     final Object currentValue = getModelObject(target);
-    final Object newValue = entity != null ?
-        entity.getType().newInstance() : null;
-
-    if (newValue != null) {
-      entity.inject(newValue, context);
-    }
-
-    if (newValue != null && currentValue != null
-        && newValue.equals(currentValue)) {
-      entity.inject(currentValue, context);
-    }
-    else {
-      if (currentValue != null) {
-        context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(this, target, currentValue, context));
-      }
-      if (newValue != null) {
-        context.getListeners().entityCreated(
-            new ViewNodePropertyEvent(this, target, newValue, context));
-      }
+    final Object newValue = ObjectUpdater.update(this, target, currentValue,
+        (MutableViewEntity) value, context);
+    if (currentValue != newValue) {
       setModelObject(target, newValue);
     }
-  }
-
-  protected boolean canRead() {
-    return getAccessor().canRead();
   }
 
   protected Object getModelObject(Object source) throws Exception {
