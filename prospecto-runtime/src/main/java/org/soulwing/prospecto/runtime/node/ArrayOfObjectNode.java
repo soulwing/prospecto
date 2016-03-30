@@ -21,21 +21,19 @@ package org.soulwing.prospecto.runtime.node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.collection.CollectionManager;
-import org.soulwing.prospecto.api.collection.ListManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
+import org.soulwing.prospecto.runtime.collection.CollectionUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -125,12 +123,11 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    final CollectionManager manager = getCollectionManager(context);
-    final Map<Object, Object> touched = createOrUpdateChildren(target,
-        (List<?>) value, manager, context);
-    removeChildren(target, touched, manager, context);
+    CollectionUpdater.update(this, target,
+        (List<MutableViewEntity>) value, getCollectionManager(context), context);
   }
 
   @SuppressWarnings("unchecked")
@@ -153,68 +150,6 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   }
 
   @SuppressWarnings("unchecked")
-  protected Map<Object, Object> createOrUpdateChildren(Object target,
-      List<?> entities, CollectionManager manager, ScopedViewContext context)
-      throws Exception {
-    final Map<Object, Object> touched = new IdentityHashMap<>();
-    final Iterator<?> i = ((List) entities).iterator();
-    int index = 0;
-    while (i.hasNext()) {
-      final MutableViewEntity entity = (MutableViewEntity) i.next();
-      final Object element = manager.find(target, entity);
-      if (element != null) {
-        touched.put(element, element);
-        entity.inject(element, context);
-      }
-      else {
-        Object newElement = manager.newElement(target, entity);
-        if (newElement == null) {
-          newElement = accessor.newElement(target, entity);
-        }
-        context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            this, target, newElement, context));
-        if (manager instanceof ListManager) {
-          ((ListManager) manager).add(target, index, newElement);
-        }
-        else {
-          manager.add(target, newElement);
-        }
-        touched.put(newElement, newElement);
-      }
-      index++;
-    }
-    return touched;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void removeChildren(Object target, Map<Object, Object> touched,
-      CollectionManager manager, ScopedViewContext context) throws Exception {
-    final List<Object> children = copyModelChildren(target);
-    int index = 0;
-    for (final Object child : children) {
-      if (!touched.containsKey(child)) {
-        context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(this, target, child, context));
-        if (manager instanceof ListManager) {
-          ((ListManager) manager).remove(target, index);
-        }
-        else {
-          manager.remove(target, child);
-        }
-      }
-      index++;
-    }
-  }
-
-  private List<Object> copyModelChildren(Object source) throws Exception {
-    final List<Object> children = new LinkedList<>();
-    final Iterator<Object> i = getModelIterator(source);
-    while (i.hasNext()) {
-      children.add(i.next());
-    }
-    return children;
-  }
-
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
     return accessor.iterator(source);
   }
