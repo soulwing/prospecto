@@ -53,8 +53,8 @@ curl -H "Accept: application/xml" http://localhost:8080/prospecto-demo/api/leagu
 
 Investigate the source code for the demo at  `prospecto-demo-jaxrs/src/main/java`.
 
-Start in the `domain` package. You'll see a simple domain model that represents
-purchase orders, with JPA annotations for persistence.
+Start in the `domain` package. You'll see a domain model for representing 
+softball or baseball leagues, with JPA annotations for persistence.
 
 The `startup` package contains a bean that loads some demo data into the 
 database when the application starts.
