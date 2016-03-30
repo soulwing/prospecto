@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.views;
 
+import java.util.Iterator;
+
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.collection.CollectionManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
@@ -30,7 +32,7 @@ import org.soulwing.prospecto.demo.jaxrs.domain.League;
  * @author Carl Harris
  */
 public class LeagueDivisionCollectionManager
-    implements CollectionManager<League, Division> {
+    extends AbstractEntityCollectionManager<League, Division> {
 
   @Override
   public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
@@ -39,14 +41,8 @@ public class LeagueDivisionCollectionManager
   }
 
   @Override
-  public Division find(League owner, ViewEntity elementEntity) throws Exception {
-    if (elementEntity.get("id") == null) return null;
-    for (final Division division : owner.getDivisions()) {
-      if (division.getId().equals(elementEntity.get("id"))) {
-        return division;
-      }
-    }
-    return null;
+  protected Iterator<Division> elementIterator(League owner) {
+    return owner.getDivisions().iterator();
   }
 
   @Override
