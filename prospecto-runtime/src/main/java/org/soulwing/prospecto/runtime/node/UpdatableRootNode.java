@@ -32,6 +32,9 @@ public interface UpdatableRootNode extends UpdatableViewNode {
 
   Class<?> getModelType();
 
+  Object create(Deque<View.Event> events,
+      ScopedViewContext context) throws ModelEditorException;
+
   void update(Object target, Deque<View.Event> events,
       ScopedViewContext context) throws ModelEditorException;
 

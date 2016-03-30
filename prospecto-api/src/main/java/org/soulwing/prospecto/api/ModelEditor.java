@@ -28,6 +28,8 @@ package org.soulwing.prospecto.api;
  */
 public interface ModelEditor {
 
+  Object create() throws ModelEditorException;
+
   /**
    * Updates the given model.
    * @param model model (which must be an instance of the type associated with

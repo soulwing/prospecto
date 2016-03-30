@@ -46,6 +46,33 @@ public class RootObjectNode extends ObjectNode
   }
 
   @Override
+  public Object create(Deque<View.Event> events, ScopedViewContext context)
+      throws ModelEditorException {
+    final View.Event triggerEvent = events.removeFirst();
+    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
+      throw new ModelEditorException("view must start with an object");
+    }
+    try {
+      Object target = null;
+      Object value = toModelValue(null, triggerEvent, events, context);
+      if (value != UndefinedValue.INSTANCE) {
+        target = ((MutableViewEntity) value).getType().newInstance();
+        ((MutableViewEntity) value).inject(target, context);
+      }
+      if (target == null) {
+        throw new ModelEditorException("view produced no object");
+      }
+      return target;
+    }
+    catch (RuntimeException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ModelEditorException(ex);
+    }
+  }
+
+  @Override
   public void update(Object target, Deque<View.Event> events,
       ScopedViewContext context) throws ModelEditorException {
     final View.Event triggerEvent = events.removeFirst();

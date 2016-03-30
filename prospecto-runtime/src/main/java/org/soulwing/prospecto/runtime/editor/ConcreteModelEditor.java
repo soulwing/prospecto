@@ -52,6 +52,20 @@ public class ConcreteModelEditor implements ModelEditor {
   }
 
   @Override
+  public Object create() throws ModelEditorException {
+    try {
+      final Deque<View.Event> events = eventDeque(source);
+      return root.create(events, context);
+    }
+    catch (ModelEditorException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ModelEditorException(ex);
+    }
+  }
+
+  @Override
   public void update(Object model) throws ModelEditorException {
     try {
       assertHasRootModelType(model);
