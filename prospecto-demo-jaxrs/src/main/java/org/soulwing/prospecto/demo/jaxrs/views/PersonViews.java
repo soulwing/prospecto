@@ -32,6 +32,15 @@ import org.soulwing.prospecto.demo.jaxrs.domain.PhysicalAddress;
  */
 public interface PersonViews {
 
+  ViewTemplate PHONE_DETAIL = ViewTemplateBuilderProducer
+      .object(Phone.class)
+        .value("id")
+        .value("version")
+        .value("label")
+        .value("number")
+        .value("textEnabled")
+      .build();
+
   ViewTemplate CONTACT_REFERENCE = ViewTemplateBuilderProducer
       .object(Contact.class)
           .url()
@@ -56,13 +65,7 @@ public interface PersonViews {
               .value("state")
               .value("postalCode")
           .end()
-          .arrayOfObjects("phones", Phone.class)
-              .value("id")
-              .value("version")
-              .value("label")
-              .value("number")
-              .value("textEnabled")
-          .end()
+          .arrayOfObjects("phones", PHONE_DETAIL)
       .build();
 
 }
