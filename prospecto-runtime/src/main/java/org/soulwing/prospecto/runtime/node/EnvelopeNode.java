@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an envelope.
@@ -52,6 +53,12 @@ public class EnvelopeNode extends ObjectNode {
     events.addAll(evaluateChildren(model, context));
     events.add(newEvent(View.Event.Type.END_OBJECT));
     return events;
+  }
+
+  @Override
+  public void inject(Object target, Object value, ScopedViewContext context)
+      throws Exception {
+    ((MutableViewEntity) value).inject(target, context);
   }
 
 }
