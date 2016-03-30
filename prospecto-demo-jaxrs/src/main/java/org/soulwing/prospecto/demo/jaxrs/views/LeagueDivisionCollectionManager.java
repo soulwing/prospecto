@@ -41,8 +41,13 @@ public class LeagueDivisionCollectionManager
   }
 
   @Override
-  protected Iterator<Division> elementIterator(League owner) {
-    return owner.getDivisions().iterator();
+  public Iterator<Division> iterator(League league) {
+    return league.getDivisions().iterator();
+  }
+
+  @Override
+  public int size(League league) throws Exception {
+    return league.getDivisions().size();
   }
 
   @Override

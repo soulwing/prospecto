@@ -42,8 +42,13 @@ public class DivisionTeamCollectionManager
   }
 
   @Override
-  protected Iterator<Team> elementIterator(Division owner) {
-    return owner.getTeams().iterator();
+  public Iterator<Team> iterator(Division division) {
+    return division.getTeams().iterator();
+  }
+
+  @Override
+  public int size(Division division) throws Exception {
+    return division.getTeams().size();
   }
 
   @Override

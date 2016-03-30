@@ -35,7 +35,7 @@ abstract class AbstractEntityCollectionManager
   @Override
   public E find(T owner, ViewEntity elementEntity) throws Exception {
     if (elementEntity.get("id") == null) return null;
-    final Iterator<E> i = elementIterator(owner);
+    final Iterator<E> i = iterator(owner);
     while (i.hasNext()) {
       final E element = i.next();
       if (element.getId().equals(elementEntity.get("id"))) {
@@ -44,7 +44,5 @@ abstract class AbstractEntityCollectionManager
     }
     return null;
   }
-
-  protected abstract Iterator<E> elementIterator(T owner);
 
 }

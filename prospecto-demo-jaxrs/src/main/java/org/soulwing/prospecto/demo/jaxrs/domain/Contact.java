@@ -18,8 +18,8 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -34,6 +34,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 /**
@@ -58,7 +59,8 @@ public class Contact extends Person {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "contact_id")
-  private Set<Phone> phones = new HashSet<>();
+  @OrderColumn(name = "list_index")
+  private List<Phone> phones = new ArrayList<>();
 
   /**
    * Gets the {@code mailingAddress} property.
@@ -96,7 +98,7 @@ public class Contact extends Person {
    * Gets the {@code phones} property.
    * @return property value
    */
-  public Set<Phone> getPhones() {
+  public List<Phone> getPhones() {
     return phones;
   }
 
@@ -104,7 +106,7 @@ public class Contact extends Person {
    * Sets the {@code phones} property.
    * @param phones the property value to set
    */
-  public void setPhones(Set<Phone> phones) {
+  public void setPhones(List<Phone> phones) {
     this.phones = phones;
   }
 
