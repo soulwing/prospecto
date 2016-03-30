@@ -68,6 +68,12 @@ class RootNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
+  protected ViewTemplateBuilder newValueNodeTemplateBuilder(
+      ContainerViewNode node) {
+    return new ValueNodeViewTemplateBuilder(this, getTarget(), node);
+  }
+
+  @Override
   protected ViewTemplateBuilder newTemplateBuilder(EnvelopeNode node) {
     return new EnvelopeNodeViewTemplateBuilder(this, node, node);
   }

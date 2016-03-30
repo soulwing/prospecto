@@ -185,7 +185,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     final ContainerViewNode node = ((ComposableViewTemplate) template)
         .object(name, namespace);
     addChildToTarget(node);
-    return new ValueNodeViewTemplateBuilder(parent, target, node);
+    return newValueNodeTemplateBuilder(node);
   }
 
   @Override
@@ -213,7 +213,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     final ContainerViewNode node = ((ComposableViewTemplate) template)
         .reference(name, namespace);
     addChildToTarget(node);
-    return new ValueNodeViewTemplateBuilder(parent, target, node);
+    return newValueNodeTemplateBuilder(node);
   }
 
   @Override
@@ -254,11 +254,12 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     final ContainerViewNode node = ((ComposableViewTemplate) template)
         .arrayOfObjects(name, elementName, namespace);
     addChildToTarget(node);
-    return new ValueNodeViewTemplateBuilder(parent, target, node);
+    return newValueNodeTemplateBuilder(node);
   }
 
   protected abstract ViewTemplateBuilder newTemplateBuilder(ContainerViewNode node);
 
+  protected abstract ViewTemplateBuilder newValueNodeTemplateBuilder(ContainerViewNode node);
 
   @Override
   public ViewTemplateBuilder envelope(String name) {

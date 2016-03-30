@@ -68,6 +68,12 @@ class ValueNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
+  protected ViewTemplateBuilder newValueNodeTemplateBuilder(
+      ContainerViewNode node) {
+    return new ValueNodeViewTemplateBuilder(getParent(), getTarget(), node);
+  }
+
+  @Override
   protected ViewTemplateBuilder newTemplateBuilder(EnvelopeNode node) {
     return new EnvelopeNodeViewTemplateBuilder(getParent(), node, node);
   }
