@@ -47,10 +47,9 @@ class ConcreteAssociationManagerLocator
     AssociationManager manager = node.get(managerClass);
 
     if (manager != null) {
-      if (!managerClass.isInstance(manager)
-          || !manager.supports(descriptor)) {
+      if (!manager.supports(descriptor)) {
         throw new ModelEditorException(
-            "association manager does not support expected types");
+            "association manager does not support association");
       }
       return (M) manager;
     }
