@@ -26,12 +26,9 @@ import org.soulwing.prospecto.api.ViewNode;
  *
  * @author Carl Harris
  */
-public class ViewNodePropertyEvent implements ViewEvent {
+public class ViewNodePropertyEvent extends ViewNodeEvent {
 
-  private final ViewNode source;
-  private final Object model;
   private final Object value;
-  private final ViewContext context;
 
   /**
    * Constructs a copy of an event, composed with a different property model.
@@ -39,38 +36,22 @@ public class ViewNodePropertyEvent implements ViewEvent {
    * @param value the new property value to compose in the event
    */
   public ViewNodePropertyEvent(ViewNodePropertyEvent source, Object value) {
-    this(source.getSource(), source.getModel(), value, source.getContext());
+    this(source.getMode(), source.getSource(), source.getModel(), value,
+        source.getContext());
   }
 
   /**
    * Constructs a new instance.
+   * @param mode mode in which the event occurred
    * @param source view node source of the event
    * @param model model associated with source view node
    * @param value property value associated with {@code model}
    * @param context view context
    */
-  public ViewNodePropertyEvent(ViewNode source, Object model, Object value,
-      ViewContext context) {
-    this.source = source;
-    this.model = model;
+  public ViewNodePropertyEvent(Mode mode, ViewNode source, Object model,
+      Object value, ViewContext context) {
+    super(mode, source, model, context);
     this.value = value;
-    this.context = context;
-  }
-
-  /**
-   * Gets the event source.
-   * @return node that is the source of the event
-   */
-  public ViewNode getSource() {
-    return source;
-  }
-
-  /**
-   * Gets the model associated with the event source node.
-   * @return model
-   */
-  public Object getModel() {
-    return model;
   }
 
   /**
@@ -79,14 +60,6 @@ public class ViewNodePropertyEvent implements ViewEvent {
    */
   public Object getValue() {
     return value;
-  }
-
-  /**
-   * Gets the view context.
-   * @return view context
-   */
-  public ViewContext getContext() {
-    return context;
   }
 
 }

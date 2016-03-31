@@ -29,6 +29,7 @@ import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
@@ -89,8 +90,8 @@ public class ArrayOfObjectNode extends ContainerViewNode {
     viewEvents.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
       Object elementModel = i.next();
-      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(this,
-          model, elementModel, context);
+      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
+          ViewNodeEvent.Mode.VIEW_GENERATION, this, model, elementModel, context);
       if (context.getListeners().shouldVisitProperty(elementEvent)) {
         viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
         viewEvents.addAll(evaluateChildren(

@@ -75,7 +75,7 @@ public class OrderedCollectionUpdateStrategy
             target, entity, manager);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            node, target, newElement, context));
+            MODE, node, target, newElement, context));
 
         manager.add(target, viewIndex, newElement);
       }
@@ -86,7 +86,7 @@ public class OrderedCollectionUpdateStrategy
     for (int i = 0; i < count; i++) {
       final Object element = manager.get(target, viewIndex);
       context.getListeners().entityDiscarded(
-          new ViewNodePropertyEvent(node, target, element, context));
+          new ViewNodePropertyEvent(MODE, node, target, element, context));
       manager.remove(target, viewIndex);
     }
 

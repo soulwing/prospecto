@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
@@ -84,8 +85,8 @@ public class ArrayOfValueNode extends AbstractViewNode
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
     while (i.hasNext()) {
       final Object elementModel = i.next();
-      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(this,
-          model, elementModel, context);
+      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
+          ViewNodeEvent.Mode.VIEW_GENERATION, this, model, elementModel, context);
       if (context.getListeners().shouldVisitProperty(elementEvent)) {
         events.add(newEvent(View.Event.Type.VALUE, elementName,
             toViewValue(

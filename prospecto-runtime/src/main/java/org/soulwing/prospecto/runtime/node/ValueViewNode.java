@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
@@ -52,12 +53,14 @@ abstract class ValueViewNode extends AbstractViewNode {
     }
 
     final Object extractedValue = context.getListeners().didExtractValue(
-        new ViewNodePropertyEvent(this, source, value, context));
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.VIEW_GENERATION, this,
+            source, value, context));
 
     final Object viewValue = toViewValue(extractedValue, context);
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(this, source, viewValue, context));
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.VIEW_GENERATION, this,
+            source, viewValue, context));
 
     return Collections.singletonList(newEvent(
         getEventType(), getEventName(value, context), viewValue));

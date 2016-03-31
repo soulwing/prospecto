@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -66,7 +67,7 @@ public class UnorderedCollectionUpdateStrategy
             target, entity, manager);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            node, target, newElement, context));
+            ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));
 
         manager.add(target, newElement);
         touched.put(newElement, newElement);
@@ -77,7 +78,8 @@ public class UnorderedCollectionUpdateStrategy
     for (final Object child : children) {
       if (!touched.containsKey(child)) {
         context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(node, target, child, context));
+            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+                target, child, context));
         manager.remove(target, child);
       }
     }

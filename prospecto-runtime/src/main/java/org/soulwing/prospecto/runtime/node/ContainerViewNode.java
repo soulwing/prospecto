@@ -190,10 +190,12 @@ public abstract class ContainerViewNode extends AbstractViewNode
     }
 
     final Object valueToInject = context.getListeners().willInjectValue(
-         new ViewNodePropertyEvent(this, parentEntity, entity, context));
+         new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
+            parentEntity, entity, context));
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(this, parentEntity, valueToInject, context));
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
+        parentEntity, valueToInject, context));
 
     context.getListeners().nodeVisited(nodeEvent);
 

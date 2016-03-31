@@ -89,10 +89,12 @@ public class ValueNode extends ValueViewNode
           getAccessor().getDataType(), viewValue, this, context);
 
       final Object valueToInject = context.getListeners().willInjectValue(
-          new ViewNodePropertyEvent(this, parentEntity, convertedValue, context));
+          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
+              parentEntity, convertedValue, context));
 
       context.getListeners().propertyVisited(
-          new ViewNodePropertyEvent(this, parentEntity, valueToInject, context));
+          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
+              parentEntity, valueToInject, context));
 
       context.getListeners().nodeVisited(nodeEvent);
 

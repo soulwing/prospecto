@@ -130,7 +130,7 @@ public class LinkedListNotifiableViewListenersTest {
         context.mock(ViewNodePropertyAcceptor.class, "acceptor1");
 
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null);
+        new ViewNodePropertyEvent(null, null, null, null, null);
 
     context.checking(new Expectations() {
       {
@@ -154,7 +154,7 @@ public class LinkedListNotifiableViewListenersTest {
         context.mock(ViewNodePropertyAcceptor.class, "acceptor1");
 
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null);
+        new ViewNodePropertyEvent(null, null, null, null, null);
 
     context.checking(new Expectations() {
       {
@@ -179,7 +179,7 @@ public class LinkedListNotifiableViewListenersTest {
     final Object value1 = new Object();
     final Object value2 = new Object();
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, value0, null);
+        new ViewNodePropertyEvent(null, null, null, value0, null);
 
     context.checking(new Expectations() {
       {
@@ -208,7 +208,7 @@ public class LinkedListNotifiableViewListenersTest {
     final Object value1 = new Object();
     final Object value2 = new Object();
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, value0, null);
+        new ViewNodePropertyEvent(null, null, null, value0, null);
 
     context.checking(new Expectations() {
       {
@@ -232,7 +232,7 @@ public class LinkedListNotifiableViewListenersTest {
         context.mock(ViewNodePropertyListener.class);
 
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null);
+        new ViewNodePropertyEvent(null, null, null, null, null);
 
     context.checking(new Expectations() {
       {
@@ -250,7 +250,7 @@ public class LinkedListNotifiableViewListenersTest {
         context.mock(ViewNodeEntityListener.class);
 
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null);
+        new ViewNodePropertyEvent(null, null, null, null, null);
 
     context.checking(new Expectations() {
       {
@@ -268,7 +268,7 @@ public class LinkedListNotifiableViewListenersTest {
         context.mock(ViewNodeEntityListener.class);
 
     final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null);
+        new ViewNodePropertyEvent(null, null, null, null, null);
 
     context.checking(new Expectations() {
       {

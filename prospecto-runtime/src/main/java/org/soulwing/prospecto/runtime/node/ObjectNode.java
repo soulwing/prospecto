@@ -66,7 +66,7 @@ public class ObjectNode extends ContainerViewNode {
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     final Object currentValue = getModelObject(target);
-    final Object newValue = ObjectUpdater.update(this, target, currentValue,
+    final Object newValue = ToOneAssociationUpdater.update(this, target, currentValue,
         (MutableViewEntity) value, context);
     if (currentValue != newValue) {
       setModelObject(target, newValue);
