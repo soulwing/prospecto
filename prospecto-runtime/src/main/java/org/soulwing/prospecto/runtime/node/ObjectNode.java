@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -64,14 +63,6 @@ public class ObjectNode extends ContainerViewNode {
 
     if (model != null) {
       events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
-      if (get(DISCRIMINATOR_FLAG_KEY, Boolean.class) == Boolean.TRUE) {
-        final Discriminator discriminator =
-            getDiscriminator(model.getClass(), context);
-        assert discriminator != null;
-        events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-            discriminator.getName(), discriminator.getValue()));
-      }
-
       events.addAll(evaluateChildren(model, context));
       events.add(newEvent(View.Event.Type.END_OBJECT));
     }

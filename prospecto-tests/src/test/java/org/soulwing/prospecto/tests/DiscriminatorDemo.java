@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.tests;
 
+import java.util.Collections;
+
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
@@ -62,7 +64,7 @@ public class DiscriminatorDemo {
   }
 
   static final ViewTemplate TEMPLATE = ViewTemplateBuilderProducer
-      .object(TestObject.class)
+      .arrayOfObjects(TestObject.class)
           .discriminator(SimpleClassNameDiscriminatorStrategy.class,
               "suffix", "Object", "decapitalize", true)
           .value("id")
@@ -80,7 +82,7 @@ public class DiscriminatorDemo {
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
         .getFactory("JSON");
 
-    final View view = TEMPLATE.generateView(model, context);
+    final View view = TEMPLATE.generateView(Collections.singleton(model), context);
     writerFactory.newWriter(view, System.out)
         .writeView();
   }

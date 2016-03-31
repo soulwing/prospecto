@@ -45,9 +45,9 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 public abstract class ContainerViewNode extends AbstractViewNode
     implements UpdatableViewNode {
 
-  public static final String DISCRIMINATOR_FLAG_KEY = "hasDiscriminator";
-
   private final List<AbstractViewNode> children;
+  private final DiscriminatorEventFactory discriminatorEventFactory;
+
   private Accessor accessor;
 
   /**
@@ -56,7 +56,8 @@ public abstract class ContainerViewNode extends AbstractViewNode
    * @param namespace namespace for {@code name}
    * @param modelType element model type
    */
-  protected ContainerViewNode(String name, String namespace, Class<?> modelType) {
+  protected ContainerViewNode(String name, String namespace,
+      Class<?> modelType) {
     this(name, namespace, modelType, new ArrayList<AbstractViewNode>());
   }
 
@@ -69,8 +70,24 @@ public abstract class ContainerViewNode extends AbstractViewNode
    */
   protected ContainerViewNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children) {
+    this(name, namespace, modelType, children,
+        new ConcreteDiscriminatorEventFactory());
+  }
+
+  /**
+   * Constructs a new instance.
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType element model type
+   * @param children node children
+   * @param discriminatorEventFactory discriminator strategy locator
+   */
+  protected ContainerViewNode(String name, String namespace, Class<?> modelType,
+      List<AbstractViewNode> children,
+      DiscriminatorEventFactory discriminatorEventFactory) {
     super(name, namespace, modelType);
     this.children = children;
+    this.discriminatorEventFactory = discriminatorEventFactory;
   }
 
   @Override
@@ -125,12 +142,13 @@ public abstract class ContainerViewNode extends AbstractViewNode
       ScopedViewContext context) throws Exception {
     context.put(model);
     final List<View.Event> events = new LinkedList<>();
-
-
+    if (discriminatorEventFactory.isDiscriminatorNeeded(this)) {
+      events.add(discriminatorEventFactory.newDiscriminatorEvent(this,
+          model.getClass(), context));
+    }
     for (AbstractViewNode child : getChildren()) {
       events.addAll(child.evaluate(model, context));
     }
-
     context.remove(model);
     return events;
   }
@@ -205,8 +223,13 @@ public abstract class ContainerViewNode extends AbstractViewNode
 
     final Discriminator discriminator = new Discriminator(event.getName(),
         event.getValue());
-    return new ConcreteMutableViewEntity(getDiscriminatorStrategy(context)
-        .toSubtype(getModelType(), discriminator));
+
+    final DiscriminatorStrategy strategy =
+        discriminatorEventFactory.getStrategyLocator()
+            .findStrategy(this, context);
+
+    return new ConcreteMutableViewEntity(
+        strategy.toSubtype(getModelType(), discriminator));
   }
 
   private View.Event findDiscriminatorEvent(Iterator<View.Event> i) {
@@ -231,24 +254,6 @@ public abstract class ContainerViewNode extends AbstractViewNode
     while (i.hasNext() && event.getType() != complementType) {
       event = i.next();
     }
-  }
-
-  protected Discriminator getDiscriminator(Class<?> subtype,
-      ScopedViewContext context) {
-    DiscriminatorStrategy strategy = getDiscriminatorStrategy(context);
-    return strategy.toDiscriminator(getModelType(), subtype);
-  }
-
-  private DiscriminatorStrategy getDiscriminatorStrategy(
-      ScopedViewContext context) {
-    DiscriminatorStrategy strategy = get(DiscriminatorStrategy.class);
-    if (strategy == null) {
-      strategy = context.get(DiscriminatorStrategy.class);
-    }
-    if (strategy == null) {
-      throw new AssertionError("discriminator strategy is required");
-    }
-    return strategy;
   }
 
 }

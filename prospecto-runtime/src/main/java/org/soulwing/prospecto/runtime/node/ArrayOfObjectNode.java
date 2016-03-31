@@ -64,17 +64,13 @@ public class ArrayOfObjectNode extends ContainerViewNode {
         new ConcreteToManyAssociationUpdater());
   }
 
-
   ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType,
       ToManyAssociationUpdater associationUpdater) {
-    super(name, namespace, modelType,
-        new ArrayList<AbstractViewNode>());
+    super(name, namespace, modelType, new ArrayList<AbstractViewNode>());
     this.elementName = elementName;
     this.associationUpdater = associationUpdater;
   }
-
-
 
   /**
    * Gets the {@code elementName} property.
