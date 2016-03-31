@@ -29,7 +29,7 @@ import org.soulwing.prospecto.api.association.ToOneAssociationManager;
  *
  * @author Carl Harris
  */
-public interface Accessor extends ToOneAssociationManager {
+public interface Accessor extends ToOneAssociationManager<Object, Object> {
 
   /**
    * Gets the model type in which the property is located

@@ -24,14 +24,17 @@ import java.util.EnumSet;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.UndefinedValue;
-import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AbstractToOneAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * An abstract base for {@link Accessor} implementations.
  *
  * @author Carl Harris
  */
-public abstract class AbstractAccessor implements Accessor {
+public abstract class AbstractAccessor
+    extends AbstractToOneAssociationManager<Object, Object>
+    implements Accessor {
 
   private final Class<?> modelType;
   private final String name;
@@ -115,26 +118,8 @@ public abstract class AbstractAccessor implements Accessor {
       throws IllegalAccessException, InvocationTargetException;
 
   @Override
-  public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
-    return getDataType().isAssignableFrom(elementClass);
-  }
-
-  @Override
-  public boolean isSameAssociate(Object owner, ViewEntity associateEntity)
-      throws Exception {
-    final Object currentAssociate = get(owner);
-    if (currentAssociate == null && associateEntity == null) return true;
-    if (currentAssociate == null || associateEntity == null) return false;
-    final Object newAssociate = newAssociate(owner, associateEntity);
-    return currentAssociate.equals(newAssociate);
-  }
-
-  @Override
-  public Object newAssociate(Object owner, ViewEntity associateEntity)
-      throws Exception {
-    final Object associate = associateEntity.getType().newInstance();
-    associateEntity.inject(associate);
-    return associate;
+  public boolean supports(AssociationDescriptor descriptor) {
+    return getDataType().isAssignableFrom(descriptor.getAssociateType());
   }
 
 }

@@ -23,7 +23,7 @@ import java.util.List;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
  * An updater for a to-many association between a target model object and
@@ -33,7 +33,7 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
  */
 public interface ToManyAssociationUpdater {
 
-  void update(AbstractViewNode node, Object target,
+  void update(ContainerViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception;
 

@@ -18,12 +18,13 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
  * An updater for a to-one association between a target model object and
@@ -46,13 +47,19 @@ public class ConcreteToOneAssociationUpdater
 
   @Override
   @SuppressWarnings("unchecked")
-  public void update(AbstractViewNode node, Object target,
+  public void update(ContainerViewNode node, Object target,
       MutableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception {
 
+    assert node.getParent() != null;
+    assert node.getAccessor() != null;
+    final AssociationDescriptor descriptor =
+        new ConcreteAssociationDescriptor(node.getParent().getModelType(),
+            node.getModelType(), node.getAccessor().getName());
+
     final ToOneAssociationManager manager = managerLocator.findManager(
-            ToOneAssociationManager.class, defaultManager, node, context);
+            ToOneAssociationManager.class, defaultManager, descriptor, node, context);
 
     final Object currentAssociate = manager.get(target);
 

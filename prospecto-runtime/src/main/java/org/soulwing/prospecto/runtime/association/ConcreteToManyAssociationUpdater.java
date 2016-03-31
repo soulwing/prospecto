@@ -20,10 +20,11 @@ package org.soulwing.prospecto.runtime.association;
 
 import java.util.List;
 
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
  * A {@link ToOneAssociationUpdater} implementation.
@@ -48,12 +49,20 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
   }
 
   @Override
-  public void update(AbstractViewNode node, Object target,
+  public void update(ContainerViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
+
+    assert node.getParent() != null;
+    assert node.getAccessor() != null;
+    final AssociationDescriptor descriptor =
+        new ConcreteAssociationDescriptor(node.getParent().getModelType(),
+            node.getModelType(), node.getAccessor().getName());
+
     final ToManyAssociationManager manager =
         managerLocator.findManager(ToManyAssociationManager.class,
-            defaultManager, node, context);
+            defaultManager, descriptor, node, context);
+
     findStrategy(manager).update(node, target, entities, defaultManager, context);
   }
 

@@ -50,22 +50,14 @@ public class UnorderedToManyAssociationUpdateStrategy
   }
 
   @Override
-  public void update(ViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager manager,
-      ScopedViewContext context) throws Exception {
-    assert manager instanceof ToManyAssociationManager;
-    doUpdate(node, target, entities, (ToManyAssociationManager) manager,
-        context);
-  }
-
   @SuppressWarnings("unchecked")
-  private void doUpdate(ViewNode node, Object target,
+  public void update(ViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception {
 
     final Map<Object, Object> touched = new IdentityHashMap<>();
     for (final MutableViewEntity entity : entities)  {
-      final Object element = manager.find(target, entity);
+      final Object element = manager.findAssociate(target, entity);
       if (element != null) {
         touched.put(element, element);
         entity.inject(element, context);

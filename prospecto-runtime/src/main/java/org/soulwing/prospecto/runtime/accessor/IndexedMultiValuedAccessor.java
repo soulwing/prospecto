@@ -27,5 +27,5 @@ import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
  * @author Carl Harris
  */
 public interface IndexedMultiValuedAccessor extends MultiValuedAccessor,
-    ToManyIndexedAssociationManager {
+    ToManyIndexedAssociationManager<Object, Object> {
 }

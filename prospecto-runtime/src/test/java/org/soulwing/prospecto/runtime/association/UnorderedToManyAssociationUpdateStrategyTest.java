@@ -151,7 +151,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
       final Object element) throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).find(owner, entity);
+        oneOf(manager).findAssociate(owner, entity);
         will(returnValue(element));
       }
     };
@@ -161,7 +161,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
       final Object element) throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).newElement(owner, entity);
+        oneOf(manager).newAssociate(owner, entity);
         will(returnValue(element));
         oneOf(manager).add(owner, element);
 

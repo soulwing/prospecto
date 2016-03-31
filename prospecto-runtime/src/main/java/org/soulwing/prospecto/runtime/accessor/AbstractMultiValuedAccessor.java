@@ -18,9 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.Iterator;
-
-import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AbstractToManyAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * An abstract base for {@link MultiValuedAccessor} implementations.
@@ -28,6 +27,7 @@ import org.soulwing.prospecto.api.ViewEntity;
  * @author Carl Harris
  */
 public abstract class AbstractMultiValuedAccessor
+    extends AbstractToManyAssociationManager<Object, Object>
     implements MultiValuedAccessor {
 
   protected Accessor delegate;
@@ -37,40 +37,8 @@ public abstract class AbstractMultiValuedAccessor
   }
 
   @Override
-  public boolean canRead() {
-    return delegate.canRead();
-  }
-
-  @Override
-  public boolean canWrite() {
-    return delegate.canWrite();
-  }
-
-  @Override
-  public boolean supports(Class ownerClass, Class elementClass) {
+  public boolean supports(AssociationDescriptor descriptor) {
     return true;
-  }
-
-  @Override
-  public Object newElement(Object owner, ViewEntity elementEntity)
-      throws Exception {
-    final Object element = elementEntity.getType().newInstance();
-    elementEntity.inject(element);
-    return element;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public Object find(Object owner, ViewEntity entity) throws Exception {
-    Object element = newElement(owner, entity);
-    final Iterator<Object> i = iterator(owner);
-    while (i.hasNext()) {
-      Object candidate = i.next();
-      if (candidate.equals(element)) {
-        return candidate;
-      }
-    }
-    return null;
   }
 
 }

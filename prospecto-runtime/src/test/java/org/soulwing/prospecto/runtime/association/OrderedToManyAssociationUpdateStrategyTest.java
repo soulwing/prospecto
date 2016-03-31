@@ -258,7 +258,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
       final int modelIndex, final Object element) throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).newElement(owner, entity);
+        oneOf(manager).newAssociate(owner, entity);
         will(returnValue(element));
         oneOf(manager).add(owner, modelIndex, element);
 

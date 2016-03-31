@@ -24,9 +24,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
 import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
 
 /**
@@ -38,6 +40,9 @@ public class LinkedListAssociationManagerServiceTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private AssociationDescriptor descriptor;
 
   private LinkedListAssociationManagerService managers =
       new LinkedListAssociationManagerService();
@@ -66,9 +71,9 @@ public class LinkedListAssociationManagerServiceTest {
 
     context.checking(new Expectations() {
       {
-        oneOf(manager0).supports(MockOwner.class, MockElement.class);
+        oneOf(manager0).supports(descriptor);
         will(returnValue(false));
-        oneOf(manager1).supports(MockOwner.class, MockElement.class);
+        oneOf(manager1).supports(descriptor);
         will(returnValue(true));
       }
     });
@@ -78,7 +83,7 @@ public class LinkedListAssociationManagerServiceTest {
     managers.append(manager2);
 
     assertThat(managers.findManager(AssociationManager.class,
-        MockOwner.class, MockElement.class), is(sameInstance(manager1)));
+        descriptor), is(sameInstance(manager1)));
   }
 
   interface MockAssociationManager extends AssociationManager {}

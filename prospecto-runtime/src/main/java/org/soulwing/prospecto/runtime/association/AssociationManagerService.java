@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.api.association.AssociationManagers;
 
@@ -36,12 +37,11 @@ public interface AssociationManagerService extends AssociationManagers {
    * claims to support the given owner and element types is returned.
    *
    * @param managerClass manager class
-   * @param ownerClass owner class
-   * @param elementClass element class
+   * @param descriptor association descriptor
    * @return manager or {@code null} if no manager claims to support the
-   *    given types
+   *    given association
    */
    <M extends AssociationManager> M findManager(
-        Class<M> managerClass, Class<?> ownerClass, Class<?> elementClass);
+       Class<M> managerClass, AssociationDescriptor descriptor);
 
 }

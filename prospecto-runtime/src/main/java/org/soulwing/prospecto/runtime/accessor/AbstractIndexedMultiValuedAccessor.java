@@ -18,9 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.Iterator;
-
-import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AbstractToManyIndexedAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * An abstract base for {@link IndexedMultiValuedAccessor} implementations.
@@ -28,26 +27,18 @@ import org.soulwing.prospecto.api.ViewEntity;
  * @author Carl Harris
  */
 public abstract class AbstractIndexedMultiValuedAccessor
-    extends AbstractMultiValuedAccessor
+    extends AbstractToManyIndexedAssociationManager<Object, Object>
     implements IndexedMultiValuedAccessor {
 
+  protected Accessor delegate;
+
   public AbstractIndexedMultiValuedAccessor(Accessor delegate) {
-    super(delegate);
+    this.delegate = delegate;
   }
 
   @Override
-  public int indexOf(Object owner, ViewEntity entity) throws Exception {
-    Object element = newElement(owner, entity);
-    final Iterator<Object> i = iterator(owner);
-    int index = 0;
-    while (i.hasNext()) {
-      Object candidate = i.next();
-      if (candidate.equals(element)) {
-        return index;
-      }
-      index++;
-    }
-    return -1;
+  public boolean supports(AssociationDescriptor descriptor) {
+    return true;
   }
 
 }

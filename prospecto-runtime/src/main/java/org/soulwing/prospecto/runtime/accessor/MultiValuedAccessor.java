@@ -25,18 +25,7 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
  *
  * @author Carl Harris
  */
-public interface MultiValuedAccessor extends ToManyAssociationManager {
-
-  /**
-   * Determines whether the accessor can be read.
-   * @return {@code true} if the accessor can be read
-   */
-  boolean canRead();
-
-  /**
-   * Determines whether the accessor can be written.
-   * @return {@code true} if the accessor can be written
-   */
-  boolean canWrite();
+public interface MultiValuedAccessor
+    extends ToManyAssociationManager<Object, Object> {
 
 }

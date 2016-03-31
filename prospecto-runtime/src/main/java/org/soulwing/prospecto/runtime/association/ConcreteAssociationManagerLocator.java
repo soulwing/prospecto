@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
@@ -35,17 +36,14 @@ class ConcreteAssociationManagerLocator
   @SuppressWarnings("unchecked")
   public <M extends AssociationManager> M findManager(
       Class<M> managerClass, M defaultManager,
-      AbstractViewNode node, ScopedViewContext context) {
-
-    assert node.getParent() != null;
-    final Class<?> ownerType = node.getParent().getModelType();
-    final Class<?> associateType = node.getModelType();
+      AssociationDescriptor descriptor, AbstractViewNode node,
+      ScopedViewContext context) {
 
     AssociationManager manager = node.get(managerClass);
 
     if (manager != null) {
       if (!managerClass.isInstance(manager)
-          || !manager.supports(ownerType, associateType)) {
+          || !manager.supports(descriptor)) {
         throw new ModelEditorException(
             "association manager does not support expected types");
       }
@@ -53,7 +51,7 @@ class ConcreteAssociationManagerLocator
     }
 
     manager = context.getAssociationManagers().findManager(managerClass,
-        ownerType, associateType);
+        descriptor);
 
     if (manager != null) return (M) manager;
 

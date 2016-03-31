@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * Unit tests for {@link ArrayAccessor}.
@@ -206,7 +207,7 @@ public class ArrayAccessorTest {
     }
 
     @Override
-    public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
+    public boolean supports(AssociationDescriptor descriptor) {
       return false;
     }
   }

@@ -31,9 +31,9 @@ class CollectionElementFactory {
   @SuppressWarnings("unchecked")
   public static Object newElement(Object target, MutableViewEntity entity,
       ToManyAssociationManager manager) throws Exception {
-    Object newElement = manager.newElement(target, entity);
+    Object newElement = manager.newAssociate(target, entity);
     if (newElement == null) {
-      newElement = manager.newElement(target, entity);
+      newElement = manager.newAssociate(target, entity);
     }
     return newElement;
   }

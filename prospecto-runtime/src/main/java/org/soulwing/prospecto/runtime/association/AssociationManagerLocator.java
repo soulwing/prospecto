@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
@@ -32,14 +33,16 @@ interface AssociationManagerLocator {
 
   /**
    * Finds an association manager.
+   * @param <M> manager type
    * @param managerClass manager class
    * @param defaultManager default manager if none found
+   * @param descriptor association descriptor
    * @param node subject view node
    * @param context view context
-   * @param <M> manager type
    * @return manager (never {@code null})
    */
   <M extends AssociationManager> M findManager(
       Class<M> managerClass, M defaultManager,
-      AbstractViewNode node, ScopedViewContext context);
+      AssociationDescriptor descriptor, AbstractViewNode node,
+      ScopedViewContext context);
 }

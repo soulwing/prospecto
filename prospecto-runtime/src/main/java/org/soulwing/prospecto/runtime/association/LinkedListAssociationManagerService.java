@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.association;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
 
 /**
@@ -36,10 +37,9 @@ public class LinkedListAssociationManagerService
   @Override
   @SuppressWarnings("unchecked")
   public <M extends AssociationManager> M findManager(
-      Class<M> managerClass, Class<?> ownerClass, Class<?> elementClass) {
+      Class<M> managerClass, AssociationDescriptor descriptor) {
     for (final AssociationManager manager : managers) {
-      if (managerClass.isInstance(manager)
-          && manager.supports(ownerClass, elementClass)) {
+      if (managerClass.isInstance(manager) && manager.supports(descriptor)) {
         return (M) manager;
       }
     }
