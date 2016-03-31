@@ -47,6 +47,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
@@ -96,7 +97,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
-            accessingNothing(),
+            accessing(sameInstance(RootAccessor.INSTANCE)),
             containingNothing()
         )
     ));
@@ -152,7 +153,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
-            accessingNothing(),
+            accessing(sameInstance(RootAccessor.INSTANCE)),
             containingNothing(),
             havingAttribute(ATTRIBUTE_VALUE.getClass(),
                 sameInstance(ATTRIBUTE_VALUE))
@@ -171,7 +172,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
-            accessingNothing(),
+            accessing(sameInstance(RootAccessor.INSTANCE)),
             containingNothing(),
             havingAttribute(ATTRIBUTE_NAME, ATTRIBUTE_VALUE.getClass(),
                 sameInstance(ATTRIBUTE_VALUE))

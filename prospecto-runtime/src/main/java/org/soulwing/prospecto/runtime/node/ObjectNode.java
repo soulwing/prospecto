@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -48,7 +49,7 @@ public class ObjectNode extends ContainerViewNode {
   protected List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
     final List<View.Event> events = new LinkedList<>();
-    final Object model = getModelObject(source);
+    final Object model = getAccessor().get(source);
     if (model == UndefinedValue.INSTANCE) return Collections.emptyList();
 
     if (model != null) {
@@ -65,20 +66,8 @@ public class ObjectNode extends ContainerViewNode {
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    final Object currentValue = getModelObject(target);
-    final Object newValue = ToOneAssociationUpdater.update(this, target, currentValue,
-        (MutableViewEntity) value, context);
-    if (currentValue != newValue) {
-      setModelObject(target, newValue);
-    }
-  }
-
-  protected Object getModelObject(Object source) throws Exception {
-    return getAccessor().get(source);
-  }
-
-  protected void setModelObject(Object target, Object value) throws Exception {
-    getAccessor().set(target, value);
+    ToOneAssociationUpdater.update(this, target,
+        (MutableViewEntity) value, getAccessor(), context);
   }
 
 }

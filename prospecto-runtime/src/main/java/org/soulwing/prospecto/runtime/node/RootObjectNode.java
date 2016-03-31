@@ -23,6 +23,8 @@ import java.util.Deque;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -94,8 +96,8 @@ public class RootObjectNode extends ObjectNode
   }
 
   @Override
-  protected Object getModelObject(Object source) throws Exception {
-    return source;
+  public Accessor getAccessor() {
+    return RootAccessor.INSTANCE;
   }
 
 }

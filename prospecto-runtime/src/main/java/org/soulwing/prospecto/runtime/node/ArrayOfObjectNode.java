@@ -28,13 +28,12 @@ import java.util.List;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.collection.CollectionManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
-import org.soulwing.prospecto.runtime.collection.CollectionUpdater;
+import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -127,28 +126,10 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    CollectionUpdater.update(this, target,
-        (List<MutableViewEntity>) value, getCollectionManager(context), context);
+    ToManyAssociationUpdater.update(this, target,
+        (List<MutableViewEntity>) value, accessor, context);
   }
 
-  @SuppressWarnings("unchecked")
-  private CollectionManager getCollectionManager(ScopedViewContext context) {
-    assert getParent() != null;
-    CollectionManager manager = get(CollectionManager.class);
-    if (manager != null) {
-      if (!manager.supports(getParent().getModelType(), getModelType())) {
-        throw new ModelEditorException(
-            "collection manager does not support expected types");
-      }
-      return manager;
-    }
-
-    manager = context.getCollectionManagers().findManager(
-        getParent().getModelType(), getModelType());
-    if (manager != null) return manager;
-
-    return accessor;
-  }
 
   @SuppressWarnings("unchecked")
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
