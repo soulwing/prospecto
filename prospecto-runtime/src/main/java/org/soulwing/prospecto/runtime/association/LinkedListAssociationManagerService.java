@@ -16,49 +16,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.AssociationManager;
 
 /**
- * A {@link CollectionManagerService} backed by a {@link LinkedList}.
+ * A {@link AssociationManagerService} backed by a {@link LinkedList}.
  *
  * @author Carl Harris
  */
-public class LinkedListCollectionManagerService
-    implements CollectionManagerService {
+public class LinkedListAssociationManagerService
+    implements AssociationManagerService {
 
-  private final List<CollectionManager<?, ?>> managers = new LinkedList<>();
+  private final List<AssociationManager> managers = new LinkedList<>();
 
   @Override
-  public CollectionManager<?, ?> findManager(Class<?> ownerClass,
-      Class<?> elementClass) {
-    for (final CollectionManager<?, ?> manager : managers) {
-      if (manager.supports(ownerClass, elementClass)) return manager;
+  @SuppressWarnings("unchecked")
+  public <M extends AssociationManager> M findManager(
+      Class<M> managerClass, Class<?> ownerClass, Class<?> elementClass) {
+    for (final AssociationManager manager : managers) {
+      if (managerClass.isInstance(manager)
+          && manager.supports(ownerClass, elementClass)) {
+        return (M) manager;
+      }
     }
     return null;
   }
 
   @Override
-  public void append(CollectionManager manager) {
+  public void append(AssociationManager manager) {
     managers.add(manager);
   }
 
   @Override
-  public void prepend(CollectionManager manager) {
+  public void prepend(AssociationManager manager) {
     managers.add(0, manager);
   }
 
   @Override
-  public boolean remove(CollectionManager manager) {
+  public boolean remove(AssociationManager manager) {
     return managers.remove(manager);
   }
 
   @Override
-  public List<CollectionManager<?, ?>> toList() {
+  public List<AssociationManager> toList() {
     return managers;
   }
 

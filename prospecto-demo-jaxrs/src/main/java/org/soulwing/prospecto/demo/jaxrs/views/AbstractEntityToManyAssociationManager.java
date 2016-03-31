@@ -21,16 +21,16 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 
 /**
  * A
  * @author Carl Harris
  */
-abstract class AbstractEntityCollectionManager
+abstract class AbstractEntityToManyAssociationManager
     <T extends AbstractEntity, E extends AbstractEntity>
-        implements CollectionManager<T, E> {
+        implements ToManyAssociationManager<T, E> {
 
   @Override
   public E find(T owner, ViewEntity elementEntity) throws Exception {

@@ -16,17 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
-import org.soulwing.prospecto.api.collection.CollectionManager;
-import org.soulwing.prospecto.api.collection.CollectionManagers;
+import org.soulwing.prospecto.api.association.AssociationManager;
+import org.soulwing.prospecto.api.association.AssociationManagers;
 
 /**
  * A collection manager service.
  *
  * @author Carl Harris
  */
-public interface CollectionManagerService extends CollectionManagers {
+public interface AssociationManagerService extends AssociationManagers {
 
   /**
    * Finds the appropriate collection manager for the given owner type and
@@ -35,12 +35,13 @@ public interface CollectionManagerService extends CollectionManagers {
    * Registered managers are consulted in order. The first manager that
    * claims to support the given owner and element types is returned.
    *
+   * @param managerClass manager class
    * @param ownerClass owner class
    * @param elementClass element class
    * @return manager or {@code null} if no manager claims to support the
    *    given types
    */
-   CollectionManager<?, ?> findManager(Class<?> ownerClass,
-      Class<?> elementClass);
+   <M extends AssociationManager> M findManager(
+        Class<M> managerClass, Class<?> ownerClass, Class<?> elementClass);
 
 }

@@ -33,7 +33,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.listener.ViewListener;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
@@ -338,21 +338,21 @@ public class ConcreteViewContextTest {
         context.mock(ValueTypeConverter.class);
     final ReferenceResolver resolver =
         context.mock(ReferenceResolver.class);
-    final CollectionManager collectionManager =
-        context.mock(CollectionManager.class);
+    final AssociationManager associationManager =
+        context.mock(AssociationManager.class);
 
     viewContext.getScopes().append(scope);
     viewContext.getListeners().append(listener);
     viewContext.getValueTypeConverters().add(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
-    viewContext.getCollectionManagers().append(collectionManager);
+    viewContext.getAssociationManagers().append(associationManager);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
     viewContext.getListeners().toList().clear();
     viewContext.getValueTypeConverters().clear();
     viewContext.getReferenceResolvers().toList().clear();
-    viewContext.getCollectionManagers().toList().clear();
+    viewContext.getAssociationManagers().toList().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
@@ -360,8 +360,8 @@ public class ConcreteViewContextTest {
         contains(valueTypeConverter));
     assertThat(contextCopy.getReferenceResolvers().toList(),
         contains(resolver));
-    assertThat(contextCopy.getCollectionManagers().toList(),
-        contains(collectionManager));
+    assertThat(contextCopy.getAssociationManagers().toList(),
+        contains(associationManager));
   }
 
 }

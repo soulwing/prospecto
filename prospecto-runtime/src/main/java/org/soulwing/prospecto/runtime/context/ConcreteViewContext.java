@@ -31,8 +31,8 @@ import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.api.scope.Scopes;
-import org.soulwing.prospecto.runtime.collection.CollectionManagerService;
-import org.soulwing.prospecto.runtime.collection.LinkedListCollectionManagerService;
+import org.soulwing.prospecto.runtime.association.AssociationManagerService;
+import org.soulwing.prospecto.runtime.association.LinkedListAssociationManagerService;
 import org.soulwing.prospecto.runtime.listener.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;
@@ -60,8 +60,8 @@ public class ConcreteViewContext implements ScopedViewContext {
   private final ReferenceResolverService referenceResolvers =
       new LinkedListReferenceResolverService();
 
-  private final CollectionManagerService collectionManagers =
-      new LinkedListCollectionManagerService();
+  private final AssociationManagerService collectionManagers =
+      new LinkedListAssociationManagerService();
 
   static class ScopeFrame extends ConcreteMutableScope {
 
@@ -93,7 +93,7 @@ public class ConcreteViewContext implements ScopedViewContext {
     this.listeners.toList().addAll(source.getListeners().toList());
     this.valueTypeConverters.addAll(source.getValueTypeConverters());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
-    this.collectionManagers.toList().addAll(source.getCollectionManagers().toList());
+    this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
   }
 
   @Override
@@ -136,7 +136,7 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public CollectionManagerService getCollectionManagers() {
+  public AssociationManagerService getAssociationManagers() {
     return collectionManagers;
   }
 

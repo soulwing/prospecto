@@ -16,17 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.collection;
+package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
- * An object that during model update manages the relationship between an object
- * and an array/collection composed in the object.
+ * An object that during model update manages the association between an object
+ * and a indexed collection or array composed in the object.
  *
  * @author Carl Harris
  */
-public interface ListManager<T, E> extends CollectionManager<T, E> {
+public interface ToManyIndexedAssociationManager<T, E>
+    extends ToManyAssociationManager<T, E> {
 
   int indexOf(T owner, ViewEntity elementEntity) throws Exception;
 

@@ -16,30 +16,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.collection;
+package org.soulwing.prospecto.api.association;
 
 import java.util.List;
 
 /**
- * A mutable ordered collection of {@link CollectionManager} instances.
+ * A mutable ordered collection of {@link AssociationManager} instances.
  * <p>
  *
  * @author Carl Harris
  */
-public interface CollectionManagers {
+public interface AssociationManagers {
 
   /**
    * Appends the given manager to the end of the collection.
    * @param manager the manager to append
    */
-  void append(CollectionManager manager);
+  void append(AssociationManager manager);
 
   /**
    * Inserts the given manager such that it becomes the first manager in the
    * collection.
    * @param manager the collection to insert
    */
-  void prepend(CollectionManager manager);
+  void prepend(AssociationManager manager);
 
   /**
    * Removes the given manager from the collection
@@ -48,7 +48,7 @@ public interface CollectionManagers {
    * @param manager the manager to remove
    * @return {@code true} true if a manager was removed
    */
-  boolean remove(CollectionManager manager);
+  boolean remove(AssociationManager manager);
 
   /**
    * Coerces this collection into a list.
@@ -56,6 +56,6 @@ public interface CollectionManagers {
    * The returned list may be manipulated to update this collection of managers.
    * @return list of managers
    */
-  List<CollectionManager<?, ?>> toList();
+  List<AssociationManager> toList();
 
 }

@@ -21,19 +21,19 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
 import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
- * A {@link CollectionManager} that manages the relationship between
+ * A {@link ToManyAssociationManager} that manages the relationship between
  * a {@link League} and its {@link Division} elements.
  *
  * @author Carl Harris
  */
-public class DivisionTeamCollectionManager
-    extends AbstractEntityCollectionManager<Division, Team> {
+public class DivisionTeamToManyAssociationManager
+    extends AbstractEntityToManyAssociationManager<Division, Team> {
 
   @Override
   public boolean supports(Class<?> ownerClass, Class<?> elementClass) {

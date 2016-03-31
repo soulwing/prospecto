@@ -80,8 +80,8 @@ public class ViewContextProducerBean {
         .format(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE)
         .build());
 
-    context.getCollectionManagers().append(new LeagueDivisionCollectionManager());
-    context.getCollectionManagers().append(new DivisionTeamCollectionManager());
+    context.getAssociationManagers().append(new LeagueDivisionToManyAssociationManager());
+    context.getAssociationManagers().append(new DivisionTeamToManyAssociationManager());
     context.getReferenceResolvers().append(referenceResolver);
     context.getListeners().append(entityListener);
         

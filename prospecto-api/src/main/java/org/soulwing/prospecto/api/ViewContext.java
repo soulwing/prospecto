@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.collection.CollectionManagers;
+import org.soulwing.prospecto.api.association.AssociationManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
@@ -119,7 +119,7 @@ public interface ViewContext {
   ReferenceResolvers getReferenceResolvers();
 
   /**
-   * Gets the collection of collection managers that will be consulted to
+   * Gets the collection of association managers that will be consulted to
    * manage collections in a view during model update.
    * <p>
    * The returned collection can be manipulated directly to add or remove
@@ -127,7 +127,7 @@ public interface ViewContext {
    * or model update has no effect.
    * @return
    */
-  CollectionManagers getCollectionManagers();
+  AssociationManagers getAssociationManagers();
 
   /**
    * Gets the sequence of view node names that form the path to the current

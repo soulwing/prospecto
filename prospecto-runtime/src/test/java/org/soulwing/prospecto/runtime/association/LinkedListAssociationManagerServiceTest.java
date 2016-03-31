@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -27,26 +27,26 @@ import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.AssociationManager;
 
 /**
- * Unit tests for {@link LinkedListCollectionManagerService}.
+ * Unit tests for {@link LinkedListAssociationManagerService}.
  *
  * @author Carl Harris
  */
-public class LinkedListCollectionManagerServiceTest {
+public class LinkedListAssociationManagerServiceTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private LinkedListCollectionManagerService managers =
-      new LinkedListCollectionManagerService();
+  private LinkedListAssociationManagerService managers =
+      new LinkedListAssociationManagerService();
 
   @Test
   public void testAppendPrependAndRemove() throws Exception {
-    final CollectionManager manager0 = context.mock(CollectionManager.class, "manager0");
-    final CollectionManager manager1 = context.mock(CollectionManager.class, "manager1");
-    final CollectionManager manager2 = context.mock(CollectionManager.class, "manager2");
+    final AssociationManager manager0 = context.mock(AssociationManager.class, "manager0");
+    final AssociationManager manager1 = context.mock(AssociationManager.class, "manager1");
+    final AssociationManager manager2 = context.mock(AssociationManager.class, "manager2");
 
     managers.append(manager1);
     managers.prepend(manager0);
@@ -60,9 +60,9 @@ public class LinkedListCollectionManagerServiceTest {
   @Test
   @SuppressWarnings("unchecked")
   public void testFindManager() throws Exception {
-    final CollectionManager manager0 = context.mock(CollectionManager.class, "manager0");
-    final CollectionManager manager1 = context.mock(CollectionManager.class, "manager1");
-    final CollectionManager manager2 = context.mock(CollectionManager.class, "manager2");
+    final AssociationManager manager0 = context.mock(AssociationManager.class, "manager0");
+    final AssociationManager manager1 = context.mock(MockAssociationManager.class, "manager1");
+    final AssociationManager manager2 = context.mock(AssociationManager.class, "manager2");
 
     context.checking(new Expectations() {
       {
@@ -77,14 +77,14 @@ public class LinkedListCollectionManagerServiceTest {
     managers.append(manager1);
     managers.append(manager2);
 
-    assertThat(managers.findManager(MockOwner.class, MockElement.class),
-        is(sameInstance(manager1)));
+    assertThat(managers.findManager(AssociationManager.class,
+        MockOwner.class, MockElement.class), is(sameInstance(manager1)));
   }
 
-  interface MockOwner {
-  }
+  interface MockAssociationManager extends AssociationManager {}
 
-  interface MockElement {
-  }
+  interface MockOwner {}
+
+  interface MockElement {}
 
 }

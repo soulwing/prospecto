@@ -1,5 +1,5 @@
 /*
- * File created on Mar 29, 2016
+ * File created on Mar 31, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,32 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.collection;
-
-import java.util.Iterator;
+package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
- * An object that during model update manages the relationship between an object
- * and an array/collection composed in the object.
+ * An object that during model update manages the association between an object
+ * and associated object.
  *
  * @author Carl Harris
  */
-public interface CollectionManager<T, E> {
+public interface ToOneAssociationManager<T, E> extends AssociationManager {
 
-  boolean supports(Class<?> ownerClass, Class<?> elementClass);
+  boolean isSameAssociate(T owner, ViewEntity associateEntity) throws Exception;
 
-  Iterator<E> iterator(T owner) throws Exception;
+  E newAssociate(T owner, ViewEntity associateEntity) throws Exception;
 
-  int size(T owner) throws Exception;
+  E get(T owner) throws Exception;
 
-  E find(T owner, ViewEntity elementEntity) throws Exception;
-
-  E newElement(T owner, ViewEntity elementEntity) throws Exception;
-
-  void add(T owner, E element) throws Exception;
-
-  void remove(T owner, E element) throws Exception;
+  void set(T owner, E associate) throws Exception;
 
 }
