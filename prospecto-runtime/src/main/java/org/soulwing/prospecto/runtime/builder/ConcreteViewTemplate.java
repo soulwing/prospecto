@@ -89,8 +89,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   public ContainerViewNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     ObjectNode node = new ObjectNode(name, namespace, root.getModelType());
-    assert root instanceof ContainerViewNode;
-    node.addChildren(((ContainerViewNode) root).getChildren());
+    copyNode(node);
     return node;
   }
 
@@ -98,8 +97,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   public ContainerViewNode reference(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     ReferenceNode node = new ReferenceNode(name, namespace, root.getModelType());
-    assert root instanceof ContainerViewNode;
-    node.addChildren(((ContainerViewNode) root).getChildren());
+    copyNode(node);
     return node;
   }
 
@@ -109,9 +107,14 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
     assertRootIsContainerViewNode(name);
     ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName, namespace,
         root.getModelType());
+    copyNode(node);
+    return node;
+  }
+
+  private void copyNode(ContainerViewNode node) {
     assert root instanceof ContainerViewNode;
     node.addChildren(((ContainerViewNode) root).getChildren());
-    return node;
+    node.putAll(root);
   }
 
   private void assertRootIsContainerViewNode(String name) {

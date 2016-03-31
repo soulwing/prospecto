@@ -108,4 +108,9 @@ public class ConcreteMutableScope implements MutableScope {
     return removed;
   }
 
+  public void putAll(ConcreteMutableScope scope) {
+    contentMap.putAll(scope.contentMap);
+    nameMap.putAll(scope.nameMap);
+  }
+
 }

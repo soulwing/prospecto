@@ -38,7 +38,7 @@ import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
  */
 public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
-  private final MutableScope scope = new ConcreteMutableScope();
+  private final ConcreteMutableScope scope = new ConcreteMutableScope();
 
   private final String name;
   private final String namespace;
@@ -149,6 +149,10 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   @Override
   public boolean remove(Object obj) {
     return scope.remove(obj);
+  }
+
+  public void putAll(AbstractViewNode node) {
+    scope.putAll(node.scope);
   }
 
 }
