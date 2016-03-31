@@ -22,7 +22,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.viewNodePropertyEvent;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.inContext;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
 
 import java.util.List;
 
@@ -66,11 +70,13 @@ public class ValueViewNodeTest {
       {
         exactly(2).of(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).didExtractValue(
-            with(viewNodePropertyEvent(node, MODEL, MODEL_VALUE, viewContext)));
+        oneOf(listeners).didExtractValue(with(
+            eventDescribing(sourceNode(node), forModel(MODEL),
+                propertyValue(MODEL_VALUE), inContext(viewContext))));
         will(returnValue(MODEL_VALUE));
-        oneOf(listeners).propertyVisited(
-            with(viewNodePropertyEvent(node, MODEL, VIEW_VALUE, viewContext)));
+        oneOf(listeners).propertyVisited(with(
+            eventDescribing(sourceNode(node), forModel(MODEL),
+                propertyValue(VIEW_VALUE), inContext(viewContext))));
       }
     });
 

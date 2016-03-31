@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.listener;
 
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.sameInstance;
 
@@ -49,7 +50,7 @@ public class ViewNodePropertyEventMatchers {
   }
 
   public static Matcher<ViewNodePropertyEvent> propertyValue(Object value) {
-    return hasProperty("value", sameInstance(value));
+    return hasProperty("value", equalTo(value));
   }
 
   public static Matcher<ViewNodePropertyEvent> inContext(ViewContext context) {

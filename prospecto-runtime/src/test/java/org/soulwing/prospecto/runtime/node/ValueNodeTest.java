@@ -27,6 +27,7 @@ import java.util.Collections;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
@@ -105,6 +106,10 @@ public class ValueNodeTest {
         is(sameInstance(VIEW_VALUE)));
   }
 
+  @Test
+  public void testToModelValue() throws Exception {
+    Assert.fail("not implemented");
+  }
 
 }
 
