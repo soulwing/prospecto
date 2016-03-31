@@ -21,6 +21,7 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AbstractAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 
@@ -30,10 +31,11 @@ import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
  */
 abstract class AbstractEntityToManyAssociationManager
     <T extends AbstractEntity, E extends AbstractEntity>
+        extends AbstractAssociationManager<T, E>
         implements ToManyAssociationManager<T, E> {
 
   @Override
-  public E find(T owner, ViewEntity elementEntity) throws Exception {
+  public E findAssociate(T owner, ViewEntity elementEntity) throws Exception {
     if (elementEntity.get("id") == null) return null;
     final Iterator<E> i = iterator(owner);
     while (i.hasNext()) {

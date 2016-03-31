@@ -20,7 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 
 import java.util.Iterator;
 
-import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
@@ -36,9 +36,9 @@ public class DivisionTeamToManyAssociationManager
     extends AbstractEntityToManyAssociationManager<Division, Team> {
 
   @Override
-  public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
-    return Division.class.isAssignableFrom(ownerClass)
-        && Team.class.isAssignableFrom(elementClass);
+  public boolean supports(AssociationDescriptor descriptor) {
+    return Division.class.isAssignableFrom(descriptor.getOwnerType())
+        && Team.class.isAssignableFrom(descriptor.getAssociateType());
   }
 
   @Override
@@ -49,12 +49,6 @@ public class DivisionTeamToManyAssociationManager
   @Override
   public int size(Division division) throws Exception {
     return division.getTeams().size();
-  }
-
-  @Override
-  public Team newElement(Division owner, ViewEntity elementEntity)
-      throws Exception {
-    return null;
   }
 
   @Override
