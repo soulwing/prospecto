@@ -32,13 +32,13 @@ import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilderFactory;
 import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorBuilderFactory;
+import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.DiscriminatorEventFactory;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ModelAccessingNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
@@ -282,7 +282,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     assertIsSubTypeOfModelType(subtype);
     assertTargetHasDiscriminator();
     final SubtypeNode node = new SubtypeNode(subtype);
-    node.put(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY, true);
+    node.put(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY, true);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
@@ -298,7 +298,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertTargetHasDiscriminator() {
-    if (target.get(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) return;
+    if (target.get(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) return;
     throw new ViewTemplateException(
         "discriminator is required before introducing subtypes");
   }
@@ -338,7 +338,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator) {
     assertDiscriminatorNotSet();
     assertTargetHasNoChildren();
-    target.put(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY, true);
+    target.put(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY, true);
     if (discriminator != null) {
       target.put(discriminator);
     }
@@ -354,7 +354,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertDiscriminatorNotSet() {
-    if (target.get(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) {
+    if (target.get(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY, Boolean.class) != null) {
       throw new ViewTemplateException("only one discriminator is allowed");
     }
   }

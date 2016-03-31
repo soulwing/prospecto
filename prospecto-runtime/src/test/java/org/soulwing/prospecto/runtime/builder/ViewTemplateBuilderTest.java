@@ -48,9 +48,9 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
+import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
-import org.soulwing.prospecto.runtime.node.DiscriminatorEventFactory;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
@@ -191,7 +191,7 @@ public class ViewTemplateBuilderTest {
     assertThat(template.getRoot(), is(
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true))
         )
     ));
@@ -209,7 +209,7 @@ public class ViewTemplateBuilderTest {
     assertThat(template.getRoot(), is(
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true)),
             havingAttribute(DiscriminatorStrategy.class,
                 sameInstance(strategy))
@@ -229,7 +229,7 @@ public class ViewTemplateBuilderTest {
     assertThat(template.getRoot(), is(
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true)),
             havingAttribute(DiscriminatorStrategy.class,
                 hasProperty(MOCK_PROPERTY, equalTo(MOCK_PROPERTY_VALUE)))
@@ -249,7 +249,7 @@ public class ViewTemplateBuilderTest {
     assertThat(template.getRoot(), is(
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true)),
             havingAttribute(DiscriminatorStrategy.class,
                 hasProperty(MOCK_PROPERTY, equalTo(MOCK_PROPERTY_VALUE)))
@@ -1001,7 +1001,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                   Boolean.class, equalTo(true)),
             containing(
                 nodeOfType(ValueNode.class,
@@ -1062,7 +1062,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
-            havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+            havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true)),
             containing(
                 nodeOfType(SubtypeNode.class,
@@ -1121,7 +1121,7 @@ public class ViewTemplateBuilderTest {
                         propertyNamed(MOCK_PROPERTY),
                         onModelType(MockModel.class)
                     ),
-                    havingAttribute(DiscriminatorEventFactory.DISCRIMINATOR_FLAG_KEY,
+                    havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                         Boolean.class, equalTo(true)),
                     containing(
                         nodeOfType(ValueNode.class,

@@ -16,36 +16,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.discriminator;
+
+import java.util.Iterator;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.SubtypeNode;
 
 /**
- * A {@link DiscriminatorEventFactory} implementation.
+ * A {@link DiscriminatorEventService} implementation.
  *
  * @author Carl Harris
  */
-public class ConcreteDiscriminatorEventFactory
-    implements DiscriminatorEventFactory {
+public class ConcreteDiscriminatorEventService
+    implements DiscriminatorEventService {
 
   private final DiscriminatorStrategyLocator strategyLocator;
 
-  ConcreteDiscriminatorEventFactory() {
+  public ConcreteDiscriminatorEventService() {
     this(new ConcreteDiscriminatorStrategyLocator());
   }
 
-  ConcreteDiscriminatorEventFactory(
+  ConcreteDiscriminatorEventService(
       DiscriminatorStrategyLocator strategyLocator) {
     this.strategyLocator = strategyLocator;
-  }
-
-  @Override
-  public DiscriminatorStrategyLocator getStrategyLocator() {
-    return strategyLocator;
   }
 
   @Override
@@ -66,6 +65,37 @@ public class ConcreteDiscriminatorEventFactory
 
     return new ConcreteViewEvent(View.Event.Type.DISCRIMINATOR,
         discriminator.getName(), null, discriminator.getValue());
+  }
+
+  @Override
+  public View.Event findDiscriminatorEvent(Iterator<View.Event> events) {
+    // TODO:
+    // Making a discriminator (if present) the first child of a structural node
+    // in a view should perhaps be a responsibility of the ViewReader. This
+    // would avoid having to look potentially very far ahead in the event stream.
+    View.Event event = null;
+    while (events.hasNext()) {
+      event = events.next();
+      if (View.Event.Type.DISCRIMINATOR == event.getType()) break;
+      skipEvent(event, events);
+    }
+    if (event == null) return null;
+    if (event.getType() != View.Event.Type.DISCRIMINATOR) return null;
+    return event;
+  }
+
+  private static void skipEvent(View.Event event,
+      Iterator<View.Event> events) {
+    final View.Event.Type complementType = event.getType().complement();
+    while (events.hasNext() && event.getType() != complementType) {
+      event = events.next();
+    }
+  }
+
+  @Override
+  public DiscriminatorStrategy findStrategy(ContainerViewNode node,
+      ScopedViewContext context) {
+    return strategyLocator.findStrategy(node, context);
   }
 
 }

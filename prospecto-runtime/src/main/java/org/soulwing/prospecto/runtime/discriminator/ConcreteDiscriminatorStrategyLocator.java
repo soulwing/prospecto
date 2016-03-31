@@ -16,25 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.discriminator;
 
-import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
- * A factory that produces a discriminator event.
+ * A {@link DiscriminatorStrategyLocator} implementation.
  *
  * @author Carl Harris
  */
-public interface DiscriminatorEventFactory {
+class ConcreteDiscriminatorStrategyLocator
+    implements DiscriminatorStrategyLocator {
 
-  String DISCRIMINATOR_FLAG_KEY = "hasDiscriminator";
+  @Override
+  public DiscriminatorStrategy findStrategy(ContainerViewNode node,
+      ScopedViewContext context) {
 
-  DiscriminatorStrategyLocator getStrategyLocator();
+    DiscriminatorStrategy strategy = node.get(DiscriminatorStrategy.class);
+    if (strategy == null) {
+      strategy = context.get(DiscriminatorStrategy.class);
+    }
+    if (strategy == null) {
+      throw new AssertionError("discriminator strategy is required");
+    }
 
-  boolean isDiscriminatorNeeded(ContainerViewNode node);
-
-  View.Event newDiscriminatorEvent(ContainerViewNode node, Class<?> subtype,
-      ScopedViewContext context);
+    return strategy;
+  }
 
 }

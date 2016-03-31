@@ -34,6 +34,8 @@ import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
+import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.entity.ConcreteMutableViewEntity;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -46,7 +48,7 @@ public abstract class ContainerViewNode extends AbstractViewNode
     implements UpdatableViewNode {
 
   private final List<AbstractViewNode> children;
-  private final DiscriminatorEventFactory discriminatorEventFactory;
+  private final DiscriminatorEventService discriminatorEventService;
 
   private Accessor accessor;
 
@@ -71,7 +73,7 @@ public abstract class ContainerViewNode extends AbstractViewNode
   protected ContainerViewNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children) {
     this(name, namespace, modelType, children,
-        new ConcreteDiscriminatorEventFactory());
+        new ConcreteDiscriminatorEventService());
   }
 
   /**
@@ -80,14 +82,14 @@ public abstract class ContainerViewNode extends AbstractViewNode
    * @param namespace namespace for {@code name}
    * @param modelType element model type
    * @param children node children
-   * @param discriminatorEventFactory discriminator strategy locator
+   * @param discriminatorEventService discriminator strategy locator
    */
   protected ContainerViewNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children,
-      DiscriminatorEventFactory discriminatorEventFactory) {
+      DiscriminatorEventService discriminatorEventService) {
     super(name, namespace, modelType);
     this.children = children;
-    this.discriminatorEventFactory = discriminatorEventFactory;
+    this.discriminatorEventService = discriminatorEventService;
   }
 
   @Override
@@ -142,8 +144,8 @@ public abstract class ContainerViewNode extends AbstractViewNode
       ScopedViewContext context) throws Exception {
     context.put(model);
     final List<View.Event> events = new LinkedList<>();
-    if (discriminatorEventFactory.isDiscriminatorNeeded(this)) {
-      events.add(discriminatorEventFactory.newDiscriminatorEvent(this,
+    if (discriminatorEventService.isDiscriminatorNeeded(this)) {
+      events.add(discriminatorEventService.newDiscriminatorEvent(this,
           model.getClass(), context));
     }
     for (AbstractViewNode child : getChildren()) {
@@ -216,7 +218,10 @@ public abstract class ContainerViewNode extends AbstractViewNode
 
   private MutableViewEntity newEntity(Deque<View.Event> events,
       ScopedViewContext context) throws Exception {
-    View.Event event = findDiscriminatorEvent(events.iterator());
+
+    View.Event event = discriminatorEventService.findDiscriminatorEvent(
+        events.iterator());
+
     if (event == null) {
       return new ConcreteMutableViewEntity(getModelType());
     }
@@ -225,35 +230,10 @@ public abstract class ContainerViewNode extends AbstractViewNode
         event.getValue());
 
     final DiscriminatorStrategy strategy =
-        discriminatorEventFactory.getStrategyLocator()
-            .findStrategy(this, context);
+        discriminatorEventService.findStrategy(this, context);
 
     return new ConcreteMutableViewEntity(
         strategy.toSubtype(getModelType(), discriminator));
-  }
-
-  private View.Event findDiscriminatorEvent(Iterator<View.Event> i) {
-    // TODO:
-    // Making a discriminator (if present) the first child of a structural node
-    // in a view should perhaps be a responsibility of the ViewReader. This
-    // would avoid having to look potentially very far ahead in the event stream.
-    View.Event event = null;
-    while (i.hasNext()) {
-      event = i.next();
-      if (View.Event.Type.DISCRIMINATOR == event.getType()) break;
-      skipEvent(event, i);
-    }
-    if (event == null) return null;
-    if (event.getType() != View.Event.Type.DISCRIMINATOR) return null;
-    return event;
-  }
-
-  private static void skipEvent(View.Event event,
-      Iterator<View.Event> i) {
-    final View.Event.Type complementType = event.getType().complement();
-    while (i.hasNext() && event.getType() != complementType) {
-      event = i.next();
-    }
   }
 
 }

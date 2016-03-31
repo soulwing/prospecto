@@ -16,32 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.discriminator;
 
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
- * A {@link DiscriminatorStrategyLocator} implementation.
+ * A service the locates a discriminator strategy.
  *
  * @author Carl Harris
  */
-public class ConcreteDiscriminatorStrategyLocator
-    implements DiscriminatorStrategyLocator {
+interface DiscriminatorStrategyLocator {
 
-  @Override
-  public DiscriminatorStrategy findStrategy(ContainerViewNode node,
-      ScopedViewContext context) {
-
-    DiscriminatorStrategy strategy = node.get(DiscriminatorStrategy.class);
-    if (strategy == null) {
-      strategy = context.get(DiscriminatorStrategy.class);
-    }
-    if (strategy == null) {
-      throw new AssertionError("discriminator strategy is required");
-    }
-
-    return strategy;
-  }
+  /**
+   * Finds the appropriate discriminator strategy for the subject container node.
+   * @param node subject node
+   * @param context view context
+   * @return discriminator strategy (never {@code null})
+   */
+  DiscriminatorStrategy findStrategy(ContainerViewNode node,
+      ScopedViewContext context);
 
 }
