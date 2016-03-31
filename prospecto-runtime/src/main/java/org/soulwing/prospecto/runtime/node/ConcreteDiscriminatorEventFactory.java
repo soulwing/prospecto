@@ -50,8 +50,8 @@ public class ConcreteDiscriminatorEventFactory
 
   @Override
   public boolean isDiscriminatorNeeded(ContainerViewNode node) {
-    return node.get(DISCRIMINATOR_FLAG_KEY, Boolean.class) == true
-        && !(node instanceof SubtypeNode);
+    final Boolean flag = node.get(DISCRIMINATOR_FLAG_KEY, Boolean.class);
+    return flag != null && flag && !(node instanceof SubtypeNode);
   }
 
   @Override
