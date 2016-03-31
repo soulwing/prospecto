@@ -73,8 +73,7 @@ public class OrderedToManyAssociationUpdateStrategy
         }
       }
       else {
-        final Object newElement = CollectionElementFactory.newElement(
-            target, entity, manager);
+        final Object newElement = manager.newAssociate(target, entity);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
             ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));

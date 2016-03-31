@@ -75,7 +75,7 @@ public class ConcreteToOneAssociationUpdater
                 target, currentAssociate, context));
       }
       if (entity != null) {
-        Object newAssociate = newAssociate(target, entity, manager, context);
+        final Object newAssociate = manager.newAssociate(target, entity);
         entity.inject(newAssociate, context);
         context.getListeners().entityCreated(
             new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
@@ -86,21 +86,6 @@ public class ConcreteToOneAssociationUpdater
         manager.set(target, null);
       }
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  private static Object newAssociate(Object owner,
-      MutableViewEntity associateEntity, ToOneAssociationManager manager,
-      ScopedViewContext context) throws Exception {
-
-    Object newAssociate = manager.newAssociate(owner, associateEntity);
-
-    if (newAssociate == null) {
-      newAssociate = associateEntity.getType().newInstance();
-      associateEntity.inject(newAssociate, context);
-    }
-
-    return newAssociate;
   }
 
 }
