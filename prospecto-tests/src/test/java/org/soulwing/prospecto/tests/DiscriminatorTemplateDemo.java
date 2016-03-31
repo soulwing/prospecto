@@ -77,9 +77,7 @@ public class DiscriminatorTemplateDemo {
       .build();
 
   static ViewTemplate OBJ_COLLECTION = ViewTemplateBuilderProducer
-      .object(TestCollection.class)
-      .arrayOfObjects("objects", OBJECT_TEMPLATE)
-      .build();
+      .arrayOfObjects("objects", OBJECT_TEMPLATE);
 
   public static void main(String[] args) {
     SubObject o1 = new SubObject();
@@ -99,7 +97,7 @@ public class DiscriminatorTemplateDemo {
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
         .getFactory("JSON");
 
-    final View view = OBJ_COLLECTION.generateView(collection, context);
+    final View view = OBJ_COLLECTION.generateView(collection.getObjects(), context);
     writerFactory.newWriter(view, System.out)
         .writeView();
   }

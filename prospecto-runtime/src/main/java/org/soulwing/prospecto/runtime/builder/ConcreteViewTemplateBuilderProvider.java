@@ -21,7 +21,6 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
@@ -37,6 +36,7 @@ public class ConcreteViewTemplateBuilderProvider
 
   private final ViewTemplateBuilderFactory builderFactory;
 
+  @SuppressWarnings("unused")
   public ConcreteViewTemplateBuilderProvider() {
     this(new ConcreteViewTemplateBuilderFactory());
   }
@@ -64,12 +64,8 @@ public class ConcreteViewTemplateBuilderProvider
   @Override
   public ViewTemplate arrayOfObjects(String name, String elementName,
       String namespace, ViewTemplate template) throws ViewTemplateException {
-    final ConcreteViewTemplate templateImpl = templateImpl(template);
-    final ObjectNode templateRoot = templateRoot(templateImpl);
-    RootArrayOfObjectNode root = new RootArrayOfObjectNode(name, elementName,
-        namespace, ((ConcreteViewTemplate) template).getRoot().getModelType());
-    root.addChildren(templateRoot.getChildren());
-    return new ConcreteViewTemplate(root);
+    return ((ComposableViewTemplate) template)
+        .arrayOfObjectsTemplate(name, elementName, namespace);
   }
 
   @Override
@@ -77,21 +73,6 @@ public class ConcreteViewTemplateBuilderProvider
       String namespace) throws ViewTemplateException {
     return new ConcreteViewTemplate(
         new RootArrayOfValueNode(name, elementName, namespace));
-  }
-
-  private ConcreteViewTemplate templateImpl(ViewTemplate template) {
-    if (!(template instanceof ConcreteViewTemplate)) {
-      throw new IllegalArgumentException("unsupported template");
-    }
-    return (ConcreteViewTemplate) template;
-  }
-
-  private ObjectNode templateRoot(ConcreteViewTemplate template) {
-    if (!(template.getRoot() instanceof ObjectNode)) {
-      throw new IllegalArgumentException(
-          "template must be for a view of type `object`");
-    }
-    return (ObjectNode) template.getRoot();
   }
 
 }

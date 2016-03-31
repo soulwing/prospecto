@@ -68,4 +68,19 @@ public interface ComposableViewTemplate extends ViewTemplate {
   ContainerViewNode arrayOfObjects(String name, String elementName,
       String namespace);
 
+  /**
+   * Extracts a view template of array-of-objects type from the root of this
+   * template.
+   * @param name name for the root (as it will appear in the calling template)
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName}; used
+   *    in only some view types (e.g. XML)
+   * @return new view template containing the children of the root node of this
+   *    template
+   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#arrayOfObjects(String, String, String, ViewTemplate)
+   */
+  ViewTemplate arrayOfObjectsTemplate(String name, String elementName,
+      String namespace);
+
 }

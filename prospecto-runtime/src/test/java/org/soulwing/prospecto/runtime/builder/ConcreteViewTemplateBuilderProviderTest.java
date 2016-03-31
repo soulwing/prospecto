@@ -30,12 +30,10 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ObjectNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.runtime.node.ValueNode;
 
@@ -120,19 +118,6 @@ public class ConcreteViewTemplateBuilderProviderTest {
         arrayViewNode(ArrayOfObjectNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
     assertThat(((ArrayOfObjectNode) template.getRoot()).getChildren()
         .contains(child), is(true));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testArrayOfObjectsTemplateWithUnrecognizedImpl() throws Exception {
-    final ViewTemplate template = context.mock(ViewTemplate.class);
-    provider.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE, template);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testArrayOfObjectsTemplateWithNonObjectNode() throws Exception {
-    final ConcreteViewTemplate template = new ConcreteViewTemplate(
-        new RootArrayOfObjectNode(null, null, null, null));
-    provider.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE, template);
   }
 
 }
