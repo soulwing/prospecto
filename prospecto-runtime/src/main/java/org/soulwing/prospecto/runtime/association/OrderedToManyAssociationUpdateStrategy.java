@@ -27,13 +27,14 @@ import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A strategy for updating an unordered collection.
  *
  * @author Carl Harris
  */
-public class OrderedToManyAssociationUpdateStrategy
+class OrderedToManyAssociationUpdateStrategy
     implements ToManyAssociationUpdateStrategy {
 
   public static final OrderedToManyAssociationUpdateStrategy INSTANCE =
@@ -47,12 +48,13 @@ public class OrderedToManyAssociationUpdateStrategy
   }
 
   @Override
-  public void update(ViewNode node, Object target,
+  public void update(AbstractViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
-          ScopedViewContext context) throws Exception {
+      ScopedViewContext context) throws Exception {
+
     assert manager instanceof ToManyIndexedAssociationManager;
-    doUpdate(node, target, entities, (ToManyIndexedAssociationManager) manager,
-        context);
+    doUpdate(node, target, entities, (ToManyIndexedAssociationManager)
+        manager, context);
   }
 
   @SuppressWarnings("unchecked")

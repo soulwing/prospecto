@@ -32,6 +32,11 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 class ConcreteAssociationManagerLocator
     implements AssociationManagerLocator {
 
+  public static ConcreteAssociationManagerLocator INSTANCE =
+      new ConcreteAssociationManagerLocator();
+
+  private ConcreteAssociationManagerLocator() {}
+
   @Override
   @SuppressWarnings("unchecked")
   public <M extends AssociationManager> M findManager(

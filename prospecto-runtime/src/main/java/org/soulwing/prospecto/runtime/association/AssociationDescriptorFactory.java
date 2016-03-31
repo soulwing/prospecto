@@ -1,5 +1,5 @@
 /*
- * File created on Mar 30, 2016
+ * File created on Mar 31, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,24 +18,16 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
+import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
- * A strategy for updating a collection.
+ * A factory that produces a association descriptor from a container view node.
  *
  * @author Carl Harris
  */
-interface ToManyAssociationUpdateStrategy {
+public interface AssociationDescriptorFactory {
 
-  boolean supports(ToManyAssociationManager manager);
-
-  void update(AbstractViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager manager,
-      ScopedViewContext context) throws Exception;
+  AssociationDescriptor newDescriptor(ContainerViewNode node);
 
 }

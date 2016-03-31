@@ -35,13 +35,18 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 public class ConcreteToOneAssociationUpdater
     implements ToOneAssociationUpdater {
 
+  private final AssociationDescriptorFactory descriptorFactory;
   private final AssociationManagerLocator managerLocator;
 
   public ConcreteToOneAssociationUpdater() {
-    this(new ConcreteAssociationManagerLocator());
+    this(ConcreteAssociationDescriptorFactory.INSTANCE,
+        ConcreteAssociationManagerLocator.INSTANCE);
   }
 
-  ConcreteToOneAssociationUpdater(AssociationManagerLocator managerLocator) {
+  ConcreteToOneAssociationUpdater(
+      AssociationDescriptorFactory descriptorFactory,
+      AssociationManagerLocator managerLocator) {
+    this.descriptorFactory = descriptorFactory;
     this.managerLocator = managerLocator;
   }
 
@@ -52,14 +57,12 @@ public class ConcreteToOneAssociationUpdater
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception {
 
-    assert node.getParent() != null;
-    assert node.getAccessor() != null;
     final AssociationDescriptor descriptor =
-        new ConcreteAssociationDescriptor(node.getParent().getModelType(),
-            node.getModelType(), node.getAccessor().getName());
+        descriptorFactory.newDescriptor(node);
 
-    final ToOneAssociationManager manager = managerLocator.findManager(
-            ToOneAssociationManager.class, defaultManager, descriptor, node, context);
+    final ToOneAssociationManager manager =
+        managerLocator.findManager(ToOneAssociationManager.class,
+            defaultManager, descriptor, node, context);
 
     final Object currentAssociate = manager.get(target);
 

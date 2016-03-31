@@ -18,10 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import static org.soulwing.prospecto.runtime.association.AssociationDescriptorMatchers.associateNamed;
-import static org.soulwing.prospecto.runtime.association.AssociationDescriptorMatchers.associateType;
-import static org.soulwing.prospecto.runtime.association.AssociationDescriptorMatchers.descriptionOf;
-import static org.soulwing.prospecto.runtime.association.AssociationDescriptorMatchers.ownerType;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
@@ -37,7 +33,6 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -49,59 +44,55 @@ import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery
  *
  * @author Carl Harris
  */
-@SuppressWarnings({ "unchecked", "unused" })
 public class ConcreteToOneAssociationUpdaterTest {
-
-  private static final String ASSOCIATION_NAME = "associationName";
 
   @Rule
   public final JUnitRuleMockery context =
       new JUnitRuleClassImposterizingMockery();
 
   @Mock
-  private ScopedViewContext viewContext;
+  ScopedViewContext viewContext;
 
   @Mock
-  private NotifiableViewListeners listeners;
+  NotifiableViewListeners listeners;
 
   @Mock
-  private ContainerViewNode node;
+  ContainerViewNode node;
 
   @Mock
-  private ContainerViewNode parentNode;
+  AssociationDescriptorFactory descriptorFactory;
 
   @Mock
-  private Accessor accessor;
+  AssociationManagerLocator managerLocator;
 
   @Mock
-  private AssociationManagerLocator managerLocator;
+  AssociationDescriptor descriptor;
 
   @Mock
-  private AssociationDescriptor descriptor;
+  ToOneAssociationManager manager;
 
   @Mock
-  private ToOneAssociationManager manager;
+  MockModel owner;
 
   @Mock
-  private MockModel owner;
+  MockModel currentAssociate;
 
   @Mock
-  private MockModel currentAssociate;
+  MockModel newAssociate;
 
   @Mock
-  private MockModel newAssociate;
+  MutableViewEntity associateEntity;
 
-  @Mock
-  private MutableViewEntity associateEntity;
-
-  private ConcreteToOneAssociationUpdater updater;
+  ConcreteToOneAssociationUpdater updater;
 
   @Before
   public void setUp() throws Exception {
-    updater = new ConcreteToOneAssociationUpdater(managerLocator);
+    updater = new ConcreteToOneAssociationUpdater(descriptorFactory,
+        managerLocator);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpdateNullToNull() throws Exception {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
@@ -117,6 +108,7 @@ public class ConcreteToOneAssociationUpdaterTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpdateNullToNonNull() throws Exception {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
@@ -133,6 +125,7 @@ public class ConcreteToOneAssociationUpdaterTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpdateSameAssociate() throws Exception {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
@@ -149,6 +142,7 @@ public class ConcreteToOneAssociationUpdaterTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpdateDifferentAssociate() throws Exception {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
@@ -164,29 +158,20 @@ public class ConcreteToOneAssociationUpdaterTest {
     updater.update(node, owner, associateEntity, manager, viewContext);
   }
 
+  @SuppressWarnings("unchecked")
   private Expectations findManagerExpectations() throws Exception {
     return new Expectations() {
       {
-        allowing(node).getParent();
-        will(returnValue(parentNode));
-        allowing(node).getAccessor();
-        will(returnValue(accessor));
-        allowing(accessor).getName();
-        will(returnValue(ASSOCIATION_NAME));
-        allowing(node).getModelType();
-        will(returnValue(MockModel.class));
-        allowing(parentNode).getModelType();
-        will(returnValue(MockModel.class));
-        oneOf(managerLocator).findManager(
-            with(ToOneAssociationManager.class), with(manager),
-            with(descriptionOf(associateNamed(ASSOCIATION_NAME),
-                ownerType(MockModel.class), associateType(MockModel.class))),
-            with(node), with(viewContext));
+        oneOf(descriptorFactory).newDescriptor(node);
+        will(returnValue(descriptor));
+        oneOf(managerLocator).findManager(ToOneAssociationManager.class,
+            manager, descriptor, node, viewContext);
         will(returnValue(manager));
       }
     };
   }
 
+  @SuppressWarnings("unchecked")
   private Expectations discardAssociateExpectations(final Object associate)
       throws Exception {
     return new Expectations() {
@@ -200,6 +185,7 @@ public class ConcreteToOneAssociationUpdaterTest {
     };
   }
 
+  @SuppressWarnings("unchecked")
   private Expectations createAssociateExpectations(final Object associate)
       throws Exception {
     return new Expectations() {

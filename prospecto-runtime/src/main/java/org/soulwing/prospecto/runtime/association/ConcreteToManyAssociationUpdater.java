@@ -33,18 +33,27 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
  */
 public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdater {
 
-  private static final ToManyAssociationUpdateStrategy[] strategies = {
+  private static final ToManyAssociationUpdateStrategy[] DEFAULT_STRATEGIES = {
       OrderedToManyAssociationUpdateStrategy.INSTANCE,
       UnorderedToManyAssociationUpdateStrategy.INSTANCE
   };
 
+  private final ToManyAssociationUpdateStrategy[] strategies;
+  private final AssociationDescriptorFactory descriptorFactory;
   private final AssociationManagerLocator managerLocator;
 
   public ConcreteToManyAssociationUpdater() {
-    this(new ConcreteAssociationManagerLocator());
+    this(DEFAULT_STRATEGIES,
+        ConcreteAssociationDescriptorFactory.INSTANCE,
+        ConcreteAssociationManagerLocator.INSTANCE);
   }
 
-  ConcreteToManyAssociationUpdater(AssociationManagerLocator managerLocator) {
+  ConcreteToManyAssociationUpdater(
+      ToManyAssociationUpdateStrategy[] strategies,
+      AssociationDescriptorFactory descriptorFactory,
+      AssociationManagerLocator managerLocator) {
+    this.strategies = strategies;
+    this.descriptorFactory = descriptorFactory;
     this.managerLocator = managerLocator;
   }
 
@@ -53,20 +62,18 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
       List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 
-    assert node.getParent() != null;
-    assert node.getAccessor() != null;
     final AssociationDescriptor descriptor =
-        new ConcreteAssociationDescriptor(node.getParent().getModelType(),
-            node.getModelType(), node.getAccessor().getName());
+        descriptorFactory.newDescriptor(node);
 
     final ToManyAssociationManager manager =
         managerLocator.findManager(ToManyAssociationManager.class,
             defaultManager, descriptor, node, context);
 
-    findStrategy(manager).update(node, target, entities, defaultManager, context);
+    findStrategy(manager).update(node, target, entities, defaultManager,
+        context);
   }
 
-  private static ToManyAssociationUpdateStrategy findStrategy(
+  private ToManyAssociationUpdateStrategy findStrategy(
       ToManyAssociationManager manager) {
     for (final ToManyAssociationUpdateStrategy strategy : strategies) {
       if (strategy.supports(manager)) {

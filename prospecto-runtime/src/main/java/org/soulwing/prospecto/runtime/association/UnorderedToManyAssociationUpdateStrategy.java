@@ -24,19 +24,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A strategy for updating a to-many association (unordered)
  *
  * @author Carl Harris
  */
-public class UnorderedToManyAssociationUpdateStrategy
+class UnorderedToManyAssociationUpdateStrategy
     implements ToManyAssociationUpdateStrategy {
 
   public static final UnorderedToManyAssociationUpdateStrategy INSTANCE =
@@ -51,9 +51,10 @@ public class UnorderedToManyAssociationUpdateStrategy
 
   @Override
   @SuppressWarnings("unchecked")
-  public void update(ViewNode node, Object target,
+  public void update(AbstractViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
-      ScopedViewContext context) throws Exception {
+      ScopedViewContext context)
+      throws Exception {
 
     final Map<Object, Object> touched = new IdentityHashMap<>();
     for (final MutableViewEntity entity : entities)  {
