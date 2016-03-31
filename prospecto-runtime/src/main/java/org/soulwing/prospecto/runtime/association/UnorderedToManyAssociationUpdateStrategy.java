@@ -50,16 +50,16 @@ public class UnorderedToManyAssociationUpdateStrategy
   }
 
   @Override
-  public Object update(ViewNode node, Object target,
+  public void update(ViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception {
     assert manager instanceof ToManyAssociationManager;
-    return doUpdate(node, target, entities, (ToManyAssociationManager) manager,
+    doUpdate(node, target, entities, (ToManyAssociationManager) manager,
         context);
   }
 
   @SuppressWarnings("unchecked")
-  private Object doUpdate(ViewNode node, Object target,
+  private void doUpdate(ViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception {
 
@@ -92,7 +92,6 @@ public class UnorderedToManyAssociationUpdateStrategy
       }
     }
 
-    return target;
   }
 
   @SuppressWarnings("unchecked")

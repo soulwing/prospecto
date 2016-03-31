@@ -33,6 +33,7 @@ import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
+import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -43,6 +44,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  * @author Carl Harris
  */
 public class ArrayOfObjectNode extends ContainerViewNode {
+
+  private final ToManyAssociationUpdater associationUpdater;
 
   private final String elementName;
 
@@ -57,10 +60,21 @@ public class ArrayOfObjectNode extends ContainerViewNode {
    */
   public ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType) {
+    this(name, elementName, namespace, modelType,
+        new ConcreteToManyAssociationUpdater());
+  }
+
+
+  ArrayOfObjectNode(String name, String elementName,
+      String namespace, Class<?> modelType,
+      ToManyAssociationUpdater associationUpdater) {
     super(name, namespace, modelType,
         new ArrayList<AbstractViewNode>());
     this.elementName = elementName;
+    this.associationUpdater = associationUpdater;
   }
+
+
 
   /**
    * Gets the {@code elementName} property.
@@ -126,7 +140,7 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    ToManyAssociationUpdater.update(this, target,
+    associationUpdater.update(this, target,
         (List<MutableViewEntity>) value, accessor, context);
   }
 

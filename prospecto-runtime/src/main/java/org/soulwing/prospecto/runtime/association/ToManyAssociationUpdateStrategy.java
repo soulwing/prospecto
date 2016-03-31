@@ -34,7 +34,7 @@ public interface ToManyAssociationUpdateStrategy {
 
   boolean supports(ToManyAssociationManager manager);
 
-  Object update(ViewNode node, Object target, List<MutableViewEntity> entities,
+  void update(ViewNode node, Object target, List<MutableViewEntity> entities,
       ToManyAssociationManager manager, ScopedViewContext context)
       throws Exception;
 

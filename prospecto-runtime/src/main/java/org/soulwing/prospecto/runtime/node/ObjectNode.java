@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -35,6 +36,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  */
 public class ObjectNode extends ContainerViewNode {
 
+  private final ToOneAssociationUpdater associationUpdater;
+
   /**
    * Constructs a new instance.
    * @param name node name
@@ -42,7 +45,13 @@ public class ObjectNode extends ContainerViewNode {
    * @param modelType model type associated with node
    */
   public ObjectNode(String name, String namespace, Class<?> modelType) {
+    this(name, namespace, modelType, new ConcreteToOneAssociationUpdater());
+  }
+
+  ObjectNode(String name, String namespace, Class<?> modelType,
+      ToOneAssociationUpdater associationUpdater) {
     super(name, namespace, modelType);
+    this.associationUpdater = associationUpdater;
   }
 
   @Override
@@ -66,7 +75,7 @@ public class ObjectNode extends ContainerViewNode {
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    ToOneAssociationUpdater.update(this, target,
+    associationUpdater.update(this, target,
         (MutableViewEntity) value, getAccessor(), context);
   }
 

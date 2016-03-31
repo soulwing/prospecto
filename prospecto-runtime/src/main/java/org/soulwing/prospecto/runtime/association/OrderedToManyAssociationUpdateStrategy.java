@@ -47,16 +47,16 @@ public class OrderedToManyAssociationUpdateStrategy
   }
 
   @Override
-  public Object update(ViewNode node, Object target,
+  public void update(ViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager manager,
           ScopedViewContext context) throws Exception {
     assert manager instanceof ToManyIndexedAssociationManager;
-    return doUpdate(node, target, entities,
-        (ToManyIndexedAssociationManager) manager, context);
+    doUpdate(node, target, entities, (ToManyIndexedAssociationManager) manager,
+        context);
   }
 
   @SuppressWarnings("unchecked")
-  private Object doUpdate(ViewNode node, Object target,
+  private void doUpdate(ViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyIndexedAssociationManager manager,
       ScopedViewContext context) throws Exception {
     int viewIndex = 0;
@@ -93,7 +93,6 @@ public class OrderedToManyAssociationUpdateStrategy
       manager.remove(target, viewIndex);
     }
 
-    return target;
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * File created on Mar 30, 2016
+ * File created on Mar 31, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -26,35 +26,15 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
- * A static utility method for updating a collection during model update.
+ * An updater for a to-many association between a target model object and
+ * one of its properties.
  *
  * @author Carl Harris
  */
-public class ToManyAssociationUpdater {
+public interface ToManyAssociationUpdater {
 
-  private static final ToManyAssociationUpdateStrategy[] strategies = {
-      OrderedToManyAssociationUpdateStrategy.INSTANCE,
-      UnorderedToManyAssociationUpdateStrategy.INSTANCE
-  };
-
-  public static Object update(AbstractViewNode node, Object target,
+  void update(AbstractViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
-      ScopedViewContext context) throws Exception {
-    final ToManyAssociationManager manager =
-        AssociationManagerLocator.findManager(ToManyAssociationManager.class,
-            defaultManager, node, context);
-    return findStrategy(manager)
-        .update(node, target, entities, defaultManager, context);
-  }
-
-  private static ToManyAssociationUpdateStrategy findStrategy(
-      ToManyAssociationManager manager) {
-    for (final ToManyAssociationUpdateStrategy strategy : strategies) {
-      if (strategy.supports(manager)) {
-        return strategy;
-      }
-    }
-    throw new AssertionError("no strategy");
-  }
+      ScopedViewContext context) throws Exception;
 
 }

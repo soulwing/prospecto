@@ -19,8 +19,6 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
@@ -31,54 +29,9 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
  *
  * @author Carl Harris
  */
-public class ToOneAssociationUpdater {
+public interface ToOneAssociationUpdater {
 
-  @SuppressWarnings("unchecked")
-  public static void update(AbstractViewNode node, Object target,
-      MutableViewEntity entity,
+  void update(AbstractViewNode node, Object target, MutableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
-      throws Exception {
-
-    final ToOneAssociationManager manager =
-        AssociationManagerLocator.findManager(ToOneAssociationManager.class,
-            defaultManager, node, context);
-
-    final Object currentAssociate = manager.get(target);
-
-    if (manager.isSameAssociate(target, entity)) {
-      entity.inject(currentAssociate, context);
-    }
-    else {
-      if (currentAssociate != null) {
-        context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
-                target, currentAssociate, context));
-      }
-      if (entity != null) {
-        Object newAssociate = newAssociate(target, entity, manager, context);
-        context.getListeners().entityCreated(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
-                target, newAssociate, context));
-        manager.set(target, newAssociate);
-      }
-      else {
-        manager.set(target, null);
-      }
-    }
-  }
-
-  private static Object newAssociate(Object owner,
-      MutableViewEntity associateEntity, ToOneAssociationManager manager,
-      ScopedViewContext context) throws Exception {
-
-    Object newAssociate = manager.newAssociate(owner, associateEntity);
-
-    if (newAssociate == null) {
-      newAssociate = associateEntity.getType().newInstance();
-      associateEntity.inject(newAssociate, context);
-    }
-
-    return newAssociate;
-  }
-
+      throws Exception;
 }

@@ -18,44 +18,28 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
- * A static utility method for locating an {@link AssociationManager}.
+ * A service that locates an appropriate {@link AssociationManager} for
+ * an update operation.
  *
  * @author Carl Harris
  */
-public class AssociationManagerLocator {
+interface AssociationManagerLocator {
 
-  @SuppressWarnings("unchecked")
-  public static <M extends AssociationManager> M findManager(
+  /**
+   * Finds an association manager.
+   * @param managerClass manager class
+   * @param defaultManager default manager if none found
+   * @param node subject view node
+   * @param context view context
+   * @param <M> manager type
+   * @return manager (never {@code null})
+   */
+  <M extends AssociationManager> M findManager(
       Class<M> managerClass, M defaultManager,
-      AbstractViewNode node, ScopedViewContext context) {
-
-    assert node.getParent() != null;
-    final Class<?> ownerType = node.getParent().getModelType();
-    final Class<?> associateType = node.getModelType();
-
-    AssociationManager manager = node.get(managerClass);
-
-    if (manager != null) {
-      if (!managerClass.isInstance(manager)
-          || !manager.supports(ownerType, associateType)) {
-        throw new ModelEditorException(
-            "association manager does not support expected types");
-      }
-      return (M) manager;
-    }
-
-    manager = context.getAssociationManagers().findManager(managerClass,
-        ownerType, associateType);
-
-    if (manager != null) return (M) manager;
-
-    return defaultManager;
-  }
-
+      AbstractViewNode node, ScopedViewContext context);
 }
