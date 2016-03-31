@@ -1,5 +1,5 @@
 /*
- * File created on Mar 29, 2016
+ * File created on Mar 31, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,27 +18,29 @@
  */
 package org.soulwing.prospecto.api.association;
 
-import java.util.Iterator;
-
-import org.soulwing.prospecto.api.ViewEntity;
-
 /**
- * An object that during model update manages the association between an object
- * and a collection composed in the object.
+ * A descriptor for an association between model objects.
  *
  * @author Carl Harris
  */
-public interface ToManyAssociationManager<T, E>
-    extends AssociationManager<T, E> {
+public interface AssociationDescriptor {
 
-  Iterator<E> iterator(T owner) throws Exception;
+  /**
+   * Gets the class for the model type that owns the association.
+   * @return owner type
+   */
+  Class<?> getOwnerType();
 
-  int size(T owner) throws Exception;
+  /**
+   * Gets the class for the model type for the associate.
+   * @return associate type
+   */
+  Class<?> getAssociateType();
 
-  E findAssociate(T owner, ViewEntity elementEntity) throws Exception;
-
-  void add(T owner, E element) throws Exception;
-
-  void remove(T owner, E element) throws Exception;
+  /**
+   * Gets the property name of the associate.
+   * @return associate property name
+   */
+  String getAssociateName();
 
 }

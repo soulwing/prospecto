@@ -26,11 +26,10 @@ import org.soulwing.prospecto.api.ViewEntity;
  *
  * @author Carl Harris
  */
-public interface ToOneAssociationManager<T, E> extends AssociationManager {
+public interface ToOneAssociationManager<T, E>
+    extends AssociationManager<T, E> {
 
   boolean isSameAssociate(T owner, ViewEntity associateEntity) throws Exception;
-
-  E newAssociate(T owner, ViewEntity associateEntity) throws Exception;
 
   E get(T owner) throws Exception;
 

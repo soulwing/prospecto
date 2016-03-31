@@ -21,22 +21,20 @@ package org.soulwing.prospecto.api.association;
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
- * A marker interface for association managers.
+ * An abstract base for {@link AssociationManager} implementations.
  *
  * @author Carl Harris
  */
-public interface AssociationManager<T, E> {
-
-  /**
-   * Tests whether this manager supports a given association.
-   * @param descriptor association descriptor
-   * @return {@code true} if
-   */
-  boolean supports(AssociationDescriptor descriptor);
+public abstract class AbstractAssociationManager<T, E>
+    implements AssociationManager<T, E> {
 
   /**
    * Creates an instance of type {@code E} and populates it using the state
    * of the given view entity.
+   * <p>
+   * This implementation constructs an instance of type {@code E} using the
+   * no-arg constructor and populates its properties by injecting them
+   * using {@link ViewEntity#inject(Object)}.
    *
    * @param owner owner object
    * @param associateEntity a view entity representing the state of the
@@ -45,6 +43,12 @@ public interface AssociationManager<T, E> {
    *    {@code associateEntity}
    * @throws Exception
    */
-  E newAssociate(T owner, ViewEntity associateEntity) throws Exception;
+  @Override
+  @SuppressWarnings("unchecked")
+  public E newAssociate(T owner, ViewEntity associateEntity) throws Exception {
+    final E associate = (E) associateEntity.getType().newInstance();
+    associateEntity.inject(associate);
+    return associate;
+  }
 
 }
