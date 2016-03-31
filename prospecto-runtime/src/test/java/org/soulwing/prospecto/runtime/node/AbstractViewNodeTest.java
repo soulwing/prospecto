@@ -23,7 +23,10 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.viewNodeEvent;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,11 +75,13 @@ public class AbstractViewNodeTest {
         oneOf(viewContext).pop();
         exactly(2).of(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitNode(
-            with(viewNodeEvent(node, MODEL, viewContext)));
+        oneOf(listeners).shouldVisitNode(with(
+            eventDescribing(sourceNode(node), forModel(MODEL),
+                inContext(viewContext))));
         will(returnValue(true));
-        oneOf(listeners).nodeVisited(
-            with(viewNodeEvent(node, MODEL, viewContext)));
+        oneOf(listeners).nodeVisited(with(
+             eventDescribing(sourceNode(node), forModel(MODEL),
+                inContext(viewContext))));
       }
     });
 
@@ -91,8 +96,9 @@ public class AbstractViewNodeTest {
         oneOf(viewContext).pop();
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitNode(
-            with(viewNodeEvent(node, MODEL, viewContext)));
+        oneOf(listeners).shouldVisitNode(with(
+            eventDescribing(sourceNode(node), forModel(MODEL),
+                inContext(viewContext))));
         will(returnValue(false));
       }
     });

@@ -22,11 +22,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.inContext;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
@@ -70,11 +71,11 @@ public class ValueViewNodeTest {
       {
         exactly(2).of(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).didExtractValue(with(
+        oneOf(listeners).didExtractValue((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(MODEL),
                 propertyValue(MODEL_VALUE), inContext(viewContext))));
         will(returnValue(MODEL_VALUE));
-        oneOf(listeners).propertyVisited(with(
+        oneOf(listeners).propertyVisited((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(MODEL),
                 propertyValue(VIEW_VALUE), inContext(viewContext))));
       }

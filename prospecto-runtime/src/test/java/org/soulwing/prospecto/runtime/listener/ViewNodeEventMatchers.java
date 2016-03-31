@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.listener;
 
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.sameInstance;
 
@@ -26,8 +27,6 @@ import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * Matchers for view node event types.
@@ -36,24 +35,28 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  */
 public class ViewNodeEventMatchers {
 
-  public static Matcher<ViewNodePropertyEvent> viewNodePropertyEvent(
-      ViewNode node, Object model, Object value, ViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("model", sameInstance(model)),
-        hasProperty("value", sameInstance(value)),
-        hasProperty("context", sameInstance(viewContext)));
+
+  @SafeVarargs
+  public static <E extends ViewNodeEvent> Matcher<E> eventDescribing(
+      Matcher<E>... matchers) {
+    return allOf(matchers);
   }
 
-  public static Matcher<ViewNodeEvent> viewNodeEvent(ViewNode node,
-      Object model, ScopedViewContext viewContext) {
-    return allOf(
-        hasProperty("source", sameInstance(node)),
-        hasProperty("model", sameInstance(model)),
-        hasProperty("context", sameInstance(viewContext)));
+  public static Matcher<ViewNodeEvent> sourceNode(ViewNode node) {
+    return hasProperty("source", sameInstance(node));
   }
 
+  public static Matcher<ViewNodeEvent> forModel(Object model) {
+    return hasProperty("model", sameInstance(model));
+  }
 
+  public static Matcher<ViewNodeEvent> propertyValue(Object value) {
+    return hasProperty("value", equalTo(value));
+  }
+
+  public static Matcher<ViewNodeEvent> inContext(ViewContext context) {
+    return hasProperty("context", sameInstance(context));
+  }
 }
 
 

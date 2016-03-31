@@ -22,11 +22,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.inContext;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,6 +40,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -101,13 +102,13 @@ public class ArrayOfValueNodeTest {
         will(returnValue(Collections.singletonList(ELEMENT)));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitProperty(
-            with(eventDescribing(
+        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
+            eventDescribing(
                 sourceNode(node), forModel(MODEL), propertyValue(ELEMENT),
                 inContext(viewContext))));
         will(returnValue(true));
-        oneOf(listeners).didExtractValue(
-            with(eventDescribing(
+        oneOf(listeners).didExtractValue((ViewNodePropertyEvent) with(
+            eventDescribing(
                 sourceNode(node), forModel(MODEL), propertyValue(ELEMENT),
                 inContext(viewContext))));
         will(returnValue(ELEMENT));

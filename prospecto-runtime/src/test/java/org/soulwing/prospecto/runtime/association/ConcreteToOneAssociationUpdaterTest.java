@@ -18,11 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.inContext;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -162,7 +163,7 @@ public class ConcreteToOneAssociationUpdaterTest {
       {
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).entityDiscarded(with(
+        oneOf(listeners).entityDiscarded((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(owner),
                 propertyValue(associate), inContext(viewContext))));
       }
@@ -179,7 +180,7 @@ public class ConcreteToOneAssociationUpdaterTest {
         oneOf(manager).set(owner, associate);
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).entityCreated(with(
+        oneOf(listeners).entityCreated((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(owner),
                 propertyValue(associate), inContext(viewContext))));
       }

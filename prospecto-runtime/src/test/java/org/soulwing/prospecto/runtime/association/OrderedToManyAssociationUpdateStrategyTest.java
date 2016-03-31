@@ -18,10 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
+import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -263,7 +264,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
 
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).entityCreated(with(
+        oneOf(listeners).entityCreated((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node),
                 forModel(owner), propertyValue(element))));
       }
@@ -301,7 +302,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
 
         oneOf(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).entityDiscarded(with(
+        oneOf(listeners).entityDiscarded((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node),
                 forModel(owner), propertyValue(element))));
       }
