@@ -18,10 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.collection;
 
-import static org.soulwing.prospecto.runtime.collection.ViewNodePropertyEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.collection.ViewNodePropertyEventMatchers.ownerModel;
-import static org.soulwing.prospecto.runtime.collection.ViewNodePropertyEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.collection.ViewNodePropertyEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.propertyValue;
+import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.sourceNode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -265,7 +265,7 @@ public class OrderedCollectionUpdateStrategyTest {
         will(returnValue(listeners));
         oneOf(listeners).entityCreated(with(
             eventDescribing(sourceNode(node),
-                ownerModel(owner), propertyValue(element))));
+                forModel(owner), propertyValue(element))));
       }
     };
   }
@@ -303,7 +303,7 @@ public class OrderedCollectionUpdateStrategyTest {
         will(returnValue(listeners));
         oneOf(listeners).entityDiscarded(with(
             eventDescribing(sourceNode(node),
-                ownerModel(owner), propertyValue(element))));
+                forModel(owner), propertyValue(element))));
       }
     };
   }
