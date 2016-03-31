@@ -127,14 +127,6 @@ public abstract class ContainerViewNode extends AbstractViewNode
     final List<View.Event> events = new LinkedList<>();
 
 
-    if (get(DISCRIMINATOR_FLAG_KEY, Boolean.class) == Boolean.TRUE) {
-      final Discriminator discriminator =
-          getDiscriminator(model.getClass(), context);
-      assert discriminator != null;
-      events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-          discriminator.getName(), discriminator.getValue()));
-    }
-
     for (AbstractViewNode child : getChildren()) {
       events.addAll(child.evaluate(model, context));
     }
@@ -241,7 +233,7 @@ public abstract class ContainerViewNode extends AbstractViewNode
     }
   }
 
-  private Discriminator getDiscriminator(Class<?> subtype,
+  protected Discriminator getDiscriminator(Class<?> subtype,
       ScopedViewContext context) {
     DiscriminatorStrategy strategy = getDiscriminatorStrategy(context);
     return strategy.toDiscriminator(getModelType(), subtype);
