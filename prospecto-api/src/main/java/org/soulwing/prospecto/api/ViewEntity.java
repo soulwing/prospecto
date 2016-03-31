@@ -80,4 +80,10 @@ public interface ViewEntity {
    */
   void remove(String name);
 
+  /**
+   * Injects the properties of this entity onto the given target model object.
+   * @param target the injection target
+   */
+  void inject(Object target) throws ModelEditorException;
+
 }

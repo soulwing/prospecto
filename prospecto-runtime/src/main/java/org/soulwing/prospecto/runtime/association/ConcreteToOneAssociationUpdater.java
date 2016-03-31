@@ -81,6 +81,7 @@ public class ConcreteToOneAssociationUpdater
     }
   }
 
+  @SuppressWarnings("unchecked")
   private static Object newAssociate(Object owner,
       MutableViewEntity associateEntity, ToOneAssociationManager manager,
       ScopedViewContext context) throws Exception {

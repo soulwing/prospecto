@@ -25,8 +25,6 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * An abstract base for {@link Accessor} implementations.
@@ -135,8 +133,7 @@ public abstract class AbstractAccessor implements Accessor {
   public Object newAssociate(Object owner, ViewEntity associateEntity)
       throws Exception {
     final Object associate = associateEntity.getType().newInstance();
-    ((MutableViewEntity) associateEntity).inject(associate,
-        new ConcreteViewContext());
+    associateEntity.inject(associate);
     return associate;
   }
 

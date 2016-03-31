@@ -21,8 +21,6 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * An abstract base for {@link MultiValuedAccessor} implementations.
@@ -57,12 +55,12 @@ public abstract class AbstractMultiValuedAccessor
   public Object newElement(Object owner, ViewEntity elementEntity)
       throws Exception {
     final Object element = elementEntity.getType().newInstance();
-    ((MutableViewEntity) elementEntity).inject(
-        element, new ConcreteViewContext());
+    elementEntity.inject(element);
     return element;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Object find(Object owner, ViewEntity entity) throws Exception {
     Object element = newElement(owner, entity);
     final Iterator<Object> i = iterator(owner);
