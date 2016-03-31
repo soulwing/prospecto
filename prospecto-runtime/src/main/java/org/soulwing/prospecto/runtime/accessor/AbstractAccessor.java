@@ -24,6 +24,9 @@ import java.util.EnumSet;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.UndefinedValue;
+import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * An abstract base for {@link Accessor} implementations.
@@ -92,6 +95,7 @@ public abstract class AbstractAccessor implements Accessor {
   protected abstract Accessor newAccessor(Class<?> type, String name)
       throws Exception;
 
+
   @Override
   public Object get(Object source)
       throws IllegalAccessException, InvocationTargetException {
@@ -111,5 +115,29 @@ public abstract class AbstractAccessor implements Accessor {
 
   protected abstract void onSet(Object target, Object value)
       throws IllegalAccessException, InvocationTargetException;
+
+  @Override
+  public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
+    return getDataType().isAssignableFrom(elementClass);
+  }
+
+  @Override
+  public boolean isSameAssociate(Object owner, ViewEntity associateEntity)
+      throws Exception {
+    final Object currentAssociate = get(owner);
+    if (currentAssociate == null && associateEntity == null) return true;
+    if (currentAssociate == null || associateEntity == null) return false;
+    final Object newAssociate = newAssociate(owner, associateEntity);
+    return currentAssociate.equals(newAssociate);
+  }
+
+  @Override
+  public Object newAssociate(Object owner, ViewEntity associateEntity)
+      throws Exception {
+    final Object associate = associateEntity.getType().newInstance();
+    ((MutableViewEntity) associateEntity).inject(associate,
+        new ConcreteViewContext());
+    return associate;
+  }
 
 }

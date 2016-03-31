@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
 import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
@@ -32,18 +32,18 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.collection.ListManager;
+import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link OrderedCollectionUpdateStrategy}.
+ * Unit tests for {@link OrderedToManyAssociationUpdateStrategy}.
  *
  * @author Carl Harris
  */
 @SuppressWarnings({ "unused", "unchecked" })
-public class OrderedCollectionUpdateStrategyTest {
+public class OrderedToManyAssociationUpdateStrategyTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -58,7 +58,7 @@ public class OrderedCollectionUpdateStrategyTest {
   private NotifiableViewListeners listeners;
 
   @Mock
-  private ListManager manager;
+  private ToManyIndexedAssociationManager manager;
 
   @Mock
   private MutableViewEntity a;
@@ -106,7 +106,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(createElementExpectations(b, 1, elementB));
     context.checking(modelSizeExpectations(2));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
@@ -120,7 +120,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(removeElementExpectations(0, elementA));
     context.checking(removeElementExpectations(0, elementB));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Collections.<MutableViewEntity>emptyList(),
             manager, viewContext);
   }
@@ -137,7 +137,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(updateElementExpectations(b, 1, elementB));
     context.checking(modelSizeExpectations(2));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
@@ -164,7 +164,7 @@ public class OrderedCollectionUpdateStrategyTest {
 
     context.checking(modelSizeExpectations(4));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b, c, d), manager, viewContext);
 
   }
@@ -183,7 +183,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(modelSizeExpectations(3));
     context.checking(removeElementExpectations(2, elementA));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
@@ -212,7 +212,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(removeElementExpectations(3, elementE));
     context.checking(removeElementExpectations(3, elementD));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b, c), manager, viewContext);
   }
 
@@ -239,7 +239,7 @@ public class OrderedCollectionUpdateStrategyTest {
     context.checking(removeElementExpectations(3, elementE));
     context.checking(removeElementExpectations(3, elementD));
 
-    OrderedCollectionUpdateStrategy.INSTANCE
+    OrderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b, c), manager, viewContext);
   }
 

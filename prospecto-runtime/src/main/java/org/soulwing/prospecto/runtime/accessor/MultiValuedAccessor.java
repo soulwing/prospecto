@@ -18,14 +18,14 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 
 /**
  * An accessor for a multi-valued property such as an array or a collection.
  *
  * @author Carl Harris
  */
-public interface MultiValuedAccessor extends CollectionManager {
+public interface MultiValuedAccessor extends ToManyAssociationManager {
 
   /**
    * Determines whether the accessor can be read.

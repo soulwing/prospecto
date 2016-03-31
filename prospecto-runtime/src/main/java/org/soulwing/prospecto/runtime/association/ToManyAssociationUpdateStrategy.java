@@ -16,26 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import java.util.List;
+
+import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A static factory method for an element in a collection.
+ * A strategy for updating a collection.
  *
  * @author Carl Harris
  */
-class CollectionElementFactory {
+public interface ToManyAssociationUpdateStrategy {
 
-  @SuppressWarnings("unchecked")
-  public static Object newElement(Object target, MutableViewEntity entity,
-      CollectionManager manager) throws Exception {
-    Object newElement = manager.newElement(target, entity);
-    if (newElement == null) {
-      newElement = manager.newElement(target, entity);
-    }
-    return newElement;
-  }
+  boolean supports(ToManyAssociationManager manager);
+
+  Object update(ViewNode node, Object target, List<MutableViewEntity> entities,
+      ToManyAssociationManager manager, ScopedViewContext context)
+      throws Exception;
 
 }

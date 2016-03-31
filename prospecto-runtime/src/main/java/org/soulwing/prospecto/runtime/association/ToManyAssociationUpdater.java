@@ -16,37 +16,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import java.util.List;
 
-import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A static utility method for updating a collection during model update.
  *
- *
  * @author Carl Harris
  */
-public class CollectionUpdater {
+public class ToManyAssociationUpdater {
 
-  private static final CollectionUpdateStrategy[] strategies = {
-      OrderedCollectionUpdateStrategy.INSTANCE,
-      UnorderedCollectionUpdateStrategy.INSTANCE
+  private static final ToManyAssociationUpdateStrategy[] strategies = {
+      OrderedToManyAssociationUpdateStrategy.INSTANCE,
+      UnorderedToManyAssociationUpdateStrategy.INSTANCE
   };
 
-  public static void update(ViewNode node, Object target,
-      List<MutableViewEntity> entities, CollectionManager manager,
+  public static Object update(AbstractViewNode node, Object target,
+      List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
-    findStrategy(manager).update(node, target, entities, manager, context);
+    final ToManyAssociationManager manager =
+        AssociationManagerLocator.findManager(ToManyAssociationManager.class,
+            defaultManager, node, context);
+    return findStrategy(manager)
+        .update(node, target, entities, defaultManager, context);
   }
 
-  private static CollectionUpdateStrategy findStrategy(
-      CollectionManager manager) {
-    for (final CollectionUpdateStrategy strategy : strategies) {
+  private static ToManyAssociationUpdateStrategy findStrategy(
+      ToManyAssociationManager manager) {
+    for (final ToManyAssociationUpdateStrategy strategy : strategies) {
       if (strategy.supports(manager)) {
         return strategy;
       }

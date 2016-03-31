@@ -16,13 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import java.util.List;
 
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.collection.CollectionManager;
-import org.soulwing.prospecto.api.collection.ListManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
+import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -32,30 +33,31 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class OrderedCollectionUpdateStrategy
-    implements CollectionUpdateStrategy {
+public class OrderedToManyAssociationUpdateStrategy
+    implements ToManyAssociationUpdateStrategy {
 
-  public static final OrderedCollectionUpdateStrategy INSTANCE =
-      new OrderedCollectionUpdateStrategy();
+  public static final OrderedToManyAssociationUpdateStrategy INSTANCE =
+      new OrderedToManyAssociationUpdateStrategy();
 
-  private OrderedCollectionUpdateStrategy() {}
+  private OrderedToManyAssociationUpdateStrategy() {}
 
   @Override
-  public boolean supports(CollectionManager manager) {
-    return ListManager.class.isInstance(manager);
+  public boolean supports(ToManyAssociationManager manager) {
+    return ToManyIndexedAssociationManager.class.isInstance(manager);
   }
 
   @Override
-  public void update(ViewNode node, Object target,
-      List<MutableViewEntity> entities, CollectionManager manager,
+  public Object update(ViewNode node, Object target,
+      List<MutableViewEntity> entities, ToManyAssociationManager manager,
           ScopedViewContext context) throws Exception {
-    assert manager instanceof ListManager;
-    doUpdate(node, target, entities, (ListManager) manager, context);
+    assert manager instanceof ToManyIndexedAssociationManager;
+    return doUpdate(node, target, entities,
+        (ToManyIndexedAssociationManager) manager, context);
   }
 
   @SuppressWarnings("unchecked")
-  private void doUpdate(ViewNode node, Object target,
-      List<MutableViewEntity> entities, ListManager manager,
+  private Object doUpdate(ViewNode node, Object target,
+      List<MutableViewEntity> entities, ToManyIndexedAssociationManager manager,
       ScopedViewContext context) throws Exception {
     int viewIndex = 0;
     for (final MutableViewEntity entity : entities) {
@@ -75,7 +77,7 @@ public class OrderedCollectionUpdateStrategy
             target, entity, manager);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            MODE, node, target, newElement, context));
+            ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));
 
         manager.add(target, viewIndex, newElement);
       }
@@ -86,10 +88,12 @@ public class OrderedCollectionUpdateStrategy
     for (int i = 0; i < count; i++) {
       final Object element = manager.get(target, viewIndex);
       context.getListeners().entityDiscarded(
-          new ViewNodePropertyEvent(MODE, node, target, element, context));
+          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+              target, element, context));
       manager.remove(target, viewIndex);
     }
 
+    return target;
   }
 
 }

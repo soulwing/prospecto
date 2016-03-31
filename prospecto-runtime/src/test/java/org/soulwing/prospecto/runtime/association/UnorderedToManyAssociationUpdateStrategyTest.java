@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.eventDescribing;
 import static org.soulwing.prospecto.runtime.listener.ViewNodePropertyEventMatchers.forModel;
@@ -32,18 +32,18 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.collection.ListManager;
+import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link OrderedCollectionUpdateStrategy}.
+ * Unit tests for {@link OrderedToManyAssociationUpdateStrategy}.
  *
  * @author Carl Harris
  */
 @SuppressWarnings({ "unused", "unchecked" })
-public class UnorderedCollectionUpdateStrategyTest {
+public class UnorderedToManyAssociationUpdateStrategyTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -58,7 +58,7 @@ public class UnorderedCollectionUpdateStrategyTest {
   private NotifiableViewListeners listeners;
 
   @Mock
-  private ListManager manager;
+  private ToManyIndexedAssociationManager manager;
 
   @Mock
   private MutableViewEntity a;
@@ -94,7 +94,7 @@ public class UnorderedCollectionUpdateStrategyTest {
     context.checking(createElementExpectations(b, elementB));
     context.checking(copyElementsExpectations());
 
-    UnorderedCollectionUpdateStrategy.INSTANCE
+    UnorderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
@@ -108,7 +108,7 @@ public class UnorderedCollectionUpdateStrategyTest {
     context.checking(removeElementExpectations(elementB));
     context.checking(copyElementsExpectations(elementA, elementB));
 
-    UnorderedCollectionUpdateStrategy.INSTANCE
+    UnorderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Collections.<MutableViewEntity>emptyList(),
             manager, viewContext);
   }
@@ -125,7 +125,7 @@ public class UnorderedCollectionUpdateStrategyTest {
     context.checking(updateElementExpectations(b, elementB));
     context.checking(copyElementsExpectations());
 
-    UnorderedCollectionUpdateStrategy.INSTANCE
+    UnorderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
@@ -142,7 +142,7 @@ public class UnorderedCollectionUpdateStrategyTest {
     context.checking(copyElementsExpectations(elementA, elementB, elementC));
     context.checking(removeElementExpectations(elementC));
 
-    UnorderedCollectionUpdateStrategy.INSTANCE
+    UnorderedToManyAssociationUpdateStrategy.INSTANCE
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 

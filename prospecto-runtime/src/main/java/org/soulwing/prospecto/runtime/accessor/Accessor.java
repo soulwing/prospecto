@@ -22,13 +22,14 @@ import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 
 /**
  * An accessor for a property of a model.
  *
  * @author Carl Harris
  */
-public interface Accessor {
+public interface Accessor extends ToOneAssociationManager {
 
   /**
    * Gets the model type in which the property is located

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.collection;
+package org.soulwing.prospecto.runtime.association;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -25,34 +25,42 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewNode;
-import org.soulwing.prospecto.api.collection.CollectionManager;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A strategy for updating an unordered collection.
+ * A strategy for updating a to-many association (unordered)
  *
  * @author Carl Harris
  */
-public class UnorderedCollectionUpdateStrategy
-    implements CollectionUpdateStrategy {
+public class UnorderedToManyAssociationUpdateStrategy
+    implements ToManyAssociationUpdateStrategy {
 
-  public static final UnorderedCollectionUpdateStrategy INSTANCE =
-      new UnorderedCollectionUpdateStrategy();
+  public static final UnorderedToManyAssociationUpdateStrategy INSTANCE =
+      new UnorderedToManyAssociationUpdateStrategy();
 
-  private UnorderedCollectionUpdateStrategy() {}
+  private UnorderedToManyAssociationUpdateStrategy() {}
 
   @Override
-  public boolean supports(CollectionManager manager) {
-    return true;
+  public boolean supports(ToManyAssociationManager manager) {
+    return ToManyAssociationManager.class.isInstance(manager);
   }
 
   @Override
+  public Object update(ViewNode node, Object target,
+      List<MutableViewEntity> entities, ToManyAssociationManager manager,
+      ScopedViewContext context) throws Exception {
+    assert manager instanceof ToManyAssociationManager;
+    return doUpdate(node, target, entities, (ToManyAssociationManager) manager,
+        context);
+  }
+
   @SuppressWarnings("unchecked")
-  public void update(ViewNode node, Object target,
-      List<MutableViewEntity> entities, CollectionManager manager,
+  private Object doUpdate(ViewNode node, Object target,
+      List<MutableViewEntity> entities, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception {
 
     final Map<Object, Object> touched = new IdentityHashMap<>();
@@ -83,11 +91,13 @@ public class UnorderedCollectionUpdateStrategy
         manager.remove(target, child);
       }
     }
+
+    return target;
   }
 
   @SuppressWarnings("unchecked")
   private List<Object> copyModelChildren(Object source,
-      CollectionManager manager) throws Exception {
+      ToManyAssociationManager manager) throws Exception {
     final List<Object> children = new LinkedList<>();
     final Iterator<Object> i = manager.iterator(source);
     while (i.hasNext()) {

@@ -27,6 +27,7 @@ import java.util.EnumSet;
 import org.junit.Test;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.ViewEntity;
 
 /**
  * Unit tests for {@link ArrayAccessor}.
@@ -192,6 +193,22 @@ public class ArrayAccessorTest {
       array = (Object[]) value;
     }
 
+    @Override
+    public boolean isSameAssociate(Object owner, ViewEntity associateEntity)
+        throws Exception {
+      return false;
+    }
+
+    @Override
+    public Object newAssociate(Object owner, ViewEntity associateEntity)
+        throws Exception {
+      return null;
+    }
+
+    @Override
+    public boolean supports(Class<?> ownerClass, Class<?> elementClass) {
+      return false;
+    }
   }
 
 }

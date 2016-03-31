@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import org.soulwing.prospecto.api.collection.ListManager;
+import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 
 /**
  * A {@link MultiValuedAccessor} that supports an ordered collection that
@@ -27,5 +27,5 @@ import org.soulwing.prospecto.api.collection.ListManager;
  * @author Carl Harris
  */
 public interface IndexedMultiValuedAccessor extends MultiValuedAccessor,
-    ListManager {
+    ToManyIndexedAssociationManager {
 }
