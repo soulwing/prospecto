@@ -27,12 +27,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.api.scope.Scopes;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
 import org.soulwing.prospecto.runtime.association.LinkedListAssociationManagerService;
+import org.soulwing.prospecto.runtime.converter.LinkedListValueTypeConverterService;
+import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.listener.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;
@@ -54,8 +55,8 @@ public class ConcreteViewContext implements ScopedViewContext {
   private final NotifiableViewListeners listeners =
       new LinkedListNotifiableViewListeners();
 
-  private final List<ValueTypeConverter<?>> valueTypeConverters =
-      new ArrayList<>();
+  private final ValueTypeConverterService valueTypeConverters =
+      new LinkedListValueTypeConverterService();
 
   private final ReferenceResolverService referenceResolvers =
       new LinkedListReferenceResolverService();
@@ -91,7 +92,7 @@ public class ConcreteViewContext implements ScopedViewContext {
   public ConcreteViewContext(ViewContext source) {
     this.scopes.toList().addAll(source.getScopes().toList());
     this.listeners.toList().addAll(source.getListeners().toList());
-    this.valueTypeConverters.addAll(source.getValueTypeConverters());
+    this.valueTypeConverters.toList().addAll(source.getValueTypeConverters().toList());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
   }
@@ -126,7 +127,7 @@ public class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public List<ValueTypeConverter<?>> getValueTypeConverters() {
+  public ValueTypeConverterService getValueTypeConverters() {
     return valueTypeConverters;
   }
 

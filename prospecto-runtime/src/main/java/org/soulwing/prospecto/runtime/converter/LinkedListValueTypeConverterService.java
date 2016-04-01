@@ -1,5 +1,5 @@
 /*
- * File created on Mar 15, 2016
+ * File created on Apr 1, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -24,28 +24,23 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.LinkedList;
 
-import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.runtime.util.SimpleLinkedList;
 
 /**
- * A utility that provides support for model value to view value conversion.
+ * A {@link ValueTypeConverterService} backed by a {@link LinkedList}.
  *
  * @author Carl Harris
  */
-public class ConverterSupport {
+public class LinkedListValueTypeConverterService
+    extends SimpleLinkedList<ValueTypeConverter<?>>
+    implements ValueTypeConverterService {
 
-  /**
-   * Converts a model value to a view value for a node.
-   * @param model model value
-   * @param node the subject node
-   * @param context view context
-   * @return view value
-   * @throws Exception
-   */
-  public static Object toViewValue(Object model, ViewNode node,
-      ViewContext context) throws Exception {
+  @Override
+  public Object toViewValue(Object model, ViewNode node) throws Exception {
     if (model == null) return null;
 
     final ValueTypeConverter<?> localConverter = node.get(ValueTypeConverter.class);
@@ -53,26 +48,17 @@ public class ConverterSupport {
       return localConverter.toValue(model);
     }
 
-    for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
-      if (converter.supports(model.getClass())) {
-        return converter.toValue(model);
-      }
+    final ValueTypeConverter<?> converter = findConverter(model.getClass());
+    if (converter != null) {
+      return converter.toValue(model);
     }
 
     return model;
   }
 
-  /**
-   * Converts a view value to a model value for a node.
-   * @param type target model type
-   * @param value view value
-   * @param node the subject node
-   * @param context view context
-   * @return model value
-   * @throws Exception
-   */
-  public static Object toModelValue(Class<?> type, Object value, ViewNode node,
-      ViewContext context) throws Exception {
+  @Override
+  public Object toModelValue(Class<?> type, Object value, ViewNode node)
+      throws Exception {
     if (value == null) return null;
 
     final ValueTypeConverter<?> localConverter = node.get(ValueTypeConverter.class);
@@ -80,10 +66,9 @@ public class ConverterSupport {
       return localConverter.toObject(coerce(value, localConverter.getViewType()));
     }
 
-    for (ValueTypeConverter<?> converter : context.getValueTypeConverters()) {
-      if (converter.supports(type)) {
-        return converter.toObject(coerce(value, converter.getViewType()));
-      }
+    final ValueTypeConverter<?> converter = findConverter(type);
+    if (converter != null) {
+      return converter.toObject(coerce(value, converter.getViewType()));
     }
 
     return coerce(value, type);
@@ -183,6 +168,15 @@ public class ConverterSupport {
         assert true;
       }
       valueType = valueType.getSuperclass();
+    }
+    return null;
+  }
+
+  private ValueTypeConverter<?> findConverter(Class<?> type) {
+    for (final ValueTypeConverter<?> converter : toList()) {
+      if (converter.supports(type)) {
+        return converter;
+      }
     }
     return null;
   }

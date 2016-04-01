@@ -1,5 +1,5 @@
 /*
- * File created on Mar 15, 2016
+ * File created on Apr 1, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.is;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
@@ -36,14 +35,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * Unit tests for {@link ConverterSupport}.
+ * Unit tests for {@link LinkedListValueTypeConverterService}.
  *
  * @author Carl Harris
  */
-public class ConverterSupportTest {
+public class LinkedListValueTypeConverterServiceTest {
 
   private static final Object MODEL_VALUE = new Object();
 
@@ -53,13 +51,13 @@ public class ConverterSupportTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  ScopedViewContext viewContext;
-
-  @Mock
   ViewNode node;
 
   @Mock
   ValueTypeConverter<Object> converter;
+
+  private LinkedListValueTypeConverterService service =
+      new LinkedListValueTypeConverterService();
 
   @Test
   public void testToViewValueWithLocalConverter() throws Exception {
@@ -72,8 +70,7 @@ public class ConverterSupportTest {
       }
     });
 
-    assertThat(ConverterSupport.toViewValue(MODEL_VALUE, node, viewContext),
-        is(equalTo(VIEW_VALUE)));
+    assertThat(service.toViewValue(MODEL_VALUE, node), is(equalTo(VIEW_VALUE)));
   }
 
   @Test
@@ -82,17 +79,15 @@ public class ConverterSupportTest {
       {
         oneOf(node).get(ValueTypeConverter.class);
         will(returnValue(null));
-        oneOf(viewContext).getValueTypeConverters();
-        will(returnValue(Collections.singletonList(converter)));
-        oneOf(converter).supports(Object.class);
+        oneOf(converter).supports(MODEL_VALUE.getClass());
         will(returnValue(true));
         oneOf(converter).toValue(MODEL_VALUE);
         will(returnValue(VIEW_VALUE));
       }
     });
 
-    assertThat(ConverterSupport.toViewValue(MODEL_VALUE, node, viewContext),
-        is(equalTo(VIEW_VALUE)));
+    service.append(converter);
+    assertThat(service.toViewValue(MODEL_VALUE, node), is(equalTo(VIEW_VALUE)));
   }
 
   @Test
@@ -205,8 +200,7 @@ public class ConverterSupportTest {
   private <T> void coerceAndValidate(Class<T> type, Object value, T expected)
       throws Exception {
     context.checking(converterExpectations());
-    final Object actual = ConverterSupport.toModelValue(type, value, node,
-        viewContext);
+    final Object actual = service.toModelValue(type, value, node);
     assertThat(actual, is(instanceOf(type)));
     assertThat((T) actual, is(equalTo(expected)));
   }
@@ -216,8 +210,6 @@ public class ConverterSupportTest {
       {
         oneOf(node).get(ValueTypeConverter.class);
         will(returnValue(null));
-        oneOf(viewContext).getValueTypeConverters();
-        will(returnValue(Collections.emptyList()));
       }
     };
   }
@@ -242,8 +234,8 @@ public class ConverterSupportTest {
     public boolean equals(Object obj) {
       return obj == this
           || obj instanceof MockValueTypeWithConstructor
-              && Objects.equals(this.value,
-                  ((MockValueTypeWithConstructor) obj).value);
+          && Objects.equals(this.value,
+          ((MockValueTypeWithConstructor) obj).value);
     }
   }
 
@@ -268,8 +260,8 @@ public class ConverterSupportTest {
     public boolean equals(Object obj) {
       return obj == this
           || obj instanceof MockValueTypeWithValueOf
-              && Objects.equals(this.value,
-                  ((MockValueTypeWithValueOf) obj).value);
+          && Objects.equals(this.value,
+          ((MockValueTypeWithValueOf) obj).value);
     }
   }
 

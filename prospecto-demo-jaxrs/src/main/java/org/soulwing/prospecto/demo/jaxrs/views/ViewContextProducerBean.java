@@ -71,12 +71,12 @@ public class ViewContextProducerBean {
     scope.put(UrlResolverProducer.getResolver());
     scope.put(userContextService);
 
-    context.getValueTypeConverters().add(DateTypeConverter.Builder.with()
+    context.getValueTypeConverters().append(DateTypeConverter.Builder.with()
         .format(DateTypeConverter.Format.ISO8601_DATE)
         .supportedType(java.sql.Date.class)
         .build());
 
-    context.getValueTypeConverters().add(DateTypeConverter.Builder.with()
+    context.getValueTypeConverters().append(DateTypeConverter.Builder.with()
         .format(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE)
         .build());
 

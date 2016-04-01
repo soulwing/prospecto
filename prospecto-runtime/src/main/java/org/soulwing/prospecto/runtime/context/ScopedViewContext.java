@@ -20,6 +20,7 @@ package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
+import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
@@ -46,11 +47,18 @@ public interface ScopedViewContext extends ViewContext {
   ReferenceResolverService getReferenceResolvers();
 
   /**
-   * Gets the collection of collection managers.
-   * @return collection managers
+   * Gets the collection of association managers.
+   * @return association managers
    */
   @Override
   AssociationManagerService getAssociationManagers();
+
+  /**
+   * Gets the collection of value type converters
+   * @return converter collection
+   */
+  @Override
+  ValueTypeConverterService getValueTypeConverters();
 
   /**
    * Pushes a new frame onto the context stack.

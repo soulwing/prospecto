@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.association.AssociationManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.converter.ValueTypeConverters;
 import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;
@@ -91,21 +92,21 @@ public interface ViewContext {
   ViewListeners getListeners();
 
   /**
-   * Gets the set of {@link ValueTypeConverter} instances that will be consulted
-   * to convert model value types to view value types and vice-versa.
+   * Gets the collection of {@link ValueTypeConverter} instances that will be
+   * consulted to convert model value types to view value types and vice-versa.
    * <p>
-   * The list of converters can be manipulated directly to add
+   * The collection of converters can be manipulated directly to add
    * (or remove, or reorder) converters as needed. The order of the converters
    * in this list has an effect on converter selection; the first converter
    * in the list that claims support for a given type {via its
    * {@link ValueTypeConverter#supports(Class)} method}, will be used to
    * convert <em>all</em> model instances of that type.
    * <p>
-   * Manipulating the list of converters while a view is being generated using
-   * this context has no effect.
+   * Manipulating the list of converters during view generation or model
+   * update has no effect.
    * @return value type converters
    */
-  List<ValueTypeConverter<?>> getValueTypeConverters();
+  ValueTypeConverters getValueTypeConverters();
 
   /**
    * Gets the collection of reference resolvers that will be consulted to

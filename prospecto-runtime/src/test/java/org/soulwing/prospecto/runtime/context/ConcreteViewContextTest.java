@@ -343,20 +343,20 @@ public class ConcreteViewContextTest {
 
     viewContext.getScopes().append(scope);
     viewContext.getListeners().append(listener);
-    viewContext.getValueTypeConverters().add(valueTypeConverter);
+    viewContext.getValueTypeConverters().append(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
     viewContext.getAssociationManagers().append(associationManager);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
     viewContext.getListeners().toList().clear();
-    viewContext.getValueTypeConverters().clear();
+    viewContext.getValueTypeConverters().toList().clear();
     viewContext.getReferenceResolvers().toList().clear();
     viewContext.getAssociationManagers().toList().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
-    assertThat(contextCopy.getValueTypeConverters(),
+    assertThat(contextCopy.getValueTypeConverters().toList(),
         contains(valueTypeConverter));
     assertThat(contextCopy.getReferenceResolvers().toList(),
         contains(resolver));
