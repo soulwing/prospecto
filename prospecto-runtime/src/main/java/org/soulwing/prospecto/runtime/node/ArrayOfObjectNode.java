@@ -31,6 +31,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
@@ -46,6 +47,7 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 public class ArrayOfObjectNode extends ContainerViewNode {
 
   private final ToManyAssociationUpdater associationUpdater;
+  private final MultiValuedAccessorFactory accessorFactory;
 
   private final String elementName;
 
@@ -61,15 +63,18 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   public ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType) {
     this(name, elementName, namespace, modelType,
-        new ConcreteToManyAssociationUpdater());
+        new ConcreteToManyAssociationUpdater(),
+        ConcreteMultiValuedAccessorFactory.INSTANCE);
   }
 
   ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType,
-      ToManyAssociationUpdater associationUpdater) {
+      ToManyAssociationUpdater associationUpdater,
+      MultiValuedAccessorFactory accessorFactory) {
     super(name, namespace, modelType, new ArrayList<AbstractViewNode>());
     this.elementName = elementName;
     this.associationUpdater = associationUpdater;
+    this.accessorFactory = accessorFactory;
   }
 
   /**
@@ -83,7 +88,7 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
-    this.accessor = MultiValuedAccessorFactory.newAccessor(accessor);
+    this.accessor = accessorFactory.newAccessor(accessor);
   }
 
   @Override

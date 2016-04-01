@@ -1,5 +1,5 @@
 /*
- * File created on Mar 16, 2016
+ * File created on Apr 1, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,29 +18,13 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.soulwing.prospecto.api.ViewTemplateException;
-
 /**
- * A static utility for producing a {@link MultiValuedAccessor}.
+ * A factory that produces {@link MultiValuedAccessor} objects.
  *
  * @author Carl Harris
  */
-public class MultiValuedAccessorFactory {
+public interface MultiValuedAccessorFactory {
 
-  public static MultiValuedAccessor newAccessor(Accessor accessor) {
-    if (List.class.isAssignableFrom(accessor.getDataType())) {
-      return new ListAccessor(accessor);
-    }
-    if (Collection.class.isAssignableFrom(accessor.getDataType())) {
-      return new CollectionAccessor(accessor);
-    }
-    if (Object[].class.isAssignableFrom(accessor.getDataType())) {
-      return new ArrayAccessor(accessor);
-    }
-    throw new ViewTemplateException("expected an array or a collection");
-  }
+  MultiValuedAccessor newAccessor(Accessor accessor);
 
 }
