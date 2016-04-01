@@ -115,6 +115,21 @@ public class ViewTemplateBuilderProducer {
    *   an extra envelope object around a named root view node
    * @param elementName name for the elements in the array; this is used by only
    *   some view types (e.g. XML)
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfObjects(String name,
+      String elementName, Class<?> modelType) throws ViewTemplateException {
+    return arrayOfObjects(name, elementName, null, modelType);
+  }
+
+  /**
+   * Creates a template builder whose root node type is of array-of-objects type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param elementName name for the elements in the array; this is used by only
+   *   some view types (e.g. XML)
    * @param namespace namespace for {@code name} and {@code elementName}; this
    *   is used by only some view types (e.g. XML)
    * @param modelType model type to associate with the root node
