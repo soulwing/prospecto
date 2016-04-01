@@ -51,7 +51,6 @@ import org.soulwing.prospecto.api.ViewTemplate;
 public class ArrayOfObjectsTest {
 
   public static final String NAME = "root";
-  public static final String ELEMENT = "element";
   public static final String NAMESPACE = "namespace";
   public static final String CHILD = "child";
   public static final String CHILDREN = "children";
@@ -92,7 +91,7 @@ public class ArrayOfObjectsTest {
   @Test
   public void testArrayOfObjectsNameElement() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .arrayOfObjects(NAME, ELEMENT, MockType1.class)
+        .arrayOfObjects(NAME, CHILD, MockType1.class)
         .build();
 
     validateRootArrayOfObjectsNameElement(template);
@@ -101,7 +100,7 @@ public class ArrayOfObjectsTest {
   @Test
   public void testArrayOfObjectsNameElementNamespace() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .arrayOfObjects(NAME, ELEMENT, NAMESPACE, MockType1.class)
+        .arrayOfObjects(NAME, CHILD, NAMESPACE, MockType1.class)
         .build();
 
     validateRootArrayOfObjectsNameElementNamespace(template);
@@ -139,7 +138,7 @@ public class ArrayOfObjectsTest {
         .build();
 
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .arrayOfObjects(NAME, ELEMENT, childTemplate);
+        .arrayOfObjects(NAME, CHILD, childTemplate);
 
     validateRootArrayOfObjectsNameElement(template);
   }
@@ -152,7 +151,7 @@ public class ArrayOfObjectsTest {
         .build();
 
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .arrayOfObjects(NAME, ELEMENT, NAMESPACE, childTemplate);
+        .arrayOfObjects(NAME, CHILD, NAMESPACE, childTemplate);
 
     validateRootArrayOfObjectsNameElementNamespace(template);
   }
@@ -191,8 +190,8 @@ public class ArrayOfObjectsTest {
         hasEventSequence(
             eventOfType(BEGIN_ARRAY, withName(NAME), inDefaultNamespace(),
                 whereValue(is(nullValue()))),
-            eventOfType(BEGIN_OBJECT, withName(ELEMENT), inDefaultNamespace()),
-            eventOfType(END_OBJECT, withName(ELEMENT), inDefaultNamespace()),
+            eventOfType(BEGIN_OBJECT, withName(CHILD), inDefaultNamespace()),
+            eventOfType(END_OBJECT, withName(CHILD), inDefaultNamespace()),
             eventOfType(END_ARRAY, withName(NAME), inDefaultNamespace(),
                 whereValue(is(nullValue())))
         )
@@ -206,8 +205,8 @@ public class ArrayOfObjectsTest {
         hasEventSequence(
             eventOfType(BEGIN_ARRAY, withName(NAME), inNamespace(NAMESPACE),
                 whereValue(is(nullValue()))),
-            eventOfType(BEGIN_OBJECT, withName(ELEMENT), inNamespace(NAMESPACE)),
-            eventOfType(END_OBJECT, withName(ELEMENT), inNamespace(NAMESPACE)),
+            eventOfType(BEGIN_OBJECT, withName(CHILD), inNamespace(NAMESPACE)),
+            eventOfType(END_OBJECT, withName(CHILD), inNamespace(NAMESPACE)),
             eventOfType(END_ARRAY, withName(NAME), inNamespace(NAMESPACE),
                 whereValue(is(nullValue())))
         )
@@ -220,7 +219,7 @@ public class ArrayOfObjectsTest {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .arrayOfObjects(MockType1.class)
             .accessType(AccessType.FIELD)
-            .arrayOfObjects("children", MockType2.class)
+            .arrayOfObjects(CHILDREN, MockType2.class)
                 .end()
             .end()
         .build();
