@@ -33,6 +33,12 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
+  public Class<?> getComponentType() {
+    // FIXME
+    return Object.class;
+  }
+
+  @Override
   public Iterator<Object> iterator(Object source) throws Exception {
     return get(source).iterator();
   }

@@ -34,6 +34,11 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
+  public Class<?> getComponentType() {
+    return delegate.getDataType().getComponentType();
+  }
+
+  @Override
   public Iterator<Object> iterator(Object source) throws Exception {
     final Object[] array = (Object[]) delegate.get(source);
     if (array == null) return null;

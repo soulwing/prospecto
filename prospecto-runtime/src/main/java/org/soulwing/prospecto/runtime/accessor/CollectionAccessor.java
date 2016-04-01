@@ -33,6 +33,12 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
   }
 
   @Override
+  public Class<?> getComponentType() {
+    // FIXME
+    return Object.class;
+  }
+
+  @Override
   public Iterator<Object> iterator(Object source) throws Exception {
     final Collection<Object> collection = get(source);
     if (collection == null) return null;
