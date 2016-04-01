@@ -21,6 +21,7 @@ package org.soulwing.prospecto.tests.template;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.DISCRIMINATOR;
@@ -40,6 +41,8 @@ import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 
 /**
  * Tests for use of discriminator.
@@ -48,6 +51,9 @@ import org.soulwing.prospecto.api.ViewTemplate;
  */
 public class DiscriminatorTest {
 
+  private static final Discriminator MOCK_DISCRIMINATOR =
+      new Discriminator(new Object());
+
   @SuppressWarnings("unused")
   public static class MockType1 {
     MockType2 child = new MockType2();
@@ -55,6 +61,21 @@ public class DiscriminatorTest {
   }
 
   public static class MockType2 {
+  }
+
+  static class MockDiscriminatorStrategy implements DiscriminatorStrategy {
+
+    @Override
+    public Discriminator toDiscriminator(Class<?> base, Class<?> subtype) {
+      return MOCK_DISCRIMINATOR;
+    }
+
+    @Override
+    public <T> Class<T> toSubtype(Class<T> base, Discriminator discriminator)
+        throws ClassNotFoundException {
+      return null;
+    }
+
   }
 
   MockType1 model = new MockType1();
@@ -76,6 +97,26 @@ public class DiscriminatorTest {
             eventOfType(BEGIN_OBJECT),
             eventOfType(DISCRIMINATOR,
                 whereValue(is(equalTo(MockType1.class.getSimpleName())))),
+            eventOfType(END_OBJECT)
+        )
+    );
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testObjectCustomDiscriminator() throws Exception {
+
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+        .discriminator(new MockDiscriminatorStrategy())
+        .end()
+        .build();
+
+    assertThat(template.generateView(model, context),
+        hasEventSequence(
+            eventOfType(BEGIN_OBJECT),
+            eventOfType(DISCRIMINATOR,
+                whereValue(is(sameInstance(MOCK_DISCRIMINATOR.getValue())))),
             eventOfType(END_OBJECT)
         )
     );

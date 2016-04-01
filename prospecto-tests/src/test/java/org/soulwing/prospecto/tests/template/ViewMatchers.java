@@ -120,6 +120,7 @@ public class ViewMatchers {
 
   }
 
+  @SafeVarargs
   public static Matcher<View.Event> eventOfType(final View.Event.Type type,
       final Matcher<View.Event>... matchers) {
     return new BaseMatcher<View.Event>() {
@@ -144,6 +145,7 @@ public class ViewMatchers {
               .appendValue(((View.Event) item).getType());
         }
         else {
+          description.appendText(" but ");
           allOf(matchers).describeMismatch(item, description);
         }
       }
