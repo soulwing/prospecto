@@ -72,6 +72,11 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
     get(target).remove(index);
   }
 
+  @Override
+  public void clear(Object target) throws Exception {
+    get(target).clear();
+  }
+
   @SuppressWarnings("unchecked")
   private List<Object> get(Object source) throws Exception {
     return (List<Object>) delegate.get(source);

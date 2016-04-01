@@ -28,4 +28,6 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 public interface MultiValuedAccessor
     extends ToManyAssociationManager<Object, Object> {
 
+  void clear(Object target) throws Exception;
+
 }

@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -91,6 +92,12 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
           arrayCopy.length - index);
     }
     delegate.set(target, arrayCopy);
+  }
+
+  @Override
+  public void clear(Object target) throws Exception {
+    delegate.set(target, Array.newInstance(
+        delegate.getDataType().getComponentType(), 0));
   }
 
   private static void assertIndexIsInRange(Object[] array, int index,

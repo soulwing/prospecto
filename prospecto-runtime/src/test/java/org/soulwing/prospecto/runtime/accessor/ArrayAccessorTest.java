@@ -136,7 +136,6 @@ public class ArrayAccessorTest {
     assertThat(delegate.array, is(equalTo(new Object[] { value0, value2 })));
   }
 
-
   static class MockAccessor implements Accessor {
     private Object[] array;
     private boolean writable = true;

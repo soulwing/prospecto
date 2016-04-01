@@ -54,10 +54,14 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
     get(target).remove(value);
   }
 
+  @Override
+  public void clear(Object target) throws Exception {
+    get(target).clear();
+  }
+
   @SuppressWarnings("unchecked")
   private Collection<Object> get(Object source) throws Exception {
     return (Collection<Object>) delegate.get(source);
   }
-
 
 }
