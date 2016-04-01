@@ -107,6 +107,11 @@ public class ConverterSupportTest {
   }
 
   @Test
+  public void testCoerceBooleanToBooleanPrimitive() throws Exception {
+    coerceAndValidate(boolean.class, Boolean.TRUE, true);
+  }
+
+  @Test
   public void testCoerceNumberToDate() throws Exception {
     final Date date = new Date();
     coerceAndValidate(Date.class, date.getTime(), date);
@@ -191,9 +196,9 @@ public class ConverterSupportTest {
 
   @Test
   public void testCoerceObjectToValueTypeUsingConstructor() throws Exception {
-    final MockValueTypeWithValueOf value =
-        new MockValueTypeWithValueOf("value");
-    coerceAndValidate(MockValueTypeWithValueOf.class, "value", value);
+    final MockValueTypeWithConstructor value =
+        new MockValueTypeWithConstructor("value");
+    coerceAndValidate(MockValueTypeWithConstructor.class, "value", value);
   }
 
   @SuppressWarnings("unchecked")
