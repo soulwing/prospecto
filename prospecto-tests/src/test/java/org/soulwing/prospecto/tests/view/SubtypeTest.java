@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.template;
+package org.soulwing.prospecto.tests.view;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,10 +27,10 @@ import static org.soulwing.prospecto.api.View.Event.Type.DISCRIMINATOR;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
-import static org.soulwing.prospecto.tests.template.ViewMatchers.eventOfType;
-import static org.soulwing.prospecto.tests.template.ViewMatchers.hasEventSequence;
-import static org.soulwing.prospecto.tests.template.ViewMatchers.whereValue;
-import static org.soulwing.prospecto.tests.template.ViewMatchers.withName;
+import static org.soulwing.prospecto.tests.view.ViewMatchers.eventOfType;
+import static org.soulwing.prospecto.tests.view.ViewMatchers.hasEventSequence;
+import static org.soulwing.prospecto.tests.view.ViewMatchers.whereValue;
+import static org.soulwing.prospecto.tests.view.ViewMatchers.withName;
 
 import java.util.Collections;
 
