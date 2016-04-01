@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
 
@@ -34,10 +35,23 @@ import org.soulwing.prospecto.api.AccessMode;
 public class ReflectionAccessorFactory {
 
 
-  static Accessor field(Class<?> declaringClass, String name,
+  static Accessor field(Class<?> ownerClass, String name,
       EnumSet<AccessMode> allowedModes) throws NoSuchFieldException {
-    return new FieldAccessor(declaringClass, name,
-        declaringClass.getDeclaredField(name), allowedModes);
+    return new FieldAccessor(ownerClass, name,
+        findField(ownerClass, name), allowedModes);
+  }
+
+  private static Field findField(Class<?> ownerClass, String name)
+      throws NoSuchFieldException {
+    try {
+      return ownerClass.getDeclaredField(name);
+    }
+    catch (NoSuchFieldException ex) {
+      if (ownerClass.getSuperclass() != null) {
+        return findField(ownerClass.getSuperclass(), name);
+      }
+      throw ex;
+    }
   }
 
   static Accessor property(Class<?> declaringClass, String name,

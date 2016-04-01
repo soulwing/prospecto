@@ -61,24 +61,22 @@ public class ReflectionAccessorBuilderTest {
     assertThat(accessor.get(model), is(sameInstance(PUBLIC_FIELD_VALUE)));
   }
 
-  @Test(expected = ViewTemplateException.class)
+  @Test
   public void testProtectedFieldInSuperAccessor() throws Exception {
-    // this isn't supported, but it could be; just need to go up the class
-    // ancestors. Does anyone care?
-    accessorBuilder
-        .propertyName("protectedFieldInSuper")
+    final Accessor accessor = accessorBuilder
+        .propertyName("privateFieldInSuper")
         .accessType(AccessType.FIELD)
         .build();
+    assertThat(accessor.get(model), is(sameInstance(PRIVATE_FIELD_VALUE)));
   }
 
-  @Test(expected = ViewTemplateException.class)
+  @Test
   public void testPublicFieldInSuperAccessor() throws Exception {
-    // this isn't supported, but it could be; just need to go up the class
-    // ancestors. Does anyone care?
-    accessorBuilder
+    final Accessor accessor = accessorBuilder
         .propertyName("publicFieldInSuper")
         .accessType(AccessType.FIELD)
         .build();
+    assertThat(accessor.get(model), is(sameInstance(PUBLIC_FIELD_VALUE)));
   }
 
   @Test
@@ -104,10 +102,9 @@ public class ReflectionAccessorBuilderTest {
   @SuppressWarnings("unused")
   abstract class MockSuperModel {
 
-    protected Object protectedFieldInSuper = new Object();
+    private Object privateFieldInSuper = PRIVATE_FIELD_VALUE;
 
-    public Object publicFieldInSuper = new Object();
-
+    public Object publicFieldInSuper = PUBLIC_FIELD_VALUE;
 
   }
 
