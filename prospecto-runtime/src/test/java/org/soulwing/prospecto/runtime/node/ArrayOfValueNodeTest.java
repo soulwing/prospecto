@@ -19,9 +19,13 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
@@ -30,6 +34,9 @@ import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sour
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -38,15 +45,20 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
+import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
+import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link ObjectNode}.
+ * Unit tests for {@link ArrayOfValueNode}.
  *
  * @author Carl Harris
  */
@@ -59,35 +71,65 @@ public class ArrayOfValueNodeTest {
   private static final Class<?> MODEL_TYPE = Collection.class;
 
   private static final Object MODEL = new Object();
-  private static final Object ELEMENT = new Object();
+  private static final Object MODEL_VALUE = new Object();
+  private static final Object VIEW_VALUE = new Object();
+
+  private static final View.Event TRIGGER_EVENT =
+      new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY, NAME, null, null);
+
+  private static final ConcreteViewEvent END_EVENT =
+      new ConcreteViewEvent(View.Event.Type.END_ARRAY, NAME, null, null);
+
+  private static final ConcreteViewEvent VALUE_EVENT =
+      new ConcreteViewEvent(View.Event.Type.VALUE, null, null, VIEW_VALUE);
+
+  private static final ConcreteViewEvent OTHER_EVENT =
+      new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, null, null, null);
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private Accessor accessor;
+  Accessor accessor;
 
   @Mock
-  private ScopedViewContext viewContext;
+  ScopedViewContext viewContext;
 
   @Mock
-  private NotifiableViewListeners listeners;
+  NotifiableViewListeners listeners;
 
   @Mock
-  private ValueTypeConverter<?> converter;
+  TransformationService transformationService;
 
   @Mock
-  private View.Event childEvent;
+  UpdatableViewNodeTemplate template;
 
-  private ArrayOfValueNode node = new ArrayOfValueNode(NAME, ELEMENT_NAME,
-      NAMESPACE);
+  @Mock
+  MultiValuedAccessorFactory accessorFactory;
+
+  @Mock
+  MultiValuedAccessor multiValuedAccessor;
+
+  @Mock
+  Iterator<?> iterator;
+
+  @Mock
+  ViewEntity parentEntity;
+
+  private Deque<View.Event> events = new LinkedList<>();
+
+  private ArrayOfValueNode node;
 
   @Before
   public void setUp() throws Exception {
+    node = new ArrayOfValueNode(NAME, ELEMENT_NAME, NAMESPACE,
+        transformationService, template, accessorFactory);
     context.checking(new Expectations() {
       {
         allowing(accessor).getDataType();
         will(returnValue(MODEL_TYPE));
+        allowing(accessorFactory).newAccessor(accessor);
+        will(returnValue(multiValuedAccessor));
       }
     });
 
@@ -96,29 +138,19 @@ public class ArrayOfValueNodeTest {
 
   @Test
   public void testOnEvaluate() throws Exception {
+    context.checking(iteratorExpectations());
     context.checking(new Expectations() {
       {
-        oneOf(accessor).get(MODEL);
-        will(returnValue(Collections.singletonList(ELEMENT)));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
         oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
             eventDescribing(
-                sourceNode(node), forModel(MODEL), propertyValue(ELEMENT),
+                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
                 inContext(viewContext))));
         will(returnValue(true));
-        oneOf(listeners).didExtractValue((ViewNodePropertyEvent) with(
-            eventDescribing(
-                sourceNode(node), forModel(MODEL), propertyValue(ELEMENT),
-                inContext(viewContext))));
-        will(returnValue(ELEMENT));
-
-        oneOf(viewContext).getValueTypeConverters();
-        will(returnValue(Collections.singletonList(converter)));
-        oneOf(converter).supports(ELEMENT.getClass());
-        will(returnValue(true));
-        oneOf(converter).toValue(ELEMENT);
-        will(returnValue(ELEMENT));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
+            viewContext);
+        will(returnValue(MODEL_VALUE));
       }
     });
 
@@ -131,11 +163,161 @@ public class ArrayOfValueNodeTest {
     assertThat(events.get(1).getType(), is(equalTo(View.Event.Type.VALUE)));
     assertThat(events.get(1).getName(), is(equalTo(ELEMENT_NAME)));
     assertThat(events.get(1).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(1).getValue(), is(ELEMENT));
+    assertThat(events.get(1).getValue(), is(MODEL_VALUE));
     assertThat(events.get(2).getType(), is(equalTo(View.Event.Type.END_ARRAY)));
     assertThat(events.get(2).getName(), is(equalTo(NAME)));
     assertThat(events.get(2).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(2).getValue(), is(nullValue()));
+  }
+
+  @Test
+  public void testOnEvaluateWhenWillNotVisitProperty() throws Exception {
+    context.checking(iteratorExpectations());
+    context.checking(new Expectations() {
+      {
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
+            eventDescribing(
+                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
+                inContext(viewContext))));
+        will(returnValue(false));
+      }
+    });
+
+    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
+    validateEmptyArray(events);
+  }
+
+  @Test
+  public void testOnEvaluateWhenUndefinedValue() throws Exception {
+    context.checking(iteratorExpectations());
+    context.checking(new Expectations() {
+      {
+        allowing(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
+            eventDescribing(
+                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
+                inContext(viewContext))));
+        will(returnValue(true));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
+            node, viewContext);
+        will(returnValue(UndefinedValue.INSTANCE));
+      }
+    });
+
+    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
+    validateEmptyArray(events);
+  }
+
+  private Expectations iteratorExpectations() throws Exception {
+    return new Expectations() {
+      {
+        oneOf(multiValuedAccessor).iterator(MODEL);
+        will(returnValue(iterator));
+        exactly(2).of(iterator).hasNext();
+        will(onConsecutiveCalls(returnValue(true), returnValue(false)));
+        oneOf(iterator).next();
+        will(returnValue(MODEL_VALUE));
+      }
+    };
+  }
+
+  private void validateEmptyArray(List<View.Event> events) {
+    assertThat(events.size(), is(equalTo(2)));
+    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.BEGIN_ARRAY)));
+    assertThat(events.get(0).getName(), is(equalTo(NAME)));
+    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
+    assertThat(events.get(0).getValue(), is(nullValue()));
+    assertThat(events.get(1).getType(), is(equalTo(View.Event.Type.END_ARRAY)));
+    assertThat(events.get(1).getName(), is(equalTo(NAME)));
+    assertThat(events.get(1).getNamespace(), is(equalTo(NAMESPACE)));
+    assertThat(events.get(1).getValue(), is(nullValue()));
+  }
+
+  @Test
+  public void testToModelValue() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(template).toModelValue(
+            with(node),
+            with(parentEntity),
+            with(viewContext),
+            with(any(UpdatableViewNodeTemplate.Method.class)));
+        will(returnValue(MODEL_VALUE));
+      }
+    });
+
+    assertThat(
+        node.toModelValue(parentEntity, TRIGGER_EVENT, events, viewContext),
+        is(sameInstance(MODEL_VALUE)));
+  }
+
+  @Test
+  public void testToModelValueWhenUndefinedValue() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(template).toModelValue(
+            with(node),
+            with(parentEntity),
+            with(viewContext),
+            with(any(UpdatableViewNodeTemplate.Method.class)));
+        will(returnValue(UndefinedValue.INSTANCE));
+      }
+    });
+
+    events.add(END_EVENT);
+
+    assertThat(
+        node.toModelValue(parentEntity, TRIGGER_EVENT, events, viewContext),
+        is(sameInstance((Object) UndefinedValue.INSTANCE)));
+
+    assertThat(events, is(empty()));
+  }
+
+  @Test
+  public void testUpdateMethod() throws Exception {
+    final UpdatableViewNodeTemplate.Method method = node.new Method(
+        parentEntity, TRIGGER_EVENT, events, viewContext);
+
+    context.checking(new Expectations() {
+      {
+        oneOf(multiValuedAccessor).getComponentType();
+        will(returnValue(Object.class));
+        oneOf(transformationService).valueToInject(parentEntity, Object.class,
+            VIEW_VALUE, node, viewContext);
+        will(returnValue(MODEL_VALUE));
+      }
+    });
+
+    events.add(VALUE_EVENT);
+    events.add(END_EVENT);
+
+    final Object value = method.toModelValue();
+    assertThat(value, instanceOf(Iterable.class));
+    assertThat((Iterable<?>) value, contains(MODEL_VALUE));
+  }
+
+  @Test(expected = ModelEditorException.class)
+  public void testUpdateMethodWhenUnexpectedEvent() throws Exception {
+    final UpdatableViewNodeTemplate.Method method = node.new Method(
+        parentEntity, TRIGGER_EVENT, events, viewContext);
+
+    events.add(OTHER_EVENT);
+    method.toModelValue();
+  }
+
+  @Test
+  public void testInject() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(multiValuedAccessor).clear(MODEL);
+        oneOf(multiValuedAccessor).add(MODEL, MODEL_VALUE);
+      }
+    });
+
+    node.inject(MODEL, Collections.singletonList(MODEL_VALUE), viewContext);
   }
 
 }

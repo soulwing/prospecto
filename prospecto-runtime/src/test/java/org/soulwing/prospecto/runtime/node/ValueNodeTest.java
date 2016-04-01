@@ -19,19 +19,30 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.eventOfType;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.inNamespace;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.whereValue;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.withName;
 
-import java.util.Collections;
+import java.util.Deque;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.UndefinedValue;
+import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
+import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ValueNode}.
@@ -44,65 +55,133 @@ public class ValueNodeTest {
   private static final String NAMESPACE = "namespace";
   private static final Object MODEL = new Object();
   private static final Object MODEL_VALUE = new Object();
+  private static final Object TRANSFORMED_VALUE = new Object();
   private static final Object VIEW_VALUE = new Object();
 
   @Rule
-  public final JUnitRuleMockery context = new JUnitRuleMockery();
+  public final JUnitRuleMockery context =
+      new JUnitRuleClassImposterizingMockery();
 
   @Mock
-  private Accessor accessor;
+  AbstractViewNode parent;
 
   @Mock
-  private ValueTypeConverter<?> converter;
+  TransformationService transformationService;
 
   @Mock
-  private ScopedViewContext viewContext;
+  UpdatableViewNodeTemplate template;
 
-  private ValueNode node = new ValueNode(NAME,  NAMESPACE);
+  @Mock
+  Accessor accessor;
+
+  @Mock
+  ValueTypeConverterService converters;
+
+  @Mock
+  ScopedViewContext viewContext;
+
+  @Mock
+  ViewEntity parentEntity;
+
+  @Mock
+  View.Event triggerEvent;
+
+  @Mock
+  Deque<View.Event> events;
+
+  ValueNode node;
+
+  @Before
+  public void setUp() throws Exception {
+    node = new ValueNode(NAME, NAMESPACE, transformationService, template);
+    node.setAccessor(accessor);
+    node.setParent(parent);
+  }
 
   @Test
-  public void testGetModelValue() throws Exception {
+  public void testOnEvaluate() throws Exception {
     context.checking(new Expectations() {
       {
         oneOf(accessor).get(MODEL);
         will(returnValue(MODEL_VALUE));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
+            node, viewContext);
+        will(returnValue(TRANSFORMED_VALUE));
       }
     });
 
-    node.setAccessor(accessor);
-    assertThat(node.getModelValue(MODEL, viewContext),
+    assertThat(node.onEvaluate(MODEL, viewContext),
+        contains(
+            eventOfType(View.Event.Type.VALUE,
+                withName(NAME),
+                inNamespace(NAMESPACE),
+                whereValue(is(sameInstance(TRANSFORMED_VALUE))))));
+  }
+
+  @Test
+  public void testOnEvaluateWhenUndefinedValue() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(MODEL_VALUE));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
+            node, viewContext);
+        will(returnValue(UndefinedValue.INSTANCE));
+      }
+    });
+
+    assertThat(node.onEvaluate(MODEL, viewContext), is(empty()));
+  }
+
+  @Test
+  public void testToModelValue() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(template).toModelValue(
+            with(node),
+            with(parentEntity),
+            with(viewContext),
+            with(any(UpdatableViewNodeTemplate.Method.class)));
+        will(returnValue(MODEL_VALUE));
+      }
+    });
+
+    assertThat(
+        node.toModelValue(parentEntity, triggerEvent, events, viewContext),
         is(sameInstance(MODEL_VALUE)));
   }
 
   @Test
-  public void testToViewValue() throws Exception {
+  public void testUpdateMethod() throws Exception {
+    final UpdatableViewNodeTemplate.Method method = node.new Method(
+        parentEntity, triggerEvent, viewContext);
+
     context.checking(new Expectations() {
       {
-        oneOf(converter).toValue(MODEL_VALUE);
+        oneOf(triggerEvent).getValue();
         will(returnValue(VIEW_VALUE));
+        oneOf(accessor).getDataType();
+        will(returnValue(Object.class));
+        oneOf(transformationService).valueToInject(parentEntity, Object.class,
+            VIEW_VALUE, node, viewContext);
+        will(returnValue(MODEL_VALUE));
       }
     });
 
-    node.put(converter);
-    assertThat(node.toViewValue(MODEL_VALUE, viewContext),
-        is(sameInstance(VIEW_VALUE)));
+    assertThat(method.toModelValue(), is(sameInstance(MODEL_VALUE)));
   }
 
   @Test
-  public void testWithContextConverter() throws Exception {
+  public void testInject() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(viewContext).getValueTypeConverters();
-        will(returnValue(Collections.singletonList(converter)));
-        oneOf(converter).supports(Object.class);
-        will(returnValue(true));
-        oneOf(converter).toValue(MODEL_VALUE);
-        will(returnValue(VIEW_VALUE));
+        oneOf(accessor).forSubtype(MODEL.getClass());
+        will(returnValue(accessor));
+        oneOf(accessor).set(MODEL, MODEL_VALUE);
       }
     });
 
-    assertThat(node.toViewValue(MODEL_VALUE, viewContext),
-        is(sameInstance(VIEW_VALUE)));
+    node.inject(MODEL, MODEL_VALUE, viewContext);
   }
 
 }

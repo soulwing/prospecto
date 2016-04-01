@@ -18,6 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -27,9 +31,11 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class UrlNode extends ValueViewNode {
+public class UrlNode extends AbstractViewNode {
 
   public static final String DEFAULT_NAME = "href";
+
+  private final TransformationService transformationService;
 
   /**
    * Constructs a new instance.
@@ -37,24 +43,31 @@ public class UrlNode extends ValueViewNode {
    * @param namespace namespace for {@code name}
    */
   public UrlNode(String name, String namespace) {
-    super(name, namespace);
+    this(name, namespace, ConcreteTransformationService.INSTANCE);
+  }
+
+  UrlNode(String name, String namespace,
+      TransformationService transformationService) {
+    super(name, namespace, null);
+    this.transformationService = transformationService;
   }
 
   @Override
-  protected View.Event.Type getEventType() {
-    return View.Event.Type.URL;
-  }
+  protected List<View.Event> onEvaluate(Object source,
+      ScopedViewContext context) throws Exception {
 
-  @Override
-  protected Object getModelValue(Object source, ScopedViewContext context)
-      throws Exception {
-    return context.get(UrlResolver.class).resolve(this, context);
-  }
+    final Object modelValue =
+        context.get(UrlResolver.class).resolve(this, context);
 
-  @Override
-  protected Object toViewValue(Object model, ScopedViewContext context)
-      throws Exception {
-    return model;
+    final Object transformedValue =
+        transformationService.valueToExtract(source, modelValue, this, context);
+
+    if (transformedValue == UndefinedValue.INSTANCE) {
+      return Collections.emptyList();
+    }
+
+    return Collections.singletonList(
+        newEvent(View.Event.Type.URL, getName(), transformedValue));
   }
 
 }

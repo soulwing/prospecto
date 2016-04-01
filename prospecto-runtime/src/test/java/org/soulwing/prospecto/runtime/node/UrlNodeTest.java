@@ -19,24 +19,32 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.eventOfType;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.inNamespace;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.whereValue;
+import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.withName;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.UrlResolver;
+import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * Unit tests for {@linK UrlNode}.
+ * Unit tests for {@link UrlNode}.
  *
  * @author Carl Harris
  */
 public class UrlNodeTest {
 
+  private static final Object MODEL = new Object();
   private static final String NAMESPACE = "namespace";
   private static final Object URL = "url";
 
@@ -44,30 +52,41 @@ public class UrlNodeTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private ScopedViewContext viewContext;
+  ScopedViewContext viewContext;
 
   @Mock
-  private UrlResolver urlResolver;
+  TransformationService transformationService;
 
-  private UrlNode node = new UrlNode(UrlNode.DEFAULT_NAME, NAMESPACE);
+  @Mock
+  UrlResolver urlResolver;
+
+  private UrlNode node;
+
+  @Before
+  public void setUp() throws Exception {
+    node = new UrlNode(UrlNode.DEFAULT_NAME, NAMESPACE, transformationService);
+  }
 
   @Test
-  public void testGetModelValue() throws Exception {
+  public void testOnEvaluate() throws Exception {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).get(UrlResolver.class);
         will(returnValue(urlResolver));
         oneOf(urlResolver).resolve(node, viewContext);
         will(returnValue(URL));
+        oneOf(transformationService).valueToExtract(MODEL, URL, node,
+            viewContext);
+        will(returnValue(URL));
       }
     });
 
-    assertThat(node.getModelValue(null, viewContext), is(sameInstance(URL)));
-  }
-
-  @Test
-  public void testToViewValue() throws Exception {
-    assertThat(node.toViewValue(URL, viewContext), is(sameInstance(URL)));
+    assertThat(node.onEvaluate(MODEL, viewContext),
+        contains(
+            eventOfType(View.Event.Type.URL,
+                withName(UrlNode.DEFAULT_NAME),
+                inNamespace(NAMESPACE),
+                whereValue(is(sameInstance(URL))))));
   }
 
 }

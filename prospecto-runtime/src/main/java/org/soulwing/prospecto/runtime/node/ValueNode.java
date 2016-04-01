@@ -18,17 +18,15 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.converter.ConverterSupport;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 
 /**
@@ -36,8 +34,11 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  *
  * @author Carl Harris
  */
-public class ValueNode extends ValueViewNode
+public class ValueNode extends AbstractViewNode
     implements Convertible, UpdatableViewNode {
+
+  private final TransformationService transformationService;
+  private final UpdatableViewNodeTemplate template;
 
   private Accessor accessor;
 
@@ -47,7 +48,16 @@ public class ValueNode extends ValueViewNode
    * @param namespace namespace for {@code name}
    */
   public ValueNode(String name, String namespace) {
-    super(name, namespace);
+    this(name, namespace, ConcreteTransformationService.INSTANCE,
+        ConcreteUpdatableViewNodeTemplate.INSTANCE);
+  }
+
+  ValueNode(String name, String namespace,
+      TransformationService transformationService,
+      UpdatableViewNodeTemplate template) {
+    super(name, namespace, null);
+    this.transformationService = transformationService;
+    this.template = template;
   }
 
   @Override
@@ -61,59 +71,56 @@ public class ValueNode extends ValueViewNode
   }
 
   @Override
-  protected Object getModelValue(Object source, ScopedViewContext context)
-      throws Exception {
-    return getAccessor().get(source);
+  protected List<View.Event> onEvaluate(Object source,
+      ScopedViewContext context) throws Exception {
+
+    final Object modelValue = accessor.get(source);
+
+    final Object transformedValue =
+        transformationService.valueToExtract(source, modelValue, this, context);
+
+    if (transformedValue == UndefinedValue.INSTANCE) {
+      return Collections.emptyList();
+    }
+    return Collections.singletonList(
+        newEvent(View.Event.Type.VALUE, getName(), transformedValue));
   }
 
   @Override
-  protected Object toViewValue(Object model, ScopedViewContext context)
-      throws Exception {
-    return ConverterSupport.toViewValue(model, this, context);
-  }
+  public Object toModelValue(final ViewEntity parentEntity,
+      final View.Event triggerEvent, Deque<View.Event> events,
+      final ScopedViewContext context) throws Exception {
 
-  @Override
-  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    context.push(getName(), getModelType());
-    try {
-      final Object viewValue = triggerEvent.getValue();
-
-      final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-          ViewNodeEvent.Mode.MODEL_UPDATE, this, viewValue, context);
-      if (!context.getListeners().shouldVisitNode(nodeEvent)) {
-        return UndefinedValue.INSTANCE;
-      }
-
-      final Object convertedValue = ConverterSupport.toModelValue(
-          getAccessor().getDataType(), viewValue, this, context);
-
-      final Object valueToInject = context.getListeners().willInjectValue(
-          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
-              parentEntity, convertedValue, context));
-
-      context.getListeners().propertyVisited(
-          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, this,
-              parentEntity, valueToInject, context));
-
-      context.getListeners().nodeVisited(nodeEvent);
-
-      return valueToInject;
-    }
-    catch (Exception ex) {
-      throw new ModelEditorException("error at path "
-          + context.currentViewPathAsString(), ex);
-    }
-    finally {
-      context.pop();
-    }
-
+    return template.toModelValue(this, parentEntity,
+        context, new Method(parentEntity, triggerEvent, context));
   }
 
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    getAccessor().forSubtype(target.getClass()).set(target, value);
+    accessor.forSubtype(target.getClass()).set(target, value);
+  }
+
+  class Method implements UpdatableViewNodeTemplate.Method {
+
+    private final ViewEntity parentEntity;
+    private final View.Event triggerEvent;
+    private final ScopedViewContext context;
+
+    Method(ViewEntity parentEntity, View.Event triggerEvent,
+        ScopedViewContext context) {
+      this.parentEntity = parentEntity;
+      this.triggerEvent = triggerEvent;
+      this.context = context;
+    }
+
+    @Override
+    public Object toModelValue() throws Exception {
+      return transformationService.valueToInject(
+          parentEntity, accessor.getDataType(),
+          triggerEvent.getValue(), ValueNode.this, context);
+    }
+
   }
 
 }
