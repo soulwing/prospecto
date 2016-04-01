@@ -53,13 +53,13 @@ public class ConverterSupportTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private ScopedViewContext viewContext;
+  ScopedViewContext viewContext;
 
   @Mock
-  private ViewNode node;
+  ViewNode node;
 
   @Mock
-  private ValueTypeConverter<Object> converter;
+  ValueTypeConverter<Object> converter;
 
   @Test
   public void testToViewValueWithLocalConverter() throws Exception {
@@ -240,16 +240,17 @@ public class ConverterSupportTest {
 
     @Override
     public boolean equals(Object obj) {
-      if (obj == this) return true;
-      if (!(obj instanceof MockValueTypeWithConstructor)) return false;
-      return Objects.equals(this.value,
-          ((MockValueTypeWithConstructor) obj).value);
+      return obj == this
+          || obj instanceof MockValueTypeWithConstructor
+              && Objects.equals(this.value,
+                  ((MockValueTypeWithConstructor) obj).value);
     }
   }
 
   public static class MockValueTypeWithValueOf {
     private final Object value;
 
+    @SuppressWarnings("unused")
     public static MockValueTypeWithValueOf valueOf(Object value) {
       return new MockValueTypeWithValueOf(value);
     }
@@ -265,10 +266,10 @@ public class ConverterSupportTest {
 
     @Override
     public boolean equals(Object obj) {
-      if (obj == this) return true;
-      if (!(obj instanceof MockValueTypeWithValueOf)) return false;
-      return Objects.equals(this.value,
-          ((MockValueTypeWithValueOf) obj).value);
+      return obj == this
+          || obj instanceof MockValueTypeWithValueOf
+              && Objects.equals(this.value,
+                  ((MockValueTypeWithValueOf) obj).value);
     }
   }
 
