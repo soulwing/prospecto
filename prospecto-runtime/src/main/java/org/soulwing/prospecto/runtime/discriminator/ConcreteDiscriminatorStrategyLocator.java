@@ -30,6 +30,11 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 class ConcreteDiscriminatorStrategyLocator
     implements DiscriminatorStrategyLocator {
 
+  public static final ConcreteDiscriminatorStrategyLocator INSTANCE =
+      new ConcreteDiscriminatorStrategyLocator();
+
+  private ConcreteDiscriminatorStrategyLocator() {}
+
   @Override
   public DiscriminatorStrategy findStrategy(ContainerViewNode node,
       ScopedViewContext context) {

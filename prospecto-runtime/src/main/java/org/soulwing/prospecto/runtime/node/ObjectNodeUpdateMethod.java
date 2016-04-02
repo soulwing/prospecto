@@ -24,12 +24,7 @@ import java.util.EnumSet;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.discriminator.Discriminator;
-import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
-import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
-import org.soulwing.prospecto.runtime.entity.ConcreteMutableViewEntity;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
@@ -44,35 +39,37 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
           View.Event.Type.BEGIN_ARRAY,
           View.Event.Type.VALUE);
 
-  protected final ContainerViewNode node;
-  protected final View.Event triggerEvent;
-  protected final Deque<View.Event> events;
-  protected final ScopedViewContext context;
-  private final DiscriminatorEventService discriminatorEventService;
+  private final ContainerViewNode node;
+  private final View.Event triggerEvent;
+  private final Deque<View.Event> events;
+  private final ScopedViewContext context;
+  private final ViewEntityFactory entityFactory;
 
   public ObjectNodeUpdateMethod(ContainerViewNode node,
       View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context) {
     this(node, triggerEvent, events, context,
-        new ConcreteDiscriminatorEventService());
+        ConcreteViewEntityFactory.INSTANCE);
   }
 
   ObjectNodeUpdateMethod(ContainerViewNode node, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context,
-      DiscriminatorEventService discriminatorEventService) {
+      ViewEntityFactory entityFactory) {
     this.node = node;
     this.triggerEvent = triggerEvent;
     this.events = events;
     this.context = context;
-    this.discriminatorEventService = discriminatorEventService;
+    this.entityFactory = entityFactory;
   }
 
   @Override
   public Object toModelValue() throws Exception {
-    final MutableViewEntity entity = newEntity();
+    final MutableViewEntity entity = entityFactory.newEntity(node, events, context);
+    View.Event.Type eventType = triggerEvent.getType();
     while (!events.isEmpty()) {
-      final View.Event event = events.removeFirst();
-      if (event.getType() == triggerEvent.getType().complement()) break;
+      View.Event event = events.removeFirst();
+      eventType = event.getType();
+      if (eventType == triggerEvent.getType().complement()) break;
 
       if (!UPDATE_EVENT_TYPES.contains(event.getType())) {
         // assumes that the event is not a BEGIN_*/END_* pair
@@ -81,7 +78,7 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
 
       final String name = event.getName();
       if (name == null) {
-        throw new ModelEditorException("unexpected un-named event: " + event);
+        throw new ModelEditorException("unexpected anonymous event: " + event);
       }
 
       final AbstractViewNode child = node.getChild(entity.getType(), name);
@@ -111,26 +108,12 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
 
     }
 
-    return entity;
-  }
-
-  private MutableViewEntity newEntity() throws Exception {
-
-    View.Event event = discriminatorEventService.findDiscriminatorEvent(
-        events.iterator());
-
-    if (event == null) {
-      return new ConcreteMutableViewEntity(node.getModelType());
+    if (eventType != triggerEvent.getType().complement()) {
+      throw new ModelEditorException("expected " +
+          triggerEvent.getType().complement());
     }
 
-    final Discriminator discriminator = new Discriminator(event.getName(),
-        event.getValue());
-
-    final DiscriminatorStrategy strategy =
-        discriminatorEventService.findStrategy(node, context);
-
-    return new ConcreteMutableViewEntity(
-        strategy.toSubtype(node.getModelType(), discriminator));
+    return entity;
   }
 
 }

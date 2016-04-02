@@ -62,8 +62,7 @@ public abstract class ContainerViewNode extends AbstractViewNode {
   protected ContainerViewNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children) {
     this(name, namespace, modelType, children,
-        new ConcreteDiscriminatorEventService()
-    );
+        ConcreteDiscriminatorEventService.INSTANCE);
   }
 
   ContainerViewNode(String name, String namespace, Class<?> modelType,

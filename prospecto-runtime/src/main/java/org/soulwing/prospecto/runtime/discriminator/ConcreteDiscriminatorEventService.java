@@ -36,10 +36,13 @@ import org.soulwing.prospecto.runtime.node.SubtypeNode;
 public class ConcreteDiscriminatorEventService
     implements DiscriminatorEventService {
 
+  public static final ConcreteDiscriminatorEventService INSTANCE =
+      new ConcreteDiscriminatorEventService();
+
   private final DiscriminatorStrategyLocator strategyLocator;
 
-  public ConcreteDiscriminatorEventService() {
-    this(new ConcreteDiscriminatorStrategyLocator());
+  private ConcreteDiscriminatorEventService() {
+    this(ConcreteDiscriminatorStrategyLocator.INSTANCE);
   }
 
   ConcreteDiscriminatorEventService(
