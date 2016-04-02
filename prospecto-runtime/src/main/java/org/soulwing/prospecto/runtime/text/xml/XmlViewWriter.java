@@ -270,14 +270,6 @@ class XmlViewWriter extends AbstractViewWriter {
     writer.writeCharacters(value);
     writer.writeEndElement();
   }
-
-  private void writeAttribute(View.Event event) throws XMLStreamException {
-    writeAttributeString(event.getName(),
-        event.getNamespace() != null ?
-            event.getNamespace() : XmlViewConstants.VIEW_NAMESPACE,
-        event.getValue().toString());
-  }
-
   private void writeUrl(View.Event event) throws XMLStreamException {
     writeAttributeString(event.getName(),
         XmlViewConstants.VIEW_NAMESPACE, event.getValue().toString());
@@ -337,11 +329,6 @@ class XmlViewWriter extends AbstractViewWriter {
 
   private static String pname(String prefix, String name) {
     return prefix + ":" + name;
-  }
-
-  private static String pname(QName qname, NamespaceContext namespaceContext) {
-    return pname(namespaceContext.getPrefix(qname.getNamespaceURI()),
-        qname.getLocalPart());
   }
 
   static class IndentingXMLStreamWriter implements XMLStreamWriter {
