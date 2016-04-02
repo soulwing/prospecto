@@ -28,7 +28,7 @@ import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -55,13 +55,15 @@ public class EditorTest {
   private static final String SUBTYPE_STRING = "subtypeString";
   private static final String UPDATED_STRING = "updated " + STRING;
   private static final String UPDATED_SUBTYPE_STRING = "updated " + SUBTYPE_STRING;
+  private static final String UPDATED_CHILD_STRING1 = "updated " + STRING + "1";
+  private static final String UPDATED_CHILD_STRING2 = "updated " + STRING + "2";
 
   @SuppressWarnings("unused")
   public static class MockType1 {
     String string = STRING;
     String[] strings = new String[] { STRING };
     MockType2 child = new MockType2();
-    List<MockType2> children = Collections.singletonList(new MockType2());
+    List<MockType2> children = new ArrayList<>();
   }
 
   @SuppressWarnings("unused")
@@ -130,6 +132,39 @@ public class EditorTest {
     assertThat(model.strings, is(equalTo(new String[] { UPDATED_STRING })));
   }
 
+  @Test
+  public void testObjectArrayOfObjects() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .arrayOfObjects(CHILDREN, MockType2.class)
+                .value(STRING)
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_ARRAY).name(CHILDREN)
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(UPDATED_CHILD_STRING1)
+        .type(END_OBJECT)
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(UPDATED_CHILD_STRING2)
+        .type(END_OBJECT)
+        .type(END_ARRAY).name(CHILDREN)
+        .type(END_OBJECT)
+        .end();
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+    editor.update(model);
+
+    assertThat(model.children.size(), is(equalTo(2)));
+    assertThat(model.children.get(0).string, is(equalTo(UPDATED_CHILD_STRING1)));
+    assertThat(model.children.get(1).string, is(equalTo(UPDATED_CHILD_STRING2)));
+  }
 
   @Test
   public void testObjectValueObjectValue() throws Exception {

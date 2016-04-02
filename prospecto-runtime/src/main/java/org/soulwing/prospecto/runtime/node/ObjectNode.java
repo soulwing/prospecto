@@ -19,11 +19,13 @@
 package org.soulwing.prospecto.runtime.node;
 
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -34,9 +36,11 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ObjectNode extends ContainerViewNode {
+public class ObjectNode extends ContainerViewNode
+    implements UpdatableViewNode {
 
   private final ToOneAssociationUpdater associationUpdater;
+  private final UpdatableViewNodeTemplate template;
 
   /**
    * Constructs a new instance.
@@ -45,13 +49,16 @@ public class ObjectNode extends ContainerViewNode {
    * @param modelType model type associated with node
    */
   public ObjectNode(String name, String namespace, Class<?> modelType) {
-    this(name, namespace, modelType, new ConcreteToOneAssociationUpdater());
+    this(name, namespace, modelType, new ConcreteToOneAssociationUpdater(),
+        ConcreteUpdatableViewNodeTemplate.INSTANCE);
   }
 
   ObjectNode(String name, String namespace, Class<?> modelType,
-      ToOneAssociationUpdater associationUpdater) {
+      ToOneAssociationUpdater associationUpdater,
+      UpdatableViewNodeTemplate template) {
     super(name, namespace, modelType);
     this.associationUpdater = associationUpdater;
+    this.template = template;
   }
 
   @Override
@@ -70,6 +77,13 @@ public class ObjectNode extends ContainerViewNode {
       events.add(newEvent(View.Event.Type.VALUE));
     }
     return events;
+  }
+
+  @Override
+  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
+    return template.toModelValue(this, parentEntity, context,
+        new ObjectNodeUpdateMethod(this, triggerEvent, events, context));
   }
 
   @Override

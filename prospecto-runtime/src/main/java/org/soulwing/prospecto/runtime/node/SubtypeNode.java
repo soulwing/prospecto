@@ -55,10 +55,4 @@ public class SubtypeNode extends ContainerViewNode {
     return viewEvents;
   }
 
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    throw new UnsupportedOperationException();
-  }
-
 }

@@ -162,12 +162,6 @@ public class ConcreteViewTemplateTest {
       return Collections.singletonList(event);
     }
 
-    @Override
-    public void inject(Object target, Object value, ScopedViewContext context)
-        throws Exception {
-
-    }
-
   }
 
 }

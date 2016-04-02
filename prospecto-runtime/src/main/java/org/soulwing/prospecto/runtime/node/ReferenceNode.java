@@ -53,14 +53,6 @@ public class ReferenceNode extends ObjectNode {
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    setModelObject(target, value);
-  }
-
-  protected Object getModelObject(Object source) throws Exception {
-    return getAccessor().get(source);
-  }
-
-  protected void setModelObject(Object target, Object value) throws Exception {
     getAccessor().set(target, value);
   }
 

@@ -51,13 +51,13 @@ public class ContainerViewNodeTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private ScopedViewContext viewContext;
+  ScopedViewContext viewContext;
 
   @Mock
-  private View.Event event;
+  View.Event event;
 
   @Mock
-  private NotifiableViewListeners listeners;
+  NotifiableViewListeners listeners;
 
   private static final Object MODEL = new Object();
 
@@ -101,11 +101,6 @@ public class ContainerViewNodeTest {
       return Collections.singletonList(event);
     }
 
-    @Override
-    public void inject(Object target, Object value, ScopedViewContext context)
-        throws Exception {
-
-    }
-
   }
+
 }

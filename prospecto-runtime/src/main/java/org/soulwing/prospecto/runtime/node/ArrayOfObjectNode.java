@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
@@ -44,10 +43,12 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ArrayOfObjectNode extends ContainerViewNode {
+public class ArrayOfObjectNode extends ContainerViewNode
+    implements UpdatableViewNode {
 
   private final ToManyAssociationUpdater associationUpdater;
   private final MultiValuedAccessorFactory accessorFactory;
+  private final UpdatableViewNodeTemplate template;
 
   private final String elementName;
 
@@ -64,17 +65,20 @@ public class ArrayOfObjectNode extends ContainerViewNode {
       String namespace, Class<?> modelType) {
     this(name, elementName, namespace, modelType,
         new ConcreteToManyAssociationUpdater(),
-        ConcreteMultiValuedAccessorFactory.INSTANCE);
+        ConcreteMultiValuedAccessorFactory.INSTANCE,
+        ConcreteUpdatableViewNodeTemplate.INSTANCE);
   }
 
   ArrayOfObjectNode(String name, String elementName,
       String namespace, Class<?> modelType,
       ToManyAssociationUpdater associationUpdater,
-      MultiValuedAccessorFactory accessorFactory) {
+      MultiValuedAccessorFactory accessorFactory,
+      UpdatableViewNodeTemplate template) {
     super(name, namespace, modelType, new ArrayList<AbstractViewNode>());
     this.elementName = elementName;
     this.associationUpdater = associationUpdater;
     this.accessorFactory = accessorFactory;
+    this.template = template;
   }
 
   /**
@@ -119,22 +123,17 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<MutableViewEntity> toModelValue(ViewEntity parentEntity,
       View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context) throws Exception {
-    final List<MutableViewEntity> entities = new ArrayList<>();
-    View.Event event = events.removeFirst();
-    while (event != null
-        && View.Event.Type.BEGIN_OBJECT.equals(event.getType())) {
-      entities.add((MutableViewEntity)
-          super.toModelValue(parentEntity, event, events, context));
-      event = events.removeFirst();
-    }
-    if (event == null
-        || event.getType() != triggerEvent.getType().complement()) {
-      throw new ModelEditorException("expected END_ARRAY");
-    }
-    return entities;
+
+    final ArrayOfObjectNodeUpdateMethod method =
+        new ArrayOfObjectNodeUpdateMethod(this, parentEntity, triggerEvent,
+            events, context, template);
+
+    return (List<MutableViewEntity>)
+        template.toModelValue(this, parentEntity, context, method);
   }
 
   @Override
@@ -144,7 +143,6 @@ public class ArrayOfObjectNode extends ContainerViewNode {
     associationUpdater.update(this, target,
         (List<MutableViewEntity>) value, accessor, context);
   }
-
 
   @SuppressWarnings("unchecked")
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
