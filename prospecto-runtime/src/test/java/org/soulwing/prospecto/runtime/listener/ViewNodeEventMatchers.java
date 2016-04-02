@@ -57,6 +57,11 @@ public class ViewNodeEventMatchers {
   public static Matcher<ViewNodeEvent> inContext(ViewContext context) {
     return hasProperty("context", sameInstance(context));
   }
+
+  public static Matcher<ViewNodeEvent> mode(ViewNodeEvent.Mode mode) {
+    return hasProperty("mode", equalTo(mode));
+  }
+
 }
 
 

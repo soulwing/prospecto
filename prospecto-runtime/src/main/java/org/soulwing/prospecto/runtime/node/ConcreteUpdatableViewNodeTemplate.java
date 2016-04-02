@@ -41,7 +41,7 @@ class ConcreteUpdatableViewNodeTemplate implements UpdatableViewNodeTemplate {
   public Object toModelValue(ViewNode node, ViewEntity parentEntity,
       ScopedViewContext context, Method method) throws Exception {
 
-    context.push(node.getName(), node.getModelType());
+    context.push(node.getName(), parentEntity.getType());
     try {
       final ViewNodeEvent nodeEvent = new ViewNodeEvent(
           ViewNodeEvent.Mode.MODEL_UPDATE, node, parentEntity, context);
