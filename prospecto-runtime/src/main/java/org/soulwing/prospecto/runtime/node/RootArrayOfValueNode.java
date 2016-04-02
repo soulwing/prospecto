@@ -35,7 +35,7 @@ public class RootArrayOfValueNode extends ArrayOfValueNode {
    */
   public RootArrayOfValueNode(String name, String elementName,
       String namespace) {
-    super(name, elementName, namespace);
+    super(name, elementName, namespace, Object.class);
   }
 
   @Override

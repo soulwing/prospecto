@@ -123,12 +123,14 @@ public class ArrayOfValueNodeTest {
   @Before
   public void setUp() throws Exception {
     node = new ArrayOfValueNode(NAME, ELEMENT_NAME, NAMESPACE,
-        transformationService, template, accessorFactory);
+        MODEL_VALUE.getClass(), transformationService, template,
+        accessorFactory);
     context.checking(new Expectations() {
       {
         allowing(accessor).getDataType();
         will(returnValue(MODEL_TYPE));
-        allowing(accessorFactory).newAccessor(accessor);
+        allowing(accessorFactory).newAccessor(accessor,
+            MODEL_VALUE.getClass());
         will(returnValue(multiValuedAccessor));
       }
     });

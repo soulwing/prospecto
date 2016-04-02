@@ -141,20 +141,21 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   protected abstract ViewTemplateBuilder newTemplateBuilder(UrlNode node);
 
   @Override
-  public ViewTemplateBuilder arrayOfValues(String name) {
-    return arrayOfValues(name, null, null);
-  }
-
-  @Override
-  public ViewTemplateBuilder arrayOfValues(String name, String elementName) {
-    return arrayOfValues(name, elementName, null);
+  public ViewTemplateBuilder arrayOfValues(String name, Class<?> componentType) {
+    return arrayOfValues(name, null, null, componentType);
   }
 
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, String elementName,
-      String namespace) {
+      Class<?> componentType) {
+    return arrayOfValues(name, elementName, null, componentType);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfValues(String name, String elementName,
+      String namespace, Class<?> componentType) {
     final ArrayOfValueNode node = new ArrayOfValueNode(name, elementName,
-        namespace);
+        namespace, componentType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }

@@ -66,7 +66,7 @@ public interface Views {
           .source("itemTotal")
           .accessType(AccessType.PROPERTY)
         .envelope("approverList")
-          .arrayOfValues("approvers", "approver")
+          .arrayOfValues("approvers", "approver", String.class)
           .end()
         .value("vendor")
           .converter(PropertyExtractingValueTypeConverter.class,

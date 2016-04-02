@@ -78,18 +78,25 @@ public interface ViewTemplateBuilder {
   /**
    * Adds an array-of-values node at the cursor.
    * @param name name for the array in the view
+   * @param componentType common type of the elements; all elements need not
+   *    be of the same type, but the most specific type that is common to
+   *    all elements should be given here
    * @return this builder
    */
-  ViewTemplateBuilder arrayOfValues(String name);
+  ViewTemplateBuilder arrayOfValues(String name, Class<?> componentType);
 
   /**
    * Adds an array-of-values at the cursor.
    * @param name name for the array in the view
    * @param elementName name for the elements in the view; used in only
    *    some view types (e.g. XML)
+   * @param componentType common type of the elements; all elements need not
+   *    be of the same type, but the most specific type that is common to
+   *    all elements should be given here
    * @return this builder
    */
-  ViewTemplateBuilder arrayOfValues(String name, String elementName);
+  ViewTemplateBuilder arrayOfValues(String name, String elementName,
+      Class<?> componentType);
 
   /**
    * Adds an array-of-values at the cursor.
@@ -98,10 +105,13 @@ public interface ViewTemplateBuilder {
    *    some view types (e.g. XML)
    * @param namespace namespace for {@code name} and {@code elementName};
    *    used in only some view types (e.g. XML)
+   * @param componentType common type of the elements; all elements need not
+   *    be of the same type, but the most specific type that is common to
+   *    all elements should be given here
    * @return this builder
    */
   ViewTemplateBuilder arrayOfValues(String name, String elementName,
-      String namespace);
+      String namespace, Class<?> componentType);
 
   /**
    * Adds an object node at the cursor.

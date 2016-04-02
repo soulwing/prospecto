@@ -110,7 +110,7 @@ public class EditorTest {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(MockType1.class)
             .accessType(AccessType.FIELD)
-            .arrayOfValues(STRINGS)
+            .arrayOfValues(STRINGS, String.class)
             .end()
         .build();
 

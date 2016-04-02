@@ -38,7 +38,7 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
 public class ArrayAccessorTest {
 
   private MockAccessor delegate = new MockAccessor();
-  private ArrayAccessor accessor = new ArrayAccessor(delegate);
+  private ArrayAccessor accessor = new ArrayAccessor(delegate, Object.class);
 
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testAddIndexValueBelowRange() throws Exception {
@@ -173,7 +173,7 @@ public class ArrayAccessorTest {
 
     @Override
     public Class<?> getDataType() {
-      return null;
+      return Object[].class;
     }
 
     @Override

@@ -30,15 +30,23 @@ public abstract class AbstractIndexedMultiValuedAccessor
     extends AbstractToManyIndexedAssociationManager<Object, Object>
     implements IndexedMultiValuedAccessor {
 
-  protected Accessor delegate;
+  protected final Accessor delegate;
+  protected final Class<?> componentType;
 
-  public AbstractIndexedMultiValuedAccessor(Accessor delegate) {
+  public AbstractIndexedMultiValuedAccessor(Accessor delegate,
+      Class<?> componentType) {
     this.delegate = delegate;
+    this.componentType = componentType;
   }
 
   @Override
   public boolean supports(AssociationDescriptor descriptor) {
     return true;
+  }
+
+  @Override
+  public Class<?> getComponentType() {
+    return componentType;
   }
 
 }

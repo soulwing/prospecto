@@ -31,6 +31,7 @@ public abstract class AbstractMultiValuedAccessor
     implements MultiValuedAccessor {
 
   protected Accessor delegate;
+  protected Class<?> componentType;
 
   protected AbstractMultiValuedAccessor(Accessor delegate) {
     this.delegate = delegate;
@@ -39,6 +40,11 @@ public abstract class AbstractMultiValuedAccessor
   @Override
   public boolean supports(AssociationDescriptor descriptor) {
     return true;
+  }
+
+  @Override
+  public Class<?> getComponentType() {
+    return componentType;
   }
 
 }

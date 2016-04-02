@@ -174,7 +174,7 @@ public class EnvelopeTest {
         .object(MockType1.class)
             .accessType(AccessType.FIELD)
                 .envelope(ENVELOPE)
-                    .arrayOfValues(STRINGS)
+                    .arrayOfValues(STRINGS, Object.class)
                         .end()
                 .end()
             .end()

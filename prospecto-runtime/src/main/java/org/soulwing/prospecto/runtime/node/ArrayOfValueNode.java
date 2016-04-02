@@ -46,6 +46,7 @@ public class ArrayOfValueNode extends AbstractViewNode
     implements Convertible, ModelAccessingNode, UpdatableViewNode {
 
   private final String elementName;
+  private final Class<?> componentType;
   private final TransformationService transformationService;
   private final UpdatableViewNodeTemplate template;
   private final MultiValuedAccessorFactory accessorFactory;
@@ -58,19 +59,23 @@ public class ArrayOfValueNode extends AbstractViewNode
    * @param name node name
    * @param elementName name for the elements of the array
    * @param namespace namespace for {@code name} and {@code elementName}
+   * @param componentType common type for elements
    */
-  public ArrayOfValueNode(String name, String elementName, String namespace) {
-    this(name, elementName, namespace, ConcreteTransformationService.INSTANCE,
+  public ArrayOfValueNode(String name, String elementName, String namespace,
+      Class<?> componentType) {
+    this(name, elementName, namespace, componentType,
+        ConcreteTransformationService.INSTANCE,
         ConcreteUpdatableViewNodeTemplate.INSTANCE,
         ConcreteMultiValuedAccessorFactory.INSTANCE);
   }
 
   ArrayOfValueNode(String name, String elementName, String namespace,
-      TransformationService transformationService,
+      Class<?> componentType, TransformationService transformationService,
       UpdatableViewNodeTemplate template,
       MultiValuedAccessorFactory accessorFactory) {
     super(name, namespace, null);
     this.elementName = elementName;
+    this.componentType = componentType;
     this.transformationService = transformationService;
     this.template = template;
     this.accessorFactory = accessorFactory;
@@ -93,7 +98,7 @@ public class ArrayOfValueNode extends AbstractViewNode
   public void setAccessor(Accessor accessor) {
     this.accessor = accessor;
     this.multiValuedAccessor = accessor != null ?
-        accessorFactory.newAccessor(accessor) : null;
+        accessorFactory.newAccessor(accessor, componentType) : null;
   }
 
   @Override

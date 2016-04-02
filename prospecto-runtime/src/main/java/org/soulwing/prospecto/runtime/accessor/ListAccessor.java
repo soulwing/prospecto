@@ -28,14 +28,8 @@ import java.util.List;
  */
 public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
 
-  public ListAccessor(Accessor delegate) {
-    super(delegate);
-  }
-
-  @Override
-  public Class<?> getComponentType() {
-    // FIXME
-    return Object.class;
+  public ListAccessor(Accessor delegate, Class<?> componentType) {
+    super(delegate, componentType);
   }
 
   @Override

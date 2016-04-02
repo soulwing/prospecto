@@ -25,6 +25,6 @@ package org.soulwing.prospecto.runtime.accessor;
  */
 public interface MultiValuedAccessorFactory {
 
-  MultiValuedAccessor newAccessor(Accessor accessor);
+  MultiValuedAccessor newAccessor(Accessor accessor, Class<?> componentType);
 
 }

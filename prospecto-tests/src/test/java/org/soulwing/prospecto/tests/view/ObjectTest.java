@@ -456,7 +456,7 @@ public class ObjectTest {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(MockType1.class)
             .accessType(AccessType.FIELD)
-            .arrayOfValues(STRINGS)
+            .arrayOfValues(STRINGS, String.class)
             .end()
         .build();
 
@@ -480,7 +480,7 @@ public class ObjectTest {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(MockType1.class)
         .accessType(AccessType.FIELD)
-        .arrayOfValues(STRINGS, STRING)
+        .arrayOfValues(STRINGS, STRING, String.class)
         .end()
         .build();
 
@@ -504,7 +504,7 @@ public class ObjectTest {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(MockType1.class)
         .accessType(AccessType.FIELD)
-        .arrayOfValues(STRINGS, STRING, NAMESPACE)
+        .arrayOfValues(STRINGS, STRING, NAMESPACE, String.class)
         .end()
         .build();
 

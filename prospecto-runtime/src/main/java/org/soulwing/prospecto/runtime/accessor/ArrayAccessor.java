@@ -29,13 +29,15 @@ import java.util.Iterator;
  */
 public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
 
-  public ArrayAccessor(Accessor delegate) {
-    super(delegate);
-  }
-
-  @Override
-  public Class<?> getComponentType() {
-    return delegate.getDataType().getComponentType();
+  public ArrayAccessor(Accessor delegate, Class<?> componentType) {
+    super(delegate, componentType);
+    if (!delegate.getDataType().getComponentType()
+        .isAssignableFrom(componentType)) {
+      throw new IllegalArgumentException("component type "
+          + componentType.getSimpleName()
+          + " is not compatible with array type "
+          + delegate.getDataType().getComponentType());
+    }
   }
 
   @Override

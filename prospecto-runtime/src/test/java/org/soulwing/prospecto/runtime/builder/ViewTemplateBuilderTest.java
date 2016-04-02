@@ -690,7 +690,7 @@ public class ViewTemplateBuilderTest {
   public void testObjectArrayOfValuesArray() throws Exception {
     ConcreteViewTemplate template = (ConcreteViewTemplate)
         ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
-            .arrayOfValues(MOCK_ARRAY)
+            .arrayOfValues(MOCK_ARRAY, Object.class)
             .build();
 
     assertThat(template.getRoot(), is(
@@ -713,7 +713,7 @@ public class ViewTemplateBuilderTest {
   public void testObjectArrayOfValuesCollection() throws Exception {
     ConcreteViewTemplate template = (ConcreteViewTemplate)
         ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
-            .arrayOfValues(MOCK_COLLECTION)
+            .arrayOfValues(MOCK_COLLECTION, Object.class)
             .build();
 
     assertThat(template.getRoot(), is(
@@ -736,7 +736,7 @@ public class ViewTemplateBuilderTest {
   public void testObjectArrayOfValuesElementName() throws Exception {
     ConcreteViewTemplate template = (ConcreteViewTemplate)
         ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
-            .arrayOfValues(MOCK_ARRAY, ELEMENT_NAME)
+            .arrayOfValues(MOCK_ARRAY, ELEMENT_NAME, Object.class)
             .build();
 
     assertThat(template.getRoot(), is(
@@ -760,7 +760,7 @@ public class ViewTemplateBuilderTest {
   public void testObjectArrayOfValuesElementNameNamespace() throws Exception {
     ConcreteViewTemplate template = (ConcreteViewTemplate)
         ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
-            .arrayOfValues(MOCK_ARRAY, ELEMENT_NAME, NAMESPACE)
+            .arrayOfValues(MOCK_ARRAY, ELEMENT_NAME, NAMESPACE, Object.class)
             .build();
 
     assertThat(template.getRoot(), is(
@@ -784,7 +784,7 @@ public class ViewTemplateBuilderTest {
   @Test(expected = ViewTemplateException.class)
   public void testObjectArrayOfValuesWithIncompatibleProperty() throws Exception {
     ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
-        .arrayOfValues(MOCK_PROPERTY)
+        .arrayOfValues(MOCK_PROPERTY, Object.class)
         .build();
   }
 

@@ -88,7 +88,7 @@ public class ArrayOfObjectNode extends ContainerViewNode {
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
-    this.accessor = accessorFactory.newAccessor(accessor);
+    this.accessor = accessorFactory.newAccessor(accessor, getModelType());
   }
 
   @Override
