@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
@@ -124,6 +125,9 @@ public class LinkedListValueTypeConverterService
     }
     if (BigDecimal.class.isAssignableFrom(type) && value instanceof Number) {
       return new BigDecimal(((Number) value).doubleValue());
+    }
+    if (UUID.class.equals(type) && value instanceof String) {
+      return UUID.fromString((String) value);
     }
 
     Object result = coerceUsingValueOf(type, value);

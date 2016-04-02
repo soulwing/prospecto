@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -180,6 +181,11 @@ public class LinkedListValueTypeConverterServiceTest {
   @Test
   public void testCoerceNumberToBigDecimal() throws Exception {
     coerceAndValidate(BigDecimal.class, -1L, BigDecimal.ONE.negate());
+  }
+
+  public void testCoerceStringUUID() throws Exception {
+    final UUID uuid = UUID.randomUUID();
+    coerceAndValidate(String.class, uuid, uuid.toString());
   }
 
   @Test
