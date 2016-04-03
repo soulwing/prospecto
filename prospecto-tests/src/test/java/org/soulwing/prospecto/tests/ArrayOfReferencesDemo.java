@@ -27,6 +27,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 
@@ -45,6 +46,27 @@ import static org.hamcrest.Matchers.notNullValue;
  * @author Michael Irwin
  */
 public class ArrayOfReferencesDemo {
+
+  public static class ParentObject {
+    private Long id;
+    private TestObject test;
+
+    public Long getId() {
+      return id;
+    }
+
+    public void setId(Long id) {
+      this.id = id;
+    }
+
+    public TestObject getTest() {
+      return test;
+    }
+
+    public void setTest(TestObject test) {
+      this.test = test;
+    }
+  }
 
   public static class TestObject {
     private Set<ReferencedObject> references = new HashSet<>();
@@ -90,6 +112,16 @@ public class ArrayOfReferencesDemo {
           .end()
         .build();
 
+  static final ViewTemplate PARENT_TEMPLATE = ViewTemplateBuilderProducer
+      .object(ParentObject.class)
+        .value("id")
+        .object("test", TestObject.class)
+          .arrayOfReferences("references", ReferencedObject.class)
+            .value("id")
+            .end()
+          .end()
+        .build();
+
   public static void main(String[] args) throws Exception {
     ReferencedObject reference1 = new ReferencedObject(123L);
     ReferencedObject reference2 = new ReferencedObject(456L);
@@ -120,6 +152,13 @@ public class ArrayOfReferencesDemo {
       assertThat(r, is(notNullValue()));
       assertThat(r.getId(), is(notNullValue()));
     }
+    
+    // Test for other json
+    String json2 = "{\"id\":321,\"test\":" + json + "}";
+    jsonProducedView = readerFactory.newReader(new ByteArrayInputStream(json2.getBytes())).readView();
+    ParentObject parent = (ParentObject) PARENT_TEMPLATE.generateEditor(jsonProducedView, context).create();
+    assertThat(parent.getTest(), is(notNullValue()));
+    assertThat(parent.getTest().getReferences().size(), is(2));
   }
 
 }
