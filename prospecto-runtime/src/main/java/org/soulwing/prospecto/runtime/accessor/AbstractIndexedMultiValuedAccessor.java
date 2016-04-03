@@ -49,4 +49,10 @@ public abstract class AbstractIndexedMultiValuedAccessor
     return componentType;
   }
 
+  @Override
+  public void begin(Object target) throws Exception {}
+
+  @Override
+  public void end(Object target) throws Exception {}
+
 }

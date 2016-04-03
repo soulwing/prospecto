@@ -58,8 +58,8 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
-  public void remove(Object target, Object value) throws Exception {
-    get(target).remove(value);
+  public boolean remove(Object target, Object value) throws Exception {
+    return get(target).remove(value);
   }
 
   @Override

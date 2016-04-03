@@ -56,8 +56,8 @@ public class LeagueDivisionToManyAssociationManager
   }
 
   @Override
-  public void remove(League league, Division division) throws Exception {
-    league.removeDivision(division);
+  public boolean remove(League league, Division division) throws Exception {
+    return league.removeDivision(division);
   }
 
 }

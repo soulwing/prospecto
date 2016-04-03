@@ -82,9 +82,11 @@ public class ConcreteToManyAssociationUpdaterTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpdate() throws Exception {
     context.checking(new Expectations() {
       {
+        oneOf(manager).begin(owner);
         oneOf(descriptorFactory).newDescriptor(node);
         will(returnValue(descriptor));
         oneOf(managerLocator).findManager(ToManyAssociationManager.class,
@@ -95,6 +97,7 @@ public class ConcreteToManyAssociationUpdaterTest {
         oneOf(strategy).update(node, owner,
             Collections.<MutableViewEntity>emptyList(),
             manager, viewContext);
+        oneOf(manager).end(owner);
       }
     });
 

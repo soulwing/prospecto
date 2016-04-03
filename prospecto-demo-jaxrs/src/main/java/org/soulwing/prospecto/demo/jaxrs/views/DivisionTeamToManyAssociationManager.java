@@ -57,8 +57,8 @@ public class DivisionTeamToManyAssociationManager
   }
 
   @Override
-  public void remove(Division division, Team team) throws Exception {
-    division.removeTeam(team);
+  public boolean remove(Division division, Team team) throws Exception {
+    return division.removeTeam(team);
   }
 
 }

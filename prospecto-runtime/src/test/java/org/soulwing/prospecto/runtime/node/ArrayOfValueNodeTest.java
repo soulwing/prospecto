@@ -279,8 +279,10 @@ public class ArrayOfValueNodeTest {
   public void testInject() throws Exception {
     context.checking(new Expectations() {
       {
+        oneOf(multiValuedAccessor).begin(MODEL);
         oneOf(multiValuedAccessor).clear(MODEL);
         oneOf(multiValuedAccessor).add(MODEL, MODEL_VALUE);
+        oneOf(multiValuedAccessor).end(MODEL);
       }
     });
 

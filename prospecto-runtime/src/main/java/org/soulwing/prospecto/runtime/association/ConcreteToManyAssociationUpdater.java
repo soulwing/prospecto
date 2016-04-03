@@ -58,6 +58,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void update(ContainerViewNode node, Object target,
       List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
@@ -69,8 +70,10 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
         managerLocator.findManager(ToManyAssociationManager.class,
             defaultManager, descriptor, node, context);
 
+    manager.begin(target);
     findStrategy(manager).update(node, target, entities, defaultManager,
         context);
+    manager.end(target);
   }
 
   private ToManyAssociationUpdateStrategy findStrategy(

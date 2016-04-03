@@ -61,4 +61,10 @@ public abstract class AbstractToManyAssociationManager<T, E>
     return null;
   }
 
+  @Override
+  public void begin(T owner) throws Exception {}
+
+  @Override
+  public void end(T owner) throws Exception {}
+
 }

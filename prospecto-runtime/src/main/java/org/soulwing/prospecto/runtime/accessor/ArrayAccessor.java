@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * An accessor for the elements of an array.
@@ -28,6 +30,8 @@ import java.util.Iterator;
  * @author Carl Harris
  */
 public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
+
+  private List<Object> buffer;
 
   public ArrayAccessor(Accessor delegate, Class<?> componentType) {
     super(delegate, componentType);
@@ -49,71 +53,100 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
 
   @Override
   public int size(Object source) throws Exception {
-    return ((Object[]) delegate.get(source)).length;
+    return getAsList(source, TransactionStatus.MANDATORY).size();
   }
 
   @Override
   public Object get(Object source, int index) throws Exception {
-    return ((Object[]) delegate.get(source))[index];
+    return getAsList(source, TransactionStatus.OPTIONAL).get(index);
   }
 
   @Override
   public void set(Object target, int index, Object value) throws Exception {
-    ((Object[]) delegate.get(target))[index] = value;
+    getAsList(target, TransactionStatus.OPTIONAL).set(index, value);
   }
 
   @Override
   public void add(Object target, Object value) throws Exception {
-    add(target, ((Object[]) delegate.get(target)).length, value);
+    assertHasTransaction();
+    getAsList(target, TransactionStatus.MANDATORY).add(value);
   }
 
   @Override
-  public void remove(Object target, Object value) throws Exception {
-    throw new UnsupportedOperationException();
+  public boolean remove(Object target, Object value) throws Exception {
+    assertHasTransaction();
+    return getAsList(target, TransactionStatus.MANDATORY).remove(value);
   }
 
   @Override
   public void add(Object target, int index, Object value) throws Exception {
-    Object[] array = (Object[]) delegate.get(target);
-    assertIndexIsInRange(array, index, array.length);
-    Object[] arrayCopy = Arrays.copyOf(array, array.length + 1);
-    if (index < array.length) {
-      System.arraycopy(arrayCopy, index, arrayCopy, index + 1,
-        array.length - index);
-    }
-    arrayCopy[index] = value;
-    delegate.set(target, arrayCopy);
+    assertHasTransaction();
+    getAsList(target, TransactionStatus.MANDATORY).add(index, value);
   }
 
   @Override
   public void remove(Object target, int index) throws Exception {
-    Object[] array = (Object[]) delegate.get(target);
-    assertIndexIsInRange(array, index, array.length - 1);
-    Object[] arrayCopy = array.length - 1 > 0 ?
-        Arrays.copyOf(array, array.length - 1) : new Object[0];
-    if (array.length - 1 > 0) {
-      if (index - 1 >= 0) {
-        System.arraycopy(array, 0, arrayCopy, 0, index - 1);
-      }
-      System.arraycopy(array, index + 1, arrayCopy, index,
-          arrayCopy.length - index);
-    }
-    delegate.set(target, arrayCopy);
+    assertHasTransaction();
+    getAsList(target, TransactionStatus.MANDATORY).remove(index);
   }
 
   @Override
   public void clear(Object target) throws Exception {
-    delegate.set(target, Array.newInstance(
-        delegate.getDataType().getComponentType(), 0));
+    assertHasTransaction();
+    getAsList(target, TransactionStatus.MANDATORY).clear();
   }
 
-  private static void assertIndexIsInRange(Object[] array, int index,
-      int extent) {
-    if (index < 0 || index > extent) {
-      throw new ArrayIndexOutOfBoundsException("index " + index + " is not in"
-          + " range [0, " + extent + "]");
-    }
+  @Override
+  public void begin(Object target) throws Exception {
+    assertNoTransaction();
+    buffer = new ArrayList<>(Arrays.asList(getAsArray(target)));
+  }
 
+  @Override
+  public void end(Object target) throws Exception {
+    assertHasTransaction();
+    Object[] src = buffer.toArray();
+    Object[] dest = getAsArray(target);
+    if (dest.length != src.length) {
+      dest = (Object[]) Array.newInstance(
+          delegate.getDataType().getComponentType(), src.length);
+      delegate.set(target, dest);
+    }
+    System.arraycopy(src, 0, dest, 0, src.length);
+    buffer = null;
+  }
+
+  enum TransactionStatus {
+    MANDATORY, OPTIONAL
+  }
+
+  private List<Object> getAsList(Object target,
+      TransactionStatus transactionStatus) throws Exception {
+    if (transactionStatus == TransactionStatus.MANDATORY) {
+      assertHasTransaction();
+    }
+    if (buffer != null) {
+      return buffer;
+    }
+    return Arrays.asList(getAsArray(target));
+  }
+
+  private Object[] getAsArray(Object target) throws Exception {
+    Object[] array = (Object[]) delegate.get(target);
+    if (array == null) {
+      array = new Object[0];
+    }
+    return array;
+  }
+
+  private void assertNoTransaction() {
+    if (buffer == null) return;
+    throw new IllegalStateException("transaction already in progress");
+  }
+
+  private void assertHasTransaction() {
+    if (buffer != null) return;
+    throw new IllegalStateException("no transaction in progress");
   }
 
 }

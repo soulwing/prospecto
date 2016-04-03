@@ -49,11 +49,13 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
       throws Exception {
     final List<MutableViewEntity> entities = (List<MutableViewEntity>) value;
     final ReferenceResolverService resolvers = context.getReferenceResolvers();
+    getMultiValuedAccessor().begin(target);
     getMultiValuedAccessor().clear(target);
     for (final MutableViewEntity entity : entities) {
       getMultiValuedAccessor().add(target,
           resolvers.resolve(entity.getType(), entity));
     }
+    getMultiValuedAccessor().end(target);
   }
 
 }

@@ -150,11 +150,13 @@ public class ArrayOfValueNode extends AbstractViewNode
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
+    multiValuedAccessor.begin(target);
     multiValuedAccessor.clear(target);
     final List<?> array = (List<?>) value;
     for (final Object element : array) {
       multiValuedAccessor.add(target, element);
     }
+    multiValuedAccessor.end(target);
   }
 
   class Method implements UpdatableViewNodeTemplate.Method {

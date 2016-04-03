@@ -25,20 +25,64 @@ import org.soulwing.prospecto.api.ViewEntity;
 /**
  * An object that during model update manages the association between an object
  * and a collection composed in the object.
+ * <p>
+ * A manager is used, by the underlying framework, in a transactional fashion.
+ * Before invoking methods to update the associated collection, the framework
+ * will first invoke the {@link #begin(Object)} method to inform the manager
+ * that a sequence of collection-operations will be performed. When all
+ * update operations have been performed, the framework will notify the manager
+ * that the update is complete by invoking the {@link #end(Object)} method.
  *
  * @author Carl Harris
  */
 public interface ToManyAssociationManager<T, E>
     extends AssociationManager<T, E> {
 
+  /**
+   * Gets an iterator for the associated collection.
+   * @param owner association owner
+   * @return collection iterator
+   * @throws Exception
+   */
   Iterator<E> iterator(T owner) throws Exception;
 
+  /**
+   * Gets the size of the associated collection.
+   * @param owner association owner
+   * @return collection size
+   * @throws Exception
+   */
   int size(T owner) throws Exception;
 
   E findAssociate(T owner, ViewEntity elementEntity) throws Exception;
 
+  /**
+   * Adds an element to the associated collection.
+   * @param owner association owner
+   * @param element the element to add to the collection
+   * @throws Exception
+   */
   void add(T owner, E element) throws Exception;
 
-  void remove(T owner, E element) throws Exception;
+  /**
+   * Removes an element from the associated collection.
+   * @param owner association owner
+   * @param element the element to remove from the collection
+   * @return {@code true} if an element was removed
+   * @throws Exception
+   */
+  boolean remove(T owner, E element) throws Exception;
+
+  /**
+   * Begins a transaction for updating the associated collection.
+   * @param owner association owner
+   */
+  void begin(T owner) throws Exception;
+
+  /**
+   * Ends a transaction that has updated the associated collection.
+   * @param owner association owner
+   */
+  void end(T owner) throws Exception;
 
 }
