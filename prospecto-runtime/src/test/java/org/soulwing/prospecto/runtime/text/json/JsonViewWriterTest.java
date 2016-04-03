@@ -30,6 +30,7 @@ import javax.json.stream.JsonParser;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.runtime.text.ViewWriterTestBase;
 
 /**
@@ -44,8 +45,9 @@ public class JsonViewWriterTest extends ViewWriterTestBase {
   }
 
   @Override
-  protected ViewWriter newViewWriter(View view, OutputStream outputStream) {
-    return new JsonViewWriter(view, outputStream);
+  protected ViewWriter newViewWriter(View view, OutputStream outputStream,
+      Options options) {
+    return new JsonViewWriter(view, outputStream, options);
   }
 
   @Override

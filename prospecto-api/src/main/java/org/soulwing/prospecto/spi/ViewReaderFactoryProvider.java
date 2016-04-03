@@ -18,9 +18,8 @@
  */
 package org.soulwing.prospecto.spi;
 
-import java.util.Map;
-
 import org.soulwing.prospecto.api.ViewReaderFactory;
+import org.soulwing.prospecto.api.options.Options;
 
 /**
  * A provider for a {@link ViewReaderFactory}.
@@ -40,9 +39,9 @@ public interface ViewReaderFactoryProvider {
   /**
    * Creates a new factory that will produce readers for the textual
    * representation supported by this provider.
-   * @param properties configuration properties for the provider
+   * @param options configuration properties for the provider
    * @return factory instance
    */
-  ViewReaderFactory newFactory(Map<String, Object> properties);
+  ViewReaderFactory newFactory(Options options);
 
 }

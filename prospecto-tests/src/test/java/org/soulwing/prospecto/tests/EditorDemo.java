@@ -19,7 +19,6 @@
 package org.soulwing.prospecto.tests;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
 
 import org.soulwing.prospecto.ViewContextProducer;
@@ -43,6 +42,8 @@ import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodeListener;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.demo.DepartmentPurchaser;
 import org.soulwing.prospecto.demo.PersonPurchaser;
@@ -128,8 +129,9 @@ public class EditorDemo {
     order.getItems().add(item1);
     order.getItems().add(item2);
 
+    final Options options = new OptionsMap();
     ViewReaderFactory readerFactory = ViewReaderFactoryProducer
-        .getFactory("JSON", Collections.<String, Object>emptyMap());
+        .getFactory("JSON", options);
 
     ViewReader reader = readerFactory.newReader(
         EditorDemo.class.getClassLoader().getResourceAsStream("po.json"));
@@ -184,7 +186,7 @@ public class EditorDemo {
     editor.update(order);
 
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
-        .getFactory("JSON");
+        .getFactory("JSON", options);
 
     View updatedView = PO_TEMPLATE.generateView(order, context);
 

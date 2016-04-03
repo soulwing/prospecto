@@ -19,13 +19,13 @@
 package org.soulwing.prospecto.runtime.text.xml;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewReader;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
 /**
- * Unit tests for {@link XmlViewReader}.
+ * Tests for {@link XmlViewReader}.
  *
  * @author Carl Harris
  */
@@ -37,8 +37,8 @@ public class XmlViewReaderTest extends ViewReaderTestBase {
 
   @Override
   protected ViewReader newViewReader(InputStream inputStream,
-      Map<String, Object> properties) {
-    return new XmlViewReader(inputStream, properties);
+      Options options) {
+    return new XmlViewReader(inputStream, options);
   }
 
 }

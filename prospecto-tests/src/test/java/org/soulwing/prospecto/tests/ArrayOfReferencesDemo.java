@@ -18,6 +18,14 @@
  */
 package org.soulwing.prospecto.tests;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
+import java.io.ByteArrayInputStream;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
@@ -27,19 +35,10 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
-
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Demo for an array of references
@@ -133,8 +132,9 @@ public class ArrayOfReferencesDemo {
     final ViewContext context = ViewContextProducer.newContext();
     context.getReferenceResolvers().append(new ReferencedObjectResolver());
 
+    final Options options = new OptionsMap();
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
-        .getFactory("JSON");
+        .getFactory("JSON", options);
 
     final View view = TEMPLATE.generateView(test, context);
     writerFactory.newWriter(view, System.out).writeView();
@@ -142,7 +142,7 @@ public class ArrayOfReferencesDemo {
     // Test reading
     String json = "{\"references\":[{\"id\":123},{\"id\":456}]}";
     ViewReaderFactory readerFactory = ViewReaderFactoryProducer
-        .getFactory("JSON", new HashMap<String, Object>());
+        .getFactory("JSON", options);
     View jsonProducedView = readerFactory
         .newReader(new ByteArrayInputStream(json.getBytes())).readView();
 

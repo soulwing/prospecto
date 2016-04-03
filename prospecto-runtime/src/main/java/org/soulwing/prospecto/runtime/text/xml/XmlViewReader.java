@@ -21,10 +21,8 @@ package org.soulwing.prospecto.runtime.text.xml;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
@@ -38,24 +36,24 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
-import org.soulwing.prospecto.runtime.text.ReaderKeys;
-import org.soulwing.prospecto.runtime.util.PropertyMap;
 
 /**
  * A {@link org.soulwing.prospecto.api.ViewReader} that parses an XML document.
  *
  * @author Carl Harris
  */
-public class XmlViewReader extends AbstractViewReader {
+class XmlViewReader extends AbstractViewReader {
 
   public static final String DEFAULT_URL_NAME = UrlNode.DEFAULT_NAME;
 
   /**
    * A parser stack frame
    */
-  static class Frame {
+  private static class Frame {
     final StringBuilder text = new StringBuilder();
 
     final QName qname;
@@ -99,17 +97,10 @@ public class XmlViewReader extends AbstractViewReader {
   private final Deque<Frame> stack = new LinkedList<>();
 
   private final InputStream inputStream;
-  private final PropertyMap properties;
 
-
-  public XmlViewReader(InputStream inputStream) {
-    this(inputStream, Collections.<String, Object>emptyMap());
-  }
-
-  public XmlViewReader(InputStream inputStream,
-      Map<String, Object> properties) {
+  XmlViewReader(InputStream inputStream, Options options) {
+    super(options);
     this.inputStream = inputStream;
-    this.properties = new PropertyMap(properties);
   }
 
   @Override
@@ -161,7 +152,6 @@ public class XmlViewReader extends AbstractViewReader {
 
   private void endElement(EndElement event) throws XMLStreamException {
     final Frame frame = stack.pop();
-    final String type = frame.getType();
     if (!frame.isValueElement()) {
       end();
     }
@@ -187,7 +177,7 @@ public class XmlViewReader extends AbstractViewReader {
   private void url(StartElement event) {
     final Attribute url = event.getAttributeByName(
         new QName(XmlViewConstants.VIEW_NAMESPACE,
-            properties.getString(ReaderKeys.URL_NAME, DEFAULT_URL_NAME)));
+            getOptions().get(ReaderKeys.URL_NAME, DEFAULT_URL_NAME).toString()));
     if (url != null) {
       url(url.getValue());
     }

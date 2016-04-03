@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
 
 /**
@@ -31,7 +32,7 @@ import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
  * @author Carl Harris
  */
 public class XmlViewWriterFactoryProvider
-    implements ViewWriterFactoryProvider, ViewWriterFactory {
+    implements ViewWriterFactoryProvider {
 
   public static final String NAME = "XML";
 
@@ -41,13 +42,23 @@ public class XmlViewWriterFactoryProvider
   }
 
   @Override
-  public ViewWriterFactory newFactory() {
-    return this;
+  public ViewWriterFactory newFactory(Options options) {
+    return new XmlViewWriterFactory(options);
   }
 
-  @Override
-  public ViewWriter newWriter(View view, OutputStream outputStream) {
-    return new XmlViewWriter(view, outputStream);
+  private static class XmlViewWriterFactory implements ViewWriterFactory {
+
+    private final Options options;
+
+    XmlViewWriterFactory(Options options) {
+      this.options = options;
+    }
+
+    @Override
+    public ViewWriter newWriter(View view, OutputStream outputStream) {
+      return new XmlViewWriter(view, outputStream, options);
+    }
+
   }
 
 }

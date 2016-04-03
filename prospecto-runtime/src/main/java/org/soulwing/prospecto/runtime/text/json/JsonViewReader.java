@@ -20,17 +20,16 @@ package org.soulwing.prospecto.runtime.text.json;
 
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.Map;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParserFactory;
 
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
-import org.soulwing.prospecto.runtime.text.ReaderKeys;
-import org.soulwing.prospecto.runtime.util.PropertyMap;
 
 /**
  * A {@link org.soulwing.prospecto.api.ViewReader} that parses a JSON object.
@@ -48,18 +47,12 @@ class JsonViewReader extends AbstractViewReader {
       Collections.<String, Object>emptyMap());
 
   private final InputStream inputStream;
-  private final PropertyMap properties;
 
   private String name;
 
-  public JsonViewReader(InputStream inputStream) {
-    this(inputStream, Collections.<String, Object>emptyMap());
-  }
-
-  public JsonViewReader(InputStream inputStream,
-      Map<String, Object> properties) {
+  JsonViewReader(InputStream inputStream, Options options) {
+    super(options);
     this.inputStream = inputStream;
-    this.properties = new PropertyMap(properties);
   }
 
   @Override
@@ -105,12 +98,12 @@ class JsonViewReader extends AbstractViewReader {
   }
 
   private boolean isDiscriminator() {
-    return name != null && name.equals(properties.getString(
-        ReaderKeys.DISCRIMINATOR_NAME, DEFAULT_DISCRIMINATOR_NAME));
+    return name != null && name.equals(getOptions().get(
+        ReaderKeys.DISCRIMINATOR_NAME, DEFAULT_DISCRIMINATOR_NAME).toString());
   }
 
   private boolean isUrl() {
-    return name != null && name.equals(properties.getString(
+    return name != null && name.equals(getOptions().get(
         ReaderKeys.URL_NAME, DEFAULT_URL_NAME));
   }
 

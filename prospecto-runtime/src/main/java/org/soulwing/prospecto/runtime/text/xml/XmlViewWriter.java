@@ -39,6 +39,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -105,20 +106,23 @@ class XmlViewWriter extends AbstractViewWriter {
    * Constructs a new instance.
    * @param view source view
    * @param outputStream target output stream for the textual representation
+   * @param options configuration options
    */
   public XmlViewWriter(View view,
-      OutputStream outputStream) {
-    this(view, outputStream, DEFAULT_ENCODING);
+      OutputStream outputStream, Options options) {
+    this(view, outputStream, options, DEFAULT_ENCODING);
   }
 
   /**
    * Constructs a new instance.
    * @param view source view
    * @param outputStream target output stream for the textual representation
+   * @param options configuration options
    * @param encoding character encoding for the XML
    */
-  public XmlViewWriter(View view, OutputStream outputStream, String encoding) {
-    super(view, outputStream);
+  XmlViewWriter(View view, OutputStream outputStream, Options options,
+      String encoding) {
+    super(view, outputStream, options);
     this.encoding = encoding;
   }
 

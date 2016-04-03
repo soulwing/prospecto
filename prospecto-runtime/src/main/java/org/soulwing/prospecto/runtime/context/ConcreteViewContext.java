@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.api.scope.Scopes;
@@ -64,7 +65,7 @@ class ConcreteViewContext implements ScopedViewContext {
   private final AssociationManagerService collectionManagers =
       new LinkedListAssociationManagerService();
 
-  private final MapOptions options = new MapOptions();
+  private final OptionsMap options = new OptionsMap();
 
   private static class ScopeFrame extends ConcreteMutableScope {
 
@@ -145,7 +146,7 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public MapOptions getOptions() {
+  public OptionsMap getOptions() {
     return options;
   }
 

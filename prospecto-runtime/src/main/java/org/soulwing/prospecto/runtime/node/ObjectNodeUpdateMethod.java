@@ -22,9 +22,9 @@ import java.util.Deque;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.ModelEditorException;
-import org.soulwing.prospecto.api.ModelEditorKeys;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.options.ModelEditorKeys;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 

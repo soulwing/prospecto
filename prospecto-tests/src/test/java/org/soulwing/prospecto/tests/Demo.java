@@ -29,6 +29,8 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.demo.DepartmentPurchaser;
 import org.soulwing.prospecto.demo.MockUrlResolverProvider;
@@ -104,9 +106,10 @@ public class Demo {
     /*
      * Probably want to do this once before a MessageBodyWriter is needed.
      */
+    final Options options = new OptionsMap();
 
-    final ViewWriterFactory jsonWriterFactory = ViewWriterFactoryProducer.getFactory("JSON");
-    final ViewWriterFactory xmlWriterFactory = ViewWriterFactoryProducer.getFactory("XML");
+    final ViewWriterFactory jsonWriterFactory = ViewWriterFactoryProducer.getFactory("JSON", options);
+    final ViewWriterFactory xmlWriterFactory = ViewWriterFactoryProducer.getFactory("XML", options);
 
     /*
      * This sort of thing would go in a message body writer.

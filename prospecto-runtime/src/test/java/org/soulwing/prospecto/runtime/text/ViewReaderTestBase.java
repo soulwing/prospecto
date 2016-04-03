@@ -27,15 +27,16 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.ReaderKeys;
 
 /**
  * Common infrastructure and tests for view reader test classes.
@@ -50,12 +51,12 @@ public abstract class ViewReaderTestBase {
     this.fileSuffix = fileSuffix;
   }
 
-  protected ViewReader newViewReader(InputStream inputStream) {
-    return newViewReader(inputStream, Collections.<String, Object>emptyMap());
+  private ViewReader newViewReader(InputStream inputStream) {
+    return newViewReader(inputStream, new OptionsMap());
   }
 
   protected abstract ViewReader newViewReader(InputStream inputStream,
-      Map<String, Object> properties);
+      Options options);
 
   @Test
   public void testFlatObjectView() throws Exception {
@@ -158,10 +159,10 @@ public abstract class ViewReaderTestBase {
 
   @Test
   public void testCustomUrlView() throws Exception {
+    Options options = new OptionsMap();
+    options.put(ReaderKeys.URL_NAME, Constants.CUSTOM_NAME);
     final ViewReader reader = newViewReader(
-        getTestResource("customUrlView"),
-        Collections.<String, Object>singletonMap(
-            ReaderKeys.URL_NAME, Constants.CUSTOM_NAME));
+        getTestResource("customUrlView"), options);
     final Iterator<View.Event> events = reader.readView().iterator();
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));

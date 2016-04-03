@@ -35,6 +35,7 @@ import javax.json.stream.JsonGeneratorFactory;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -72,10 +73,11 @@ class JsonViewWriter extends AbstractViewWriter {
    * Constructs a new instance.
    * @param view source view
    * @param outputStream target output stream for the textual representation
+   * @param options
    */
   public JsonViewWriter(View view,
-      OutputStream outputStream) {
-    super(view, outputStream);
+      OutputStream outputStream, Options options) {
+    super(view, outputStream, options);
   }
 
   @Override

@@ -28,6 +28,8 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * TODO: DESCRIBE THE TYPE HERE
@@ -75,12 +77,12 @@ public class DiscriminatorDemo {
 
   public static void main(String[] args) throws Exception {
     TestSubObject model = new TestSubObject();
+    Options options = new OptionsMap();
     model.setId(1L);
     model.setText("Some text");
     final ViewContext context = ViewContextProducer.newContext();
-
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
-        .getFactory("JSON");
+        .getFactory("JSON", options);
 
     final View view = TEMPLATE.generateView(Collections.singleton(model), context);
     writerFactory.newWriter(view, System.out)

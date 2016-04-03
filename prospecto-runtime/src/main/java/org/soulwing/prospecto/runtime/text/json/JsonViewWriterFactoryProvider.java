@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
 
 /**
@@ -31,7 +32,7 @@ import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
  * @author Carl Harris
  */
 public class JsonViewWriterFactoryProvider
-    implements ViewWriterFactoryProvider, ViewWriterFactory {
+    implements ViewWriterFactoryProvider {
 
   public static final String NAME = "JSON";
 
@@ -41,13 +42,23 @@ public class JsonViewWriterFactoryProvider
   }
 
   @Override
-  public ViewWriterFactory newFactory() {
-    return this;
+  public ViewWriterFactory newFactory(Options options) {
+    return new JsonViewWriterFactory(options);
   }
 
-  @Override
-  public ViewWriter newWriter(View view, OutputStream outputStream) {
-    return new JsonViewWriter(view, outputStream);
+  private static class JsonViewWriterFactory implements ViewWriterFactory {
+
+    private final Options options;
+
+    JsonViewWriterFactory(Options options) {
+      this.options = options;
+    }
+
+    @Override
+    public ViewWriter newWriter(View view, OutputStream outputStream) {
+      return new JsonViewWriter(view, outputStream, options);
+    }
+
   }
 
 }

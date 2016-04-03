@@ -28,6 +28,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * TODO: DESCRIBE THE TYPE HERE
@@ -94,8 +96,10 @@ public class DiscriminatorTemplateDemo {
 
     final ViewContext context = ViewContextProducer.newContext();
 
+    final Options options = new OptionsMap();
+
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
-        .getFactory("JSON");
+        .getFactory("JSON", options);
 
     final View view = OBJ_COLLECTION.generateView(collection.getObjects(), context);
     writerFactory.newWriter(view, System.out)

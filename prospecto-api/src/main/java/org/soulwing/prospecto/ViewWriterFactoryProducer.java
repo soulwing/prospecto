@@ -19,6 +19,8 @@
 package org.soulwing.prospecto;
 
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
 
 /**
@@ -36,17 +38,36 @@ public class ViewWriterFactoryProducer {
         }
       };
 
+  /**
+   * Gets a writer factory.
+   * @param providerName name of the provider; e.g. 'JSON', 'XML', etc.
+   * @return writer factory
+   * @throws NoSuchProviderException
+   */
   public static ViewWriterFactory getFactory(String providerName)
       throws NoSuchProviderException {
-    return singleton.getInstance().newFactory(providerName);
+    return getFactory(providerName, new OptionsMap());
+  }
+
+  /**
+   * Gets a writer factory.
+   * @param providerName name of the provider; e.g. 'JSON', 'XML', etc.
+   * @param options configuration options
+   * @return writer factory
+   * @throws NoSuchProviderException
+   */
+  public static ViewWriterFactory getFactory(String providerName,
+      Options options)
+      throws NoSuchProviderException {
+    return singleton.getInstance().newFactory(providerName, options);
   }
 
   private ViewWriterFactoryProducer() {
   }
 
-  private ViewWriterFactory newFactory(String providerName)
+  private ViewWriterFactory newFactory(String providerName, Options options)
       throws NoSuchProviderException {
-    return findProvider(providerName).newFactory();
+    return findProvider(providerName).newFactory(options);
   }
 
   private ViewWriterFactoryProvider findProvider(final String providerName)

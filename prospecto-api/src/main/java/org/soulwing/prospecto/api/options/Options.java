@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.options;
 
 import java.util.Map;
 
@@ -33,6 +33,14 @@ public interface Options {
    * @return value or {@code null} if the option is not set
    */
   Object get(String name);
+
+  /**
+   * Gets the value of the named option.
+   * @param name option name
+   * @param defaultValue default value
+   * @return option value or {@code defaultValue} if the option is not set
+   */
+  Object get(String name, Object defaultValue);
 
   /**
    * Puts (sets) the value of the named option.

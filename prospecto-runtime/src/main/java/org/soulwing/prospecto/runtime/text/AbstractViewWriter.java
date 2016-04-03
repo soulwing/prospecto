@@ -24,6 +24,7 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewWriter;
+import org.soulwing.prospecto.api.options.Options;
 
 /**
  * An object that produces a textual representation of a {@link View} on
@@ -42,11 +43,13 @@ public abstract class AbstractViewWriter implements ViewWriter {
   private final OutputStream outputStream;
 
   /**
-   * Constructs a new writer
+   * Constructs a new writer.
    * @param view the subject view
+   * @param options configuration options
    *
    */
-  protected AbstractViewWriter(View view, OutputStream outputStream) {
+  protected AbstractViewWriter(View view, OutputStream outputStream,
+      Options options) {
     this.view = view;
     this.outputStream = outputStream;
   }

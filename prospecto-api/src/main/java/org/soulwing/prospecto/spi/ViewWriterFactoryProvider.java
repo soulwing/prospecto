@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.spi;
 
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
 
 /**
  * A provider for a {@link ViewWriterFactory}.
@@ -38,8 +39,9 @@ public interface ViewWriterFactoryProvider {
   /**
    * Creates a new factory that will produce writers for the textual
    * representation supported by this provider.
+   * @param options configuration options
    * @return factory instance
    */
-  ViewWriterFactory newFactory();
+  ViewWriterFactory newFactory(Options options);
 
 }

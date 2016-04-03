@@ -19,7 +19,6 @@
 package org.soulwing.prospecto.tests;
 
 import java.io.ByteArrayInputStream;
-import java.util.Collections;
 import java.util.Date;
 
 import org.soulwing.prospecto.ViewContextProducer;
@@ -33,6 +32,8 @@ import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * TODO: DESCRIBE THE TYPE HERE
@@ -76,9 +77,11 @@ public class EnvelopeDemo {
     test.endDate = new Date(20000L);
     test.startDate = new Date(50000L);
 
+    final Options options = new OptionsMap();
+
     String json = "{\"stuffer\":{\"dates\":{\"start\":70000,\"end\":80000}}}";
     ViewReaderFactory readerFactory = ViewReaderFactoryProducer
-        .getFactory("JSON", Collections.<String, Object>emptyMap());
+        .getFactory("JSON", options);
 
     ViewReader reader = readerFactory.newReader(
         new ByteArrayInputStream(json.getBytes()));
@@ -89,7 +92,7 @@ public class EnvelopeDemo {
     ModelEditor editor = TEMPLATE.generateEditor(updateView, context);
 
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
-        .getFactory("JSON");
+        .getFactory("JSON", options);
 
     editor.update(test);
 

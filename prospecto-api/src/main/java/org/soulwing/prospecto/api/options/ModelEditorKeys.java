@@ -16,7 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.options;
+
+import org.soulwing.prospecto.api.ModelEditor;
 
 /**
  * Keys for model editor configuration options.

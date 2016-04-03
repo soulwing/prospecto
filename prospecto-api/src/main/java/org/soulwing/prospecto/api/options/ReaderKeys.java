@@ -1,5 +1,5 @@
 /*
- * File created on Mar 21, 2016
+ * File created on Apr 3, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,18 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.text;
+package org.soulwing.prospecto.api.options;
 
 /**
- * Keys used for configuration properties of a
+ * Keys used for configuration options of a
  * {@link org.soulwing.prospecto.api.ViewReader}.
  *
  * @author Carl Harris
  */
 public interface ReaderKeys {
 
+  /**
+   * Subtype discriminator property name.
+   */
   String DISCRIMINATOR_NAME = "discriminatorName";
 
+  /**
+   * URL property name.
+   */
   String URL_NAME = "urlName";
 
 }

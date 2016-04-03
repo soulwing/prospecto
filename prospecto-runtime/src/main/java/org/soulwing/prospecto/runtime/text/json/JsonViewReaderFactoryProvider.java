@@ -19,10 +19,10 @@
 package org.soulwing.prospecto.runtime.text.json;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.ViewReaderFactory;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewReaderFactoryProvider;
 
 /**
@@ -41,21 +41,21 @@ public class JsonViewReaderFactoryProvider
   }
 
   @Override
-  public ViewReaderFactory newFactory(Map<String, Object> properties) {
-    return new JsonViewReaderFactory(properties);
+  public ViewReaderFactory newFactory(Options options) {
+    return new JsonViewReaderFactory(options);
   }
 
-  static class JsonViewReaderFactory implements ViewReaderFactory {
+  private static class JsonViewReaderFactory implements ViewReaderFactory {
 
-    private final Map<String, Object> properties;
+    private final Options options;
 
-    public JsonViewReaderFactory(Map<String, Object> properties) {
-      this.properties = properties;
+    public JsonViewReaderFactory(Options options) {
+      this.options = options;
     }
 
     @Override
     public ViewReader newReader(InputStream inputStream) {
-      return new JsonViewReader(inputStream, properties);
+      return new JsonViewReader(inputStream, options);
     }
 
   }

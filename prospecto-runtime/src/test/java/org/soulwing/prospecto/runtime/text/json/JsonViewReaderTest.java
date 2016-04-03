@@ -22,16 +22,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.runtime.text.Constants;
-import org.soulwing.prospecto.runtime.text.ReaderKeys;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
 /**
@@ -46,17 +46,16 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
   }
 
   @Override
-  protected ViewReader newViewReader(InputStream inputStream,
-      Map<String, Object> properties) {
-    return new JsonViewReader(inputStream, properties);
+  protected ViewReader newViewReader(InputStream inputStream, Options options) {
+    return new JsonViewReader(inputStream, options);
   }
 
   @Test
   public void testCustomDiscriminatorView() throws Exception {
+    final Options options = new OptionsMap();
+    options.put(ReaderKeys.DISCRIMINATOR_NAME, Constants.CUSTOM_NAME);
     final JsonViewReader reader = new JsonViewReader(
-        getTestResource("customDiscriminatorView"),
-        Collections.<String, Object>singletonMap(
-            ReaderKeys.DISCRIMINATOR_NAME, Constants.CUSTOM_NAME));
+        getTestResource("customDiscriminatorView"), options);
     final Iterator<View.Event> events = reader.readView().iterator();
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));

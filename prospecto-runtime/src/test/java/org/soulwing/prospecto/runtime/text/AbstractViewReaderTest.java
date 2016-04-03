@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.runtime.event.ViewEventFactory;
 
 /**
@@ -152,7 +153,7 @@ public class AbstractViewReaderTest {
   class MockViewReader extends AbstractViewReader {
 
     public MockViewReader(ViewEventFactory eventFactory) {
-      super(eventFactory);
+      super(new OptionsMap(), eventFactory);
     }
 
     @Override

@@ -16,25 +16,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.context;
+package org.soulwing.prospecto.api.options;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.soulwing.prospecto.api.Options;
 
 /**
  * An {@link Options} collection implemented on top of a {@link Map}.
  *
  * @author Carl Harris
  */
-class MapOptions implements Options {
+public class OptionsMap implements Options {
 
   private final Map<String, Object> map = new HashMap<>();
 
   @Override
   public Object get(String name) {
     return map.get(name);
+  }
+
+  @Override
+  public Object get(String name, Object defaultValue) {
+    Object value = get(name);
+    if (value == null) {
+      value = defaultValue;
+    }
+    return value;
   }
 
   @Override

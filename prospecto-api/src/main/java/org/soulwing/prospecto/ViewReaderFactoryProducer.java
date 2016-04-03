@@ -18,9 +18,9 @@
  */
 package org.soulwing.prospecto;
 
-import java.util.Map;
-
 import org.soulwing.prospecto.api.ViewReaderFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.spi.ViewReaderFactoryProvider;
 
 /**
@@ -38,26 +38,37 @@ public class ViewReaderFactoryProducer {
         }
       };
 
+
   /**
    * Gets a reader factory.
    * @param providerName name of the provider; e.g. 'JSON', 'XML', etc.
-   * @param properties configuration properties
+   * @return reader factory
+   * @throws NoSuchProviderException
+   */
+  public static ViewReaderFactory getFactory(String providerName)
+      throws NoSuchProviderException {
+    return getFactory(providerName, new OptionsMap());
+  }
+
+  /**
+   * Gets a reader factory.
+   * @param providerName name of the provider; e.g. 'JSON', 'XML', etc.
+   * @param options configuration options
    * @return reader factory
    * @throws NoSuchProviderException
    */
   public static ViewReaderFactory getFactory(String providerName,
-      Map<String, Object> properties)
+      Options options)
       throws NoSuchProviderException {
-    return singleton.getInstance().newFactory(providerName, properties);
+    return singleton.getInstance().newFactory(providerName, options);
   }
 
   private ViewReaderFactoryProducer() {
   }
 
-  private ViewReaderFactory newFactory(String providerName,
-      Map<String, Object> properties)
+  private ViewReaderFactory newFactory(String providerName, Options options)
       throws NoSuchProviderException {
-    return findProvider(providerName).newFactory(properties);
+    return findProvider(providerName).newFactory(options);
   }
 
   private ViewReaderFactoryProvider findProvider(final String providerName)

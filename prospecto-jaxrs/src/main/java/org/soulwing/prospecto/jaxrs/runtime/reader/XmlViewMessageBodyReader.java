@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Collections;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
@@ -34,6 +33,7 @@ import javax.ws.rs.ext.Provider;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReaderFactory;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * A {@link MessageBodyReader} for XML.
@@ -45,8 +45,7 @@ import org.soulwing.prospecto.api.ViewReaderFactory;
 public class XmlViewMessageBodyReader implements MessageBodyReader<View> {
 
   private static final ViewReaderFactory readerFactory =
-      ViewReaderFactoryProducer.getFactory("XML",
-          Collections.<String, Object>emptyMap());
+      ViewReaderFactoryProducer.getFactory("XML", new OptionsMap());
 
   @Override
   public boolean isReadable(Class<?> aClass, Type type, Annotation[] annotations,

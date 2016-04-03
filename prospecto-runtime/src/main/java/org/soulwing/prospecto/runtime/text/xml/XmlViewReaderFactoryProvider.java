@@ -19,10 +19,10 @@
 package org.soulwing.prospecto.runtime.text.xml;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.ViewReaderFactory;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewReaderFactoryProvider;
 
 /**
@@ -41,21 +41,21 @@ public class XmlViewReaderFactoryProvider
   }
 
   @Override
-  public ViewReaderFactory newFactory(Map<String, Object> properties) {
-    return new XmlViewReaderFactory(properties);
+  public ViewReaderFactory newFactory(Options options) {
+    return new XmlViewReaderFactory(options);
   }
 
-  static class XmlViewReaderFactory implements ViewReaderFactory {
+  private static class XmlViewReaderFactory implements ViewReaderFactory {
 
-    private final Map<String, Object> properties;
+    private final Options options;
 
-    public XmlViewReaderFactory(Map<String, Object> properties) {
-      this.properties = properties;
+    public XmlViewReaderFactory(Options options) {
+      this.options = options;
     }
 
     @Override
     public ViewReader newReader(InputStream inputStream) {
-      return new XmlViewReader(inputStream, properties);
+      return new XmlViewReader(inputStream, options);
     }
 
   }

@@ -33,6 +33,7 @@ import javax.ws.rs.ext.Provider;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * A message body writer for a JSON representation of a {@link View}.
@@ -44,7 +45,7 @@ import org.soulwing.prospecto.api.ViewWriterFactory;
 public class JsonViewMessageBodyWriter implements MessageBodyWriter<View> {
 
   private static final ViewWriterFactory writerFactory =
-      ViewWriterFactoryProducer.getFactory("JSON");
+      ViewWriterFactoryProducer.getFactory("JSON", new OptionsMap());
 
   @Override
   public boolean isWriteable(Class<?> aClass, Type type,

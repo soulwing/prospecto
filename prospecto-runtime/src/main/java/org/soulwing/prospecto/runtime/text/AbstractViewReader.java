@@ -26,6 +26,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEventFactory;
 import org.soulwing.prospecto.runtime.event.ViewEventFactory;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -37,21 +38,28 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  */
 public abstract class AbstractViewReader implements ViewReader {
 
+  private final Deque<View.Event> stack = new LinkedList<>();
+  private final List<View.Event> events = new LinkedList<>();
+
+  private final Options options;
   private final ViewEventFactory eventFactory;
 
   /**
    * Constructs a new reader
+   * @param options configuration options
    */
-  protected AbstractViewReader() {
-    this(new ConcreteViewEventFactory());
+  protected AbstractViewReader(Options options) {
+    this(options, new ConcreteViewEventFactory());
   }
 
-  AbstractViewReader(ViewEventFactory eventFactory) {
+  AbstractViewReader(Options options, ViewEventFactory eventFactory) {
+    this.options = options;
     this.eventFactory = eventFactory;
   }
 
-  private final Deque<View.Event> stack = new LinkedList<>();
-  private final List<View.Event> events = new LinkedList<>();
+  public Options getOptions() {
+    return options;
+  }
 
   @Override
   public View readView() throws ViewException {

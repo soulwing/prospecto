@@ -26,6 +26,7 @@ import org.soulwing.prospecto.api.association.AssociationManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.converter.ValueTypeConverters;
 import org.soulwing.prospecto.api.listener.ViewListeners;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scopes;

@@ -34,6 +34,8 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -51,8 +53,12 @@ public abstract class ViewWriterTestBase {
     this.fileSuffix = fileSuffix;
   }
 
+  private ViewWriter newViewWriter(View view, OutputStream outputStream) {
+    return newViewWriter(view, outputStream, new OptionsMap());
+  }
+
   protected abstract ViewWriter newViewWriter(View view,
-      OutputStream outputStream);
+      OutputStream outputStream, Options options);
 
 
   protected View.Event newEvent(View.Event.Type type) {
