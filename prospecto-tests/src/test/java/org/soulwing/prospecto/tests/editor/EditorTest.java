@@ -82,6 +82,7 @@ public class EditorTest {
   public static class MockType2 {
     String string = STRING;
     MockType3 child = new MockType3();
+    List<MockType3> childrenList = new ArrayList<>();
   }
 
   @SuppressWarnings("unused")
@@ -232,6 +233,96 @@ public class EditorTest {
     editor.update(model);
     assertThat(model.string, is(equalTo(UPDATED_STRING)));
     assertThat(model.subtypeString, is(equalTo(UPDATED_SUBTYPE_STRING)));
+  }
+
+  @Test
+  public void testObjectObjectReferenceValue() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .object(CHILD, MockType2.class)
+                .reference(CHILD, MockType3.class)
+                    .value(STRING)
+                    .end()
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_OBJECT).name(CHILD)
+        .type(BEGIN_OBJECT).name(CHILD)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT)
+        .type(END_OBJECT)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType3 otherChild = new MockType3();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType3.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.child.child, is(sameInstance(otherChild)));
+  }
+
+  @Test
+  public void testObjectObjectArrayOfReferencesValue() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .object(CHILD, MockType2.class)
+                .arrayOfReferences(CHILDREN_LIST, MockType3.class)
+                    .value(STRING)
+                    .end()
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_OBJECT).name(CHILD)
+        .type(BEGIN_ARRAY).name(CHILDREN_LIST)
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT)
+        .type(END_ARRAY)
+        .type(END_OBJECT)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType3 otherChild = new MockType3();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType3.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.child.childrenList, contains(otherChild));
   }
 
   @Test
