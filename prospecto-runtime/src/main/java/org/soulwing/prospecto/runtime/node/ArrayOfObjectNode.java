@@ -141,6 +141,11 @@ public class ArrayOfObjectNode extends ContainerViewNode
   }
 
   @Override
+  public void inject(Object target, Object value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {

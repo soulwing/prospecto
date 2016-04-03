@@ -29,6 +29,9 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 public interface MutableViewEntity extends ViewEntity {
 
   interface Injector {
+
+    void inject(Object target, Object value) throws Exception;
+
     void inject(Object target, Object value, ScopedViewContext context)
         throws Exception;
   }
@@ -45,7 +48,7 @@ public interface MutableViewEntity extends ViewEntity {
   /**
    * Injects the properties of this entity into a model object.
    * @param target the target model object
-   * @param context
+   * @param context view context
    * @throws Exception
    */
   void inject(Object target, ScopedViewContext context) throws Exception;

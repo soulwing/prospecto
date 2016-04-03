@@ -221,6 +221,11 @@ public class ObjectNodeUpdateMethodTest {
     }
 
     @Override
+    public void inject(Object target, Object value) throws Exception {
+
+    }
+
+    @Override
     public void inject(Object target, Object value,
          ScopedViewContext context) throws Exception {
 
@@ -257,10 +262,16 @@ public class ObjectNodeUpdateMethodTest {
     }
 
     @Override
+    public void inject(Object target, Object value) throws Exception {
+
+    }
+
+    @Override
     public void inject(Object target, Object value,
         ScopedViewContext context) throws Exception {
 
     }
+
   }
 
 }

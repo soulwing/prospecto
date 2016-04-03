@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.soulwing.prospecto.api.ModelEditorException;
-import org.soulwing.prospecto.runtime.context.ConcreteViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -35,7 +34,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  */
 public class ConcreteMutableViewEntity implements MutableViewEntity {
 
-  static class InjectableValue {
+  private static class InjectableValue {
     final Object value;
     final Injector injector;
 
@@ -105,7 +104,10 @@ public class ConcreteMutableViewEntity implements MutableViewEntity {
   @Override
   public void inject(Object target) throws ModelEditorException {
     try {
-      inject(target, new ConcreteViewContext());
+      for (String name : map.keySet()) {
+        final InjectableValue injectableValue = map.get(name);
+        injectableValue.injector.inject(target, injectableValue.value);
+      }
     }
     catch (Exception ex) {
       throw new ModelEditorException(ex);

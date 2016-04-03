@@ -39,6 +39,9 @@ public class ReferenceNode extends ObjectNode {
   }
 
   @Override
+  public void inject(Object target, Object value) {}
+
+  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     final MutableViewEntity entity = (MutableViewEntity) value;

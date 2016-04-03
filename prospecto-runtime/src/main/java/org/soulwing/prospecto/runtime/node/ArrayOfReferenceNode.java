@@ -44,6 +44,9 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
   }
 
   @Override
+  public void inject(Object target, Object value) {}
+
+  @Override
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {

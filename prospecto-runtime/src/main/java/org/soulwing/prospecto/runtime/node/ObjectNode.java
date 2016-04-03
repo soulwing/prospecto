@@ -87,6 +87,17 @@ public class ObjectNode extends ContainerViewNode
   }
 
   @Override
+  public void inject(Object target, Object value) throws Exception {
+    final MutableViewEntity entity = (MutableViewEntity) value;
+    for (final String name : entity.nameSet()) {
+      final AbstractViewNode child = getChild(entity.getType(), name);
+      if (child instanceof ValueNode) {
+        ((ValueNode) child).inject(target, entity.get(name));
+      }
+    }
+  }
+
+  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     associationUpdater.update(this, target,

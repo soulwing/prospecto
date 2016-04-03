@@ -96,9 +96,14 @@ public class ValueNode extends AbstractViewNode
   }
 
   @Override
+  public void inject(Object target, Object value) throws Exception {
+    accessor.forSubtype(target.getClass()).set(target, value);
+  }
+
+  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    accessor.forSubtype(target.getClass()).set(target, value);
+    inject(target, value);
   }
 
   class Method implements UpdatableViewNodeTemplate.Method {
