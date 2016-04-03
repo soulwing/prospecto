@@ -105,10 +105,6 @@ public class ArrayOfObjectNodeTest {
         will(returnValue(Collections.singletonList(VALUE)));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
-            eventDescribing(sourceNode(node),
-                forModel(MODEL), propertyValue(VALUE), inContext(viewContext))));
-        will(returnValue(true));
         oneOf(listeners).didExtractValue((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node),
                 forModel(MODEL), propertyValue(VALUE), inContext(viewContext))));

@@ -28,8 +28,6 @@ import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
@@ -104,25 +102,22 @@ public class ArrayOfValueNode extends AbstractViewNode
   @Override
   public List<View.Event> onEvaluate(Object model, ScopedViewContext context)
       throws Exception {
-    final List<View.Event> events = new LinkedList<>();
-    final Iterator<Object> i = getModelIterator(model);
 
+    final Iterator<Object> i = getModelIterator(model);
+    final List<View.Event> events = new LinkedList<>();
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
+
     while (i.hasNext()) {
       final Object value = i.next();
-      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
-          ViewNodeEvent.Mode.VIEW_GENERATION, this, model, value, context);
-      if (context.getListeners().shouldVisitProperty(elementEvent)) {
-        final Object transformedValue = transformationService.valueToExtract(
-            model, value, this, context);
-        if (transformedValue != UndefinedValue.INSTANCE) {
-          events.add(
-              newEvent(View.Event.Type.VALUE, elementName, transformedValue));
-        }
+      final Object transformedValue = transformationService.valueToExtract(
+          model, value, this, context);
+      if (transformedValue != UndefinedValue.INSTANCE) {
+        events.add(newEvent(View.Event.Type.VALUE, elementName,
+            transformedValue));
       }
     }
-    events.add(newEvent(View.Event.Type.END_ARRAY));
 
+    events.add(newEvent(View.Event.Type.END_ARRAY));
     return events;
   }
 

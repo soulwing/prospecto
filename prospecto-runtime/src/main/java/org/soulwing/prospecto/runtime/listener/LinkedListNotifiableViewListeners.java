@@ -26,7 +26,6 @@ import org.soulwing.prospecto.api.listener.ViewNodeAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodeEntityListener;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodeListener;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyInterceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
@@ -63,19 +62,6 @@ public class LinkedListNotifiableViewListeners
         ((ViewNodeListener) listener).nodeVisited(event);
       }
     }
-  }
-
-  @Override
-  public boolean shouldVisitProperty(ViewNodePropertyEvent event) {
-    boolean visit = true;
-    for (final ViewListener listener : listeners) {
-      if (ViewNodePropertyAcceptor.class
-          .isAssignableFrom(listener.getClass())) {
-        visit = ((ViewNodePropertyAcceptor) listener).shouldVisitProperty(event);
-        if (!visit) break;
-      }
-    }
-    return visit;
   }
 
   @Override

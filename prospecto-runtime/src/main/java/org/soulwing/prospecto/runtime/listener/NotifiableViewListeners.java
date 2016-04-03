@@ -33,8 +33,6 @@ public interface NotifiableViewListeners extends ViewListeners {
 
   void nodeVisited(ViewNodeEvent event);
 
-  boolean shouldVisitProperty(ViewNodePropertyEvent event);
-
   Object didExtractValue(ViewNodePropertyEvent event);
 
   Object willInjectValue(ViewNodePropertyEvent event);

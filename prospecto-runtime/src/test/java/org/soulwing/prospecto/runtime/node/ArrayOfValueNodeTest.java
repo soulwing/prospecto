@@ -26,11 +26,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.eventDescribing;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forModel;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
-import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +44,6 @@ import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
@@ -145,11 +139,6 @@ public class ArrayOfValueNodeTest {
       {
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
-            eventDescribing(
-                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
-                inContext(viewContext))));
-        will(returnValue(true));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
             viewContext);
         will(returnValue(MODEL_VALUE));
@@ -173,36 +162,12 @@ public class ArrayOfValueNodeTest {
   }
 
   @Test
-  public void testOnEvaluateWhenWillNotVisitProperty() throws Exception {
-    context.checking(iteratorExpectations());
-    context.checking(new Expectations() {
-      {
-        allowing(viewContext).getListeners();
-        will(returnValue(listeners));
-        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
-            eventDescribing(
-                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
-                inContext(viewContext))));
-        will(returnValue(false));
-      }
-    });
-
-    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
-    validateEmptyArray(events);
-  }
-
-  @Test
   public void testOnEvaluateWhenUndefinedValue() throws Exception {
     context.checking(iteratorExpectations());
     context.checking(new Expectations() {
       {
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
-        oneOf(listeners).shouldVisitProperty((ViewNodePropertyEvent) with(
-            eventDescribing(
-                sourceNode(node), forModel(MODEL), propertyValue(MODEL_VALUE),
-                inContext(viewContext))));
-        will(returnValue(true));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
             node, viewContext);
         will(returnValue(UndefinedValue.INSTANCE));

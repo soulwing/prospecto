@@ -33,7 +33,6 @@ import org.soulwing.prospecto.api.listener.ViewNodeAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodeEntityListener;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodeListener;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyInterceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
@@ -120,52 +119,6 @@ public class LinkedListNotifiableViewListenersTest {
 
     listeners.append(listener);
     listeners.nodeVisited(event);
-  }
-
-  @Test
-  public void testFireShouldVisitProperty() throws Exception {
-    final ViewNodePropertyAcceptor acceptor0 =
-        context.mock(ViewNodePropertyAcceptor.class, "acceptor0");
-    final ViewNodePropertyAcceptor acceptor1 =
-        context.mock(ViewNodePropertyAcceptor.class, "acceptor1");
-
-    final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null, null);
-
-    context.checking(new Expectations() {
-      {
-        oneOf(acceptor0).shouldVisitProperty(event);
-        will(returnValue(true));
-        oneOf(acceptor1).shouldVisitProperty(event);
-        will(returnValue(true));
-      }
-    });
-
-    listeners.append(acceptor0);
-    listeners.append(acceptor1);
-    assertThat(listeners.shouldVisitProperty(event), is(true));
-  }
-
-  @Test
-  public void testFireShouldVisitPropertyShortCircuit() throws Exception {
-    final ViewNodePropertyAcceptor acceptor0 =
-        context.mock(ViewNodePropertyAcceptor.class, "acceptor0");
-    final ViewNodePropertyAcceptor acceptor1 =
-        context.mock(ViewNodePropertyAcceptor.class, "acceptor1");
-
-    final ViewNodePropertyEvent event =
-        new ViewNodePropertyEvent(null, null, null, null, null);
-
-    context.checking(new Expectations() {
-      {
-        oneOf(acceptor0).shouldVisitProperty(event);
-        will(returnValue(false));
-      }
-    });
-
-    listeners.append(acceptor0);
-    listeners.append(acceptor1);
-    assertThat(listeners.shouldVisitProperty(event), is(false));
   }
 
   @Test

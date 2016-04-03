@@ -110,18 +110,18 @@ public class ArrayOfObjectNode extends ContainerViewNode
 
     final List<View.Event> viewEvents = new LinkedList<>();
     viewEvents.add(newEvent(View.Event.Type.BEGIN_ARRAY));
+
     while (i.hasNext()) {
       Object elementModel = i.next();
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
           ViewNodeEvent.Mode.VIEW_GENERATION, this, model, elementModel, context);
-      if (context.getListeners().shouldVisitProperty(elementEvent)) {
-        viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
-        viewEvents.addAll(evaluateChildren(
-            context.getListeners().didExtractValue(elementEvent),
-            context));
-        viewEvents.add(newEvent(View.Event.Type.END_OBJECT, elementName));
-      }
+      viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
+      viewEvents.addAll(evaluateChildren(
+          context.getListeners().didExtractValue(elementEvent),
+          context));
+      viewEvents.add(newEvent(View.Event.Type.END_OBJECT, elementName));
     }
+
     viewEvents.add(newEvent(View.Event.Type.END_ARRAY));
     return viewEvents;
   }
