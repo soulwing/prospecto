@@ -131,6 +131,17 @@ public interface ViewContext {
   AssociationManagers getAssociationManagers();
 
   /**
+   * Gets the configuration options associated with this context.
+   * <p>
+   * The returned collection can be manipulated directly to add or remove
+   * options as needed.  Manipulating the options during view generation or
+   * model update has no effect.
+   *
+   * @return options maps
+   */
+  Map<String, Object> getOptions();
+
+  /**
    * Gets the sequence of view node names that form the path to the current
    * view node as a template is being evaluated to produce a view.
    * @return sequence of view node names which is empty before visiting the

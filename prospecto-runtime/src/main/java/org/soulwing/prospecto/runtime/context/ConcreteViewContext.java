@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.context;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +49,7 @@ import org.soulwing.prospecto.runtime.util.StringUtil;
  *
  * @author Carl Harris
  */
-public class ConcreteViewContext implements ScopedViewContext {
+class ConcreteViewContext implements ScopedViewContext {
 
   private final Scopes scopes = new LinkedListScopes();
 
@@ -64,7 +65,9 @@ public class ConcreteViewContext implements ScopedViewContext {
   private final AssociationManagerService collectionManagers =
       new LinkedListAssociationManagerService();
 
-  static class ScopeFrame extends ConcreteMutableScope {
+  private final Map<String, Object> options = new HashMap<>();
+
+  private static class ScopeFrame extends ConcreteMutableScope {
 
     private final String name;
     private final Class<?> modelClass;
@@ -86,15 +89,16 @@ public class ConcreteViewContext implements ScopedViewContext {
 
   private final Deque<ScopeFrame> scopeStack = new LinkedList<>();
 
-  public ConcreteViewContext() {
+  ConcreteViewContext() {
   }
 
-  public ConcreteViewContext(ViewContext source) {
+  ConcreteViewContext(ViewContext source) {
     this.scopes.toList().addAll(source.getScopes().toList());
     this.listeners.toList().addAll(source.getListeners().toList());
     this.valueTypeConverters.toList().addAll(source.getValueTypeConverters().toList());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
+    this.options.putAll(source.getOptions());
   }
 
   @Override
@@ -139,6 +143,11 @@ public class ConcreteViewContext implements ScopedViewContext {
   @Override
   public AssociationManagerService getAssociationManagers() {
     return collectionManagers;
+  }
+
+  @Override
+  public Map<String, Object> getOptions() {
+    return options;
   }
 
   @Override

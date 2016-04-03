@@ -55,6 +55,9 @@ public class ConcreteViewContextTest {
   private static final String SCOPE1_MOCK = "scope1Mock";
   private static final String SCOPE2_MOCK = "scope2Mock";
 
+  private static final String OPTION_KEY = "optionKey";
+  private static final Object OPTION_VALUE = "optionValue";
+
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
@@ -341,11 +344,13 @@ public class ConcreteViewContextTest {
     final AssociationManager associationManager =
         context.mock(AssociationManager.class);
 
+
     viewContext.getScopes().append(scope);
     viewContext.getListeners().append(listener);
     viewContext.getValueTypeConverters().append(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
     viewContext.getAssociationManagers().append(associationManager);
+    viewContext.getOptions().put(OPTION_KEY, OPTION_VALUE);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
@@ -353,6 +358,7 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().toList().clear();
     viewContext.getReferenceResolvers().toList().clear();
     viewContext.getAssociationManagers().toList().clear();
+    viewContext.getOptions().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
@@ -362,6 +368,8 @@ public class ConcreteViewContextTest {
         contains(resolver));
     assertThat(contextCopy.getAssociationManagers().toList(),
         contains(associationManager));
+    assertThat(contextCopy.getOptions().get(OPTION_KEY),
+        is(sameInstance(OPTION_VALUE)));
   }
 
 }
