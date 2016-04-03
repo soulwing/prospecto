@@ -71,6 +71,20 @@ public interface ViewTemplateBuilderProvider {
       throws ViewTemplateException;
 
   /**
+   * Creates a view template whose root node is an array-of-references node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplate arrayOfReferences(String name,
+      String elementName, String namespace, ViewTemplate template)
+      throws ViewTemplateException;
+
+  /**
    * Creates a view template whose root node is an array-of-values node.
    * @param name name for the object in the view (may be {@code null})
    * @param elementName name for the elements in the array (may be {@code null})

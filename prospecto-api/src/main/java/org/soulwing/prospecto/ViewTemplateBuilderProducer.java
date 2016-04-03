@@ -197,6 +197,49 @@ public class ViewTemplateBuilderProducer {
   }
 
   /**
+   * Creates a view template whose root node is an array-of-references node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfReferences(String name,
+      ViewTemplate template) {
+    return arrayOfReferences(name, null, null, template);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-references node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfReferences(String name, String elementName,
+      ViewTemplate template) {
+    return arrayOfReferences(name, elementName, null, template);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-references node
+   * using the children of the root node of the given object template.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfReferences(String name, String elementName,
+      String namespace, ViewTemplate template) {
+    return singleton.getInstance().provider.arrayOfReferences(name, elementName,
+        namespace, template);
+  }
+
+  /**
    * Creates a template whose root node type is of array-of-values type.
    * @return template
    * @throws ViewTemplateException

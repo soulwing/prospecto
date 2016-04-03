@@ -295,6 +295,88 @@ public interface ViewTemplateBuilder {
       String namespace, ViewTemplate template);
 
   /**
+   * Adds a reference object node at the cursor.
+   * @param name name for the object in the view
+   * @param modelType the data type for the corresponding model
+   * @return template builder for new object node
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, Class<?> modelType);
+
+  /**
+   * Adds a reference object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, ViewTemplate template);
+
+  /**
+   * Adds a reference object node at the cursor.
+   * @param name name for the object in the view
+   * @param elementName namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param modelType the data type for the corresponding model
+   * @return template builder for new object node
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      Class<?> modelType);
+
+  /**
+   * Adds a reference object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      ViewTemplate template);
+
+  /**
+   * Adds a reference object node at the cursor.
+   * @param name name for the object in the view
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param modelType the data type for the corresponding model
+   * @return template builder for new object node
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      String namespace, Class<?> modelType);
+
+  /**
+   * Adds a reference object node at the cursor using the root node of the given
+   * template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the node in the view produced by this builder
+   * @param elementName name for the elements in the array; used in only some
+   *    some view types (e.g. XML)
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      String namespace, ViewTemplate template);
+
+  /**
    * Adds an envelope node at the cursor.
    * <p>
    * An envelope inserts an extra node of type object in the view, but the

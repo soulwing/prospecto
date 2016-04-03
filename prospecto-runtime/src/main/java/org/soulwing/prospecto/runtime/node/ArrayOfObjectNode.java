@@ -52,7 +52,7 @@ public class ArrayOfObjectNode extends ContainerViewNode
 
   private final String elementName;
 
-  private MultiValuedAccessor accessor;
+  private MultiValuedAccessor multiValuedAccessor;
 
   /**
    * Constructs a new instance.
@@ -92,7 +92,11 @@ public class ArrayOfObjectNode extends ContainerViewNode
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
-    this.accessor = accessorFactory.newAccessor(accessor, getModelType());
+    this.multiValuedAccessor = accessorFactory.newAccessor(accessor, getModelType());
+  }
+
+  protected MultiValuedAccessor getMultiValuedAccessor() {
+    return multiValuedAccessor;
   }
 
   @Override
@@ -141,12 +145,12 @@ public class ArrayOfObjectNode extends ContainerViewNode
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     associationUpdater.update(this, target,
-        (List<MutableViewEntity>) value, accessor, context);
+        (List<MutableViewEntity>) value, multiValuedAccessor, context);
   }
 
   @SuppressWarnings("unchecked")
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
-    return accessor.iterator(source);
+    return multiValuedAccessor.iterator(source);
   }
 
 }

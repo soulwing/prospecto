@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.tests.editor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.DISCRIMINATOR;
@@ -38,7 +40,9 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.reference.ReferenceResolver;
 
 /**
  * Tests for editing an object.
@@ -227,5 +231,91 @@ public class EditorTest {
     assertThat(model.subtypeString, is(equalTo(UPDATED_SUBTYPE_STRING)));
   }
 
+  @Test
+  public void testObjectValueReferenceValue() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .value(STRING)
+            .reference(CHILD, MockType2.class)
+                .value(STRING)
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(UPDATED_STRING)
+        .type(BEGIN_OBJECT).name(CHILD)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType2 otherChild = new MockType2();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType2.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.string, is(equalTo(UPDATED_STRING)));
+    assertThat(model.child, is(sameInstance(otherChild)));
+  }
+
+  @Test
+  public void testObjectValueArrayOfReferencesValue() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .value(STRING)
+            .arrayOfReferences(CHILDREN, MockType2.class)
+                .value(STRING)
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(UPDATED_STRING)
+        .type(BEGIN_ARRAY).name(CHILDREN)
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT)
+        .type(END_ARRAY)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType2 otherChild = new MockType2();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType2.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.string, is(equalTo(UPDATED_STRING)));
+    assertThat(model.children, contains(otherChild));
+  }
 
 }

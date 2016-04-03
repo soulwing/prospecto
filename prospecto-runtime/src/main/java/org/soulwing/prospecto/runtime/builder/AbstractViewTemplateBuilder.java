@@ -37,6 +37,7 @@ import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.node.ArrayOfReferenceNode;
 import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.EnvelopeNode;
@@ -255,6 +256,49 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     assert template instanceof ComposableViewTemplate;
     final ContainerViewNode node = ((ComposableViewTemplate) template)
         .arrayOfObjects(name, elementName, namespace);
+    addChildToTarget(node);
+    return newValueNodeTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name,
+      Class<?> modelType) {
+    return arrayOfReferences(name, null, null, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      Class<?> modelType) {
+    return arrayOfReferences(name, elementName, null, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      String namespace, Class<?> modelType) {
+    final ArrayOfReferenceNode node = new ArrayOfReferenceNode(name,
+        elementName, namespace, modelType);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name,
+      ViewTemplate template) {
+    return arrayOfReferences(name, null, null, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      ViewTemplate template) {
+    return arrayOfReferences(name, elementName, null, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      String namespace, ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
+    final ContainerViewNode node = ((ComposableViewTemplate) template)
+        .arrayOfReferences(name, elementName, namespace);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
   }

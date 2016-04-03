@@ -69,6 +69,13 @@ public class ConcreteViewTemplateBuilderProvider
   }
 
   @Override
+  public ViewTemplate arrayOfReferences(String name, String elementName,
+      String namespace, ViewTemplate template) throws ViewTemplateException {
+    return ((ComposableViewTemplate) template)
+        .arrayOfReferencesTemplate(name, elementName, namespace);
+  }
+
+  @Override
   public ViewTemplate arrayOfValues(String name, String elementName,
       String namespace) throws ViewTemplateException {
     return new ConcreteViewTemplate(
