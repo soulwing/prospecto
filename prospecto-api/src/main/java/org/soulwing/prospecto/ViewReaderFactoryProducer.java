@@ -38,7 +38,6 @@ public class ViewReaderFactoryProducer {
         }
       };
 
-
   /**
    * Gets a reader factory.
    * @param providerName name of the provider; e.g. 'JSON', 'XML', etc.
