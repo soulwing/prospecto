@@ -22,6 +22,7 @@ import java.util.Deque;
 import java.util.EnumSet;
 
 import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ModelEditorKeys;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -83,7 +84,9 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
 
       final AbstractViewNode child = node.getChild(entity.getType(), name);
       if (child == null) {
-        // TODO -- configuration should allow it to be ignored
+        if (context.getOptions().isEnabled(
+            ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES)) continue;
+
         throw new ModelEditorException("found no child named '" + name + "'"
             + " in node " + node.getName());
       }

@@ -18,6 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
+
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +33,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ModelEditorKeys;
+import org.soulwing.prospecto.api.Options;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
@@ -36,7 +42,6 @@ import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
@@ -73,7 +78,7 @@ public class ObjectNodeUpdateMethodTest {
   ScopedViewContext viewContext;
 
   @Mock
-  NotifiableViewListeners listeners;
+  Options options;
 
   @Mock
   ContainerViewNode node;
@@ -114,12 +119,37 @@ public class ObjectNodeUpdateMethodTest {
   }
 
   @Test(expected = ModelEditorException.class)
-  public void testToModelObjectWhenChildNotFound() throws Exception {
+  public void testToModelObjectWhenChildNotFoundAndNotIgnored() throws Exception {
     context.checking(entityFactoryExpectations());
     context.checking(getChildExpectations(null));
+    context.checking(new Expectations() {
+      {
+        oneOf(viewContext).getOptions();
+        will(returnValue(options));
+        oneOf(options).isEnabled(ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES);
+        will(returnValue(false));
+      }
+    });
     events.add(VALUE_EVENT);
     method.toModelValue();
   }
+
+  @Test(expected = ModelEditorException.class)
+  public void testToModelObjectWhenChildNotFoundAndIgnored() throws Exception {
+    context.checking(entityFactoryExpectations());
+    context.checking(getChildExpectations(null));
+    context.checking(new Expectations() {
+      {
+        oneOf(viewContext).getOptions();
+        will(returnValue(options));
+        oneOf(options).isEnabled(ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES);
+        will(returnValue(true));
+      }
+    });
+    events.add(VALUE_EVENT);
+    assertThat(method.toModelValue(), is(sameInstance((Object) entity)));
+  }
+
 
   @Test
   public void testToModelObjectWhenNullUpdatableContainerNode()
@@ -129,7 +159,7 @@ public class ObjectNodeUpdateMethodTest {
     context.checking(entityPutExpectations(null, childContainer));
     events.add(NULL_VALUE_EVENT);
     events.add(END_EVENT);
-    method.toModelValue();
+    assertThat(method.toModelValue(), is(sameInstance((Object) entity)));
   }
 
   @Test
@@ -140,7 +170,7 @@ public class ObjectNodeUpdateMethodTest {
     context.checking(childModelValueExpectations(childValue, UndefinedValue.INSTANCE));
     events.add(VALUE_EVENT);
     events.add(END_EVENT);
-    method.toModelValue();
+    assertThat(method.toModelValue(), is(sameInstance((Object) entity)));
   }
 
   @Test
@@ -151,7 +181,7 @@ public class ObjectNodeUpdateMethodTest {
     context.checking(entityPutExpectations(MODEL_VALUE, childValue));
     events.add(VALUE_EVENT);
     events.add(END_EVENT);
-    method.toModelValue();
+    assertThat(method.toModelValue(), is(sameInstance((Object) entity)));
   }
 
   private Expectations entityFactoryExpectations() throws Exception {
