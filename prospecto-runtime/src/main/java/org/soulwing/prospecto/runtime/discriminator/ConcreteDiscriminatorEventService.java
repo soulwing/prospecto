@@ -72,10 +72,6 @@ public class ConcreteDiscriminatorEventService
 
   @Override
   public View.Event findDiscriminatorEvent(Iterator<View.Event> events) {
-    // TODO:
-    // Making a discriminator (if present) the first child of a structural node
-    // in a view should perhaps be a responsibility of the ViewReader. This
-    // would avoid having to look potentially very far ahead in the event stream.
     View.Event event = null;
     while (events.hasNext()) {
       event = events.next();

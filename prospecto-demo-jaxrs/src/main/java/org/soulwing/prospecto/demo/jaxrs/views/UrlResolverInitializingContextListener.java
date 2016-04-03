@@ -41,7 +41,6 @@ public class UrlResolverInitializingContextListener
   public void contextInitialized(ServletContextEvent event) {
     final Map<String, Object> properties = new HashMap<>();
     properties.put("servletContext", event.getServletContext());
-    // TODO need to get this from the context in a smart way
     properties.put("applicationPath", "/api");
     UrlResolverProducer.init(properties);
   }
