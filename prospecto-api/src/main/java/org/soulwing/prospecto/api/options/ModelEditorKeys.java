@@ -27,9 +27,9 @@ import org.soulwing.prospecto.api.ModelEditor;
 public interface ModelEditorKeys {
 
   /**
-   * When set to a boolean value of {@code true} a {@link ModelEditor} will
+   * When set to {@code true} a {@link ModelEditor} will
    * ignore unknown property names that appear in an input view.
    */
-  String EDITOR_IGNORES_UNKNOWN_PROPERTIES = "editorIgnoresUnknownProperties";
+  String IGNORE_UNKNOWN_PROPERTIES = "editor.IgnoresUnknownProperties";
 
 }

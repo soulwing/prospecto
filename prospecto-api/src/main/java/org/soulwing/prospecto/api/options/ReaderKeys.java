@@ -29,11 +29,11 @@ public interface ReaderKeys {
   /**
    * Subtype discriminator property name.
    */
-  String DISCRIMINATOR_NAME = "discriminatorName";
+  String DISCRIMINATOR_NAME = "reader.discriminatorName";
 
   /**
    * URL property name.
    */
-  String URL_NAME = "urlName";
+  String URL_NAME = "reader.urlName";
 
 }

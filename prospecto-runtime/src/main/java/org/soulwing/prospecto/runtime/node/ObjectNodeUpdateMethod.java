@@ -85,7 +85,7 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
       final AbstractViewNode child = node.getChild(entity.getType(), name);
       if (child == null) {
         if (context.getOptions().isEnabled(
-            ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES)) continue;
+            ModelEditorKeys.IGNORE_UNKNOWN_PROPERTIES)) continue;
 
         throw new ModelEditorException("found no child named '" + name + "'"
             + " in node " + node.getName());

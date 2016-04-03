@@ -126,7 +126,7 @@ public class ObjectNodeUpdateMethodTest {
       {
         oneOf(viewContext).getOptions();
         will(returnValue(options));
-        oneOf(options).isEnabled(ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES);
+        oneOf(options).isEnabled(ModelEditorKeys.IGNORE_UNKNOWN_PROPERTIES);
         will(returnValue(false));
       }
     });
@@ -142,7 +142,7 @@ public class ObjectNodeUpdateMethodTest {
       {
         oneOf(viewContext).getOptions();
         will(returnValue(options));
-        oneOf(options).isEnabled(ModelEditorKeys.EDITOR_IGNORES_UNKNOWN_PROPERTIES);
+        oneOf(options).isEnabled(ModelEditorKeys.IGNORE_UNKNOWN_PROPERTIES);
         will(returnValue(true));
       }
     });
