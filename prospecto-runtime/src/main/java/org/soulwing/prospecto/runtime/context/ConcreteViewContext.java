@@ -21,7 +21,6 @@ package org.soulwing.prospecto.runtime.context;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +64,7 @@ class ConcreteViewContext implements ScopedViewContext {
   private final AssociationManagerService collectionManagers =
       new LinkedListAssociationManagerService();
 
-  private final Map<String, Object> options = new HashMap<>();
+  private final MapOptions options = new MapOptions();
 
   private static class ScopeFrame extends ConcreteMutableScope {
 
@@ -98,7 +97,7 @@ class ConcreteViewContext implements ScopedViewContext {
     this.valueTypeConverters.toList().addAll(source.getValueTypeConverters().toList());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
-    this.options.putAll(source.getOptions());
+    this.options.toMap().putAll(source.getOptions().toMap());
   }
 
   @Override
@@ -146,7 +145,7 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public Map<String, Object> getOptions() {
+  public MapOptions getOptions() {
     return options;
   }
 

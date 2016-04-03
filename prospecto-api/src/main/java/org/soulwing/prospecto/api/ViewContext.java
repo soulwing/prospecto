@@ -137,9 +137,9 @@ public interface ViewContext {
    * options as needed.  Manipulating the options during view generation or
    * model update has no effect.
    *
-   * @return options maps
+   * @return options
    */
-  Map<String, Object> getOptions();
+  Options getOptions();
 
   /**
    * Gets the sequence of view node names that form the path to the current

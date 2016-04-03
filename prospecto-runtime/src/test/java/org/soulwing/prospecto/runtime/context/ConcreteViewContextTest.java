@@ -358,7 +358,7 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().toList().clear();
     viewContext.getReferenceResolvers().toList().clear();
     viewContext.getAssociationManagers().toList().clear();
-    viewContext.getOptions().clear();
+    viewContext.getOptions().toMap().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
