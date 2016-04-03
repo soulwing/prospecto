@@ -67,6 +67,27 @@ public class ArrayOfReferencesDemo {
     }
   }
 
+  public static class ParentUsingCollection {
+    private Long id;
+    private Set<TestObject> tests = new HashSet<>();
+
+    public Long getId() {
+      return id;
+    }
+
+    public void setId(Long id) {
+      this.id = id;
+    }
+
+    public Set<TestObject> getTests() {
+      return tests;
+    }
+
+    public void setTests(Set<TestObject> tests) {
+      this.tests = tests;
+    }
+  }
+
   public static class TestObject {
     private Set<ReferencedObject> references = new HashSet<>();
 
@@ -121,6 +142,16 @@ public class ArrayOfReferencesDemo {
           .end()
         .build();
 
+  static final ViewTemplate PARENT_COLLECTION_TEMPLATE = ViewTemplateBuilderProducer
+      .object(ParentUsingCollection.class)
+        .value("id")
+        .arrayOfObjects("tests", TestObject.class)
+          .arrayOfReferences("references", ReferencedObject.class)
+            .value("id")
+            .end()
+          .end()
+        .build();
+
   public static void main(String[] args) throws Exception {
     ReferencedObject reference1 = new ReferencedObject(123L);
     ReferencedObject reference2 = new ReferencedObject(456L);
@@ -152,13 +183,22 @@ public class ArrayOfReferencesDemo {
       assertThat(r, is(notNullValue()));
       assertThat(r.getId(), is(notNullValue()));
     }
-    
+
     // Test for other json
     String json2 = "{\"id\":321,\"test\":" + json + "}";
     jsonProducedView = readerFactory.newReader(new ByteArrayInputStream(json2.getBytes())).readView();
     ParentObject parent = (ParentObject) PARENT_TEMPLATE.generateEditor(jsonProducedView, context).create();
     assertThat(parent.getTest(), is(notNullValue()));
     assertThat(parent.getTest().getReferences().size(), is(2));
+
+    // Test using json for parent using collection. Should be one item in TestObject
+    // in top collection and it should have two referenced objects
+    String json3 = "{\"id\":321,\"tests\":[" + json + "]}";
+    jsonProducedView = readerFactory.newReader(new ByteArrayInputStream(json3.getBytes())).readView();
+    ParentUsingCollection parentUsingCollection = (ParentUsingCollection)
+        PARENT_COLLECTION_TEMPLATE.generateEditor(jsonProducedView, context).create();
+    assertThat(parentUsingCollection.getTests().size(), is(1));
+    assertThat(parentUsingCollection.getTests().iterator().next().getReferences().size(), is(2));
   }
 
 }
