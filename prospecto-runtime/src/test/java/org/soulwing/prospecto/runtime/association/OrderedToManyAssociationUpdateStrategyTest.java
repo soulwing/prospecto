@@ -262,6 +262,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
       {
         oneOf(manager).newAssociate(owner, entity);
         will(returnValue(element));
+        oneOf(entity).inject(element, viewContext);
         oneOf(manager).add(owner, modelIndex, element);
 
         oneOf(viewContext).getListeners();

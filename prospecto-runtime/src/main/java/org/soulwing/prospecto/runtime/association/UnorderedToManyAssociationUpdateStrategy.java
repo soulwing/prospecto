@@ -65,6 +65,7 @@ class UnorderedToManyAssociationUpdateStrategy
       }
       else {
         final Object newElement = manager.newAssociate(target, entity);
+        entity.inject(newElement, context);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
             ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));

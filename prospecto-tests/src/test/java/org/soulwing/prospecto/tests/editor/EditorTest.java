@@ -457,5 +457,54 @@ public class EditorTest {
     assertThat(model.childrenArray, is(arrayContaining(otherChild)));
   }
 
+  @Test
+  public void testObjectArrayOfObjectsArrayOfReferences() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .arrayOfObjects(CHILDREN_LIST, MockType2.class)
+                .arrayOfReferences(CHILDREN_LIST, MockType3.class)
+                    .value(STRING)
+                    .end()
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_ARRAY).name(CHILDREN_LIST)
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_ARRAY).name(CHILDREN_LIST)
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT)
+        .type(END_ARRAY)
+        .type(END_OBJECT)
+        .type(END_ARRAY)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType3 otherChild = new MockType3();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType3.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ModelEditor editor = template.generateEditor(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.childrenList.size(), is(equalTo(1)));
+    assertThat(model.childrenList.get(0).childrenList, contains(otherChild));
+  }
+
 
 }

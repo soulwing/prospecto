@@ -165,6 +165,8 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
       {
         oneOf(manager).newAssociate(owner, entity);
         will(returnValue(element));
+        oneOf(entity).inject(element, viewContext);
+
         oneOf(manager).add(owner, element);
 
         oneOf(viewContext).getListeners();
