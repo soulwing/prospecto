@@ -36,6 +36,7 @@ import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -49,12 +50,14 @@ public abstract class ViewWriterTestBase {
 
   private final String fileSuffix;
 
+  private final Options options = new OptionsMap();
+
   public ViewWriterTestBase(String fileSuffix) {
     this.fileSuffix = fileSuffix;
   }
 
   private ViewWriter newViewWriter(View view, OutputStream outputStream) {
-    return newViewWriter(view, outputStream, new OptionsMap());
+    return newViewWriter(view, outputStream, options);
   }
 
   protected abstract ViewWriter newViewWriter(View view,
@@ -154,6 +157,17 @@ public abstract class ViewWriterTestBase {
 
     writeAndValidateView("arrayOfValuesView", events);
   }
+
+  @Test
+  public void testOmitNullValueView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+    addObjectProperties(events);
+    events.add(newEvent(View.Event.Type.END_OBJECT));
+    options.put(WriterKeys.OMIT_NULL_PROPERTIES, true);
+    writeAndValidateView("omitNullView", events);
+  }
+
 
   private void addObjectProperties(List<View.Event> events) {
     events.add(newEvent(View.Event.Type.VALUE, Constants.STRING_NAME,

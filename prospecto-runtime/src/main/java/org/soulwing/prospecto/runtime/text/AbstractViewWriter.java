@@ -25,6 +25,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
  * An object that produces a textual representation of a {@link View} on
@@ -41,6 +42,7 @@ public abstract class AbstractViewWriter implements ViewWriter {
 
   private final View view;
   private final OutputStream outputStream;
+  private final Options options;
 
   /**
    * Constructs a new writer.
@@ -52,6 +54,11 @@ public abstract class AbstractViewWriter implements ViewWriter {
       Options options) {
     this.view = view;
     this.outputStream = outputStream;
+    this.options = options;
+  }
+
+  public Options getOptions() {
+    return options;
   }
 
   /**
@@ -62,7 +69,8 @@ public abstract class AbstractViewWriter implements ViewWriter {
    * @throws IllegalStateException if this method has already been invoked on
    *   this writer instance
    */
-  @Override public final void writeView() throws ViewException {
+  @Override
+  public final void writeView() throws ViewException {
     try {
       beforeViewEvents(outputStream);
       final Iterator<View.Event> events = view.iterator();
@@ -82,7 +90,7 @@ public abstract class AbstractViewWriter implements ViewWriter {
             onEndArray(event);
             break;
           case VALUE:
-            onValue(event);
+            doValue(event);
             break;
           case DISCRIMINATOR:
             onDiscriminator(event);
@@ -103,6 +111,12 @@ public abstract class AbstractViewWriter implements ViewWriter {
     catch (Exception ex) {
       throw new ViewException(ex);
     }
+  }
+
+  private void doValue(View.Event event) throws Exception {
+    if (event.getValue() == null
+        && getOptions().isEnabled(WriterKeys.OMIT_NULL_PROPERTIES)) return;
+    onValue(event);
   }
 
   /**

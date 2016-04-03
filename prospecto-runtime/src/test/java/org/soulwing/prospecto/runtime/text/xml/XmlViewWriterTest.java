@@ -39,7 +39,6 @@ import javax.xml.stream.events.XMLEvent;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.runtime.text.ViewWriterTestBase;
 
 /**
@@ -58,15 +57,14 @@ public class XmlViewWriterTest extends ViewWriterTestBase {
 
   private final Deque<Frame> stack = new LinkedList<>();
 
-  private Options options = new OptionsMap();
-
   public XmlViewWriterTest() {
     super(".xml");
   }
 
   @Override
-  protected ViewWriter newViewWriter(View view, OutputStream outputStream, Options options) {
-    return new XmlViewWriter(view, outputStream, this.options);
+  protected ViewWriter newViewWriter(View view, OutputStream outputStream,
+      Options options) {
+    return new XmlViewWriter(view, outputStream, options);
   }
 
   @Override
@@ -89,7 +87,8 @@ public class XmlViewWriterTest extends ViewWriterTestBase {
           assertThat(actualEvent.isEndDocument(), is(true));
           break;
         case XMLEvent.START_ELEMENT:
-          assertThat(actualEvent.isStartElement(), is(true));
+          assertThat("expected start but was" + actualEvent,
+              actualEvent.isStartElement(), is(true));
           stack.push(new Frame());
           validateStartElement(actualEvent.asStartElement(),
               expectedEvent.asStartElement());
