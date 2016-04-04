@@ -36,6 +36,7 @@ import javax.json.stream.JsonGeneratorFactory;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -132,9 +133,8 @@ class JsonViewWriter extends AbstractViewWriter {
 
   private void writeStartEnvelope(View.Event event) {
     if (!firstEvent) return;
-    firstEvent = false;
-    if (event.getName() == null) return;
-    enveloped = true;
+    enveloped = isEnveloped(event);
+    if (!enveloped) return;
     generator.writeStartObject();
     for (final Map.Entry<String, Object> property : getView().getEnvelope()) {
       writeValue(property.getKey(), property.getValue());
@@ -142,10 +142,23 @@ class JsonViewWriter extends AbstractViewWriter {
     contextStack.push(GeneratorContext.OBJECT);
   }
 
+  private boolean isEnveloped(View.Event event) {
+    if (event.getName() == null) return false;
+    if (event.getType() == View.Event.Type.BEGIN_ARRAY) {
+      return (boolean) getOptions().get(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, true);
+    }
+    return (boolean) getOptions().get(WriterKeys.WRAP_OBJECT_IN_ENVELOPE, false);
+  }
+
   private void writeStartObject(View.Event event) {
     final String name = event.getName();
     if (name != null && contextStack.peek() != GeneratorContext.ARRAY) {
-      generator.writeStartObject(name);
+      if (firstEvent && !enveloped) {
+        generator.writeStartObject();
+      }
+      else {
+        generator.writeStartObject(name);
+      }
     }
     else if (enveloped && viewName != null) {
       generator.writeStartObject(viewName);
@@ -155,12 +168,18 @@ class JsonViewWriter extends AbstractViewWriter {
       generator.writeStartObject();
     }
     contextStack.push(GeneratorContext.OBJECT);
+    firstEvent = false;
   }
 
   private void writeStartArray(View.Event event) {
     final String name = event.getName();
     if (name != null) {
-      generator.writeStartArray(name);
+      if (firstEvent && !enveloped) {
+        generator.writeStartArray();
+      }
+      else {
+        generator.writeStartArray(name);
+      }
     }
     else if (enveloped && viewName != null) {
       generator.writeStartArray(viewName);
@@ -170,6 +189,7 @@ class JsonViewWriter extends AbstractViewWriter {
       generator.writeStartArray();
     }
     contextStack.push(GeneratorContext.ARRAY);
+    firstEvent = false;
   }
 
   private void writeEnd() {

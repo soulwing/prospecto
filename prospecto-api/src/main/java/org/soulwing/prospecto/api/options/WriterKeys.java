@@ -32,4 +32,16 @@ public interface WriterKeys {
    */
   String OMIT_NULL_PROPERTIES = "writer.omitNullProperties";
 
+  /**
+   * When set to {@code true} a view whose root is of object type will be
+   * wrapped in an envelope if the root element is named.
+   */
+  String WRAP_OBJECT_IN_ENVELOPE = "writer.wrapObject";
+
+  /**
+   * When set to {@code false} a view whose root is of array type will not be
+   * wwrapped in an envelope.
+   */
+  String WRAP_ARRAY_IN_ENVELOPE = "writer.wrapArray";
+  
 }

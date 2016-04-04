@@ -24,13 +24,17 @@ import static org.hamcrest.Matchers.is;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 
+import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.text.ViewWriterTestBase;
 
 /**
@@ -62,5 +66,75 @@ public class JsonViewWriterTest extends ViewWriterTestBase {
       assertThat(viewEvent, is(equalTo(testEvent)));
     }
   }
+
+  @Test
+  public void testUnenvelopedObjectView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT, "view"));
+    addObjectProperties(events);
+    events.add(newEvent(View.Event.Type.END_OBJECT, "view"));
+
+    writeAndValidateView("flatObjectView", events);
+  }
+
+  @Test
+  public void testEnvelopedObjectView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT, "view"));
+    addObjectProperties(events);
+    events.add(newEvent(View.Event.Type.END_OBJECT, "view"));
+
+    options.put(WriterKeys.WRAP_OBJECT_IN_ENVELOPE, true);
+    writeAndValidateView("envelopedFlatObjectView", events);
+  }
+
+  @Test
+  public void testUnenvelopedArrayOfObjectsView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, "view"));
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+    addObjectProperties(events);
+    events.add(newEvent(View.Event.Type.END_OBJECT));
+    events.add(newEvent(View.Event.Type.END_ARRAY, "view"));
+
+    options.put(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, false);
+    writeAndValidateView("arrayOfObjectsView", events);
+  }
+
+  @Test
+  public void testEnvelopedArrayOfObjectsView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, "view"));
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
+    addObjectProperties(events);
+    events.add(newEvent(View.Event.Type.END_OBJECT));
+    events.add(newEvent(View.Event.Type.END_ARRAY, "view"));
+
+    writeAndValidateView("envelopedArrayOfObjectsView", events);
+  }
+
+  @Test
+  public void testUnenvelopedArrayOfValuesView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, "view"));
+    addArrayValues(events);
+    events.add(newEvent(View.Event.Type.END_ARRAY, "view"));
+
+    options.put(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, false);
+    writeAndValidateView("arrayOfValuesView", events);
+  }
+
+  @Test
+  public void testEnvelopedArrayOfValuesView() throws Exception {
+    final List<View.Event> events = new ArrayList<>();
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, "view"));
+    addArrayValues(events);
+    events.add(newEvent(View.Event.Type.END_ARRAY, "view"));
+
+    writeAndValidateView("envelopedArrayOfValuesView", events);
+  }
+
 
 }

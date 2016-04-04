@@ -50,7 +50,7 @@ public abstract class ViewWriterTestBase {
 
   private final String fileSuffix;
 
-  private final Options options = new OptionsMap();
+  protected final Options options = new OptionsMap();
 
   public ViewWriterTestBase(String fileSuffix) {
     this.fileSuffix = fileSuffix;
@@ -84,6 +84,11 @@ public abstract class ViewWriterTestBase {
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     final ViewWriter writer = newViewWriter(view, outputStream);
     writer.writeView();
+
+    System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+    System.out.write(outputStream.toByteArray());
+    System.out.println();
+    System.out.flush();
 
     final InputStream actual = new ByteArrayInputStream(
         outputStream.toByteArray());
@@ -143,6 +148,13 @@ public abstract class ViewWriterTestBase {
   public void testArrayOfValuesView() throws Exception {
     final List<View.Event> events = new ArrayList<>();
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
+    addArrayValues(events);
+    events.add(newEvent(View.Event.Type.END_ARRAY));
+
+    writeAndValidateView("arrayOfValuesView", events);
+  }
+
+  protected void addArrayValues(List<View.Event> events) {
     events.add(newEvent(View.Event.Type.VALUE, null,
         Constants.STRING_VALUE));
     events.add(newEvent(View.Event.Type.VALUE, null,
@@ -153,9 +165,6 @@ public abstract class ViewWriterTestBase {
         Constants.BOOLEAN_VALUE));
     events.add(newEvent(View.Event.Type.VALUE, null,
         null));
-    events.add(newEvent(View.Event.Type.END_ARRAY));
-
-    writeAndValidateView("arrayOfValuesView", events);
   }
 
   @Test
@@ -169,7 +178,7 @@ public abstract class ViewWriterTestBase {
   }
 
 
-  private void addObjectProperties(List<View.Event> events) {
+  protected void addObjectProperties(List<View.Event> events) {
     events.add(newEvent(View.Event.Type.VALUE, Constants.STRING_NAME,
         Constants.STRING_VALUE));
     events.add(newEvent(View.Event.Type.VALUE, Constants.INTEGRAL_NAME,

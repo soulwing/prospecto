@@ -1,0 +1,11 @@
+{
+  "view":[
+    {
+      "string":"string",
+      "integral":-1,
+      "decimal":2.71828,
+      "boolean":true,
+      "null":null
+    }
+  ]
+}
