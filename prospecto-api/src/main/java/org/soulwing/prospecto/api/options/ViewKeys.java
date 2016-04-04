@@ -18,17 +18,17 @@
  */
 package org.soulwing.prospecto.api.options;
 
-import org.soulwing.prospecto.api.ModelEditor;
 
 /**
- * Keys for model editor configuration options.
+ * Keys for view configuration options.
+ *
  * @author Carl Harris
  */
-public interface ModelEditorKeys {
+public interface ViewKeys {
 
   /**
-   * When set to {@code true} a {@link ModelEditor} will
-   * ignore unknown property names that appear in an input view.
+   * When set to {@code true} a model editor will ignore unknown property names
+   * that appear in an input view.
    */
   String IGNORE_UNKNOWN_PROPERTIES = "editor.IgnoresUnknownProperties";
 
