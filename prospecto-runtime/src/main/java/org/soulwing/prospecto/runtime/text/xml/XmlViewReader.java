@@ -194,11 +194,8 @@ class XmlViewReader extends AbstractViewReader {
       throw new XMLStreamException("xsi:type is required");
     }
     switch (type) {
-      case XmlViewConstants.XS_INTEGER:
-        value(frame.getName(), new BigInteger(text));
-        break;
-      case XmlViewConstants.XS_DECIMAL:
-        value(frame.getName(), new BigDecimal(text));
+      case XmlViewConstants.XS_BOOLEAN:
+        value(frame.getName(), Boolean.valueOf(text));
         break;
       case XmlViewConstants.XS_BYTE:
         value(frame.getName(), Byte.valueOf(text));
@@ -212,8 +209,17 @@ class XmlViewReader extends AbstractViewReader {
       case XmlViewConstants.XS_LONG:
         value(frame.getName(), Long.valueOf(text));
         break;
-      case XmlViewConstants.XS_BOOLEAN:
-        value(frame.getName(), Boolean.valueOf(text));
+      case XmlViewConstants.XS_INTEGER:
+        value(frame.getName(), new BigInteger(text));
+        break;
+      case XmlViewConstants.XS_FLOAT:
+        value(frame.getName(), Float.valueOf(text));
+        break;
+      case XmlViewConstants.XS_DOUBLE:
+        value(frame.getName(), Double.valueOf(text));
+        break;
+      case XmlViewConstants.XS_DECIMAL:
+        value(frame.getName(), new BigDecimal(text));
         break;
       case XmlViewConstants.XS_DATE_TIME:
         value(frame.getName(),

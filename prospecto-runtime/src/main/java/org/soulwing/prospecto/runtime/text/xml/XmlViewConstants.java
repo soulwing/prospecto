@@ -68,9 +68,7 @@ public interface XmlViewConstants {
 
   QName XSI_TYPE_QNAME = new QName(XSI_NAMESPACE, XSI_TYPE_NAME);
 
-  String XS_INTEGER = "integer";
-
-  String XS_DECIMAL = "decimal";
+  String XS_BOOLEAN = "boolean";
 
   String XS_BYTE = "byte";
 
@@ -80,7 +78,13 @@ public interface XmlViewConstants {
 
   String XS_LONG = "long";
 
-  String XS_BOOLEAN = "boolean";
+  String XS_INTEGER = "integer";
+
+  String XS_FLOAT = "float";
+
+  String XS_DOUBLE = "double";
+
+  String XS_DECIMAL = "decimal";
 
   String XS_DATE_TIME = "dateTime";
 
