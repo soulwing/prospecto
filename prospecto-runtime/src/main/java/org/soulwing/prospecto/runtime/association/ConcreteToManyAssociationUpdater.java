@@ -71,8 +71,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
             defaultManager, descriptor, node, context);
 
     manager.begin(target);
-    findStrategy(manager).update(node, target, entities, defaultManager,
-        context);
+    findStrategy(manager).update(node, target, entities, manager, context);
     manager.end(target);
   }
 
