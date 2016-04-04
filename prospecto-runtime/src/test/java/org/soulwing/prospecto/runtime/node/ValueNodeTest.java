@@ -23,10 +23,10 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.eventOfType;
-import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.inNamespace;
-import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.whereValue;
-import static org.soulwing.prospecto.runtime.event.ViewEventMatchers.withName;
+import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.eventOfType;
+import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.inNamespace;
+import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.whereValue;
+import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
 import java.util.Deque;
 

@@ -134,6 +134,7 @@
     <module>prospecto-tests</module>
     <module>prospecto-jaxrs</module>
     <module>prospecto-demo-jaxrs</module>
+    <module>prospecto-matchers</module>
   </modules>
 
 </project>

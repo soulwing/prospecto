@@ -44,6 +44,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
+import org.soulwing.prospecto.runtime.view.ViewBuilder;
 
 /**
  * Tests for editing an object.

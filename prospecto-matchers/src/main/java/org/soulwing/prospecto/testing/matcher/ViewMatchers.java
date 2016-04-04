@@ -16,12 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.matcher;
-
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.nullValue;
+package org.soulwing.prospecto.testing.matcher;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,6 +27,7 @@ import java.util.Objects;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.soulwing.prospecto.api.View;
 
 /**
@@ -130,7 +126,7 @@ public class ViewMatchers {
       @Override
       public boolean matches(Object item) {
         return ((View.Event) item).getType() == type
-            && allOf(matchers).matches(item);
+            && Matchers.allOf(matchers).matches(item);
       }
 
       @Override
@@ -138,7 +134,7 @@ public class ViewMatchers {
         description.appendText("event of type ")
             .appendValue(type)
             .appendText(" and all of ")
-            .appendDescriptionOf(allOf(matchers));
+            .appendDescriptionOf(Matchers.allOf(matchers));
       }
 
       @Override
@@ -149,30 +145,30 @@ public class ViewMatchers {
         }
         else {
           description.appendText(" but ");
-          allOf(matchers).describeMismatch(item, description);
+          Matchers.allOf(matchers).describeMismatch(item, description);
         }
       }
     };
   }
 
   public static Matcher<View.Event> withName(String name) {
-    return hasProperty("name", equalTo(name));
+    return Matchers.hasProperty("name", Matchers.equalTo(name));
   }
 
   public static Matcher<View.Event> withNoName() {
-    return hasProperty("name", nullValue(String.class));
+    return Matchers.hasProperty("name", Matchers.nullValue(String.class));
   }
 
   public static Matcher<View.Event> inNamespace(String namespace) {
-    return hasProperty("namespace", equalTo(namespace));
+    return Matchers.hasProperty("namespace", Matchers.equalTo(namespace));
   }
 
   public static Matcher<View.Event> inDefaultNamespace() {
-    return hasProperty("namespace", nullValue(String.class));
+    return Matchers.hasProperty("namespace", Matchers.nullValue(String.class));
   }
 
   public static Matcher<View.Event> whereValue(Matcher<?> matcher) {
-    return hasProperty("value", matcher);
+    return Matchers.hasProperty("value", matcher);
   }
 
   public static Matcher<View> sameView(View expectedView) {
@@ -253,8 +249,8 @@ public class ViewMatchers {
 
     private boolean equals(View.Event actual, View.Event expected) {
       return Objects.equals(actual.getType(), expected.getType())
-          && Objects.equals(actual.getName(), expected.getName())
-          && Objects.equals(actual.getNamespace(), expected.getNamespace())
+          && (index == 0 || Objects.equals(actual.getName(), expected.getName()))
+          && (index == 0 || Objects.equals(actual.getNamespace(), expected.getNamespace()))
           && equals(actual.getValue(), expected.getValue());
     }
 
