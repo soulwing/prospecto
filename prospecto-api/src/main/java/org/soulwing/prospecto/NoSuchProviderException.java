@@ -25,8 +25,8 @@ package org.soulwing.prospecto;
  */
 public class NoSuchProviderException extends RuntimeException {
 
-  public NoSuchProviderException(String providerName) {
-    super("Provider '" + providerName + "' not available on class loader");
+  public NoSuchProviderException(String message) {
+    super(message);
   }
 
 }

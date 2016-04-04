@@ -76,7 +76,7 @@ public class ViewReaderFactoryProducer {
         new ServiceLocator.Strategy<ViewReaderFactoryProvider>() {
           @Override
           public boolean isSatisfiedBy(ViewReaderFactoryProvider service) {
-            return service.getName().equals(providerName);
+            return service.getName().equalsIgnoreCase(providerName);
           }
         });
   }
