@@ -67,11 +67,8 @@ class XmlViewWriter extends AbstractViewWriter {
   private static final String XS_PREFIX = "xs";
   private static final String XSI_PREFIX = "xsi";
 
-  private static final String XS_INTEGER = pname(XS_PREFIX,
-      XmlViewConstants.XS_INTEGER);
-
-  private static final String XS_DECIMAL = pname(XS_PREFIX,
-      XmlViewConstants.XS_DECIMAL);
+  private static final String XS_BOOLEAN = pname(XS_PREFIX,
+      XmlViewConstants.XS_BOOLEAN);
 
   private static final String XS_BYTE = pname(XS_PREFIX,
       XmlViewConstants.XS_BYTE);
@@ -85,8 +82,17 @@ class XmlViewWriter extends AbstractViewWriter {
   private static final String XS_LONG = pname(XS_PREFIX,
       XmlViewConstants.XS_LONG);
 
-  private static final String XS_BOOLEAN = pname(XS_PREFIX,
-      XmlViewConstants.XS_BOOLEAN);
+  private static final String XS_INTEGER = pname(XS_PREFIX,
+      XmlViewConstants.XS_INTEGER);
+
+  private static final String XS_FLOAT = pname(XS_PREFIX,
+      XmlViewConstants.XS_FLOAT);
+
+  private static final String XS_DOUBLE = pname(XS_PREFIX,
+      XmlViewConstants.XS_FLOAT);
+
+  private static final String XS_DECIMAL = pname(XS_PREFIX,
+      XmlViewConstants.XS_DECIMAL);
 
   private static final String XS_DATE_TIME = pname(XS_PREFIX,
       XmlViewConstants.XS_DATE_TIME);
@@ -223,23 +229,8 @@ class XmlViewWriter extends AbstractViewWriter {
     final String name = event.getName();
     final String namespace = event.getNamespace();
     final Object value = event.getValue();
-    if (value instanceof BigDecimal) {
-      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDecimal((BigDecimal) value));
-    }
-    else if (value instanceof BigInteger) {
-      writeString(name, namespace, XS_INTEGER, DatatypeConverter.printInteger((BigInteger) value));
-    }
-    else if (value instanceof Byte) {
-      writeString(name, namespace, XS_BYTE, DatatypeConverter.printByte((Byte) value));
-    }
-    else if (value instanceof Double) {
-      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDouble((Double) value));
-    }
-    else if (value instanceof Float) {
-      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printFloat((Float) value));
-    }
-    else if (value instanceof Short) {
-      writeString(name, namespace, XS_SHORT, DatatypeConverter.printShort((Short) value));
+    if (value instanceof Boolean) {
+      writeString(name, namespace, XS_BOOLEAN, DatatypeConverter.printBoolean((Boolean) value));
     }
     else if (value instanceof Integer) {
       writeString(name, namespace, XS_INT, DatatypeConverter.printInt((Integer) value));
@@ -247,8 +238,23 @@ class XmlViewWriter extends AbstractViewWriter {
     else if (value instanceof Long) {
       writeString(name, namespace, XS_LONG, DatatypeConverter.printLong((Long) value));
     }
-    else if (value instanceof Boolean) {
-      writeString(name, namespace, XS_BOOLEAN, DatatypeConverter.printBoolean((Boolean) value));
+    else if (value instanceof Double) {
+      writeString(name, namespace, XS_DOUBLE, DatatypeConverter.printDouble((Double) value));
+    }
+    else if (value instanceof Float) {
+      writeString(name, namespace, XS_FLOAT, DatatypeConverter.printFloat((Float) value));
+    }
+    else if (value instanceof Byte) {
+      writeString(name, namespace, XS_BYTE, DatatypeConverter.printByte((Byte) value));
+    }
+    else if (value instanceof Short) {
+      writeString(name, namespace, XS_SHORT, DatatypeConverter.printShort((Short) value));
+    }
+    else if (value instanceof BigInteger) {
+      writeString(name, namespace, XS_INTEGER, DatatypeConverter.printInteger((BigInteger) value));
+    }
+    else if (value instanceof BigDecimal) {
+      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDecimal((BigDecimal) value));
     }
     else if (value instanceof Date) {
       Calendar calendar = Calendar.getInstance();

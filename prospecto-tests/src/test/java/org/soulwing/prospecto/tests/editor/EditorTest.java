@@ -193,7 +193,7 @@ public class EditorTest {
         .type(VALUE).name(STRING).value(UPDATED_STRING)
         .type(BEGIN_OBJECT).name(CHILD)
         .type(VALUE).name(STRING).value(UPDATED_STRING)
-        .type(END_OBJECT)
+        .type(END_OBJECT).name(CHILD)
         .type(END_OBJECT)
         .end();
 
@@ -255,8 +255,8 @@ public class EditorTest {
         .type(BEGIN_OBJECT).name(CHILD)
         .type(BEGIN_OBJECT).name(CHILD)
         .type(VALUE).name(STRING).value(STRING)
-        .type(END_OBJECT)
-        .type(END_OBJECT)
+        .type(END_OBJECT).name(CHILD)
+        .type(END_OBJECT).name(CHILD)
         .type(END_OBJECT)
         .end();
 
@@ -301,8 +301,8 @@ public class EditorTest {
         .type(BEGIN_OBJECT)
         .type(VALUE).name(STRING).value(STRING)
         .type(END_OBJECT)
-        .type(END_ARRAY)
-        .type(END_OBJECT)
+        .type(END_ARRAY).name(CHILDREN_LIST)
+        .type(END_OBJECT).name(CHILD)
         .type(END_OBJECT)
         .end();
 
@@ -343,7 +343,7 @@ public class EditorTest {
         .type(VALUE).name(STRING).value(UPDATED_STRING)
         .type(BEGIN_OBJECT).name(CHILD)
         .type(VALUE).name(STRING).value(STRING)
-        .type(END_OBJECT)
+        .type(END_OBJECT).name(CHILD)
         .type(END_OBJECT)
         .end();
 
@@ -388,7 +388,7 @@ public class EditorTest {
         .type(BEGIN_OBJECT)
         .type(VALUE).name(STRING).value(STRING)
         .type(END_OBJECT)
-        .type(END_ARRAY)
+        .type(END_ARRAY).name(CHILDREN_LIST)
         .type(END_OBJECT)
         .end();
 
@@ -433,7 +433,7 @@ public class EditorTest {
         .type(BEGIN_OBJECT)
         .type(VALUE).name(STRING).value(STRING)
         .type(END_OBJECT)
-        .type(END_ARRAY)
+        .type(END_ARRAY).name(CHILDREN_ARRAY)
         .type(END_OBJECT)
         .end();
 
@@ -480,9 +480,9 @@ public class EditorTest {
         .type(BEGIN_OBJECT)
         .type(VALUE).name(STRING).value(STRING)
         .type(END_OBJECT)
-        .type(END_ARRAY)
+        .type(END_ARRAY).name(CHILDREN_LIST)
         .type(END_OBJECT)
-        .type(END_ARRAY)
+        .type(END_ARRAY).name(CHILDREN_LIST)
         .type(END_OBJECT)
         .end();
 
