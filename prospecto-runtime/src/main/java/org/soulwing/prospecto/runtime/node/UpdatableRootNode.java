@@ -25,7 +25,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * A
+ * An updatable view node at the root of a view.
+ *
  * @author Carl Harris
  */
 public interface UpdatableRootNode extends UpdatableViewNode {

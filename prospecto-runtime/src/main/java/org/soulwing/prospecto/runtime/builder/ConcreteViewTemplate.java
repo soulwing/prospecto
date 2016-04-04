@@ -85,7 +85,13 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
 
   @Override
   public ModelEditor generateEditor(View source, ViewContext context) {
-    return modelEditorFactory.newEditor(root, source, context);
+    return generateEditor(source, context, null);
+  }
+
+  @Override
+  public ModelEditor generateEditor(View source, ViewContext context,
+      String dataKey) {
+    return modelEditorFactory.newEditor(root, source, context, dataKey);
   }
 
   @Override

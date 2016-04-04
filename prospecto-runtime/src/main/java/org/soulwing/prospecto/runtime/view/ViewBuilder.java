@@ -1,5 +1,5 @@
 /*
- * File created on Apr 1, 2016
+ * File created on Apr 4, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,14 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.runtime.view;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
  * A builder for a view.
@@ -32,7 +31,7 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  */
 public class ViewBuilder {
 
-  static class EventInfo {
+  private static class EventInfo {
     View.Event.Type type;
     String name;
     String namespace;

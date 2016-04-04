@@ -75,6 +75,23 @@ public interface View extends Iterable<View.Event> {
             return this;
         }
       }
+
+      /**
+       * Tests whether this is the begin event of a complementary pair.
+       * @return {@code true} if begin event
+       */
+      public boolean isBegin() {
+        return this == BEGIN_OBJECT || this == BEGIN_ARRAY;
+      }
+
+      /**
+       * Tests whether this is the end event of a complementary pair.
+       * @return {@code true} if end event
+       */
+      public boolean isEnd() {
+        return this == END_OBJECT || this == END_ARRAY;
+      }
+
     }
 
     /**

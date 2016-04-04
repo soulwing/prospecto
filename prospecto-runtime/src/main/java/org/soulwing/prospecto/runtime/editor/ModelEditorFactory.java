@@ -35,9 +35,11 @@ public interface ModelEditorFactory {
    * @param target root node of the target view template
    * @param source source view
    * @param context view context
+   * @param dataKey envelope key that contains the editable view data
+   *    or {@code null} if the view is not enveloped
    * @return model editor
    */
   ModelEditor newEditor(AbstractViewNode target, View source,
-      ViewContext context);
+      ViewContext context, String dataKey);
 
 }

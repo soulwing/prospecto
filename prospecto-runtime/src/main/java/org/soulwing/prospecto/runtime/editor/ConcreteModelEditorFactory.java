@@ -46,12 +46,12 @@ public class ConcreteModelEditorFactory implements ModelEditorFactory {
 
   @Override
   public ModelEditor newEditor(AbstractViewNode target, View source,
-      ViewContext context) {
+      ViewContext context, String dataKey) {
     if (!(target instanceof UpdatableRootNode)) {
       throw new IllegalArgumentException("view template is not updatable");
     }
     return new ConcreteModelEditor((UpdatableRootNode) target, source,
-        viewContextFactory.newContext(context));
+        viewContextFactory.newContext(context), dataKey);
   }
 
 }

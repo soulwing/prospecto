@@ -60,4 +60,13 @@ public interface ViewTemplate {
    */
   ModelEditor generateEditor(View source, ViewContext context);
 
+  /**
+   * Generates a model editor using the given enveloped source view.
+   * @param source source view (typically produced by a {@link ViewReader}
+   * @param context view context
+   * @param dataKey envelope key that contains the editable view data
+   * @return model editor
+   */
+  ModelEditor generateEditor(View source, ViewContext context, String dataKey);
+
 }
