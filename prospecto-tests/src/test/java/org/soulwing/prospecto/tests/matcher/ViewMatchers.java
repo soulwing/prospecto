@@ -1,5 +1,5 @@
 /*
- * File created on Apr 1, 2016
+ * File created on Apr 4, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,15 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.view;
+package org.soulwing.prospecto.tests.matcher;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -172,5 +175,137 @@ public class ViewMatchers {
     return hasProperty("value", matcher);
   }
 
+  public static Matcher<View> sameView(View expectedView) {
+    return new SameViewMatcher(expectedView);
+  }
+
+  private static class SameViewMatcher extends BaseMatcher<View> {
+
+    private final View expectedView;
+
+    private int index;
+    private boolean matches = true;
+    private boolean moreActual;
+    private boolean moreExpected;
+    private View.Event actualEvent;
+    private View.Event expectedEvent;
+
+    public SameViewMatcher(View expectedView) {
+      this.expectedView = expectedView;
+    }
+
+    @Override
+    public boolean matches(Object item) {
+      final Iterator<View.Event> actual = ((View) item).iterator();
+      final Iterator<View.Event> expected = expectedView.iterator();
+      moreActual = actual.hasNext();
+      moreExpected = expected.hasNext();
+      while (matches && moreActual && moreExpected) {
+        actualEvent = actual.next();
+        expectedEvent = expected.next();
+        matches = equals(actualEvent, expectedEvent);
+        if (matches) {
+          index++;
+          moreActual = actual.hasNext();
+          moreExpected = expected.hasNext();
+        }
+      }
+      return matches && !moreActual && !moreExpected;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("view containing event sequence [");
+      final Iterator<View.Event> i = expectedView.iterator();
+      while (i.hasNext()) {
+        description.appendValue(i.next());
+        if (i.hasNext()) {
+          description.appendText(", ");
+        }
+      }
+      description.appendText("]");
+    }
+
+    @Override
+    public void describeMismatch(Object item, Description description) {
+      if (!matches) {
+        description.appendText("at index ")
+            .appendValue(index)
+            .appendText(", expected ")
+            .appendValue(expectedEvent)
+            .appendText(", but was ")
+            .appendValue(actualEvent);
+      }
+      else if (moreExpected) {
+        description.appendText("after matching ")
+            .appendValue(index)
+            .appendText(" events; there are fewer events than expected");
+      }
+      else if (moreActual) {
+        description.appendText("after matching ")
+            .appendValue(index)
+            .appendText(" events; there are more unmatched events");
+      }
+      else {
+        description.appendText("huh?");
+      }
+    }
+
+    private boolean equals(View.Event actual, View.Event expected) {
+      return Objects.equals(actual.getType(), expected.getType())
+          && Objects.equals(actual.getName(), expected.getName())
+          && Objects.equals(actual.getNamespace(), expected.getNamespace())
+          && equals(actual.getValue(), expected.getValue());
+    }
+
+    private boolean equals(Object expectedValue, Object actualValue) {
+      if (expectedValue == null && actualValue == null) return true;
+      if (expectedValue == null ^ actualValue == null) return false;
+      Class<?> expectedType = expectedValue.getClass();
+      if (Number.class.isAssignableFrom(expectedType)) {
+        if (!Number.class.isAssignableFrom(actualValue.getClass())) {
+          return false;
+        }
+        actualValue = coerceNumberToType(expectedType, (Number) actualValue);
+      }
+      return expectedValue.equals(actualValue);
+    }
+
+    private Number coerceNumberToType(Class<?> type, Number value) {
+      if (type.equals(value.getClass())) {
+        return value;
+      }
+      else if (Integer.class.equals(type)) {
+        return value.intValue();
+      }
+      else if (Long.class.equals(type)) {
+        return value.longValue();
+      }
+      else if (Byte.class.equals(type)) {
+        return value.byteValue();
+      }
+      else if (Short.class.equals(type)) {
+        return value.shortValue();
+      }
+      else if (Double.class.equals(type)) {
+        return value.doubleValue();
+      }
+      else if (Float.class.equals(type)) {
+        return value.floatValue();
+      }
+      else if (BigInteger.class.equals(type)) {
+        return BigInteger.valueOf(value.longValue());
+      }
+      else if (BigDecimal.class.equals(type)) {
+        return new BigDecimal(value.doubleValue());
+      }
+      else {
+        throw new ClassCastException("cannot coerce value of type "
+            + value.getClass().getSimpleName() + " to type"
+            + type.getSimpleName());
+      }
+    }
+
+  }
 
 }

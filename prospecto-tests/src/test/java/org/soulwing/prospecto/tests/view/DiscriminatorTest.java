@@ -27,10 +27,10 @@ import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.DISCRIMINATOR;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
-import static org.soulwing.prospecto.tests.view.ViewMatchers.eventOfType;
-import static org.soulwing.prospecto.tests.view.ViewMatchers.hasEventSequence;
-import static org.soulwing.prospecto.tests.view.ViewMatchers.whereValue;
-import static org.soulwing.prospecto.tests.view.ViewMatchers.withName;
+import static org.soulwing.prospecto.tests.matcher.ViewMatchers.eventOfType;
+import static org.soulwing.prospecto.tests.matcher.ViewMatchers.hasEventSequence;
+import static org.soulwing.prospecto.tests.matcher.ViewMatchers.whereValue;
+import static org.soulwing.prospecto.tests.matcher.ViewMatchers.withName;
 
 import java.util.Collections;
 import java.util.List;
