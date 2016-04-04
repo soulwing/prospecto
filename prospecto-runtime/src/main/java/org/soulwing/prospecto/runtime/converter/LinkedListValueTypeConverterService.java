@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -125,6 +126,14 @@ public class LinkedListValueTypeConverterService
     }
     if (BigDecimal.class.isAssignableFrom(type) && value instanceof Number) {
       return new BigDecimal(((Number) value).doubleValue());
+    }
+    if (Date.class.isAssignableFrom(type) && value instanceof Long) {
+      return new Date(((Number) value).longValue());
+    }
+    if (Calendar.class.isAssignableFrom(type) && value instanceof Long) {
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTimeInMillis(((Number) value).longValue());
+      return calendar;
     }
     if (UUID.class.equals(type) && value instanceof String) {
       return UUID.fromString((String) value);
