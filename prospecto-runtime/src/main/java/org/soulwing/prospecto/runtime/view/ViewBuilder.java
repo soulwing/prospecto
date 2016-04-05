@@ -71,6 +71,12 @@ public class ViewBuilder {
     return this;
   }
 
+  public ViewBuilder with(ViewBuilder builder) {
+    next();
+    events.addAll(builder.events);
+    return this;
+  }
+
   public View end() {
     next();
     return new ConcreteView(events);
