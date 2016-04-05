@@ -21,7 +21,7 @@ package org.soulwing.prospecto.runtime.association;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * An updater for a to-one association between a target model object and
@@ -31,7 +31,7 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
  */
 public interface ToOneAssociationUpdater {
 
-  void update(ContainerViewNode node, Object target, MutableViewEntity entity,
+  void update(ConcreteContainerNode node, Object target, MutableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception;
 }

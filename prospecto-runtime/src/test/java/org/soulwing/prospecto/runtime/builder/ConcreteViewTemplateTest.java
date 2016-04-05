@@ -45,8 +45,8 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
  * Unit tests for {@link ConcreteViewTemplate}.
@@ -112,7 +112,7 @@ public class ConcreteViewTemplateTest {
     assertThat(node, is(instanceOf(ConcreteObjectNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ContainerViewNode) node).getChildren(), contains(child));
+    assertThat(((ConcreteContainerNode) node).getChildren(), contains(child));
   }
 
   @Test
@@ -125,7 +125,7 @@ public class ConcreteViewTemplateTest {
     assertThat(((ConcreteArrayOfObjectsNode) node).getElementName(),
         is(equalTo(ELEMENT_NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ContainerViewNode) node).getChildren(), contains(child));
+    assertThat(((ConcreteContainerNode) node).getChildren(), contains(child));
   }
 
   private Expectations viewContextExpectations() {
@@ -144,7 +144,7 @@ public class ConcreteViewTemplateTest {
     };
   }
 
-  class MockViewNode extends ContainerViewNode {
+  class MockViewNode extends ConcreteContainerNode {
 
     private Exception exception;
 

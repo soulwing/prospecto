@@ -36,7 +36,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class SubtypeNode extends ContainerViewNode {
+public class SubtypeNode extends ConcreteContainerNode {
 
   /**
    * Constructs a new instance

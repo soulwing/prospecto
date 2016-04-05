@@ -1,5 +1,5 @@
 /*
- * File created on Mar 16, 2016
+ * File created on Apr 5, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,22 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.builder;
-
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
+package org.soulwing.prospecto.api.node;
 
 /**
- * A {@link ViewTemplateBuilderFactory} that produces
- * {@link RootNodeViewTemplateBuilder} objects.
+ * A node that contains other nodes as children.
  *
  * @author Carl Harris
  */
-class ConcreteViewTemplateBuilderFactory implements ViewTemplateBuilderFactory {
-
-  @Override
-  public ViewTemplateBuilder newBuilder(ConcreteContainerNode target) {
-    return new RootNodeViewTemplateBuilder(target);
-  }
+public interface ContainerNode extends ViewNode, Iterable<ViewNode> {
 
 }

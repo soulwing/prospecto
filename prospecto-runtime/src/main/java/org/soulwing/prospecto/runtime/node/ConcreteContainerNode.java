@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
@@ -33,7 +35,8 @@ import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
  *
  * @author Carl Harris
  */
-public abstract class ContainerViewNode extends AbstractViewNode {
+public abstract class ConcreteContainerNode extends AbstractViewNode
+    implements ContainerNode {
 
   private final List<AbstractViewNode> children;
   private final DiscriminatorEventService discriminatorEventService;
@@ -44,7 +47,7 @@ public abstract class ContainerViewNode extends AbstractViewNode {
    * @param namespace namespace for {@code name}
    * @param modelType element model type
    */
-  protected ContainerViewNode(String name, String namespace,
+  protected ConcreteContainerNode(String name, String namespace,
       Class<?> modelType) {
     this(name, namespace, modelType, new ArrayList<AbstractViewNode>());
   }
@@ -56,18 +59,24 @@ public abstract class ContainerViewNode extends AbstractViewNode {
    * @param modelType element model type
    * @param children node children
    */
-  protected ContainerViewNode(String name, String namespace, Class<?> modelType,
+  protected ConcreteContainerNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children) {
     this(name, namespace, modelType, children,
         ConcreteDiscriminatorEventService.INSTANCE);
   }
 
-  ContainerViewNode(String name, String namespace, Class<?> modelType,
+  ConcreteContainerNode(String name, String namespace, Class<?> modelType,
       List<AbstractViewNode> children,
       DiscriminatorEventService discriminatorEventService) {
     super(name, namespace, modelType);
     this.children = children;
     this.discriminatorEventService = discriminatorEventService;
+  }
+
+  @Override
+  public Iterator<ViewNode> iterator() {
+    // TODO
+    throw new UnsupportedOperationException();
   }
 
   public List<AbstractViewNode> getChildren() {

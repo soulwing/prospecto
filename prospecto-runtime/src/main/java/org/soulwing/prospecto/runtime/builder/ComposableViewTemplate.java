@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.builder;
 
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * A view template that can be composed in another view template.
@@ -39,7 +39,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#object(String, String, ViewTemplate)
    */
-  ContainerViewNode object(String name, String namespace);
+  ConcreteContainerNode object(String name, String namespace);
 
   /**
    * Extracts a view node of reference type from the root of this template for
@@ -51,7 +51,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#reference(String, String, ViewTemplate)
    */
-  ContainerViewNode reference(String name, String namespace);
+  ConcreteContainerNode reference(String name, String namespace);
 
   /**
    * Extracts a view node of array-of-objects type from the root of this
@@ -65,7 +65,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#arrayOfObjects(String, String, String, ViewTemplate)
    */
-  ContainerViewNode arrayOfObjects(String name, String elementName,
+  ConcreteContainerNode arrayOfObjects(String name, String elementName,
       String namespace);
 
   /**
@@ -80,7 +80,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#arrayOfReferences(String, String, String, ViewTemplate)
    */
-  ContainerViewNode arrayOfReferences(String name, String elementName,
+  ConcreteContainerNode arrayOfReferences(String name, String elementName,
       String namespace);
 
   /**

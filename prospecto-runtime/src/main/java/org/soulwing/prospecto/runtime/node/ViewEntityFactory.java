@@ -38,7 +38,7 @@ interface ViewEntityFactory {
    * @return view entity
    * @throws Exception
    */
-  MutableViewEntity newEntity(ContainerViewNode node, Iterable<View.Event> events,
+  MutableViewEntity newEntity(ConcreteContainerNode node, Iterable<View.Event> events,
       ScopedViewContext context) throws Exception;
 
 }

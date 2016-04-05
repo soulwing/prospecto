@@ -49,7 +49,7 @@ class ConcreteViewEntityFactory implements ViewEntityFactory {
   }
 
   @Override
-  public MutableViewEntity newEntity(ContainerViewNode node,
+  public MutableViewEntity newEntity(ConcreteContainerNode node,
       Iterable<View.Event> events, ScopedViewContext context) throws Exception {
     View.Event event = discriminatorEventService.findDiscriminatorEvent(
         events.iterator());

@@ -49,6 +49,12 @@ public interface ViewNode extends Scope {
   Class<?> getModelType();
 
   /**
+   * Gets the parent of this view node.
+   * @return parent node or {@code null} if this node has no parent
+   */
+  ViewNode getParent();
+
+  /**
    * Accepts a visitor.
    * @param visitor the subject visitor
    * @param state visitor state

@@ -38,11 +38,11 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link ContainerViewNode}.
+ * Unit tests for {@link ConcreteContainerNode}.
  *
  * @author Carl Harris
  */
-public class ContainerViewNodeTest {
+public class ConcreteContainerNodeTest {
 
   private static final String NAME = "name";
   private static final String NAMESPACE = "namespace";
@@ -88,7 +88,7 @@ public class ContainerViewNodeTest {
   }
 
 
-  class MockViewNode extends ContainerViewNode {
+  class MockViewNode extends ConcreteContainerNode {
 
     MockViewNode() {
       super(NAME, NAMESPACE, MODEL_TYPE);

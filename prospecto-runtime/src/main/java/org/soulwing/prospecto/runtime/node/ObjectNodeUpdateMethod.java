@@ -40,20 +40,20 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
           View.Event.Type.BEGIN_ARRAY,
           View.Event.Type.VALUE);
 
-  private final ContainerViewNode node;
+  private final ConcreteContainerNode node;
   private final View.Event triggerEvent;
   private final Deque<View.Event> events;
   private final ScopedViewContext context;
   private final ViewEntityFactory entityFactory;
 
-  public ObjectNodeUpdateMethod(ContainerViewNode node,
+  public ObjectNodeUpdateMethod(ConcreteContainerNode node,
       View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context) {
     this(node, triggerEvent, events, context,
         ConcreteViewEntityFactory.INSTANCE);
   }
 
-  ObjectNodeUpdateMethod(ContainerViewNode node, View.Event triggerEvent,
+  ObjectNodeUpdateMethod(ConcreteContainerNode node, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context,
       ViewEntityFactory entityFactory) {
     this.node = node;
@@ -93,7 +93,7 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
 
       if (!(child instanceof UpdatableViewNode)) continue;
 
-      if (child instanceof ContainerViewNode
+      if (child instanceof ConcreteContainerNode
           && event.getType() == View.Event.Type.VALUE) {
         if (event.getValue() != null) {
           throw new ModelEditorException(

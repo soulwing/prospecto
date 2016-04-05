@@ -45,7 +45,7 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ConcreteArrayOfObjectsNode extends ContainerViewNode
+public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
     implements UpdatableViewNode, ArrayOfObjectsNode {
 
   private final ToManyAssociationUpdater associationUpdater;

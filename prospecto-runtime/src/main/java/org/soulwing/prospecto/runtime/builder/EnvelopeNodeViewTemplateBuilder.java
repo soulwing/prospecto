@@ -27,7 +27,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * A template builder for an envelope node.
@@ -39,7 +39,7 @@ class EnvelopeNodeViewTemplateBuilder extends ContainerNodeViewTemplateBuilder {
   private final UnconfigurableNodeSupport delegate;
 
   EnvelopeNodeViewTemplateBuilder(AbstractViewTemplateBuilder parent,
-      ContainerViewNode target, AbstractViewNode node) {
+      ConcreteContainerNode target, AbstractViewNode node) {
     super(parent, target, node);
     delegate = new UnconfigurableNodeSupport(node);
   }

@@ -82,7 +82,7 @@ public class ObjectNodeUpdateMethodTest {
   Options options;
 
   @Mock
-  ContainerViewNode node;
+  ConcreteContainerNode node;
 
   @Mock
   MockUpdatableContainerViewNode childContainer;
@@ -231,7 +231,7 @@ public class ObjectNodeUpdateMethodTest {
 
   private interface MockModel {}
 
-  static class MockUpdatableContainerViewNode extends ContainerViewNode
+  static class MockUpdatableContainerViewNode extends ConcreteContainerNode
       implements UpdatableViewNode {
 
     MockUpdatableContainerViewNode() {

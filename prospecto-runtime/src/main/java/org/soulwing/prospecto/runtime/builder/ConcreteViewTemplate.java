@@ -32,9 +32,9 @@ import org.soulwing.prospecto.runtime.editor.ModelEditorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -96,7 +96,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ContainerViewNode object(String name, String namespace) {
+  public ConcreteContainerNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteObjectNode node = new ConcreteObjectNode(name, namespace,
         root.getModelType());
@@ -105,7 +105,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ContainerViewNode reference(String name, String namespace) {
+  public ConcreteContainerNode reference(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteReferenceNode node = new ConcreteReferenceNode(name, namespace,
         root.getModelType());
@@ -114,7 +114,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ContainerViewNode arrayOfObjects(String name, String elementName,
+  public ConcreteContainerNode arrayOfObjects(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteArrayOfObjectsNode node = new ConcreteArrayOfObjectsNode(name, elementName,
@@ -124,7 +124,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ContainerViewNode arrayOfReferences(String name, String elementName,
+  public ConcreteContainerNode arrayOfReferences(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
     ConcreteArrayOfReferencesNode node = new ConcreteArrayOfReferencesNode(name, elementName,
@@ -153,14 +153,14 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
     return new ConcreteViewTemplate(root);
   }
 
-  private void copyInto(ContainerViewNode node) {
-    assert root instanceof ContainerViewNode;
-    node.addChildren(((ContainerViewNode) root).getChildren());
+  private void copyInto(ConcreteContainerNode node) {
+    assert root instanceof ConcreteContainerNode;
+    node.addChildren(((ConcreteContainerNode) root).getChildren());
     node.putAll(root);
   }
 
   private void assertRootIsContainerViewNode(String name) {
-    if (!(root instanceof ContainerViewNode)) {
+    if (!(root instanceof ConcreteContainerNode)) {
       throw new ViewTemplateException("referenced view template for node '"
           + name + "' must have a root node of object or array-of-object type");
     }
