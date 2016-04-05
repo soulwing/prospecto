@@ -52,12 +52,13 @@ class UnorderedToManyAssociationUpdateStrategy
   @Override
   @SuppressWarnings("unchecked")
   public void update(AbstractViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager manager,
+      Iterable<?> values, ToManyAssociationManager manager,
       ScopedViewContext context)
       throws Exception {
 
     final Map<Object, Object> touched = new IdentityHashMap<>();
-    for (final MutableViewEntity entity : entities)  {
+    for (final Object value : values)  {
+      final MutableViewEntity entity = (MutableViewEntity) value;
       final Object element = manager.findAssociate(target, entity);
       if (element != null) {
         touched.put(element, element);

@@ -18,11 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
@@ -35,7 +32,7 @@ interface ToManyAssociationUpdateStrategy {
   boolean supports(ToManyAssociationManager manager);
 
   void update(AbstractViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager manager,
+      Iterable<?> values, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception;
 
 }

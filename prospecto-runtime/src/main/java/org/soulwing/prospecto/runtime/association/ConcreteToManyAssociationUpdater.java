@@ -18,12 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
@@ -60,7 +57,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
   @Override
   @SuppressWarnings("unchecked")
   public void update(ContainerViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
+      Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 
     final AssociationDescriptor descriptor =
@@ -71,7 +68,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
             defaultManager, descriptor, node, context);
 
     manager.begin(target);
-    findStrategy(manager).update(node, target, entities, manager, context);
+    findStrategy(manager).update(node, target, values, manager, context);
     manager.end(target);
   }
 

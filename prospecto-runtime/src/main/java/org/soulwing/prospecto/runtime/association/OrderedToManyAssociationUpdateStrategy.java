@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
 import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
@@ -49,20 +47,21 @@ class OrderedToManyAssociationUpdateStrategy
 
   @Override
   public void update(AbstractViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager manager,
+      Iterable<?> values, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception {
 
     assert manager instanceof ToManyIndexedAssociationManager;
-    doUpdate(node, target, entities, (ToManyIndexedAssociationManager)
+    doUpdate(node, target, values, (ToManyIndexedAssociationManager)
         manager, context);
   }
 
   @SuppressWarnings("unchecked")
   private void doUpdate(ViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyIndexedAssociationManager manager,
+      Iterable<?> values, ToManyIndexedAssociationManager manager,
       ScopedViewContext context) throws Exception {
     int viewIndex = 0;
-    for (final MutableViewEntity entity : entities) {
+    for (final Object value : values) {
+      final MutableViewEntity entity = (MutableViewEntity) value;
       final int modelIndex = manager.indexOf(target, entity);
       if (modelIndex != -1) {
         final Object element = manager.get(target, modelIndex);

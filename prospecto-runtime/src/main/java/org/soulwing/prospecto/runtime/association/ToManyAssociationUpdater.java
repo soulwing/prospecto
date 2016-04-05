@@ -18,11 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 
 /**
@@ -34,7 +31,7 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 public interface ToManyAssociationUpdater {
 
   void update(ContainerViewNode node, Object target,
-      List<MutableViewEntity> entities, ToManyAssociationManager defaultManager,
+      Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception;
 
 }

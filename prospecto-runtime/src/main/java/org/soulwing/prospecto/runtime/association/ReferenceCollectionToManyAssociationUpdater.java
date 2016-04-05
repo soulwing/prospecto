@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.List;
-
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -55,7 +53,7 @@ public class ReferenceCollectionToManyAssociationUpdater
 
   @Override
   public void update(ContainerViewNode node, Object target,
-      List<MutableViewEntity> entities,
+      Iterable<?> values,
       ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 
@@ -66,17 +64,18 @@ public class ReferenceCollectionToManyAssociationUpdater
         managerLocator.findManager(ToManyAssociationManager.class,
             defaultManager, descriptor, node, context);
 
-    doUpdate(target, entities, manager, context);
+    doUpdate(target, values, manager, context);
   }
 
   @SuppressWarnings("unchecked")
-  private void doUpdate(Object target, List<MutableViewEntity> entities,
+  private void doUpdate(Object target, Iterable<?> values,
       ToManyAssociationManager manager, ScopedViewContext context)
       throws Exception {
     final ReferenceResolverService resolvers = context.getReferenceResolvers();
     manager.begin(target);
     manager.clear(target);
-    for (final MutableViewEntity entity : entities) {
+    for (final Object value : values) {
+      final MutableViewEntity entity = (MutableViewEntity) value;
       manager.add(target,
           resolvers.resolve(entity.getType(), entity));
     }
