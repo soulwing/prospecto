@@ -23,5 +23,5 @@ package org.soulwing.prospecto.api.node;
  *
  * @author Carl Harris
  */
-public interface ObjectNode extends ReferenceNode {
+public interface ObjectNode extends ViewNode {
 }
