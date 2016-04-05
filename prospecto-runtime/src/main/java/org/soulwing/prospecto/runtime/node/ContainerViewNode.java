@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
@@ -38,8 +37,6 @@ public abstract class ContainerViewNode extends AbstractViewNode {
 
   private final List<AbstractViewNode> children;
   private final DiscriminatorEventService discriminatorEventService;
-
-  private Accessor accessor;
 
   /**
    * Constructs a new instance.
@@ -71,14 +68,6 @@ public abstract class ContainerViewNode extends AbstractViewNode {
     super(name, namespace, modelType);
     this.children = children;
     this.discriminatorEventService = discriminatorEventService;
-  }
-
-  public Accessor getAccessor() {
-    return accessor;
-  }
-
-  public void setAccessor(Accessor accessor) {
-    this.accessor = accessor;
   }
 
   public List<AbstractViewNode> getChildren() {

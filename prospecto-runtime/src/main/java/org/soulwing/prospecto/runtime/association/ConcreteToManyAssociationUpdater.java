@@ -21,7 +21,7 @@ package org.soulwing.prospecto.runtime.association;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A {@link ToOneAssociationUpdater} implementation.
@@ -56,7 +56,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
 
   @Override
   @SuppressWarnings("unchecked")
-  public void update(ContainerViewNode node, Object target,
+  public void update(AbstractViewNode node, Object target,
       Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 

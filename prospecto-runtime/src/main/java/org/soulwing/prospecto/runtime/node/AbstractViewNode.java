@@ -83,6 +83,14 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     return modelType;
   }
 
+  public Accessor getAccessor() {
+    return accessor;
+  }
+
+  public void setAccessor(Accessor accessor) {
+    this.accessor = accessor;
+  }
+
   public final List<View.Event> evaluate(Object model,
       ScopedViewContext context) throws Exception {
 

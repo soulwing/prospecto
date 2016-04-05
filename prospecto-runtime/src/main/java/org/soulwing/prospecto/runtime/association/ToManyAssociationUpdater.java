@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * An updater for a to-many association between a target model object and
@@ -30,7 +30,7 @@ import org.soulwing.prospecto.runtime.node.ContainerViewNode;
  */
 public interface ToManyAssociationUpdater {
 
-  void update(ContainerViewNode node, Object target,
+  void update(AbstractViewNode node, Object target,
       Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception;
 
