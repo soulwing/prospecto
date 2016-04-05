@@ -1,0 +1,11 @@
+{
+  "vehicles":[
+    {
+      "type":"ObjectSubtypeTest$Plane",
+      "passengerCapacity":375,
+      "wingspan":200,
+      "range":6000,
+      "topSpeed":590
+    }
+  ]
+}

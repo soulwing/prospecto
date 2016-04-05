@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arrayOfValuesTest xmlns:v="urn:org.soulwing.prospecto:view"
+    xmlns="urn:org.soulwing.prospecto:test"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    v:type="object">
+
+  <values v:type="array">
+    <value xsi:type="xs:string">string</value>
+    <value xsi:type="xs:boolean">false</value>
+    <value xsi:type="xs:byte">0</value>
+    <value xsi:type="xs:short">0</value>
+    <value xsi:type="xs:int">0</value>
+    <value xsi:type="xs:long">0</value>
+    <value xsi:type="xs:integer">0</value>
+    <value xsi:type="xs:float">0.0</value>
+    <value xsi:type="xs:double">0.0</value>
+    <value xsi:type="xs:decimal">0.0</value>
+    <value xsi:type="xs:dateTime">2016-04-04T10:32:55-04:00</value>
+  </values>
+
+</arrayOfValuesTest>

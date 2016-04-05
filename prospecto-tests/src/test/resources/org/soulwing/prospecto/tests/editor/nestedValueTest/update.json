@@ -1,0 +1,17 @@
+{
+  "child":{
+    "stringValue":"updated",
+    "booleanValue":true,
+    "byteValue":1,
+    "shortValue":1,
+    "integerValue":1,
+    "longValue":1,
+    "bigIntegerValue":1,
+    "floatValue":1.0,
+    "doubleValue":1.0,
+    "bigDecimalValue":1.0,
+    "dateValue":1459780588000,
+    "calendarValue":1459780588000,
+    "uuidValue":"b7ecc2f8-fa72-11e5-a5a0-5bdfbb695760"
+  }
+}

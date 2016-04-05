@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objectSubtypeTest xmlns:v="urn:org.soulwing.prospecto:view"
+    xmlns="urn:org.soulwing.prospecto:test"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    v:type="object">
+
+  <vehicle v:type="object" xsi:type="ObjectSubtypeTest$Plane">
+    <passengerCapacity xsi:type="xs:int">4</passengerCapacity>
+    <wingspan xsi:type="xs:int">200</wingspan>
+    <range xsi:type="xs:int">6000</range>
+    <topSpeed xsi:type="xs:int">590</topSpeed>
+  </vehicle>
+
+</objectSubtypeTest>

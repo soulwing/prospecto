@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<valueTest xmlns:v="urn:org.soulwing.prospecto:view"
+    xmlns="urn:org.soulwing.prospecto:test"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    v:type="object">
+
+  <stringValue xsi:type="xs:string"/>
+  <booleanValue xsi:type="xs:boolean">false</booleanValue>
+  <byteValue xsi:type="xs:byte">0</byteValue>
+  <shortValue xsi:type="xs:short">0</shortValue>
+  <integerValue xsi:type="xs:int">0</integerValue>
+  <longValue xsi:type="xs:long">0</longValue>
+  <bigIntegerValue xsi:type="xs:integer">0</bigIntegerValue>
+  <floatValue xsi:type="xs:float">0.0</floatValue>
+  <doubleValue xsi:type="xs:double">0.0</doubleValue>
+  <bigDecimalValue xsi:type="xs:decimal">0.0</bigDecimalValue>
+  <dateValue xsi:type="xs:dateTime">2016-04-04T10:32:55-04:00</dateValue>
+  <calendarValue xsi:type="xs:dateTime">2016-04-04T10:32:55-04:00</calendarValue>
+  <uuidValue xsi:type="xs:string">eba7e830-fa71-11e5-9dd8-c3cc25817801</uuidValue>
+
+</valueTest>

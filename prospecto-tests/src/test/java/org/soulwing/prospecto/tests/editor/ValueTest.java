@@ -20,6 +20,9 @@ package org.soulwing.prospecto.tests.editor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
@@ -27,7 +30,8 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 
 /**
- * TODO: DESCRIBE THE TYPE HERE
+ * Tests for all of the basic data types allowed in a view.
+ *
  * @author Carl Harris
  */
 public class ValueTest extends EditorTestBase {
@@ -56,7 +60,7 @@ public class ValueTest extends EditorTestBase {
         AccessType.FIELD));
   }
 
-  private ViewTemplate newTemplate(Class<?> modelType, AccessType accessType) {
+  protected ViewTemplate newTemplate(Class<?> modelType, AccessType accessType) {
     return ViewTemplateBuilderProducer
         .object("valueTest", "urn:org.soulwing.prospecto:test", modelType)
             .accessType(accessType)
@@ -70,6 +74,9 @@ public class ValueTest extends EditorTestBase {
             .value("floatValue")
             .value("doubleValue")
             .value("bigDecimalValue")
+            .value("dateValue")
+            .value("calendarValue")
+            .value("uuidValue")
             .end()
         .build();
   }
@@ -87,6 +94,9 @@ public class ValueTest extends EditorTestBase {
     private float floatValue;
     private double doubleValue;
     private BigDecimal bigDecimalValue;
+    private Date dateValue;
+    private Calendar calendarValue;
+    private UUID uuidValue;
 
     public String getStringValue() {
       return stringValue;
@@ -96,43 +106,43 @@ public class ValueTest extends EditorTestBase {
       this.stringValue = stringValue;
     }
 
-    public Boolean getBooleanValue() {
+    public boolean isBooleanValue() {
       return booleanValue;
     }
 
-    public void setBooleanValue(Boolean booleanValue) {
+    public void setBooleanValue(boolean booleanValue) {
       this.booleanValue = booleanValue;
     }
 
-    public Byte getByteValue() {
+    public byte getByteValue() {
       return byteValue;
     }
 
-    public void setByteValue(Byte byteValue) {
+    public void setByteValue(byte byteValue) {
       this.byteValue = byteValue;
     }
 
-    public Short getShortValue() {
+    public short getShortValue() {
       return shortValue;
     }
 
-    public void setShortValue(Short shortValue) {
+    public void setShortValue(short shortValue) {
       this.shortValue = shortValue;
     }
 
-    public Integer getIntegerValue() {
+    public int getIntegerValue() {
       return integerValue;
     }
 
-    public void setIntegerValue(Integer integerValue) {
+    public void setIntegerValue(int integerValue) {
       this.integerValue = integerValue;
     }
 
-    public Long getLongValue() {
+    public long getLongValue() {
       return longValue;
     }
 
-    public void setLongValue(Long longValue) {
+    public void setLongValue(long longValue) {
       this.longValue = longValue;
     }
 
@@ -144,19 +154,19 @@ public class ValueTest extends EditorTestBase {
       this.bigIntegerValue = bigIntegerValue;
     }
 
-    public Float getFloatValue() {
+    public float getFloatValue() {
       return floatValue;
     }
 
-    public void setFloatValue(Float floatValue) {
+    public void setFloatValue(float floatValue) {
       this.floatValue = floatValue;
     }
 
-    public Double getDoubleValue() {
+    public double getDoubleValue() {
       return doubleValue;
     }
 
-    public void setDoubleValue(Double doubleValue) {
+    public void setDoubleValue(double doubleValue) {
       this.doubleValue = doubleValue;
     }
 
@@ -166,6 +176,30 @@ public class ValueTest extends EditorTestBase {
 
     public void setBigDecimalValue(BigDecimal bigDecimalValue) {
       this.bigDecimalValue = bigDecimalValue;
+    }
+
+    public Date getDateValue() {
+      return dateValue;
+    }
+
+    public void setDateValue(Date dateValue) {
+      this.dateValue = dateValue;
+    }
+
+    public Calendar getCalendarValue() {
+      return calendarValue;
+    }
+
+    public void setCalendarValue(Calendar calendarValue) {
+      this.calendarValue = calendarValue;
+    }
+
+    public UUID getUuidValue() {
+      return uuidValue;
+    }
+
+    public void setUuidValue(UUID uuidValue) {
+      this.uuidValue = uuidValue;
     }
 
   }
@@ -183,6 +217,9 @@ public class ValueTest extends EditorTestBase {
     private Float floatValue;
     private Double doubleValue;
     private BigDecimal bigDecimalValue;
+    private Date dateValue;
+    private Calendar calendarValue;
+    private UUID uuidValue;
 
     public String getStringValue() {
       return stringValue;
@@ -262,6 +299,30 @@ public class ValueTest extends EditorTestBase {
 
     public void setBigDecimalValue(BigDecimal bigDecimalValue) {
       this.bigDecimalValue = bigDecimalValue;
+    }
+
+    public Date getDateValue() {
+      return dateValue;
+    }
+
+    public void setDateValue(Date dateValue) {
+      this.dateValue = dateValue;
+    }
+
+    public Calendar getCalendarValue() {
+      return calendarValue;
+    }
+
+    public void setCalendarValue(Calendar calendarValue) {
+      this.calendarValue = calendarValue;
+    }
+
+    public UUID getUuidValue() {
+      return uuidValue;
+    }
+
+    public void setUuidValue(UUID uuidValue) {
+      this.uuidValue = uuidValue;
     }
 
   }

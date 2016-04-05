@@ -1,0 +1,17 @@
+{
+  "child":{
+    "stringValue":"",
+    "booleanValue":false,
+    "byteValue":0,
+    "shortValue":0,
+    "integerValue":0,
+    "longValue":0,
+    "bigIntegerValue":0,
+    "floatValue":0.0,
+    "doubleValue":0.0,
+    "bigDecimalValue":0.0,
+    "dateValue":1459780375000,
+    "calendarValue":1459780375000,
+    "uuidValue":"eba7e830-fa71-11e5-9dd8-c3cc25817801"
+  }
+}
