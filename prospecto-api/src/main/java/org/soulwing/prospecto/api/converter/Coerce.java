@@ -51,38 +51,38 @@ public class Coerce {
     if (Enum.class.isAssignableFrom(type) && value instanceof String) {
       return coerceUsingValueOf(type, value);
     }
-    if ((Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type))
+    if ((Integer.class.equals(type) || int.class.equals(type))
         && value instanceof Number) {
       return (T) Integer.valueOf(((Number) value).intValue());
     }
-    if ((Long.class.isAssignableFrom(type) || long.class.isAssignableFrom(type))
+    if ((Long.class.equals(type) || long.class.equals(type))
         && value instanceof Number) {
       return (T) Long.valueOf(((Number) value).longValue());
     }
-    if ((Byte.class.isAssignableFrom(type) || byte.class.isAssignableFrom(type))
+    if ((Byte.class.equals(type) || byte.class.equals(type))
         && value instanceof Number) {
       return (T) Byte.valueOf(((Number) value).byteValue());
     }
-    if ((Short.class.isAssignableFrom(type) || short.class.isAssignableFrom(type))
+    if ((Short.class.equals(type) || short.class.equals(type))
         && value instanceof Number) {
       return (T) Short.valueOf(((Number) value).shortValue());
     }
-    if (BigInteger.class.isAssignableFrom(type) && value instanceof Number) {
+    if (BigInteger.class.equals(type) && value instanceof Number) {
       return (T) BigInteger.valueOf(((Number) value).longValue());
     }
-    if ((Double.class.isAssignableFrom(type) || double.class.isAssignableFrom(type))
+    if ((Double.class.equals(type) || double.class.equals(type))
         && value instanceof Number) {
       return (T) Double.valueOf(((Number) value).doubleValue());
     }
-    if ((Float.class.isAssignableFrom(type) || float.class.isAssignableFrom(type))
+    if ((Float.class.equals(type) || float.class.equals(type))
         && value instanceof Number) {
       return (T) Float.valueOf(((Number) value).floatValue());
     }
-    if (BigDecimal.class.isAssignableFrom(type)
+    if (BigDecimal.class.equals(type)
         && (value instanceof Double || value instanceof Float)) {
       return (T) BigDecimal.valueOf(((Number) value).doubleValue());
     }
-    if (BigDecimal.class.isAssignableFrom(type) && value instanceof Number) {
+    if (BigDecimal.class.equals(type) && value instanceof Number) {
       return (T) BigDecimal.valueOf(((Number) value).longValue());
     }
     if (Date.class.isAssignableFrom(type) && value instanceof Number) {
