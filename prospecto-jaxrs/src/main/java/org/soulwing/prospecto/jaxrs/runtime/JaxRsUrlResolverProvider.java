@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.soulwing.prospecto.api.UrlResolver;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.jaxrs.runtime.discovery.ReflectionResourceDiscoveryService;
 import org.soulwing.prospecto.jaxrs.runtime.discovery.ServletContextReflectionService;
 import org.soulwing.prospecto.jaxrs.runtime.resolver.ConfigurableUrlResolver;

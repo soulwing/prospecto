@@ -18,12 +18,9 @@
  */
 package org.soulwing.prospecto;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.ServiceLoader;
 
-import org.soulwing.prospecto.api.UrlResolver;
-import org.soulwing.prospecto.api.UrlResolver;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.spi.UrlResolverProvider;
 
 /**

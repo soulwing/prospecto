@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 5, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.node;
 
 import org.soulwing.prospecto.api.scope.Scope;
 

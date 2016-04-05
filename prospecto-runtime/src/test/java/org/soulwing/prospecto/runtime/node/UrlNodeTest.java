@@ -33,8 +33,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

@@ -31,14 +31,14 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceNotFoundException;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * A simple {@link UrlResolver} backed by a set of resource descriptors.

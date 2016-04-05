@@ -20,7 +20,7 @@ package org.soulwing.prospecto.spi;
 
 import java.util.Map;
 
-import org.soulwing.prospecto.api.UrlResolver;
+import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**
  * A provider for a {@link UrlResolver}.

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**
  * A builder for a {@link ViewTemplate}.

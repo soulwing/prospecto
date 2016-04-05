@@ -25,7 +25,6 @@ import java.util.List;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 
@@ -39,8 +38,6 @@ public class ValueNode extends AbstractViewNode
 
   private final TransformationService transformationService;
   private final UpdatableViewNodeTemplate template;
-
-  private Accessor accessor;
 
   /**
    * Constructs a new instance.
@@ -61,20 +58,10 @@ public class ValueNode extends AbstractViewNode
   }
 
   @Override
-  public Accessor getAccessor() {
-    return accessor;
-  }
-
-  @Override
-  public void setAccessor(Accessor accessor) {
-    this.accessor = accessor;
-  }
-
-  @Override
   protected List<View.Event> onEvaluate(Object source,
       ScopedViewContext context) throws Exception {
 
-    final Object modelValue = accessor.get(source);
+    final Object modelValue = getAccessor().get(source);
 
     final Object transformedValue =
         transformationService.valueToExtract(source, modelValue, this, context);
@@ -97,7 +84,7 @@ public class ValueNode extends AbstractViewNode
 
   @Override
   public void inject(Object target, Object value) throws Exception {
-    accessor.forSubtype(target.getClass()).set(target, value);
+    getAccessor().forSubtype(target.getClass()).set(target, value);
   }
 
   @Override
@@ -122,7 +109,7 @@ public class ValueNode extends AbstractViewNode
     @Override
     public Object toModelValue() throws Exception {
       return transformationService.valueToInject(
-          parentEntity, accessor.getDataType(),
+          parentEntity, getAccessor().getDataType(),
           triggerEvent.getValue(), ValueNode.this, context);
     }
 

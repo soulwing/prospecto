@@ -20,9 +20,9 @@ package org.soulwing.prospecto.demo;
 
 import java.util.Map;
 
-import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.spi.UrlResolverProvider;
 
 /**

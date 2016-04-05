@@ -27,8 +27,8 @@ import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.node.ViewNode;
 
 /**
  * Unit tests for {@link LinkedListValueTypeConverterService}.

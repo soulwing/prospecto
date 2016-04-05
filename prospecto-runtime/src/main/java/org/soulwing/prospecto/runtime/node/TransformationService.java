@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.ViewNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

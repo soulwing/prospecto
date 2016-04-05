@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;

@@ -20,7 +20,7 @@ package org.soulwing.prospecto.jaxrs.runtime.resolver;
 
 import java.util.Collection;
 
-import org.soulwing.prospecto.api.UrlResolver;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
 

@@ -20,9 +20,9 @@ package org.soulwing.prospecto.runtime.converter;
 
 import java.util.LinkedList;
 
-import org.soulwing.prospecto.api.ViewNode;
 import org.soulwing.prospecto.api.converter.Coerce;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.util.SimpleLinkedList;
 
 /**

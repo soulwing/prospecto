@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
-import org.soulwing.prospecto.api.UrlResolver;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

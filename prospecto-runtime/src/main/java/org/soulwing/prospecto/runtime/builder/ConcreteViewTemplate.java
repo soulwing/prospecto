@@ -24,6 +24,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
@@ -163,6 +164,18 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
       throw new ViewTemplateException("referenced view template for node '"
           + name + "' must have a root node of object or array-of-object type");
     }
+  }
+
+  @Override
+  public Object traverseBreadthFirst(ViewNodeVisitor visitor, Object state) {
+    // TODO
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Object traverseDepthFirst(ViewNodeVisitor visitor, Object state) {
+    // TODO
+    throw new UnsupportedOperationException();
   }
 
 }
