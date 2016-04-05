@@ -29,7 +29,7 @@ import java.util.Iterator;
 public class CollectionAccessor extends AbstractMultiValuedAccessor {
 
   public CollectionAccessor(Accessor delegate, Class<?> componentType) {
-    super(delegate);
+    super(delegate, componentType);
   }
 
   @Override

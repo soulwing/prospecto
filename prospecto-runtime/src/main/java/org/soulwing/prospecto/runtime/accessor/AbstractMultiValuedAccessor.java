@@ -30,11 +30,13 @@ public abstract class AbstractMultiValuedAccessor
     extends AbstractToManyAssociationManager<Object, Object>
     implements MultiValuedAccessor {
 
-  protected Accessor delegate;
-  protected Class<?> componentType;
+  protected final Accessor delegate;
+  protected final Class<?> componentType;
 
-  protected AbstractMultiValuedAccessor(Accessor delegate) {
+  protected AbstractMultiValuedAccessor(Accessor delegate,
+      Class<?> componentType) {
     this.delegate = delegate;
+    this.componentType = componentType;
   }
 
   @Override
