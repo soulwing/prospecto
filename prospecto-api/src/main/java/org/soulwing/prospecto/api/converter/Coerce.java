@@ -44,7 +44,9 @@ public class Coerce {
   @SuppressWarnings("unchecked")
   public static <T> T toValueOfType(Class<T> type, Object value) {
     if (value == null) return null;
+    if (type == null) throw new NullPointerException("type is required");
     if (type.isInstance(value)) return (T) value;
+
     if (boolean.class.isAssignableFrom(type) && value instanceof Boolean) {
       return (T) value;
     }
