@@ -30,13 +30,13 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
 import org.soulwing.prospecto.runtime.editor.ModelEditorFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfReferenceNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
-import org.soulwing.prospecto.runtime.node.ReferenceNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfReferenceNode;
+import org.soulwing.prospecto.runtime.node.RootArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
@@ -98,7 +98,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   @Override
   public ContainerViewNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
-    final ObjectNode node = new ObjectNode(name, namespace,
+    final ConcreteObjectNode node = new ConcreteObjectNode(name, namespace,
         root.getModelType());
     copyInto(node);
     return node;
@@ -107,7 +107,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   @Override
   public ContainerViewNode reference(String name, String namespace) {
     assertRootIsContainerViewNode(name);
-    final ReferenceNode node = new ReferenceNode(name, namespace,
+    final ConcreteReferenceNode node = new ConcreteReferenceNode(name, namespace,
         root.getModelType());
     copyInto(node);
     return node;
@@ -117,7 +117,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   public ContainerViewNode arrayOfObjects(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
-    final ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName,
+    final ConcreteArrayOfObjectsNode node = new ConcreteArrayOfObjectsNode(name, elementName,
         namespace, root.getModelType());
     copyInto(node);
     return node;
@@ -127,7 +127,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   public ContainerViewNode arrayOfReferences(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
-    ArrayOfReferenceNode node = new ArrayOfReferenceNode(name, elementName,
+    ConcreteArrayOfReferencesNode node = new ConcreteArrayOfReferencesNode(name, elementName,
         namespace, root.getModelType());
     copyInto(node);
     return node;
@@ -147,7 +147,7 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   public ViewTemplate arrayOfReferencesTemplate(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
-    RootArrayOfReferenceNode root = new RootArrayOfReferenceNode(name,
+    RootArrayOfReferencesNode root = new RootArrayOfReferencesNode(name,
         elementName, namespace, getRoot().getModelType());
     copyInto(root);
     return new ConcreteViewTemplate(root);

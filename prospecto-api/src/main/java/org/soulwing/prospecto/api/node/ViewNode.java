@@ -48,4 +48,12 @@ public interface ViewNode extends Scope {
    */
   Class<?> getModelType();
 
+  /**
+   * Accepts a visitor.
+   * @param visitor the subject visitor
+   * @param state visitor state
+   * @return visitor result
+   */
+  Object accept(ViewNodeVisitor visitor, Object state);
+
 }

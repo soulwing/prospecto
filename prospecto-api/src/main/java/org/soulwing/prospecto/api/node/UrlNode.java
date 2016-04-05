@@ -24,4 +24,7 @@ package org.soulwing.prospecto.api.node;
  * @author Carl Harris
  */
 public interface UrlNode extends ViewNode {
+
+  String DEFAULT_NAME = "href";
+
 }

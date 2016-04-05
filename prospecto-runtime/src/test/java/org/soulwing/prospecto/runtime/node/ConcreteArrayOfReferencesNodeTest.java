@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.contains;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -37,11 +36,11 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * Unit tests for {@link ArrayOfReferenceNode}.
+ * Unit tests for {@link ConcreteArrayOfReferencesNode}.
  *
  * @author Carl Harris
  */
-public class ArrayOfReferenceNodeTest {
+public class ConcreteArrayOfReferencesNodeTest {
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -61,7 +60,7 @@ public class ArrayOfReferenceNodeTest {
   @Mock
   Accessor accessor;
 
-  private ArrayOfReferenceNode node;
+  private ConcreteArrayOfReferencesNode node;
 
   @Before
   public void setUp() throws Exception {
@@ -72,7 +71,7 @@ public class ArrayOfReferenceNodeTest {
       }
     });
 
-    node = new ArrayOfReferenceNode(null, null, null, null,
+    node = new ConcreteArrayOfReferencesNode(null, null, null, null,
         associationUpdater);
     node.setAccessor(accessor);
   }
@@ -88,7 +87,7 @@ public class ArrayOfReferenceNodeTest {
     context.checking(new Expectations() {
       {
         oneOf(associationUpdater).update(with(node), with(target),
-            (List<MutableViewEntity>) with(contains(entity)),
+            with(contains(entity)),
             with(any(MultiValuedAccessor.class)),
             with(viewContext));
       }

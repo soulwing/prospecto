@@ -25,6 +25,8 @@ import java.util.List;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.node.ValueNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 
@@ -33,8 +35,8 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  *
  * @author Carl Harris
  */
-public class ValueNode extends AbstractViewNode
-    implements Convertible, UpdatableViewNode {
+public class ConcreteValueNode extends AbstractViewNode
+    implements Convertible, UpdatableViewNode, ValueNode {
 
   private final TransformationService transformationService;
   private final UpdatableViewNodeTemplate template;
@@ -44,17 +46,22 @@ public class ValueNode extends AbstractViewNode
    * @param name node name
    * @param namespace namespace for {@code name}
    */
-  public ValueNode(String name, String namespace) {
+  public ConcreteValueNode(String name, String namespace) {
     this(name, namespace, ConcreteTransformationService.INSTANCE,
         ConcreteUpdatableViewNodeTemplate.INSTANCE);
   }
 
-  ValueNode(String name, String namespace,
+  ConcreteValueNode(String name, String namespace,
       TransformationService transformationService,
       UpdatableViewNodeTemplate template) {
     super(name, namespace, null);
     this.transformationService = transformationService;
     this.template = template;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitValue(this, state);
   }
 
   @Override
@@ -110,7 +117,7 @@ public class ValueNode extends AbstractViewNode
     public Object toModelValue() throws Exception {
       return transformationService.valueToInject(
           parentEntity, getAccessor().getDataType(),
-          triggerEvent.getValue(), ValueNode.this, context);
+          triggerEvent.getValue(), ConcreteValueNode.this, context);
     }
 
   }

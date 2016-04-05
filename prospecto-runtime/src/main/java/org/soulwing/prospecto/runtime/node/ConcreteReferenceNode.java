@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import org.soulwing.prospecto.api.node.ReferenceNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -26,7 +28,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ReferenceNode extends ObjectNode {
+public class ConcreteReferenceNode extends ConcreteObjectNode
+    implements ReferenceNode {
 
   /**
    * Constructs a new instance.
@@ -34,8 +37,13 @@ public class ReferenceNode extends ObjectNode {
    * @param namespace namespace for {@code name}
    * @param modelType model type associated with node
    */
-  public ReferenceNode(String name, String namespace, Class<?> modelType) {
+  public ConcreteReferenceNode(String name, String namespace, Class<?> modelType) {
     super(name, namespace, modelType);
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitReference(this, state);
   }
 
   @Override

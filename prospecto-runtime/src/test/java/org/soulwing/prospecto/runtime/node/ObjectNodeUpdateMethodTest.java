@@ -36,6 +36,7 @@ import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
@@ -238,6 +239,11 @@ public class ObjectNodeUpdateMethodTest {
     }
 
     @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
+    }
+
+    @Override
     protected List<View.Event> onEvaluate(Object source,
         ScopedViewContext context) throws Exception {
       return null;
@@ -267,6 +273,11 @@ public class ObjectNodeUpdateMethodTest {
 
     MockUpdatableViewNode() {
       super(null, null, null);
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
     }
 
     @Override

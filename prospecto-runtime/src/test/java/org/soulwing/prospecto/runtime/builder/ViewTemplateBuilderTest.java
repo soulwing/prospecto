@@ -47,17 +47,18 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
-import org.soulwing.prospecto.runtime.node.EnvelopeNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
+import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
-import org.soulwing.prospecto.runtime.node.UrlNode;
-import org.soulwing.prospecto.runtime.node.ValueNode;
 
 /**
  * Unit tests for the template builder.
@@ -278,7 +279,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -303,7 +304,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inNamespace(NAMESPACE),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -329,7 +330,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -354,7 +355,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -362,7 +363,7 @@ public class ViewTemplateBuilderTest {
                         usingAccessType(AccessType.PROPERTY)
                     )
                 ),
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(OTHER_MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(OTHER_MOCK_PROPERTY),
@@ -388,7 +389,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(VALUE_NAME), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -413,7 +414,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -449,7 +450,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -476,7 +477,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -502,7 +503,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -528,7 +529,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -555,7 +556,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -582,7 +583,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -609,7 +610,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME),
             inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
                     accessing(
                       propertyNamed(MOCK_FIELD),
@@ -636,7 +637,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME),
             inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_FIELD),
@@ -664,7 +665,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME),
             inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_FIELD),
@@ -697,7 +698,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfValueNode.class,
+                nodeOfType(ConcreteArrayOfValuesNode.class,
                     named(MOCK_ARRAY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_ARRAY),
@@ -720,7 +721,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfValueNode.class,
+                nodeOfType(ConcreteArrayOfValuesNode.class,
                     named(MOCK_COLLECTION), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_COLLECTION),
@@ -743,7 +744,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfValueNode.class,
+                nodeOfType(ConcreteArrayOfValuesNode.class,
                     named(MOCK_ARRAY), inDefaultNamespace(),
                     elementsNamed(ELEMENT_NAME),
                     accessing(
@@ -767,7 +768,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfValueNode.class,
+                nodeOfType(ConcreteArrayOfValuesNode.class,
                     named(MOCK_ARRAY),
                     elementsNamed(ELEMENT_NAME),
                     inNamespace(NAMESPACE),
@@ -799,7 +800,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(UrlNode.class,
+                nodeOfType(ConcreteUrlNode.class,
                     named(UrlNode.DEFAULT_NAME), inDefaultNamespace()
                 )
             )
@@ -818,7 +819,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(UrlNode.class,
+                nodeOfType(ConcreteUrlNode.class,
                     named(URL_NAME), inDefaultNamespace()
                 )
             )
@@ -837,7 +838,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(UrlNode.class,
+                nodeOfType(ConcreteUrlNode.class,
                     named(URL_NAME), inNamespace(NAMESPACE)
                 )
             )
@@ -857,7 +858,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ObjectNode.class,
+                nodeOfType(ConcreteObjectNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                       propertyNamed(MOCK_PROPERTY),
@@ -884,14 +885,14 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ObjectNode.class,
+                nodeOfType(ConcreteObjectNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
                         onModelType(MockModel.class)
                     ),
                     containing(
-                      nodeOfType(ValueNode.class,
+                      nodeOfType(ConcreteValueNode.class,
                           named(OTHER_MOCK_PROPERTY), inDefaultNamespace(),
                           accessing(
                             propertyNamed(OTHER_MOCK_PROPERTY),
@@ -920,7 +921,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ObjectNode.class,
+                nodeOfType(ConcreteObjectNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -928,7 +929,7 @@ public class ViewTemplateBuilderTest {
                         usingAccessType(AccessType.PROPERTY)
                     ),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(OTHER_MOCK_FIELD), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(OTHER_MOCK_FIELD),
@@ -958,7 +959,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ObjectNode.class,
+                nodeOfType(ConcreteObjectNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_FIELD),
@@ -966,7 +967,7 @@ public class ViewTemplateBuilderTest {
                         usingAccessType(AccessType.FIELD)
                     ),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(OTHER_MOCK_FIELD), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(OTHER_MOCK_FIELD),
@@ -1004,7 +1005,7 @@ public class ViewTemplateBuilderTest {
             havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                   Boolean.class, equalTo(true)),
             containing(
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
@@ -1014,7 +1015,7 @@ public class ViewTemplateBuilderTest {
                 nodeOfType(SubtypeNode.class,
                     forModelType(MockSubModel.class),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(MOCK_SUB_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(MOCK_SUB_PROPERTY),
@@ -1025,7 +1026,7 @@ public class ViewTemplateBuilderTest {
                 nodeOfType(SubtypeNode.class,
                     forModelType(MockOtherSubModel.class),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(MOCK_OTHER_SUB_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(MOCK_OTHER_SUB_PROPERTY),
@@ -1033,7 +1034,7 @@ public class ViewTemplateBuilderTest {
                             )
                         ))
                 ),
-                nodeOfType(ValueNode.class,
+                nodeOfType(ConcreteValueNode.class,
                     named(OTHER_MOCK_PROPERTY),
                     accessing(
                         propertyNamed(OTHER_MOCK_PROPERTY),
@@ -1068,7 +1069,7 @@ public class ViewTemplateBuilderTest {
                 nodeOfType(SubtypeNode.class,
                     forModelType(MockSubModel.class),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(MOCK_SUB_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(MOCK_SUB_PROPERTY),
@@ -1078,7 +1079,7 @@ public class ViewTemplateBuilderTest {
                         nodeOfType(SubtypeNode.class,
                             forModelType(MockSubSubModel.class),
                             containing(
-                              nodeOfType(ValueNode.class,
+                              nodeOfType(ConcreteValueNode.class,
                                   named(MOCK_SUB_SUB_PROPERTY),
                                   inDefaultNamespace(),
                                   accessing(
@@ -1114,7 +1115,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME), inNamespace(NAMESPACE),
             forModelType(MockModel.class),
             containing(
-                nodeOfType(ObjectNode.class,
+                nodeOfType(ConcreteObjectNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
                     forModelType(MockChildModel.class),
                     accessing(
@@ -1124,7 +1125,7 @@ public class ViewTemplateBuilderTest {
                     havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                         Boolean.class, equalTo(true)),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(OTHER_MOCK_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(OTHER_MOCK_PROPERTY),
@@ -1134,7 +1135,7 @@ public class ViewTemplateBuilderTest {
                         nodeOfType(SubtypeNode.class,
                             forModelType(MockChildSubModel.class),
                             containing(
-                                nodeOfType(ValueNode.class,
+                                nodeOfType(ConcreteValueNode.class,
                                     named(MOCK_SUB_PROPERTY),
                                     inDefaultNamespace(),
                                     accessing(
@@ -1163,7 +1164,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfObjectNode.class,
+                nodeOfType(ConcreteArrayOfObjectsNode.class,
                     named(MOCK_ARRAY), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_ARRAY),
@@ -1187,7 +1188,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfObjectNode.class,
+                nodeOfType(ConcreteArrayOfObjectsNode.class,
                     named(MOCK_COLLECTION), inDefaultNamespace(),
                     accessing(
                         propertyNamed(MOCK_COLLECTION),
@@ -1211,7 +1212,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfObjectNode.class,
+                nodeOfType(ConcreteArrayOfObjectsNode.class,
                     named(MOCK_ARRAY), inDefaultNamespace(),
                     elementsNamed(ELEMENT_NAME),
                     accessing(
@@ -1236,7 +1237,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ArrayOfObjectNode.class,
+                nodeOfType(ConcreteArrayOfObjectsNode.class,
                     named(MOCK_ARRAY),
                     elementsNamed(ELEMENT_NAME),
                     inNamespace(NAMESPACE),
@@ -1272,18 +1273,18 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(EnvelopeNode.class,
+                nodeOfType(ConcreteEnvelopeNode.class,
                     named(ENVELOPE_NAME), inDefaultNamespace(),
                     accessingNothing(),
                     containing(
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(MOCK_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(MOCK_PROPERTY),
                                 onModelType(MockModel.class)
                             )
                         ),
-                        nodeOfType(ValueNode.class,
+                        nodeOfType(ConcreteValueNode.class,
                             named(OTHER_MOCK_PROPERTY), inDefaultNamespace(),
                             accessing(
                                 propertyNamed(OTHER_MOCK_PROPERTY),
@@ -1315,22 +1316,22 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(EnvelopeNode.class,
+                nodeOfType(ConcreteEnvelopeNode.class,
                     named(ENVELOPE_NAME), inDefaultNamespace(),
                     accessingNothing(),
                     containing(
-                        nodeOfType(EnvelopeNode.class,
+                        nodeOfType(ConcreteEnvelopeNode.class,
                             named(ENVELOPE_NAME), inDefaultNamespace(),
                             accessingNothing(),
                             containing(
-                                nodeOfType(ValueNode.class,
+                                nodeOfType(ConcreteValueNode.class,
                                     named(MOCK_PROPERTY), inDefaultNamespace(),
                                     accessing(
                                         propertyNamed(MOCK_PROPERTY),
                                         onModelType(MockModel.class)
                                     )
                                 ),
-                                nodeOfType(ValueNode.class,
+                                nodeOfType(ConcreteValueNode.class,
                                     named(OTHER_MOCK_PROPERTY),
                                     inDefaultNamespace(),
                                     accessing(

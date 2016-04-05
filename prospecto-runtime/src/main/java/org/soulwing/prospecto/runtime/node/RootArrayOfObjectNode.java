@@ -25,7 +25,7 @@ import java.util.Iterator;
  *
  * @author Carl Harris
  */
-public class RootArrayOfObjectNode extends ArrayOfObjectNode {
+public class RootArrayOfObjectNode extends ConcreteArrayOfObjectsNode {
 
   /**
    * Constructs a new instance.

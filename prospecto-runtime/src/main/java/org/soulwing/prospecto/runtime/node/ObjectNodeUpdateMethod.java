@@ -29,7 +29,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * An {@link UpdatableViewNodeTemplate.Method} for an {@link ObjectNode}.
+ * An {@link UpdatableViewNodeTemplate.Method} for an {@link ConcreteObjectNode}.
  *
  * @author Carl Harris
  */

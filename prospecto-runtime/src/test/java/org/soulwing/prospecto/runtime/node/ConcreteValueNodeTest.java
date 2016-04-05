@@ -45,11 +45,11 @@ import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
- * Unit tests for {@link ValueNode}.
+ * Unit tests for {@link ConcreteValueNode}.
  *
  * @author Carl Harris
  */
-public class ValueNodeTest {
+public class ConcreteValueNodeTest {
 
   private static final String NAME = "name";
   private static final String NAMESPACE = "namespace";
@@ -89,11 +89,11 @@ public class ValueNodeTest {
   @Mock
   Deque<View.Event> events;
 
-  ValueNode node;
+  ConcreteValueNode node;
 
   @Before
   public void setUp() throws Exception {
-    node = new ValueNode(NAME, NAMESPACE, transformationService, template);
+    node = new ConcreteValueNode(NAME, NAMESPACE, transformationService, template);
     node.setAccessor(accessor);
     node.setParent(parent);
   }

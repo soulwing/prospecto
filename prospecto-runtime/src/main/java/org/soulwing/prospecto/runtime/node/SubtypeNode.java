@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -43,6 +44,11 @@ public class SubtypeNode extends ContainerViewNode {
    */
   public SubtypeNode(Class<?> subtype) {
     super(null, null, subtype);
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return state;
   }
 
   @Override

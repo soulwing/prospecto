@@ -36,9 +36,9 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ReaderKeys;
-import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**

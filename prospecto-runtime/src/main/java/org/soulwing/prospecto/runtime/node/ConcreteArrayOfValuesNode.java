@@ -28,6 +28,8 @@ import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.node.ArrayOfValuesNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
@@ -42,8 +44,9 @@ import org.soulwing.prospecto.runtime.converter.Convertible;
  *
  * @author Carl Harris
  */
-public class ArrayOfValueNode extends AbstractViewNode
-    implements Convertible, ModelAccessingNode, UpdatableViewNode {
+public class ConcreteArrayOfValuesNode extends AbstractViewNode
+    implements Convertible, ModelAccessingNode, UpdatableViewNode,
+    ArrayOfValuesNode {
 
   private final String elementName;
   private final Class<?> componentType;
@@ -61,7 +64,7 @@ public class ArrayOfValueNode extends AbstractViewNode
    * @param namespace namespace for {@code name} and {@code elementName}
    * @param componentType common type for elements
    */
-  public ArrayOfValueNode(String name, String elementName, String namespace,
+  public ConcreteArrayOfValuesNode(String name, String elementName, String namespace,
       Class<?> componentType) {
     this(name, elementName, namespace, componentType,
         ConcreteTransformationService.INSTANCE,
@@ -70,7 +73,7 @@ public class ArrayOfValueNode extends AbstractViewNode
         ValueCollectionToManyAssociationUpdater.INSTANCE);
   }
 
-  ArrayOfValueNode(String name, String elementName, String namespace,
+  ConcreteArrayOfValuesNode(String name, String elementName, String namespace,
       Class<?> componentType, TransformationService transformationService,
       UpdatableViewNodeTemplate template,
       MultiValuedAccessorFactory accessorFactory,
@@ -82,6 +85,11 @@ public class ArrayOfValueNode extends AbstractViewNode
     this.template = template;
     this.accessorFactory = accessorFactory;
     this.associationUpdater = associationUpdater;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitArrayOfValues(this, state);
   }
 
   /**
@@ -185,7 +193,7 @@ public class ArrayOfValueNode extends AbstractViewNode
 
         final Object valueToInject = transformationService.valueToInject(
             parentEntity, multiValuedAccessor.getComponentType(),
-            event.getValue(), ArrayOfValueNode.this, context);
+            event.getValue(), ConcreteArrayOfValuesNode.this, context);
 
         array.add(valueToInject);
       }

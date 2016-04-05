@@ -26,6 +26,8 @@ import java.util.List;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.node.ObjectNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -36,8 +38,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ObjectNode extends ContainerViewNode
-    implements UpdatableViewNode {
+public class ConcreteObjectNode extends ContainerViewNode
+    implements UpdatableViewNode, ObjectNode {
 
   private final ToOneAssociationUpdater associationUpdater;
   private final UpdatableViewNodeTemplate template;
@@ -48,17 +50,22 @@ public class ObjectNode extends ContainerViewNode
    * @param namespace namespace for {@code name}
    * @param modelType model type associated with node
    */
-  public ObjectNode(String name, String namespace, Class<?> modelType) {
+  public ConcreteObjectNode(String name, String namespace, Class<?> modelType) {
     this(name, namespace, modelType, new ConcreteToOneAssociationUpdater(),
         ConcreteUpdatableViewNodeTemplate.INSTANCE);
   }
 
-  ObjectNode(String name, String namespace, Class<?> modelType,
+  ConcreteObjectNode(String name, String namespace, Class<?> modelType,
       ToOneAssociationUpdater associationUpdater,
       UpdatableViewNodeTemplate template) {
     super(name, namespace, modelType);
     this.associationUpdater = associationUpdater;
     this.template = template;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitObject(this, state);
   }
 
   @Override
@@ -91,8 +98,8 @@ public class ObjectNode extends ContainerViewNode
     final MutableViewEntity entity = (MutableViewEntity) value;
     for (final String name : entity.nameSet()) {
       final AbstractViewNode child = getChild(entity.getType(), name);
-      if (child instanceof ValueNode) {
-        ((ValueNode) child).inject(target, entity.get(name));
+      if (child instanceof ConcreteValueNode) {
+        ((ConcreteValueNode) child).inject(target, entity.get(name));
       }
     }
   }

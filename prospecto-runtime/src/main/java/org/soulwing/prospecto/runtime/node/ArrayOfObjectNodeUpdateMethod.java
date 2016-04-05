@@ -29,21 +29,21 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A {@link ObjectNodeUpdateMethod} for an {@link ArrayOfObjectNode}.
+ * A {@link ObjectNodeUpdateMethod} for an {@link ConcreteArrayOfObjectsNode}.
  *
  * @author Carl Harris
  */
 class ArrayOfObjectNodeUpdateMethod
     implements UpdatableViewNodeTemplate.Method {
 
-  private final ArrayOfObjectNode node;
+  private final ConcreteArrayOfObjectsNode node;
   private final ViewEntity parentEntity;
   private final View.Event triggerEvent;
   private final Deque<View.Event> events;
   private final ScopedViewContext context;
   private final UpdatableViewNodeTemplate template;
 
-  public ArrayOfObjectNodeUpdateMethod(ArrayOfObjectNode node,
+  public ArrayOfObjectNodeUpdateMethod(ConcreteArrayOfObjectsNode node,
       ViewEntity parentEntity, View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context, UpdatableViewNodeTemplate template) {
     this.node = node;

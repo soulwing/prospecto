@@ -22,7 +22,7 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfValueNode;
+import org.soulwing.prospecto.runtime.node.RootArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
@@ -79,7 +79,7 @@ public class ConcreteViewTemplateBuilderProvider
   public ViewTemplate arrayOfValues(String name, String elementName,
       String namespace) throws ViewTemplateException {
     return new ConcreteViewTemplate(
-        new RootArrayOfValueNode(name, elementName, namespace));
+        new RootArrayOfValuesNode(name, elementName, namespace));
   }
 
 }

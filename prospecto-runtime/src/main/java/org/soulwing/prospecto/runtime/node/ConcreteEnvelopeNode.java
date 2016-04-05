@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.EnvelopeNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
@@ -33,7 +35,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class EnvelopeNode extends ObjectNode {
+public class ConcreteEnvelopeNode extends ConcreteObjectNode
+    implements EnvelopeNode {
 
   /**
    * Constructs a new instance.
@@ -41,8 +44,13 @@ public class EnvelopeNode extends ObjectNode {
    * @param namespace namespace for {@code name}
    * @param modelType model type
    */
-  public EnvelopeNode(String name, String namespace, Class<?> modelType) {
+  public ConcreteEnvelopeNode(String name, String namespace, Class<?> modelType) {
     super(name, namespace, modelType);
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitEnvelope(this, state);
   }
 
   @Override

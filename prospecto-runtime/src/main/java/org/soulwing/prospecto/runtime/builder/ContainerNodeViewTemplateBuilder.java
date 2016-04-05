@@ -23,12 +23,12 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
+import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
-import org.soulwing.prospecto.runtime.node.UrlNode;
-import org.soulwing.prospecto.runtime.node.ValueNode;
 
 /**
  * A template builder for a container node.
@@ -43,17 +43,17 @@ class ContainerNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(ValueNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(ConcreteValueNode node) {
     return new ValueNodeViewTemplateBuilder(this, getTarget(), node);
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(UrlNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(ConcreteUrlNode node) {
     return new UrlNodeViewTemplateBuilder(this, getTarget(), node);
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(ArrayOfValueNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(ConcreteArrayOfValuesNode node) {
     return new ValueNodeViewTemplateBuilder(this, getTarget(), node);
   }
 
@@ -69,7 +69,7 @@ class ContainerNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(EnvelopeNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(ConcreteEnvelopeNode node) {
     return new EnvelopeNodeViewTemplateBuilder(this, node, node);
   }
 

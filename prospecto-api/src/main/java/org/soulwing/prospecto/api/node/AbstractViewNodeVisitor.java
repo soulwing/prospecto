@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.api.node;
 
-import org.omg.CORBA.Object;
-
 /**
  * An abstract base for a {@link ViewNodeVisitor} implementation.
  * <p>

@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
@@ -31,9 +33,8 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class UrlNode extends AbstractViewNode {
-
-  public static final String DEFAULT_NAME = "href";
+public class ConcreteUrlNode extends AbstractViewNode
+    implements UrlNode {
 
   private final TransformationService transformationService;
 
@@ -42,14 +43,19 @@ public class UrlNode extends AbstractViewNode {
    * @param name node name
    * @param namespace namespace for {@code name}
    */
-  public UrlNode(String name, String namespace) {
+  public ConcreteUrlNode(String name, String namespace) {
     this(name, namespace, ConcreteTransformationService.INSTANCE);
   }
 
-  UrlNode(String name, String namespace,
+  ConcreteUrlNode(String name, String namespace,
       TransformationService transformationService) {
     super(name, namespace, null);
     this.transformationService = transformationService;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitUrl(this, state);
   }
 
   @Override

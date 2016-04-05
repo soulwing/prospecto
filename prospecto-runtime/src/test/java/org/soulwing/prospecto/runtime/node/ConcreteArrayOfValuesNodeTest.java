@@ -53,11 +53,11 @@ import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link ArrayOfValueNode}.
+ * Unit tests for {@link ConcreteArrayOfValuesNode}.
  *
  * @author Carl Harris
  */
-public class ArrayOfValueNodeTest {
+public class ConcreteArrayOfValuesNodeTest {
 
   private static final String NAME = "name";
   private static final String ELEMENT_NAME = "elementName";
@@ -116,11 +116,11 @@ public class ArrayOfValueNodeTest {
 
   private Deque<View.Event> events = new LinkedList<>();
 
-  private ArrayOfValueNode node;
+  private ConcreteArrayOfValuesNode node;
 
   @Before
   public void setUp() throws Exception {
-    node = new ArrayOfValueNode(NAME, ELEMENT_NAME, NAMESPACE,
+    node = new ConcreteArrayOfValuesNode(NAME, ELEMENT_NAME, NAMESPACE,
         MODEL_VALUE.getClass(), transformationService, template,
         accessorFactory, associationUpdater);
     context.checking(new Expectations() {

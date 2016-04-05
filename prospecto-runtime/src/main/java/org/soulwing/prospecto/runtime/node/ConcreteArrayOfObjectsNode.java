@@ -29,6 +29,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
@@ -43,8 +45,8 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class ArrayOfObjectNode extends ContainerViewNode
-    implements UpdatableViewNode {
+public class ConcreteArrayOfObjectsNode extends ContainerViewNode
+    implements UpdatableViewNode, ArrayOfObjectsNode {
 
   private final ToManyAssociationUpdater associationUpdater;
   private final MultiValuedAccessorFactory accessorFactory;
@@ -61,7 +63,7 @@ public class ArrayOfObjectNode extends ContainerViewNode
    * @param namespace namespace for {@code name} and {@code elementName}
    * @param modelType model type of the array elements
    */
-  public ArrayOfObjectNode(String name, String elementName,
+  public ConcreteArrayOfObjectsNode(String name, String elementName,
       String namespace, Class<?> modelType) {
     this(name, elementName, namespace, modelType,
         new ConcreteToManyAssociationUpdater(),
@@ -69,7 +71,7 @@ public class ArrayOfObjectNode extends ContainerViewNode
         ConcreteUpdatableViewNodeTemplate.INSTANCE);
   }
 
-  ArrayOfObjectNode(String name, String elementName,
+  ConcreteArrayOfObjectsNode(String name, String elementName,
       String namespace, Class<?> modelType,
       ToManyAssociationUpdater associationUpdater,
       MultiValuedAccessorFactory accessorFactory,
@@ -79,6 +81,11 @@ public class ArrayOfObjectNode extends ContainerViewNode
     this.associationUpdater = associationUpdater;
     this.accessorFactory = accessorFactory;
     this.template = template;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitArrayOfObjects(this, state);
   }
 
   /**

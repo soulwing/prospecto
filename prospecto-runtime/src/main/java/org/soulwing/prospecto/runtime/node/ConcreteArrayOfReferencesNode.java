@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
+import org.soulwing.prospecto.api.node.ArrayOfReferencesNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.association.ReferenceCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -27,7 +29,8 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class ArrayOfReferenceNode extends ArrayOfObjectNode {
+public class ConcreteArrayOfReferencesNode extends ConcreteArrayOfObjectsNode
+    implements ArrayOfReferencesNode {
 
   private final ToManyAssociationUpdater associationUpdater;
 
@@ -38,16 +41,21 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
    * @param namespace namespace for {@code name} and {@code elementName}
    * @param modelType model type of the array elements
    */
-  public ArrayOfReferenceNode(String name, String elementName,
+  public ConcreteArrayOfReferencesNode(String name, String elementName,
       String namespace, Class<?> modelType) {
     this(name, elementName, namespace, modelType,
         ReferenceCollectionToManyAssociationUpdater.INSTANCE);
   }
 
-  ArrayOfReferenceNode(String name, String elementName, String namespace,
+  ConcreteArrayOfReferencesNode(String name, String elementName, String namespace,
       Class<?> modelType, ToManyAssociationUpdater associationUpdater) {
     super(name, elementName, namespace, modelType);
     this.associationUpdater = associationUpdater;
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitArrayOfReferences(this, state);
   }
 
   @Override

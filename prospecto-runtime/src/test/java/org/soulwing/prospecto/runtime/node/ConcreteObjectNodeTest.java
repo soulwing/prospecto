@@ -1,5 +1,5 @@
 /*
- * File created on Mar 15, 2016
+ * File created on Mar 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -30,19 +30,22 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
+import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link EnvelopeNode}.
+ * Unit tests for {@link ConcreteObjectNode}.
  *
  * @author Carl Harris
  */
-public class EnvelopeNodeTest {
+public class ConcreteObjectNodeTest {
 
   private static final String NAME = "name";
   private static final String NAMESPACE = "namespace";
@@ -50,10 +53,15 @@ public class EnvelopeNodeTest {
   private static final String CHILD_NAME = "childName";
   private static final String CHILD_NAMESPACE = "childNamespace";
 
+  private static final Class<Object> MODEL_TYPE = Object.class;
+
   private static final Object MODEL = new Object();
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private Accessor accessor;
 
   @Mock
   private ScopedViewContext viewContext;
@@ -66,12 +74,21 @@ public class EnvelopeNodeTest {
 
   private MockViewNode child = new MockViewNode();
 
-  private EnvelopeNode node = new EnvelopeNode(NAME, NAMESPACE, MODEL.getClass());
+  private ConcreteObjectNode node = new ConcreteObjectNode(NAME, NAMESPACE, MODEL_TYPE);
+
+  @Before
+  public void setUp() throws Exception {
+    node.setAccessor(accessor);
+  }
 
   @Test
   public void testOnEvaluate() throws Exception {
+    context.checking(onEvaluateExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(MODEL));
+
         allowing(viewContext).put(MODEL);
         allowing(viewContext).remove(MODEL);
         allowing(viewContext).getListeners();
@@ -79,7 +96,7 @@ public class EnvelopeNodeTest {
         allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
         will(returnValue(true));
         allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
-        allowing(viewContext).push(CHILD_NAME, null);
+        allowing(viewContext).push(CHILD_NAME, MODEL_TYPE);
         allowing(viewContext).pop();
       }
     });
@@ -98,10 +115,40 @@ public class EnvelopeNodeTest {
     assertThat(events.get(2).getValue(), is(nullValue()));
   }
 
+  @Test
+  public void testOnEvaluateWhenNull() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(accessor).get(MODEL);
+        will(returnValue(null));
+      }
+    });
+
+    node.addChild(child);
+    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
+    assertThat(events.size(), is(1));
+    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.VALUE)));
+    assertThat(events.get(0).getName(), is(equalTo(NAME)));
+    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
+    assertThat(events.get(0).getValue(), is(nullValue()));
+  }
+
+  private Expectations onEvaluateExpectations() throws Exception {
+    return new Expectations() {
+      {
+      }
+    };
+  }
+
   class MockViewNode extends AbstractViewNode {
 
     MockViewNode() {
-      super(CHILD_NAME, CHILD_NAMESPACE, null);
+      super(CHILD_NAME, CHILD_NAMESPACE, MODEL_TYPE);
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
     }
 
     @Override

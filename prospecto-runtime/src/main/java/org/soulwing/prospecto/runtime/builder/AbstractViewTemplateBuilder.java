@@ -29,6 +29,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilderFactory;
 import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorBuilderFactory;
@@ -36,17 +37,17 @@ import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfReferenceNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
+import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
+import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.EnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ModelAccessingNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
-import org.soulwing.prospecto.runtime.node.ReferenceNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
-import org.soulwing.prospecto.runtime.node.UrlNode;
-import org.soulwing.prospecto.runtime.node.ValueNode;
 
 /**
  * An abstract base for {@link ViewTemplateBuilder} implementations.
@@ -115,12 +116,12 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder value(String name, String namespace) {
-    final ValueNode node = new ValueNode(name, namespace);
+    final ConcreteValueNode node = new ConcreteValueNode(name, namespace);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(ValueNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteValueNode node);
 
   @Override
   public ViewTemplateBuilder url() {
@@ -134,12 +135,12 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder url(String name, String namespace) {
-    final UrlNode node = new UrlNode(name, namespace);
+    final ConcreteUrlNode node = new ConcreteUrlNode(name, namespace);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(UrlNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteUrlNode node);
 
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, Class<?> componentType) {
@@ -155,13 +156,13 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, String elementName,
       String namespace, Class<?> componentType) {
-    final ArrayOfValueNode node = new ArrayOfValueNode(name, elementName,
+    final ConcreteArrayOfValuesNode node = new ConcreteArrayOfValuesNode(name, elementName,
         namespace, componentType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(ArrayOfValueNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteArrayOfValuesNode node);
 
   @Override
   public ViewTemplateBuilder object(String name, Class<?> modelType) {
@@ -171,7 +172,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) {
-    final ObjectNode node = new ObjectNode(name, namespace, modelType);
+    final ConcreteObjectNode node = new ConcreteObjectNode(name, namespace, modelType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
@@ -199,7 +200,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder reference(String name, String namespace,
       Class<?> modelType) {
-    final ReferenceNode node = new ReferenceNode(name, namespace, modelType);
+    final ConcreteReferenceNode node = new ConcreteReferenceNode(name, namespace, modelType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
@@ -233,7 +234,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) {
-    final ArrayOfObjectNode node = new ArrayOfObjectNode(name, elementName,
+    final ConcreteArrayOfObjectsNode node = new ConcreteArrayOfObjectsNode(name, elementName,
         namespace, modelType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
@@ -275,7 +276,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
       String namespace, Class<?> modelType) {
-    final ArrayOfReferenceNode node = new ArrayOfReferenceNode(name,
+    final ConcreteArrayOfReferencesNode node = new ConcreteArrayOfReferencesNode(name,
         elementName, namespace, modelType);
     addChildToTarget(node);
     return newTemplateBuilder(node);
@@ -314,13 +315,13 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder envelope(String name, String namespace) {
-    final EnvelopeNode node = new EnvelopeNode(name, namespace,
+    final ConcreteEnvelopeNode node = new ConcreteEnvelopeNode(name, namespace,
         target.getModelType());
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(EnvelopeNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteEnvelopeNode node);
 
   @Override
   public ViewTemplateBuilder subtype(Class<?> subtype) {
@@ -481,7 +482,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   protected void injectAccessor() {
     if (accessorBuilder != null
         && this.node instanceof ModelAccessingNode) {
-      ((ModelAccessingNode) this.node).setAccessor(accessorBuilder.build());
+      this.node.setAccessor(accessorBuilder.build());
     }
   }
 

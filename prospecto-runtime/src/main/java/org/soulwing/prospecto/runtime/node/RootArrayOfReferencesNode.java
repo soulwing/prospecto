@@ -1,5 +1,5 @@
 /*
- * File created on Mar 11, 2016
+ * File created on Apr 2, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -21,21 +21,22 @@ package org.soulwing.prospecto.runtime.node;
 import java.util.Iterator;
 
 /**
- * A root view node that represents an array of values.
+ * A root view node that represents an array of references
  *
  * @author Carl Harris
  */
-public class RootArrayOfValueNode extends ArrayOfValueNode {
+public class RootArrayOfReferencesNode extends ConcreteArrayOfReferencesNode {
 
   /**
    * Constructs a new instance.
    * @param name name of the array node
    * @param elementName name for the elements in the array node
    * @param namespace namespace for {@code name} and {@code elementName}
+   * @param modelType element model type
    */
-  public RootArrayOfValueNode(String name, String elementName,
-      String namespace) {
-    super(name, elementName, namespace, Object.class);
+  public RootArrayOfReferencesNode(String name, String elementName,
+      String namespace, Class<?> modelType) {
+    super(name, elementName, namespace, modelType);
   }
 
   @Override

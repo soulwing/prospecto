@@ -39,13 +39,14 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
 
 /**
  * Unit tests for {@link ConcreteViewTemplate}.
@@ -108,7 +109,7 @@ public class ConcreteViewTemplateTest {
     AbstractViewNode child = new MockViewNode();
     root.addChild(child);
     AbstractViewNode node = template.object(NAME, NAMESPACE);
-    assertThat(node, is(instanceOf(ObjectNode.class)));
+    assertThat(node, is(instanceOf(ConcreteObjectNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(((ContainerViewNode) node).getChildren(), contains(child));
@@ -119,9 +120,9 @@ public class ConcreteViewTemplateTest {
     AbstractViewNode child = new MockViewNode();
     root.addChild(child);
     AbstractViewNode node = template.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE);
-    assertThat(node, is(instanceOf(ArrayOfObjectNode.class)));
+    assertThat(node, is(instanceOf(ConcreteArrayOfObjectsNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
-    assertThat(((ArrayOfObjectNode) node).getElementName(),
+    assertThat(((ConcreteArrayOfObjectsNode) node).getElementName(),
         is(equalTo(ELEMENT_NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(((ContainerViewNode) node).getChildren(), contains(child));
@@ -149,6 +150,11 @@ public class ConcreteViewTemplateTest {
 
     public MockViewNode() {
       super(null, null, Object.class);
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
     }
 
     @Override

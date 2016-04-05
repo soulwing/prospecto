@@ -33,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
@@ -91,6 +92,11 @@ public class ContainerViewNodeTest {
 
     MockViewNode() {
       super(NAME, NAMESPACE, MODEL_TYPE);
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
     }
 
     @Override

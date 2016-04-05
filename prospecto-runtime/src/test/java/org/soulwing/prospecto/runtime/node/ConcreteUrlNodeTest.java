@@ -34,15 +34,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * Unit tests for {@link UrlNode}.
+ * Unit tests for {@link ConcreteUrlNode}.
  *
  * @author Carl Harris
  */
-public class UrlNodeTest {
+public class ConcreteUrlNodeTest {
 
   private static final Object MODEL = new Object();
   private static final String NAMESPACE = "namespace";
@@ -60,11 +61,11 @@ public class UrlNodeTest {
   @Mock
   UrlResolver urlResolver;
 
-  private UrlNode node;
+  private ConcreteUrlNode node;
 
   @Before
   public void setUp() throws Exception {
-    node = new UrlNode(UrlNode.DEFAULT_NAME, NAMESPACE, transformationService);
+    node = new ConcreteUrlNode(UrlNode.DEFAULT_NAME, NAMESPACE, transformationService);
   }
 
   @Test

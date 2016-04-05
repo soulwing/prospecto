@@ -24,7 +24,7 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A factory that produces {@link MutableViewEntity} objects for an
- * {@link ObjectNode}.
+ * {@link ConcreteObjectNode}.
  *
  * @author Carl Harris
  */

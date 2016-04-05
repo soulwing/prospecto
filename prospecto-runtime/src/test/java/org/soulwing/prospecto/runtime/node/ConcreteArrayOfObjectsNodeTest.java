@@ -42,16 +42,17 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
- * Unit tests for {@link ObjectNode}.
+ * Unit tests for {@link ConcreteObjectNode}.
  *
  * @author Carl Harris
  */
-public class ArrayOfObjectNodeTest {
+public class ConcreteArrayOfObjectsNodeTest {
 
   private static final String NAME = "name";
   private static final String ELEMENT_NAME = "elementName";
@@ -82,7 +83,7 @@ public class ArrayOfObjectNodeTest {
 
   private MockViewNode child = new MockViewNode();
 
-  private ArrayOfObjectNode node = new ArrayOfObjectNode(NAME, ELEMENT_NAME,
+  private ConcreteArrayOfObjectsNode node = new ConcreteArrayOfObjectsNode(NAME, ELEMENT_NAME,
       NAMESPACE, MODEL_TYPE);
 
   @Before
@@ -164,6 +165,11 @@ public class ArrayOfObjectNodeTest {
 
     MockViewNode() {
       super(CHILD_NAME, CHILD_NAMESPACE, VALUE.getClass());
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return null;
     }
 
     @Override

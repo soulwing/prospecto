@@ -33,7 +33,7 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  *
  * @author Carl Harris
  */
-public class RootObjectNode extends ObjectNode
+public class RootObjectNode extends ConcreteObjectNode
     implements UpdatableRootNode {
 
   /**
@@ -41,7 +41,6 @@ public class RootObjectNode extends ObjectNode
    * @param name node name
    * @param namespace namespace for {@code name}
    * @param modelType model type associated with the node
-   * @return root object node
    */
   public RootObjectNode(String name, String namespace, Class<?> modelType) {
     super(name, namespace, modelType);

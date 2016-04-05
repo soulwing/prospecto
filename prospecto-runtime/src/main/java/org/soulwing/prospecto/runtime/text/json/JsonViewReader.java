@@ -26,9 +26,9 @@ import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParserFactory;
 
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ReaderKeys;
-import org.soulwing.prospecto.runtime.node.UrlNode;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**

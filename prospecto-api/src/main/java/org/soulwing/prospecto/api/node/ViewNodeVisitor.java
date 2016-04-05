@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.api.node;
 
-import org.omg.CORBA.Object;
-
 /**
  * A visitor for a {@link ViewNode}.
  *
@@ -50,6 +48,14 @@ public interface ViewNodeVisitor {
    * @return visit result
    */
   Object visitReference(ReferenceNode node, Object state);
+
+  /**
+   * Visits an envelope node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitEnvelope(EnvelopeNode node, Object state);
 
   /**
    * Visits a URL node.

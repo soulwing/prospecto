@@ -31,11 +31,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.ArrayOfValueNode;
-import org.soulwing.prospecto.runtime.node.ObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
-import org.soulwing.prospecto.runtime.node.ValueNode;
 
 /**
  * Tests for {@link ConcreteViewTemplateBuilderProvider}.
@@ -70,7 +70,7 @@ public class ConcreteViewTemplateBuilderProviderTest {
     context.checking(new Expectations() {
       {
         oneOf(builderFactory).newBuilder(with(
-            viewNode(ObjectNode.class, NAME, NAMESPACE)));
+            viewNode(ConcreteObjectNode.class, NAME, NAMESPACE)));
         will(returnValue(builder));
       }
     });
@@ -84,7 +84,7 @@ public class ConcreteViewTemplateBuilderProviderTest {
     context.checking(new Expectations() {
       {
         oneOf(builderFactory).newBuilder(with(
-            arrayViewNode(ArrayOfObjectNode.class, NAME, ELEMENT_NAME,
+            arrayViewNode(ConcreteArrayOfObjectsNode.class, NAME, ELEMENT_NAME,
                 NAMESPACE)));
         will(returnValue(builder));
       }
@@ -98,8 +98,8 @@ public class ConcreteViewTemplateBuilderProviderTest {
   public void testArrayOfValuesTemplate() throws Exception {
     final ConcreteViewTemplate template = (ConcreteViewTemplate)
         provider.arrayOfValues(NAME, ELEMENT_NAME, NAMESPACE);
-    assertThat((ArrayOfValueNode) template.getRoot(), is(
-        arrayViewNode(ArrayOfValueNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
+    assertThat((ConcreteArrayOfValuesNode) template.getRoot(), is(
+        arrayViewNode(ConcreteArrayOfValuesNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
   }
 
   @Test
@@ -107,16 +107,16 @@ public class ConcreteViewTemplateBuilderProviderTest {
     final RootObjectNode templateRoot =
         new RootObjectNode(NAME, NAMESPACE, MODEL_TYPE);
 
-    final ValueNode child = new ValueNode(NAME, NAMESPACE);
+    final ConcreteValueNode child = new ConcreteValueNode(NAME, NAMESPACE);
     templateRoot.addChild(child);
 
     final ConcreteViewTemplate template = (ConcreteViewTemplate)
         provider.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE,
             new ConcreteViewTemplate(templateRoot));
 
-    assertThat((ArrayOfObjectNode) template.getRoot(), is(
-        arrayViewNode(ArrayOfObjectNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
-    assertThat(((ArrayOfObjectNode) template.getRoot()).getChildren()
+    assertThat((ConcreteArrayOfObjectsNode) template.getRoot(), is(
+        arrayViewNode(ConcreteArrayOfObjectsNode.class, NAME, ELEMENT_NAME, NAMESPACE)));
+    assertThat(((ConcreteArrayOfObjectsNode) template.getRoot()).getChildren()
         .contains(child), is(true));
   }
 
