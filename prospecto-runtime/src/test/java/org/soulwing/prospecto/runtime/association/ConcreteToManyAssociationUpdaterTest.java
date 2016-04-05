@@ -67,6 +67,9 @@ public class ConcreteToManyAssociationUpdaterTest {
   ToManyAssociationUpdateStrategy strategy;
 
   @Mock
+  ToManyAssociationManager defaultManager;
+
+  @Mock
   ToManyAssociationManager manager;
 
   @Mock
@@ -90,7 +93,7 @@ public class ConcreteToManyAssociationUpdaterTest {
         oneOf(descriptorFactory).newDescriptor(node);
         will(returnValue(descriptor));
         oneOf(managerLocator).findManager(ToManyAssociationManager.class,
-            manager, descriptor, node, viewContext);
+            defaultManager, descriptor, node, viewContext);
         will(returnValue(manager));
         oneOf(strategy).supports(manager);
         will(returnValue(true));
@@ -102,7 +105,7 @@ public class ConcreteToManyAssociationUpdaterTest {
     });
 
     updater.update(node, owner, Collections.<MutableViewEntity>emptyList(),
-        manager, viewContext);
+        defaultManager, viewContext);
   }
 
   interface MockModel {}

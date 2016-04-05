@@ -69,6 +69,9 @@ public class ConcreteToOneAssociationUpdaterTest {
   AssociationDescriptor descriptor;
 
   @Mock
+  ToOneAssociationManager defaultManager;
+
+  @Mock
   ToOneAssociationManager manager;
 
   @Mock
@@ -104,7 +107,7 @@ public class ConcreteToOneAssociationUpdaterTest {
       }
     });
 
-    updater.update(node, owner, null, manager, viewContext);
+    updater.update(node, owner, null, defaultManager, viewContext);
   }
 
   @Test
@@ -121,7 +124,7 @@ public class ConcreteToOneAssociationUpdaterTest {
     });
 
     context.checking(createAssociateExpectations(newAssociate));
-    updater.update(node, owner, associateEntity, manager, viewContext);
+    updater.update(node, owner, associateEntity, defaultManager, viewContext);
   }
 
   @Test
@@ -138,7 +141,7 @@ public class ConcreteToOneAssociationUpdaterTest {
       }
     });
 
-    updater.update(node, owner, associateEntity, manager, viewContext);
+    updater.update(node, owner, associateEntity, defaultManager, viewContext);
   }
 
   @Test
@@ -155,7 +158,7 @@ public class ConcreteToOneAssociationUpdaterTest {
     });
     context.checking(discardAssociateExpectations(currentAssociate));
     context.checking(createAssociateExpectations(newAssociate));
-    updater.update(node, owner, associateEntity, manager, viewContext);
+    updater.update(node, owner, associateEntity, defaultManager, viewContext);
   }
 
   @SuppressWarnings("unchecked")
@@ -165,7 +168,7 @@ public class ConcreteToOneAssociationUpdaterTest {
         oneOf(descriptorFactory).newDescriptor(node);
         will(returnValue(descriptor));
         oneOf(managerLocator).findManager(ToOneAssociationManager.class,
-            manager, descriptor, node, viewContext);
+            defaultManager, descriptor, node, viewContext);
         will(returnValue(manager));
       }
     };
