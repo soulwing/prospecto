@@ -47,6 +47,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
+import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -105,6 +106,9 @@ public class ArrayOfValueNodeTest {
   MultiValuedAccessor multiValuedAccessor;
 
   @Mock
+  ToManyAssociationUpdater associationUpdater;
+
+  @Mock
   Iterator<?> iterator;
 
   @Mock
@@ -118,7 +122,7 @@ public class ArrayOfValueNodeTest {
   public void setUp() throws Exception {
     node = new ArrayOfValueNode(NAME, ELEMENT_NAME, NAMESPACE,
         MODEL_VALUE.getClass(), transformationService, template,
-        accessorFactory);
+        accessorFactory, associationUpdater);
     context.checking(new Expectations() {
       {
         allowing(accessor).getDataType();
@@ -279,10 +283,9 @@ public class ArrayOfValueNodeTest {
   public void testInject() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(multiValuedAccessor).begin(MODEL);
-        oneOf(multiValuedAccessor).clear(MODEL);
-        oneOf(multiValuedAccessor).add(MODEL, MODEL_VALUE);
-        oneOf(multiValuedAccessor).end(MODEL);
+        oneOf(associationUpdater).update(with(node),
+            with(MODEL), with(contains(MODEL_VALUE)),
+            with(multiValuedAccessor), with(viewContext));
       }
     });
 

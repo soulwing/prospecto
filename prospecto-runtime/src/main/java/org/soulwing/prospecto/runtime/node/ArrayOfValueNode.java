@@ -32,6 +32,8 @@ import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessor;
 import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
+import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
+import org.soulwing.prospecto.runtime.association.ValueCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
 
@@ -48,8 +50,8 @@ public class ArrayOfValueNode extends AbstractViewNode
   private final TransformationService transformationService;
   private final UpdatableViewNodeTemplate template;
   private final MultiValuedAccessorFactory accessorFactory;
+  private final ToManyAssociationUpdater associationUpdater;
 
-  private Accessor accessor;
   private MultiValuedAccessor multiValuedAccessor;
 
   /**
@@ -64,19 +66,22 @@ public class ArrayOfValueNode extends AbstractViewNode
     this(name, elementName, namespace, componentType,
         ConcreteTransformationService.INSTANCE,
         ConcreteUpdatableViewNodeTemplate.INSTANCE,
-        ConcreteMultiValuedAccessorFactory.INSTANCE);
+        ConcreteMultiValuedAccessorFactory.INSTANCE,
+        ValueCollectionToManyAssociationUpdater.INSTANCE);
   }
 
   ArrayOfValueNode(String name, String elementName, String namespace,
       Class<?> componentType, TransformationService transformationService,
       UpdatableViewNodeTemplate template,
-      MultiValuedAccessorFactory accessorFactory) {
+      MultiValuedAccessorFactory accessorFactory,
+      ToManyAssociationUpdater associationUpdater) {
     super(name, namespace, null);
     this.elementName = elementName;
     this.componentType = componentType;
     this.transformationService = transformationService;
     this.template = template;
     this.accessorFactory = accessorFactory;
+    this.associationUpdater = associationUpdater;
   }
 
   /**
@@ -88,13 +93,8 @@ public class ArrayOfValueNode extends AbstractViewNode
   }
 
   @Override
-  public Accessor getAccessor() {
-    return accessor;
-  }
-
-  @Override
   public void setAccessor(Accessor accessor) {
-    this.accessor = accessor;
+    super.setAccessor(accessor);
     this.multiValuedAccessor = accessor != null ?
         accessorFactory.newAccessor(accessor, componentType) : null;
   }
@@ -148,20 +148,13 @@ public class ArrayOfValueNode extends AbstractViewNode
   }
 
   @Override
-  public void inject(Object target, Object value) throws Exception {
-    multiValuedAccessor.begin(target);
-    multiValuedAccessor.clear(target);
-    final List<?> array = (List<?>) value;
-    for (final Object element : array) {
-      multiValuedAccessor.add(target, element);
-    }
-    multiValuedAccessor.end(target);
-  }
+  public void inject(Object target, Object value) throws Exception {}
 
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    inject(target, value);
+    associationUpdater.update(this, target, (Iterable<?>) value,
+        multiValuedAccessor, context);
   }
 
   class Method implements UpdatableViewNodeTemplate.Method {
