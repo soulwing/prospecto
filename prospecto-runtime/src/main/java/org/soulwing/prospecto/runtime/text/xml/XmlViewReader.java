@@ -134,12 +134,12 @@ class XmlViewReader extends AbstractViewReader {
         valueElement = true;
         break;
       case OBJECT:
-        beginObject(name(event.getName()));
+        beginObject(name(event.getName()), namespace(event.getName()));
         discriminator(event);
         url(event);
         break;
       case ARRAY:
-        beginArray(name(event.getName()));
+        beginArray(name(event.getName()), namespace(event.getName()));
         discriminator(event);
         url(event);
         break;
@@ -262,6 +262,13 @@ class XmlViewReader extends AbstractViewReader {
       return null;
     }
     return qname.getLocalPart();
+  }
+
+  private static String namespace(QName qname) {
+    if (XmlViewConstants.VIEW_NAMESPACE.equals(qname.getNamespaceURI())) {
+      return null;
+    }
+    return qname.getNamespaceURI();
   }
 
 }

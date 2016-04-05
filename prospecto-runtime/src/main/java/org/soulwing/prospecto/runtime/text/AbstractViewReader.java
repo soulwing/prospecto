@@ -91,8 +91,17 @@ public abstract class AbstractViewReader implements ViewReader {
    *
    */
   protected final void beginObject(String name) {
-    events.add(newEvent(View.Event.Type.BEGIN_OBJECT, name, null));
-    stack.push(newEvent(View.Event.Type.END_OBJECT, name, null));
+    beginObject(name, null);
+  }
+
+  /**
+   * Adds a {@link View.Event.Type#BEGIN_OBJECT} event to the view.
+   * @param name name of the object
+   *
+   */
+  protected final void beginObject(String name, String namespace) {
+    events.add(newEvent(View.Event.Type.BEGIN_OBJECT, name, namespace, null));
+    stack.push(newEvent(View.Event.Type.END_OBJECT, name, namespace, null));
   }
 
   /**
@@ -101,8 +110,17 @@ public abstract class AbstractViewReader implements ViewReader {
    *
    */
   protected final void beginArray(String name) {
-    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, name, null));
-    stack.push(newEvent(View.Event.Type.END_ARRAY, name, null));
+    beginArray(name, null);
+  }
+
+  /**
+   * Adds a {@link View.Event.Type#BEGIN_ARRAY} event to the view.
+   * @param name name of the object
+   *
+   */
+  protected final void beginArray(String name, String namespace) {
+    events.add(newEvent(View.Event.Type.BEGIN_ARRAY, name, namespace, null));
+    stack.push(newEvent(View.Event.Type.END_ARRAY, name, namespace, null));
   }
 
   /**
@@ -123,7 +141,7 @@ public abstract class AbstractViewReader implements ViewReader {
    */
   protected final void discriminator(Object value) {
     events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-        Discriminator.DEFAULT_NAME, value));
+        Discriminator.DEFAULT_NAME, null, value));
   }
 
   /**
@@ -131,7 +149,7 @@ public abstract class AbstractViewReader implements ViewReader {
    * @param value resource location
    */
   protected final void url(String value) {
-    events.add(newEvent(View.Event.Type.URL, null, value));
+    events.add(newEvent(View.Event.Type.URL, null, null, value));
   }
 
   /**
@@ -166,19 +184,16 @@ public abstract class AbstractViewReader implements ViewReader {
    * @param name name of the value
    */
   protected final void nullValue(String name) {
-    events.add(newEvent(View.Event.Type.VALUE, name, null));
+    events.add(newEvent(View.Event.Type.VALUE, name, null, null));
   }
 
   private void addValue(String name, Object value) {
-    events.add(newEvent(View.Event.Type.VALUE, name, value));
+    events.add(newEvent(View.Event.Type.VALUE, name, null, value));
   }
 
-  private View.Event newEvent(View.Event.Type type, String name) {
-    return newEvent(type, name, null);
-  }
-
-  private View.Event newEvent(View.Event.Type type, String name, Object value) {
-    return eventFactory.newEvent(type, name, null, value);
+  private View.Event newEvent(View.Event.Type type, String name,
+      String namespace, Object value) {
+    return eventFactory.newEvent(type, name, namespace, value);
   }
 
 }
