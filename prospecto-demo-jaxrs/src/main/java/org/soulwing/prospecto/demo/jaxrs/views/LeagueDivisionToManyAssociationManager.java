@@ -60,4 +60,9 @@ public class LeagueDivisionToManyAssociationManager
     return league.removeDivision(division);
   }
 
+  @Override
+  public void clear(League league) throws Exception {
+    league.getDivisions().clear();
+  }
+
 }

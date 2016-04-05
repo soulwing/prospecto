@@ -61,4 +61,9 @@ public class DivisionTeamToManyAssociationManager
     return division.removeTeam(team);
   }
 
+  @Override
+  public void clear(Division division) throws Exception {
+    division.getTeams().clear();
+  }
+
 }
