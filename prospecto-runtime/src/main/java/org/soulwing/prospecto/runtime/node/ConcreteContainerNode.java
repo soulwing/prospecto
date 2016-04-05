@@ -38,7 +38,7 @@ import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 public abstract class ConcreteContainerNode extends AbstractViewNode
     implements ContainerNode {
 
-  private final List<AbstractViewNode> children;
+  private final List<ViewNode> children;
   private final DiscriminatorEventService discriminatorEventService;
 
   /**
@@ -49,7 +49,7 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
    */
   protected ConcreteContainerNode(String name, String namespace,
       Class<?> modelType) {
-    this(name, namespace, modelType, new ArrayList<AbstractViewNode>());
+    this(name, namespace, modelType, new ArrayList<ViewNode>());
   }
 
   /**
@@ -60,13 +60,13 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
    * @param children node children
    */
   protected ConcreteContainerNode(String name, String namespace, Class<?> modelType,
-      List<AbstractViewNode> children) {
+      List<ViewNode> children) {
     this(name, namespace, modelType, children,
         ConcreteDiscriminatorEventService.INSTANCE);
   }
 
   ConcreteContainerNode(String name, String namespace, Class<?> modelType,
-      List<AbstractViewNode> children,
+      List<ViewNode> children,
       DiscriminatorEventService discriminatorEventService) {
     super(name, namespace, modelType);
     this.children = children;
@@ -75,21 +75,20 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
 
   @Override
   public Iterator<ViewNode> iterator() {
-    // TODO
-    throw new UnsupportedOperationException();
+    return children.iterator();
   }
 
-  public List<AbstractViewNode> getChildren() {
+  public List<ViewNode> getChildren() {
     return children;
   }
 
-  public AbstractViewNode getChild(Class<?> modelType, String name) {
-    Iterator<AbstractViewNode> i = children.iterator();
+  public ViewNode getChild(Class<?> modelType, String name) {
+    Iterator<ViewNode> i = children.iterator();
     while (i.hasNext()) {
-      final AbstractViewNode child = i.next();
+      final ViewNode child = i.next();
       if (child instanceof SubtypeNode
           && modelType.isAssignableFrom(((SubtypeNode) child).getModelType())) {
-        final AbstractViewNode node =
+        final ViewNode node =
             ((SubtypeNode) child).getChild(modelType, name);
         if (node != null) return node;
       }
@@ -97,7 +96,7 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
 
     i = children.iterator();
     while (i.hasNext()) {
-      final AbstractViewNode child = i.next();
+      final ViewNode child = i.next();
       if (name.equals(child.getName())) {
         return child;
       }
@@ -111,9 +110,9 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
     child.setParent(this);
   }
 
-  public void addChildren(List<AbstractViewNode> children) {
-    for (AbstractViewNode child : children) {
-      addChild(child);
+  public void addChildren(Iterable<ViewNode> nodes) {
+    for (ViewNode node : nodes) {
+      addChild((AbstractViewNode) node);
     }
   }
 
@@ -125,8 +124,8 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
       events.add(discriminatorEventService.newDiscriminatorEvent(this,
           model.getClass(), context));
     }
-    for (AbstractViewNode child : getChildren()) {
-      events.addAll(child.evaluate(model, context));
+    for (ViewNode child : children) {
+      events.addAll(((AbstractViewNode) child).evaluate(model, context));
     }
     context.remove(model);
     return events;

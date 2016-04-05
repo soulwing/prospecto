@@ -30,6 +30,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
@@ -76,7 +77,7 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
       ToManyAssociationUpdater associationUpdater,
       MultiValuedAccessorFactory accessorFactory,
       UpdatableViewNodeTemplate template) {
-    super(name, namespace, modelType, new ArrayList<AbstractViewNode>());
+    super(name, namespace, modelType, new ArrayList<ViewNode>());
     this.elementName = elementName;
     this.associationUpdater = associationUpdater;
     this.accessorFactory = accessorFactory;

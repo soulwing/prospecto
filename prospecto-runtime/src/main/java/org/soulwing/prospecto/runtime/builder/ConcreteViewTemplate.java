@@ -24,6 +24,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
@@ -154,8 +155,8 @@ class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   private void copyInto(ConcreteContainerNode node) {
-    assert root instanceof ConcreteContainerNode;
-    node.addChildren(((ConcreteContainerNode) root).getChildren());
+    assert root instanceof ContainerNode;
+    node.addChildren((ContainerNode) root);
     node.putAll(root);
   }
 

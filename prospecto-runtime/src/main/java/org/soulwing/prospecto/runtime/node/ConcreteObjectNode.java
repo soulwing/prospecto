@@ -27,6 +27,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ObjectNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
@@ -97,7 +98,7 @@ public class ConcreteObjectNode extends ConcreteContainerNode
   public void inject(Object target, Object value) throws Exception {
     final MutableViewEntity entity = (MutableViewEntity) value;
     for (final String name : entity.nameSet()) {
-      final AbstractViewNode child = getChild(entity.getType(), name);
+      final ViewNode child = getChild(entity.getType(), name);
       if (child instanceof ConcreteValueNode) {
         ((ConcreteValueNode) child).inject(target, entity.get(name));
       }

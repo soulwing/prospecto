@@ -39,6 +39,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
@@ -112,7 +113,8 @@ public class ConcreteViewTemplateTest {
     assertThat(node, is(instanceOf(ConcreteObjectNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ConcreteContainerNode) node).getChildren(), contains(child));
+    assertThat(((ConcreteContainerNode) node).getChildren(),
+    contains((ViewNode) child));
   }
 
   @Test
@@ -125,7 +127,8 @@ public class ConcreteViewTemplateTest {
     assertThat(((ConcreteArrayOfObjectsNode) node).getElementName(),
         is(equalTo(ELEMENT_NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ConcreteContainerNode) node).getChildren(), contains(child));
+    assertThat(((ConcreteContainerNode) node).getChildren(),
+        contains((ViewNode) child));
   }
 
   private Expectations viewContextExpectations() {

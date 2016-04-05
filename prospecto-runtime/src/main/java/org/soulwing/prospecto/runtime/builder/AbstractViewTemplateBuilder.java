@@ -30,6 +30,7 @@ import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilderFactory;
 import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorBuilderFactory;
@@ -392,7 +393,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   private void assertTargetHasNoChildren() {
-    final List<AbstractViewNode> children = target.getChildren();
+    final List<ViewNode> children = target.getChildren();
     if (!children.isEmpty()) {
       throw new ViewTemplateException(
           "discriminator must be the first child of the parent node");
