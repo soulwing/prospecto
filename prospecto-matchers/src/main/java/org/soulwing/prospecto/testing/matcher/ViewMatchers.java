@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.testing.matcher;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -29,6 +27,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.converter.Coerce;
 
 /**
  * Matchers for {@link View}.
@@ -254,52 +253,12 @@ public class ViewMatchers {
           && equals(actual.getValue(), expected.getValue());
     }
 
-    private boolean equals(Object expectedValue, Object actualValue) {
+    private boolean equals(Object actualValue, Object expectedValue) {
       if (expectedValue == null && actualValue == null) return true;
       if (expectedValue == null ^ actualValue == null) return false;
       Class<?> expectedType = expectedValue.getClass();
-      if (Number.class.isAssignableFrom(expectedType)) {
-        if (!Number.class.isAssignableFrom(actualValue.getClass())) {
-          return false;
-        }
-        actualValue = coerceNumberToType(expectedType, (Number) actualValue);
-      }
+      actualValue = Coerce.toValueOfType(expectedType, actualValue);
       return expectedValue.equals(actualValue);
-    }
-
-    private Number coerceNumberToType(Class<?> type, Number value) {
-      if (type.equals(value.getClass())) {
-        return value;
-      }
-      else if (Integer.class.equals(type)) {
-        return value.intValue();
-      }
-      else if (Long.class.equals(type)) {
-        return value.longValue();
-      }
-      else if (Byte.class.equals(type)) {
-        return value.byteValue();
-      }
-      else if (Short.class.equals(type)) {
-        return value.shortValue();
-      }
-      else if (Double.class.equals(type)) {
-        return value.doubleValue();
-      }
-      else if (Float.class.equals(type)) {
-        return value.floatValue();
-      }
-      else if (BigInteger.class.equals(type)) {
-        return BigInteger.valueOf(value.longValue());
-      }
-      else if (BigDecimal.class.equals(type)) {
-        return new BigDecimal(value.doubleValue());
-      }
-      else {
-        throw new ClassCastException("cannot coerce value of type "
-            + value.getClass().getSimpleName() + " to type"
-            + type.getSimpleName());
-      }
     }
 
   }
