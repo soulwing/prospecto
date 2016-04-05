@@ -218,11 +218,10 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeElementType(View.Event event) throws XMLStreamException {
-    if (event.getType() == View.Event.Type.BEGIN_OBJECT)
-      writer.writeAttribute(XmlViewConstants.VIEW_NAMESPACE,
-          XmlViewConstants.TYPE_NAME,
-          event.getType() == View.Event.Type.BEGIN_OBJECT ?
-              XmlViewConstants.OBJECT_NAME : XmlViewConstants.ARRAY_NAME);
+    writer.writeAttribute(XmlViewConstants.VIEW_NAMESPACE,
+        XmlViewConstants.TYPE_NAME,
+        event.getType() == View.Event.Type.BEGIN_OBJECT ?
+            XmlViewConstants.OBJECT_NAME : XmlViewConstants.ARRAY_NAME);
   }
 
   private void writeValue(View.Event event) throws XMLStreamException {
