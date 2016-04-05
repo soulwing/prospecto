@@ -24,6 +24,8 @@ import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
+import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**

@@ -36,6 +36,7 @@ import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 
 /**
  * Tests for {@link ConcreteViewTemplateBuilderProvider}.

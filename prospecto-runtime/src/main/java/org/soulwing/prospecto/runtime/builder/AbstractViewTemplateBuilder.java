@@ -49,6 +49,7 @@ import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.ModelAccessingNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
+import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 
 /**
  * An abstract base for {@link ViewTemplateBuilder} implementations.

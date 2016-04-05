@@ -1,5 +1,5 @@
 /*
- * File created on Mar 14, 2016
+ * File created on Apr 5, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.builder;
+package org.soulwing.prospecto.runtime.template;
 
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;

@@ -59,6 +59,7 @@ import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 
 /**
  * Unit tests for the template builder.

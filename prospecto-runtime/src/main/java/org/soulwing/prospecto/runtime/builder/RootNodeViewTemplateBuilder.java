@@ -32,6 +32,7 @@ import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.SubtypeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 
 /**
  * A template builder for the root node.

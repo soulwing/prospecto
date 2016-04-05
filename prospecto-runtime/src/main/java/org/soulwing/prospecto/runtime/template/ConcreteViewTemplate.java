@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 5, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.builder;
+package org.soulwing.prospecto.runtime.template;
 
 import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
@@ -45,7 +45,7 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  *
  * @author Carl Harris
  */
-class ConcreteViewTemplate implements ComposableViewTemplate {
+public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private final AbstractViewNode root;
   private final ScopedViewContextFactory viewContextFactory;
