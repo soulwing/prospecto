@@ -74,6 +74,13 @@ public interface ToManyAssociationManager<T, E>
   boolean remove(T owner, E element) throws Exception;
 
   /**
+   * Removes all elements from the associated collection.
+   * @param owner association owner
+   * @throws Exception
+   */
+  void clear(T owner) throws Exception;
+
+  /**
    * Begins a transaction for updating the associated collection.
    * @param owner association owner
    */

@@ -20,9 +20,10 @@ package org.soulwing.prospecto.runtime.node;
 
 import java.util.List;
 
+import org.soulwing.prospecto.runtime.association.ReferenceCollectionToManyAssociationUpdater;
+import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
  * A view node that represents an array of references.
@@ -30,6 +31,8 @@ import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
  * @author Carl Harris
  */
 public class ArrayOfReferenceNode extends ArrayOfObjectNode {
+
+  private final ToManyAssociationUpdater associationUpdater;
 
   /**
    * Constructs a new instance.
@@ -40,7 +43,14 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
    */
   public ArrayOfReferenceNode(String name, String elementName,
       String namespace, Class<?> modelType) {
+    this(name, elementName, namespace, modelType,
+        ReferenceCollectionToManyAssociationUpdater.INSTANCE);
+  }
+
+  ArrayOfReferenceNode(String name, String elementName, String namespace,
+      Class<?> modelType, ToManyAssociationUpdater associationUpdater) {
     super(name, elementName, namespace, modelType);
+    this.associationUpdater = associationUpdater;
   }
 
   @Override
@@ -50,15 +60,8 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    final List<MutableViewEntity> entities = (List<MutableViewEntity>) value;
-    final ReferenceResolverService resolvers = context.getReferenceResolvers();
-    getMultiValuedAccessor().begin(target);
-    getMultiValuedAccessor().clear(target);
-    for (final MutableViewEntity entity : entities) {
-      getMultiValuedAccessor().add(target,
-          resolvers.resolve(entity.getType(), entity));
-    }
-    getMultiValuedAccessor().end(target);
+    associationUpdater.update(this, target, (List<MutableViewEntity>) value,
+        getMultiValuedAccessor(), context);
   }
 
 }

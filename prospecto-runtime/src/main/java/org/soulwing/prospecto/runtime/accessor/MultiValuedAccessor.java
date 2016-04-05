@@ -30,6 +30,4 @@ public interface MultiValuedAccessor
 
   Class<?> getComponentType();
 
-  void clear(Object target) throws Exception;
-
 }
