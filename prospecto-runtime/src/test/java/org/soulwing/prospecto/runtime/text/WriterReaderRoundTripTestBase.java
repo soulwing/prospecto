@@ -58,7 +58,7 @@ import org.soulwing.prospecto.runtime.view.ViewBuilder;
  *
  * @author Carl Harris
  */
-public class WriterReaderRoundTripTestBase {
+public abstract class WriterReaderRoundTripTestBase {
 
   private static final String CHILD = "child";
   private static final String CHILDREN = "children";
