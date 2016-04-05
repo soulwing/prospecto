@@ -18,12 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.List;
-
 import org.soulwing.prospecto.runtime.association.ReferenceCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an array of references.
@@ -57,10 +54,9 @@ public class ArrayOfReferenceNode extends ArrayOfObjectNode {
   public void inject(Object target, Object value) {}
 
   @Override
-  @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    associationUpdater.update(this, target, (List<MutableViewEntity>) value,
+    associationUpdater.update(this, target, (Iterable<?>) value,
         getMultiValuedAccessor(), context);
   }
 

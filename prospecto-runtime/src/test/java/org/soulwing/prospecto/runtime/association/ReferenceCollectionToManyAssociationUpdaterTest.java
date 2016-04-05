@@ -18,64 +18,21 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import java.util.Collections;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.soulwing.prospecto.api.association.AssociationDescriptor;
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.reference.ReferenceResolver;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ReferenceCollectionToManyAssociationUpdater}.
  *
  * @author Carl Harris
  */
-public class ReferenceCollectionToManyAssociationUpdaterTest {
-
-
-  @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
-
-  @Mock
-  ScopedViewContext viewContext;
-
-  @Mock
-  ContainerViewNode node;
-
-  @Mock
-  AssociationDescriptorFactory descriptorFactory;
-
-  @Mock
-  AssociationManagerLocator managerLocator;
-
-  @Mock
-  AssociationDescriptor descriptor;
-
-  @Mock
-  ToManyAssociationManager defaultManager;
-
-  @Mock
-  ToManyAssociationManager manager;
-
-  @Mock
-  MockModel owner;
+public class ReferenceCollectionToManyAssociationUpdaterTest
+    extends ValueCollectionToManyAssociationUpdaterTest {
 
   @Mock
   MockModel associate;
-
-  @Mock
-  MockModel newAssociate;
 
   @Mock
   MutableViewEntity associateEntity;
@@ -83,42 +40,34 @@ public class ReferenceCollectionToManyAssociationUpdaterTest {
   @Mock
   ReferenceResolverService resolvers;
 
-  @Mock
-  ReferenceResolver resolver;
-
-  ReferenceCollectionToManyAssociationUpdater updater;
-
-  @Before
-  public void setUp() throws Exception {
-    updater = new ReferenceCollectionToManyAssociationUpdater(
+  @Override
+  protected ToManyAssociationUpdater newUpdater() {
+    return new ReferenceCollectionToManyAssociationUpdater(
         descriptorFactory, managerLocator);
   }
 
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testUpdate() throws Exception {
-    context.checking(new Expectations() {
+  @Override
+  protected Object value() {
+    return associateEntity;
+  }
+
+  @Override
+  protected Object resolvedValue() {
+    return associate;
+  }
+
+  @Override
+  protected Expectations resolveExpectations() throws Exception {
+    return new Expectations() {
       {
-        oneOf(descriptorFactory).newDescriptor(node);
-        will(returnValue(descriptor));
-        oneOf(managerLocator).findManager(ToManyAssociationManager.class,
-            defaultManager, descriptor, node, viewContext);
-        will(returnValue(manager));
-        oneOf(manager).begin(owner);
-        oneOf(manager).clear(owner);
         oneOf(associateEntity).getType();
         will(returnValue(MockModel.class));
         oneOf(viewContext).getReferenceResolvers();
         will(returnValue(resolvers));
         oneOf(resolvers).resolve(MockModel.class, associateEntity);
         will(returnValue(associate));
-        oneOf(manager).add(owner, associate);
-        oneOf(manager).end(owner);
       }
-    });
-
-    updater.update(node, owner, Collections.singletonList(associateEntity),
-        defaultManager, viewContext);
+    };
   }
 
   private interface MockModel {}

@@ -18,68 +18,35 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import org.soulwing.prospecto.api.association.AssociationDescriptor;
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.ContainerViewNode;
-import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
- * A {@link ToManyAssociationUpdater} for a collection of references.
- *
+ * A {@link ToManyAssociationUpdater} for a collection of values.
+
  * @author Carl Harris
  */
 public class ReferenceCollectionToManyAssociationUpdater
-    implements ToManyAssociationUpdater {
+    extends ValueCollectionToManyAssociationUpdater {
 
   public static final ReferenceCollectionToManyAssociationUpdater INSTANCE =
       new ReferenceCollectionToManyAssociationUpdater();
 
-  private final AssociationDescriptorFactory descriptorFactory;
-  private final AssociationManagerLocator managerLocator;
-
   private ReferenceCollectionToManyAssociationUpdater() {
-    this(ConcreteAssociationDescriptorFactory.INSTANCE,
-        ConcreteAssociationManagerLocator.INSTANCE);
+    super();
   }
 
   ReferenceCollectionToManyAssociationUpdater(
       AssociationDescriptorFactory descriptorFactory,
       AssociationManagerLocator managerLocator) {
-    this.descriptorFactory = descriptorFactory;
-    this.managerLocator = managerLocator;
+    super(descriptorFactory, managerLocator);
   }
 
   @Override
-  public void update(ContainerViewNode node, Object target,
-      Iterable<?> values,
-      ToManyAssociationManager defaultManager,
-      ScopedViewContext context) throws Exception {
-
-    final AssociationDescriptor descriptor =
-        descriptorFactory.newDescriptor(node);
-
-    final ToManyAssociationManager manager =
-        managerLocator.findManager(ToManyAssociationManager.class,
-            defaultManager, descriptor, node, context);
-
-    doUpdate(target, values, manager, context);
-  }
-
-  @SuppressWarnings("unchecked")
-  private void doUpdate(Object target, Iterable<?> values,
-      ToManyAssociationManager manager, ScopedViewContext context)
-      throws Exception {
-    final ReferenceResolverService resolvers = context.getReferenceResolvers();
-    manager.begin(target);
-    manager.clear(target);
-    for (final Object value : values) {
-      final MutableViewEntity entity = (MutableViewEntity) value;
-      manager.add(target,
-          resolvers.resolve(entity.getType(), entity));
-    }
-    manager.end(target);
+  protected Object resolve(Object value,
+      ScopedViewContext context) {
+    final MutableViewEntity entity = (MutableViewEntity) value;
+    return context.getReferenceResolvers().resolve(entity.getType(), entity);
   }
 
 }
