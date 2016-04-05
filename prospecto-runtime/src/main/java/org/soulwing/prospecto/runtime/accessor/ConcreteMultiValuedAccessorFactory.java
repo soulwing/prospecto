@@ -39,13 +39,14 @@ public class ConcreteMultiValuedAccessorFactory
   @Override
   public MultiValuedAccessor newAccessor(Accessor accessor,
       Class<?> componentType) {
-    if (List.class.isAssignableFrom(accessor.getDataType())) {
+    final Class<?> dataType = accessor.getDataType();
+    if (List.class.isAssignableFrom(dataType)) {
       return new ListAccessor(accessor, componentType);
     }
-    if (Collection.class.isAssignableFrom(accessor.getDataType())) {
+    if (Collection.class.isAssignableFrom(dataType)) {
       return new CollectionAccessor(accessor, componentType);
     }
-    if (accessor.getDataType().isArray()) {
+    if (dataType.isArray()) {
       return new ArrayAccessor(accessor, componentType);
     }
     throw new ViewTemplateException("expected an array or a collection");
