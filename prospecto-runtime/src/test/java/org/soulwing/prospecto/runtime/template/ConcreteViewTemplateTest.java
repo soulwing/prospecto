@@ -27,7 +27,6 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -80,6 +79,9 @@ public class ConcreteViewTemplateTest {
   @Mock
   private View.Event event;
 
+  @Mock
+  private ViewEventGenerator generator;
+
   private MockViewNode root = new MockViewNode();
 
   private ConcreteViewTemplate template;
@@ -92,6 +94,13 @@ public class ConcreteViewTemplateTest {
   @Test
   public void testGenerateView() throws Exception {
     context.checking(viewContextExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(generator).generate(MODEL, scopedViewContext);
+        will(returnValue(Collections.singletonList(event)));
+      }
+    });
+
     View view = template.generateView(MODEL, viewContext);
     Iterator<View.Event> events = view.iterator();
     assertThat(events.hasNext(), is(true));
@@ -101,7 +110,13 @@ public class ConcreteViewTemplateTest {
   @Test(expected = ViewException.class)
   public void testGenerateViewWhenEvaluateThrowsException() throws Exception {
     context.checking(viewContextExpectations());
-    root.exception = new Exception();
+    context.checking(new Expectations() {
+      {
+        oneOf(generator).generate(MODEL, scopedViewContext);
+        will(throwException(new Exception()));
+      }
+    });
+
     template.generateView(MODEL, viewContext);
   }
 
@@ -149,26 +164,13 @@ public class ConcreteViewTemplateTest {
 
   class MockViewNode extends ConcreteContainerNode {
 
-    private Exception exception;
-
     public MockViewNode() {
       super(null, null, Object.class);
     }
 
     @Override
     public Object accept(ViewNodeVisitor visitor, Object state) {
-      return null;
-    }
-
-    @Override
-    protected List<View.Event> onEvaluate(Object source,
-        ScopedViewContext context) throws Exception {
-      assertThat(source, is(sameInstance(MODEL)));
-      assertThat(context, is(sameInstance(scopedViewContext)));
-      if (exception != null) {
-        throw exception;
-      }
-      return Collections.singletonList(event);
+      return generator;
     }
 
   }

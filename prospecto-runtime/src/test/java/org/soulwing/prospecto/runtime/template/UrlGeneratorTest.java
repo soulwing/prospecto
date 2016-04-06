@@ -1,5 +1,5 @@
 /*
- * File created on Mar 14, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.template;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -29,47 +29,40 @@ import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * Unit tests for {@link ConcreteUrlNode}.
+ * Unit tests for {@link UrlGenerator}.
  *
  * @author Carl Harris
  */
-public class ConcreteUrlNodeTest {
+public class UrlGeneratorTest extends AbstractViewEventGeneratorTest<UrlNode> {
 
-  private static final Object MODEL = new Object();
-  private static final String NAMESPACE = "namespace";
   private static final Object URL = "url";
 
-  @Rule
-  public final JUnitRuleMockery context = new JUnitRuleMockery();
+  @Mock
+  private TransformationService transformationService;
 
   @Mock
-  ScopedViewContext viewContext;
+  private UrlResolver urlResolver;
 
-  @Mock
-  TransformationService transformationService;
+  @Override
+  UrlNode newNode() {
+    return context.mock(UrlNode.class);
+  }
 
-  @Mock
-  UrlResolver urlResolver;
-
-  private ConcreteUrlNode node;
-
-  @Before
-  public void setUp() throws Exception {
-    node = new ConcreteUrlNode(UrlNode.DEFAULT_NAME, NAMESPACE, transformationService);
+  @Override
+  AbstractViewEventGenerator<UrlNode> newGenerator(UrlNode node) {
+    return new UrlGenerator(node, transformationService);
   }
 
   @Test
-  public void testOnEvaluate() throws Exception {
+  public void testGenerate() throws Exception {
+    context.checking(baseExpectations());
     context.checking(new Expectations() {
       {
         oneOf(viewContext).get(UrlResolver.class);
@@ -82,11 +75,10 @@ public class ConcreteUrlNodeTest {
       }
     });
 
-    assertThat(node.onEvaluate(MODEL, viewContext),
+    assertThat(generator.generate(MODEL, viewContext),
         contains(
             eventOfType(View.Event.Type.URL,
-                withName(UrlNode.DEFAULT_NAME),
-                inNamespace(NAMESPACE),
+                withName(NAME), inNamespace(NAMESPACE),
                 whereValue(is(sameInstance(URL))))));
   }
 

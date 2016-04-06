@@ -18,12 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ObjectNode;
@@ -65,26 +61,13 @@ public class ConcreteObjectNode extends ConcreteContainerNode
   }
 
   @Override
-  public Object accept(ViewNodeVisitor visitor, Object state) {
-    return visitor.visitObject(this, state);
+  public Object getObject(Object model) throws Exception {
+    return getAccessor().get(model);
   }
 
   @Override
-  protected List<View.Event> onEvaluate(Object source,
-      ScopedViewContext context) throws Exception {
-    final List<View.Event> events = new LinkedList<>();
-    final Object model = getAccessor().get(source);
-    if (model == UndefinedValue.INSTANCE) return Collections.emptyList();
-
-    if (model != null) {
-      events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
-      events.addAll(evaluateChildren(model, context));
-      events.add(newEvent(View.Event.Type.END_OBJECT));
-    }
-    else {
-      events.add(newEvent(View.Event.Type.VALUE));
-    }
-    return events;
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitObject(this, state);
   }
 
   @Override

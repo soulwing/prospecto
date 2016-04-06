@@ -18,15 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.soulwing.prospecto.api.UndefinedValue;
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.api.url.UrlResolver;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
  * A view node that represents a value that is resolved as a URL.
@@ -56,24 +51,6 @@ public class ConcreteUrlNode extends AbstractViewNode
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitUrl(this, state);
-  }
-
-  @Override
-  protected List<View.Event> onEvaluate(Object source,
-      ScopedViewContext context) throws Exception {
-
-    final Object modelValue =
-        context.get(UrlResolver.class).resolve(this, context);
-
-    final Object transformedValue =
-        transformationService.valueToExtract(source, modelValue, this, context);
-
-    if (transformedValue == UndefinedValue.INSTANCE) {
-      return Collections.emptyList();
-    }
-
-    return Collections.singletonList(
-        newEvent(View.Event.Type.URL, getName(), transformedValue));
   }
 
 }

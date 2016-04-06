@@ -20,13 +20,10 @@ package org.soulwing.prospecto.runtime.node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.api.node.ViewNode;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 
@@ -86,10 +83,10 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
     Iterator<ViewNode> i = children.iterator();
     while (i.hasNext()) {
       final ViewNode child = i.next();
-      if (child instanceof SubtypeNode
-          && modelType.isAssignableFrom(((SubtypeNode) child).getModelType())) {
+      if (child instanceof ConcreteSubtypeNode
+          && modelType.isAssignableFrom(((ConcreteSubtypeNode) child).getModelType())) {
         final ViewNode node =
-            ((SubtypeNode) child).getChild(modelType, name);
+            ((ConcreteSubtypeNode) child).getChild(modelType, name);
         if (node != null) return node;
       }
     }
@@ -114,21 +111,6 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
     for (ViewNode node : nodes) {
       addChild((AbstractViewNode) node);
     }
-  }
-
-  protected final List<View.Event> evaluateChildren(Object model,
-      ScopedViewContext context) throws Exception {
-    context.put(model);
-    final List<View.Event> events = new LinkedList<>();
-    if (discriminatorEventService.isDiscriminatorNeeded(this)) {
-      events.add(discriminatorEventService.newDiscriminatorEvent(this,
-          model.getClass(), context));
-    }
-    for (ViewNode child : children) {
-      events.addAll(((AbstractViewNode) child).evaluate(model, context));
-    }
-    context.remove(model);
-    return events;
   }
 
 }

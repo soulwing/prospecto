@@ -54,11 +54,11 @@ import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
-import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 
 /**
@@ -1013,7 +1013,7 @@ public class ViewTemplateBuilderTest {
                         onModelType(MockModel.class)
                     )
                 ),
-                nodeOfType(SubtypeNode.class,
+                nodeOfType(ConcreteSubtypeNode.class,
                     forModelType(MockSubModel.class),
                     containing(
                         nodeOfType(ConcreteValueNode.class,
@@ -1024,7 +1024,7 @@ public class ViewTemplateBuilderTest {
                             )
                         ))
                 ),
-                nodeOfType(SubtypeNode.class,
+                nodeOfType(ConcreteSubtypeNode.class,
                     forModelType(MockOtherSubModel.class),
                     containing(
                         nodeOfType(ConcreteValueNode.class,
@@ -1067,7 +1067,7 @@ public class ViewTemplateBuilderTest {
             havingAttribute(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY,
                 Boolean.class, equalTo(true)),
             containing(
-                nodeOfType(SubtypeNode.class,
+                nodeOfType(ConcreteSubtypeNode.class,
                     forModelType(MockSubModel.class),
                     containing(
                         nodeOfType(ConcreteValueNode.class,
@@ -1077,7 +1077,7 @@ public class ViewTemplateBuilderTest {
                                 onModelType(MockSubModel.class)
                             )
                         ),
-                        nodeOfType(SubtypeNode.class,
+                        nodeOfType(ConcreteSubtypeNode.class,
                             forModelType(MockSubSubModel.class),
                             containing(
                               nodeOfType(ConcreteValueNode.class,
@@ -1133,7 +1133,7 @@ public class ViewTemplateBuilderTest {
                                 onModelType(MockChildModel.class)
                             )
                         ),
-                        nodeOfType(SubtypeNode.class,
+                        nodeOfType(ConcreteSubtypeNode.class,
                             forModelType(MockChildSubModel.class),
                             containing(
                                 nodeOfType(ConcreteValueNode.class,

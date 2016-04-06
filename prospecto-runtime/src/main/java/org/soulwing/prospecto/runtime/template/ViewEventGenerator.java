@@ -1,5 +1,5 @@
 /*
- * File created on Mar 31, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,26 +16,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.discriminator;
+package org.soulwing.prospecto.runtime.template;
 
-import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.api.node.ContainerNode;
+import java.util.List;
+
+import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * A service the locates a discriminator strategy.
+ * An object that generates events for a view.
  *
  * @author Carl Harris
  */
-interface DiscriminatorStrategyLocator {
+interface ViewEventGenerator {
 
   /**
-   * Finds the appropriate discriminator strategy for the subject container node.
-   * @param node subject node
+   * Generate events.
+   * @param model the associated model
    * @param context view context
-   * @return discriminator strategy (never {@code null})
+   * @return list of events
+   * @throws Exception
    */
-  DiscriminatorStrategy findStrategy(ContainerNode node,
-      ScopedViewContext context);
+  List<View.Event> generate(Object model, ScopedViewContext context)
+      throws Exception;
 
 }

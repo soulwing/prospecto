@@ -22,8 +22,8 @@ import java.util.Iterator;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * A service that supports creating and finding discriminator events.
@@ -39,7 +39,7 @@ public interface DiscriminatorEventService {
    * @param node the subject node
    * @return {@code true} if {@code node} requires a discriminator
    */
-  boolean isDiscriminatorNeeded(ConcreteContainerNode node);
+  boolean isDiscriminatorNeeded(ContainerNode node);
 
   /**
    * Creates a new discriminator event for the given node and subtype.
@@ -48,7 +48,7 @@ public interface DiscriminatorEventService {
    * @param context view context
    * @return discriminator event
    */
-  View.Event newDiscriminatorEvent(ConcreteContainerNode node, Class<?> subtype,
+  View.Event newDiscriminatorEvent(ContainerNode node, Class<?> subtype,
       ScopedViewContext context);
 
   /**
@@ -65,7 +65,7 @@ public interface DiscriminatorEventService {
    * @param context view context
    * @return discriminator strategy (never {@code null})
    */
-  DiscriminatorStrategy findStrategy(ConcreteContainerNode node,
+  DiscriminatorStrategy findStrategy(ContainerNode node,
       ScopedViewContext context);
 
 }

@@ -19,14 +19,8 @@
 package org.soulwing.prospecto.runtime.node;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.eventOfType;
-import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.inNamespace;
-import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.whereValue;
-import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
 import java.util.Deque;
 
@@ -36,12 +30,11 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
@@ -55,7 +48,6 @@ public class ConcreteValueNodeTest {
   private static final String NAMESPACE = "namespace";
   private static final Object MODEL = new Object();
   private static final Object MODEL_VALUE = new Object();
-  private static final Object TRANSFORMED_VALUE = new Object();
   private static final Object VIEW_VALUE = new Object();
 
   @Rule
@@ -73,9 +65,6 @@ public class ConcreteValueNodeTest {
 
   @Mock
   Accessor accessor;
-
-  @Mock
-  ValueTypeConverterService converters;
 
   @Mock
   ScopedViewContext viewContext;
@@ -96,41 +85,6 @@ public class ConcreteValueNodeTest {
     node = new ConcreteValueNode(NAME, NAMESPACE, transformationService, template);
     node.setAccessor(accessor);
     node.setParent(parent);
-  }
-
-  @Test
-  public void testOnEvaluate() throws Exception {
-    context.checking(new Expectations() {
-      {
-        oneOf(accessor).get(MODEL);
-        will(returnValue(MODEL_VALUE));
-        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
-            node, viewContext);
-        will(returnValue(TRANSFORMED_VALUE));
-      }
-    });
-
-    assertThat(node.onEvaluate(MODEL, viewContext),
-        contains(
-            eventOfType(View.Event.Type.VALUE,
-                withName(NAME),
-                inNamespace(NAMESPACE),
-                whereValue(is(sameInstance(TRANSFORMED_VALUE))))));
-  }
-
-  @Test
-  public void testOnEvaluateWhenUndefinedValue() throws Exception {
-    context.checking(new Expectations() {
-      {
-        oneOf(accessor).get(MODEL);
-        will(returnValue(MODEL_VALUE));
-        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
-            node, viewContext);
-        will(returnValue(UndefinedValue.INSTANCE));
-      }
-    });
-
-    assertThat(node.onEvaluate(MODEL, viewContext), is(empty()));
   }
 
   @Test

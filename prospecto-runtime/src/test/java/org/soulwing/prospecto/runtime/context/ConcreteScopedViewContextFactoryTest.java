@@ -37,12 +37,10 @@ public class ConcreteScopedViewContextFactoryTest {
 
   private ViewContext source = new ConcreteViewContext();
 
-  private ConcreteScopedViewContextFactory factory =
-      new ConcreteScopedViewContextFactory();
-
   @Test
   public void testDefaultDiscriminatorStrategy() throws Exception {
-    final ScopedViewContext viewContext = factory.newContext(source);
+    final ScopedViewContext viewContext =
+        ConcreteScopedViewContextFactory.INSTANCE.newContext(source);
     viewContext.get(DiscriminatorStrategy.class);
   }
 
@@ -51,7 +49,8 @@ public class ConcreteScopedViewContextFactoryTest {
     DiscriminatorStrategy strategy = new SimpleClassNameDiscriminatorStrategy();
     MutableScope scope = source.appendScope();
     scope.put(strategy);
-    final ScopedViewContext viewContext = factory.newContext(source);
+    final ScopedViewContext viewContext =
+        ConcreteScopedViewContextFactory.INSTANCE.newContext(source);
     assertThat(viewContext.get(DiscriminatorStrategy.class),
         is(sameInstance(strategy)));
   }

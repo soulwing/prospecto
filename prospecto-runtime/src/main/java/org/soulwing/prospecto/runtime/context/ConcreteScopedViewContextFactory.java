@@ -31,6 +31,11 @@ import org.soulwing.prospecto.api.scope.MutableScope;
 public class ConcreteScopedViewContextFactory
     implements ScopedViewContextFactory {
 
+  public static final ConcreteScopedViewContextFactory INSTANCE =
+      new ConcreteScopedViewContextFactory();
+
+  private ConcreteScopedViewContextFactory() {}
+
   @Override
   public ScopedViewContext newContext(ViewContext source) {
     final ConcreteViewContext viewContext = new ConcreteViewContext(source);

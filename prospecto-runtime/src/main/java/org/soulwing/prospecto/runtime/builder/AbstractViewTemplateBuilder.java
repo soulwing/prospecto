@@ -45,10 +45,10 @@ import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
+import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.ModelAccessingNode;
-import org.soulwing.prospecto.runtime.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 
 /**
@@ -329,13 +329,13 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder subtype(Class<?> subtype) {
     assertIsSubTypeOfModelType(subtype);
     assertTargetHasDiscriminator();
-    final SubtypeNode node = new SubtypeNode(subtype);
+    final ConcreteSubtypeNode node = new ConcreteSubtypeNode(subtype);
     node.put(DiscriminatorEventService.DISCRIMINATOR_FLAG_KEY, true);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(SubtypeNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteSubtypeNode node);
 
   private void assertIsSubTypeOfModelType(Class<?> subtype) {
     final Class<?> base = target.getModelType();

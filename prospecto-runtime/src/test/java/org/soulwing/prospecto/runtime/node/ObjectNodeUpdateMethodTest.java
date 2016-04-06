@@ -24,7 +24,6 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -244,12 +243,6 @@ public class ObjectNodeUpdateMethodTest {
     }
 
     @Override
-    protected List<View.Event> onEvaluate(Object source,
-        ScopedViewContext context) throws Exception {
-      return null;
-    }
-
-    @Override
     public Object toModelValue(ViewEntity parentEntity,
         View.Event triggerEvent, Deque<View.Event> events,
         ScopedViewContext context) throws Exception {
@@ -287,12 +280,6 @@ public class ObjectNodeUpdateMethodTest {
 
     @Override
     public void setAccessor(Accessor accessor) {
-    }
-
-    @Override
-    protected List<View.Event> onEvaluate(Object source,
-        ScopedViewContext context) throws Exception {
-      return null;
     }
 
     @Override

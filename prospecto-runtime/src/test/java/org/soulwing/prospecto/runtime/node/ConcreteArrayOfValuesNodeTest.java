@@ -21,18 +21,14 @@ package org.soulwing.prospecto.runtime.node;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -50,7 +46,7 @@ import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
  * Unit tests for {@link ConcreteArrayOfValuesNode}.
@@ -91,9 +87,6 @@ public class ConcreteArrayOfValuesNodeTest {
   ScopedViewContext viewContext;
 
   @Mock
-  NotifiableViewListeners listeners;
-
-  @Mock
   TransformationService transformationService;
 
   @Mock
@@ -107,9 +100,6 @@ public class ConcreteArrayOfValuesNodeTest {
 
   @Mock
   ToManyAssociationUpdater associationUpdater;
-
-  @Mock
-  Iterator<?> iterator;
 
   @Mock
   ViewEntity parentEntity;
@@ -134,77 +124,6 @@ public class ConcreteArrayOfValuesNodeTest {
     });
 
     node.setAccessor(accessor);
-  }
-
-  @Test
-  public void testOnEvaluate() throws Exception {
-    context.checking(iteratorExpectations());
-    context.checking(new Expectations() {
-      {
-        allowing(viewContext).getListeners();
-        will(returnValue(listeners));
-        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
-            viewContext);
-        will(returnValue(MODEL_VALUE));
-      }
-    });
-
-    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
-    assertThat(events.size(), is(equalTo(3)));
-    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.BEGIN_ARRAY)));
-    assertThat(events.get(0).getName(), is(equalTo(NAME)));
-    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(0).getValue(), is(nullValue()));
-    assertThat(events.get(1).getType(), is(equalTo(View.Event.Type.VALUE)));
-    assertThat(events.get(1).getName(), is(equalTo(ELEMENT_NAME)));
-    assertThat(events.get(1).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(1).getValue(), is(MODEL_VALUE));
-    assertThat(events.get(2).getType(), is(equalTo(View.Event.Type.END_ARRAY)));
-    assertThat(events.get(2).getName(), is(equalTo(NAME)));
-    assertThat(events.get(2).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(2).getValue(), is(nullValue()));
-  }
-
-  @Test
-  public void testOnEvaluateWhenUndefinedValue() throws Exception {
-    context.checking(iteratorExpectations());
-    context.checking(new Expectations() {
-      {
-        allowing(viewContext).getListeners();
-        will(returnValue(listeners));
-        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
-            node, viewContext);
-        will(returnValue(UndefinedValue.INSTANCE));
-      }
-    });
-
-    final List<View.Event> events = node.onEvaluate(MODEL, viewContext);
-    validateEmptyArray(events);
-  }
-
-  private Expectations iteratorExpectations() throws Exception {
-    return new Expectations() {
-      {
-        oneOf(multiValuedAccessor).iterator(MODEL);
-        will(returnValue(iterator));
-        exactly(2).of(iterator).hasNext();
-        will(onConsecutiveCalls(returnValue(true), returnValue(false)));
-        oneOf(iterator).next();
-        will(returnValue(MODEL_VALUE));
-      }
-    };
-  }
-
-  private void validateEmptyArray(List<View.Event> events) {
-    assertThat(events.size(), is(equalTo(2)));
-    assertThat(events.get(0).getType(), is(equalTo(View.Event.Type.BEGIN_ARRAY)));
-    assertThat(events.get(0).getName(), is(equalTo(NAME)));
-    assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(0).getValue(), is(nullValue()));
-    assertThat(events.get(1).getType(), is(equalTo(View.Event.Type.END_ARRAY)));
-    assertThat(events.get(1).getName(), is(equalTo(NAME)));
-    assertThat(events.get(1).getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(events.get(1).getValue(), is(nullValue()));
   }
 
   @Test

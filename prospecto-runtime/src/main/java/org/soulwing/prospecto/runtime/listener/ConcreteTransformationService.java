@@ -1,5 +1,5 @@
 /*
- * File created on Apr 1, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.listener;
 
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
@@ -29,7 +29,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-class ConcreteTransformationService implements TransformationService {
+public class ConcreteTransformationService implements TransformationService {
 
   public static final ConcreteTransformationService INSTANCE =
       new ConcreteTransformationService();

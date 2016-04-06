@@ -18,12 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.node.SubtypeNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A node that acts as a container for properties of a subtype of its parent
@@ -36,29 +32,20 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public class SubtypeNode extends ConcreteContainerNode {
+public class ConcreteSubtypeNode extends ConcreteContainerNode
+    implements SubtypeNode {
 
   /**
    * Constructs a new instance
    * @param subtype type which must be a subtype of the parent node's type
    */
-  public SubtypeNode(Class<?> subtype) {
+  public ConcreteSubtypeNode(Class<?> subtype) {
     super(null, null, subtype);
   }
 
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
-    return state;
-  }
-
-  @Override
-  protected List<View.Event> onEvaluate(Object source,
-      ScopedViewContext context) throws Exception {
-    final List<View.Event> viewEvents = new LinkedList<>();
-    if (getModelType().isInstance(source)) {
-      viewEvents.addAll(evaluateChildren(source, context));
-    }
-    return viewEvents;
+    return visitor.visitSubtype(this, state);
   }
 
 }

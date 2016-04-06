@@ -18,10 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.node.EnvelopeNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -51,16 +47,6 @@ public class ConcreteEnvelopeNode extends ConcreteObjectNode
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitEnvelope(this, state);
-  }
-
-  @Override
-  protected List<View.Event> onEvaluate(Object model, ScopedViewContext context)
-      throws Exception {
-    final List<View.Event> events = new LinkedList<>();
-    events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
-    events.addAll(evaluateChildren(model, context));
-    events.add(newEvent(View.Event.Type.END_OBJECT));
-    return events;
   }
 
   @Override

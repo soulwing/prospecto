@@ -1,5 +1,5 @@
 /*
- * File created on Mar 31, 2016
+ * File created on Apr 5, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,26 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.discriminator;
+package org.soulwing.prospecto.runtime.template;
 
-import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.Traversal;
 import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
+import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
- * A service the locates a discriminator strategy.
+ * A {@link Traversal} using depth-first order.
  *
  * @author Carl Harris
  */
-interface DiscriminatorStrategyLocator {
+class DepthFirstTraversal extends AbstractTraversal {
 
-  /**
-   * Finds the appropriate discriminator strategy for the subject container node.
-   * @param node subject node
-   * @param context view context
-   * @return discriminator strategy (never {@code null})
-   */
-  DiscriminatorStrategy findStrategy(ContainerNode node,
-      ScopedViewContext context);
+  DepthFirstTraversal(AbstractViewNode root) {
+    super(root);
+  }
+
+  @Override
+  Object traverse(AbstractViewNode node, ViewNodeVisitor visitor,
+      Object state) {
+    if (node instanceof ContainerNode) {
+      return node.accept(visitor, traverseChildren((ContainerNode) node,
+          visitor, state));
+    }
+
+    return node.accept(visitor, state);
+  }
 
 }

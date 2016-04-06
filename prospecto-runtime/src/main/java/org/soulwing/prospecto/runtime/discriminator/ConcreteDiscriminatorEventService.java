@@ -23,10 +23,10 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
-import org.soulwing.prospecto.runtime.node.SubtypeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
 
 /**
  * A {@link DiscriminatorEventService} implementation.
@@ -51,13 +51,13 @@ public class ConcreteDiscriminatorEventService
   }
 
   @Override
-  public boolean isDiscriminatorNeeded(ConcreteContainerNode node) {
+  public boolean isDiscriminatorNeeded(ContainerNode node) {
     final Boolean flag = node.get(DISCRIMINATOR_FLAG_KEY, Boolean.class);
-    return flag != null && flag && !(node instanceof SubtypeNode);
+    return flag != null && flag && !(node instanceof ConcreteSubtypeNode);
   }
 
   @Override
-  public View.Event newDiscriminatorEvent(ConcreteContainerNode node,
+  public View.Event newDiscriminatorEvent(ContainerNode node,
       Class<?> subtype, ScopedViewContext context) {
 
     final DiscriminatorStrategy strategy =
@@ -92,7 +92,7 @@ public class ConcreteDiscriminatorEventService
   }
 
   @Override
-  public DiscriminatorStrategy findStrategy(ConcreteContainerNode node,
+  public DiscriminatorStrategy findStrategy(ContainerNode node,
       ScopedViewContext context) {
     return strategyLocator.findStrategy(node, context);
   }

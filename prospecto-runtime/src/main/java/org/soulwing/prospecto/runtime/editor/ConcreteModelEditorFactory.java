@@ -37,7 +37,7 @@ public class ConcreteModelEditorFactory implements ModelEditorFactory {
   private final ScopedViewContextFactory viewContextFactory;
 
   public ConcreteModelEditorFactory() {
-    this(new ConcreteScopedViewContextFactory());
+    this(ConcreteScopedViewContextFactory.INSTANCE);
   }
 
   ConcreteModelEditorFactory(ScopedViewContextFactory viewContextFactory) {

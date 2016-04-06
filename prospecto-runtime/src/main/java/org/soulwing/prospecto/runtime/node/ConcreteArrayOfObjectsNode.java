@@ -19,16 +19,12 @@
 package org.soulwing.prospecto.runtime.node;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
 import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
@@ -89,12 +85,14 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
     return visitor.visitArrayOfObjects(this, state);
   }
 
-  /**
-   * Gets the {@code elementName} property.
-   * @return property value
-   */
+  @Override
   public String getElementName() {
     return elementName;
+  }
+
+  @Override
+  public Iterator<?> iterator(Object model) throws Exception {
+    return getModelIterator(model);
   }
 
   @Override
@@ -103,35 +101,8 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
     this.multiValuedAccessor = accessorFactory.newAccessor(accessor, getModelType());
   }
 
-  protected MultiValuedAccessor getMultiValuedAccessor() {
+  public MultiValuedAccessor getMultiValuedAccessor() {
     return multiValuedAccessor;
-  }
-
-  @Override
-  protected List<View.Event> onEvaluate(Object model,
-       ScopedViewContext context)
-      throws Exception {
-    final Iterator<Object> i = getModelIterator(model);
-    if (i == null) {
-      return Collections.singletonList(newEvent(View.Event.Type.VALUE));
-    }
-
-    final List<View.Event> viewEvents = new LinkedList<>();
-    viewEvents.add(newEvent(View.Event.Type.BEGIN_ARRAY));
-
-    while (i.hasNext()) {
-      Object elementModel = i.next();
-      final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
-          ViewNodeEvent.Mode.VIEW_GENERATION, this, model, elementModel, context);
-      viewEvents.add(newEvent(View.Event.Type.BEGIN_OBJECT, elementName));
-      viewEvents.addAll(evaluateChildren(
-          context.getListeners().didExtractValue(elementEvent),
-          context));
-      viewEvents.add(newEvent(View.Event.Type.END_OBJECT, elementName));
-    }
-
-    viewEvents.add(newEvent(View.Event.Type.END_ARRAY));
-    return viewEvents;
   }
 
   @Override

@@ -28,9 +28,9 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
-import org.soulwing.prospecto.runtime.node.SubtypeNode;
 
 /**
  * A template builder for a value node.
@@ -79,7 +79,7 @@ class ValueNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(SubtypeNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(ConcreteSubtypeNode node) {
     return new SubtypeNodeViewTemplateBuilder(getParent(), node, node);
   }
 

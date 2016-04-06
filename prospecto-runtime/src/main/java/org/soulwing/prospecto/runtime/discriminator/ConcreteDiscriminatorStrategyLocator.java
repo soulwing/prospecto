@@ -19,8 +19,8 @@
 package org.soulwing.prospecto.runtime.discriminator;
 
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * A {@link DiscriminatorStrategyLocator} implementation.
@@ -36,7 +36,7 @@ class ConcreteDiscriminatorStrategyLocator
   private ConcreteDiscriminatorStrategyLocator() {}
 
   @Override
-  public DiscriminatorStrategy findStrategy(ConcreteContainerNode node,
+  public DiscriminatorStrategy findStrategy(ContainerNode node,
       ScopedViewContext context) {
 
     DiscriminatorStrategy strategy = node.get(DiscriminatorStrategy.class);

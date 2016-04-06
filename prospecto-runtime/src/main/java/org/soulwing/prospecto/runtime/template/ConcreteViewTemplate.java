@@ -19,13 +19,13 @@
 package org.soulwing.prospecto.runtime.template;
 
 import org.soulwing.prospecto.api.ModelEditor;
+import org.soulwing.prospecto.api.Traversal;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
@@ -52,7 +52,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   private final ModelEditorFactory modelEditorFactory;
 
   public ConcreteViewTemplate(AbstractViewNode root) {
-    this(root, new ConcreteScopedViewContextFactory());
+    this(root, ConcreteScopedViewContextFactory.INSTANCE);
   }
 
   ConcreteViewTemplate(AbstractViewNode root,
@@ -74,10 +74,22 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
+  public Traversal breadthFirst() {
+    return new BreadthFirstTraversal(root);
+  }
+
+  @Override
+  public Traversal depthFirst() {
+    return new DepthFirstTraversal(root);
+  }
+
+  @Override
   public View generateView(Object source, ViewContext context)
       throws ViewException {
     try {
-      return new ConcreteView(root.evaluate(source,
+      final ViewEventGenerator generator = (ViewEventGenerator)
+          depthFirst().traverse(new ViewGeneratingVisitor(), null);
+      return new ConcreteView(generator.generate(source,
           viewContextFactory.newContext(context)));
     }
     catch (Exception ex) {
@@ -165,18 +177,6 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
       throw new ViewTemplateException("referenced view template for node '"
           + name + "' must have a root node of object or array-of-object type");
     }
-  }
-
-  @Override
-  public Object traverseBreadthFirst(ViewNodeVisitor visitor, Object state) {
-    // TODO
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Object traverseDepthFirst(ViewNodeVisitor visitor, Object state) {
-    // TODO
-    throw new UnsupportedOperationException();
   }
 
 }

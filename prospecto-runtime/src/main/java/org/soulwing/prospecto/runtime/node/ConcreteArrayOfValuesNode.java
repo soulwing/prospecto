@@ -21,7 +21,6 @@ package org.soulwing.prospecto.runtime.node;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.ModelEditorException;
@@ -38,6 +37,8 @@ import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ValueCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
+import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
  * A view node that represents an array of values.
@@ -92,12 +93,14 @@ public class ConcreteArrayOfValuesNode extends AbstractViewNode
     return visitor.visitArrayOfValues(this, state);
   }
 
-  /**
-   * Gets the {@code elementName} property.
-   * @return property value
-   */
+  @Override
   public String getElementName() {
     return elementName;
+  }
+
+  @Override
+  public Iterator<?> iterator(Object model) throws Exception {
+    return getModelIterator(model);
   }
 
   @Override
@@ -105,28 +108,6 @@ public class ConcreteArrayOfValuesNode extends AbstractViewNode
     super.setAccessor(accessor);
     this.multiValuedAccessor = accessor != null ?
         accessorFactory.newAccessor(accessor, componentType) : null;
-  }
-
-  @Override
-  public List<View.Event> onEvaluate(Object model, ScopedViewContext context)
-      throws Exception {
-
-    final Iterator<Object> i = getModelIterator(model);
-    final List<View.Event> events = new LinkedList<>();
-    events.add(newEvent(View.Event.Type.BEGIN_ARRAY));
-
-    while (i.hasNext()) {
-      final Object value = i.next();
-      final Object transformedValue = transformationService.valueToExtract(
-          model, value, this, context);
-      if (transformedValue != UndefinedValue.INSTANCE) {
-        events.add(newEvent(View.Event.Type.VALUE, elementName,
-            transformedValue));
-      }
-    }
-
-    events.add(newEvent(View.Event.Type.END_ARRAY));
-    return events;
   }
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {

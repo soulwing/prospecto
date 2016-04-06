@@ -18,17 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 
 /**
@@ -60,6 +55,8 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     this.modelType = modelType;
   }
 
+  public abstract Object accept(ViewNodeVisitor visitor, Object state);
+
   public AbstractViewNode getParent() {
     return parent;
   }
@@ -89,39 +86,6 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   public void setAccessor(Accessor accessor) {
     this.accessor = accessor;
-  }
-
-  public final List<View.Event> evaluate(Object model,
-      ScopedViewContext context) throws Exception {
-
-    final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-        ViewNodeEvent.Mode.VIEW_GENERATION, this, model, context);
-    final List<View.Event> viewEvents = new LinkedList<>();
-
-    context.push(name, modelType);
-    if (context.getListeners().shouldVisitNode(nodeEvent)) {
-      viewEvents.addAll(onEvaluate(model, context));
-      context.getListeners().nodeVisited(nodeEvent);
-    }
-    context.pop();
-
-    return viewEvents;
-  }
-
-  protected abstract List<View.Event> onEvaluate(Object source,
-      ScopedViewContext context) throws Exception;
-
-  protected View.Event newEvent(View.Event.Type type) {
-    return newEvent(type, name, null);
-  }
-
-  protected View.Event newEvent(View.Event.Type type, String name) {
-    return newEvent(type, name, null);
-  }
-
-  protected View.Event newEvent(View.Event.Type type, String name,
-      Object value) {
-    return new ConcreteViewEvent(type, name, namespace, value);
   }
 
   @Override
@@ -161,6 +125,11 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   public void putAll(AbstractViewNode node) {
     scope.putAll(node.scope);
+  }
+
+  @Override
+  public String toString() {
+    return getName();
   }
 
 }
