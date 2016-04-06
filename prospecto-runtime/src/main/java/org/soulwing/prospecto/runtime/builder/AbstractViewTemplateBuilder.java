@@ -60,10 +60,6 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   private final BeanFactory beanFactory = new JdkBeanFactory();
 
-  private final AccessorBuilderFactory accessorBuilderFactory =
-      new ReflectionAccessorBuilderFactory();
-
-
   private final AbstractViewTemplateBuilder parent;
   private final ConcreteContainerNode target;
   private final AbstractViewNode node;
@@ -78,7 +74,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     this.node = node;
     this.accessType = parent == null ? AccessType.PROPERTY : parent.accessType;
     this.accessorBuilder = newAccessorBuilder(parent, node, accessType,
-        accessorBuilderFactory);
+        ReflectionAccessorBuilderFactory.INSTANCE);
   }
 
   private static AccessorBuilder newAccessorBuilder(

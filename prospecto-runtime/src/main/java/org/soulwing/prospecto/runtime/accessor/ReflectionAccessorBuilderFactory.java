@@ -27,6 +27,11 @@ package org.soulwing.prospecto.runtime.accessor;
 public class ReflectionAccessorBuilderFactory
     implements AccessorBuilderFactory {
 
+  public static final ReflectionAccessorBuilderFactory INSTANCE =
+      new ReflectionAccessorBuilderFactory();
+
+  private ReflectionAccessorBuilderFactory() {}
+
   @Override
   public AccessorBuilder newBuilder(Class<?> modelType) {
     return new ReflectionAccessorBuilder(modelType);
