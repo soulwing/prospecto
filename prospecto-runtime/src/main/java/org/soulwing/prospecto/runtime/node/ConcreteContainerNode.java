@@ -18,14 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.api.node.ViewNode;
-import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
-import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 
 /**
  * A view node that contains other view nodes.
@@ -35,8 +33,7 @@ import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 public abstract class ConcreteContainerNode extends AbstractViewNode
     implements ContainerNode {
 
-  private final List<ViewNode> children;
-  private final DiscriminatorEventService discriminatorEventService;
+  private final List<ViewNode> children = new LinkedList<>();
 
   /**
    * Constructs a new instance.
@@ -46,28 +43,7 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
    */
   protected ConcreteContainerNode(String name, String namespace,
       Class<?> modelType) {
-    this(name, namespace, modelType, new ArrayList<ViewNode>());
-  }
-
-  /**
-   * Constructs a new instance.
-   * @param name node name
-   * @param namespace namespace for {@code name}
-   * @param modelType element model type
-   * @param children node children
-   */
-  protected ConcreteContainerNode(String name, String namespace, Class<?> modelType,
-      List<ViewNode> children) {
-    this(name, namespace, modelType, children,
-        ConcreteDiscriminatorEventService.INSTANCE);
-  }
-
-  ConcreteContainerNode(String name, String namespace, Class<?> modelType,
-      List<ViewNode> children,
-      DiscriminatorEventService discriminatorEventService) {
     super(name, namespace, modelType);
-    this.children = children;
-    this.discriminatorEventService = discriminatorEventService;
   }
 
   @Override
@@ -102,14 +78,14 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
     return null;
   }
 
-  public void addChild(AbstractViewNode child) {
+  public void addChild(ViewNode child) {
     children.add(child);
-    child.setParent(this);
+    ((AbstractViewNode) child).setParent(this);
   }
 
-  public void addChildren(Iterable<ViewNode> nodes) {
-    for (ViewNode node : nodes) {
-      addChild((AbstractViewNode) node);
+  public void addChildren(ConcreteContainerNode source) {
+    for (ViewNode child : source.children) {
+      addChild(child);
     }
   }
 

@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.List;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
-import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.ConcreteMultiValuedAccessorFactory;
@@ -73,7 +71,7 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
       ToManyAssociationUpdater associationUpdater,
       MultiValuedAccessorFactory accessorFactory,
       UpdatableViewNodeTemplate template) {
-    super(name, namespace, modelType, new ArrayList<ViewNode>());
+    super(name, namespace, modelType);
     this.elementName = elementName;
     this.associationUpdater = associationUpdater;
     this.accessorFactory = accessorFactory;
