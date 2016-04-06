@@ -34,6 +34,7 @@ public interface MutableViewEntity extends ViewEntity {
 
     void inject(Object target, Object value, ScopedViewContext context)
         throws Exception;
+
   }
 
   /**
