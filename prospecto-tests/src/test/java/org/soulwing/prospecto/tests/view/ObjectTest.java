@@ -135,6 +135,27 @@ public class ObjectTest {
   }
 
   @Test
+  public void testObjectNull() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(NAME, NAMESPACE, MockType1.class)
+            .accessType(AccessType.FIELD)
+            .object(CHILD, MockType2.class)
+                .end()
+            .end()
+        .build();
+
+    model.child = null;
+    assertThat(template.generateView(model, context),
+        hasEventSequence(
+            eventOfType(BEGIN_OBJECT),
+            eventOfType(VALUE, withName(CHILD), inDefaultNamespace(),
+                whereValue(is(nullValue()))),
+            eventOfType(END_OBJECT)
+        )
+    );
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void testObjectObject() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
