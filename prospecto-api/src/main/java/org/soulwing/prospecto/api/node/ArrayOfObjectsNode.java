@@ -23,5 +23,6 @@ package org.soulwing.prospecto.api.node;
  *
  * @author Carl Harris
  */
-public interface ArrayOfObjectsNode extends ContainerNode {
+public interface ArrayOfObjectsNode extends ArrayNode, ContainerNode {
+
 }

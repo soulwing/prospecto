@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,19 +18,29 @@
  */
 package org.soulwing.prospecto.api.node;
 
+import java.util.Iterator;
+
 /**
- * A {@link ViewNode} representing an object structure.
+ * A node that represents an array structure.
  *
  * @author Carl Harris
  */
-public interface ObjectNode extends ContainerNode {
+public interface ArrayNode extends ViewNode {
 
   /**
-   * Gets the value associated with this node from the given model.
-   * @param model model which contains the associated object
-   * @return object
+   * Gets the name to use for elements of the array.
+   * @return element name or {@code null} if none was specified in the source
+   *    template
+   */
+  String getElementName();
+
+  /**
+   * Gets an iterator for the values associated with this node in the from
+   * the given model.
+   * @param model model containing the collection/array of values to iterate
+   * @return iterator for the subject values
    * @throws Exception
    */
-  Object getObject(Object model) throws Exception;
+  Iterator<?> iterator(Object model) throws Exception;
 
 }

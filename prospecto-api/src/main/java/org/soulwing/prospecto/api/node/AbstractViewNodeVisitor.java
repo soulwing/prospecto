@@ -29,9 +29,13 @@ package org.soulwing.prospecto.api.node;
  */
 public abstract class AbstractViewNodeVisitor implements ViewNodeVisitor {
 
-
   @Override
   public Object visitValue(ValueNode node, Object state) {
+    return state;
+  }
+
+  @Override
+  public Object visitUrl(UrlNode node, Object state) {
     return state;
   }
 
@@ -46,7 +50,7 @@ public abstract class AbstractViewNodeVisitor implements ViewNodeVisitor {
   }
 
   @Override
-  public Object visitUrl(UrlNode node, Object state) {
+  public Object visitEnvelope(EnvelopeNode node, Object state) {
     return state;
   }
 

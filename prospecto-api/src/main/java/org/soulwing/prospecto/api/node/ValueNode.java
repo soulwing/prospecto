@@ -24,4 +24,13 @@ package org.soulwing.prospecto.api.node;
  * @author Carl Harris
  */
 public interface ValueNode extends ViewNode {
+
+  /**
+   * Gets the value associated with this node from the given model.
+   * @param model model which contains the subject value
+   * @return value
+   * @throws Exception
+   */
+  Object getValue(Object model) throws Exception;
+
 }

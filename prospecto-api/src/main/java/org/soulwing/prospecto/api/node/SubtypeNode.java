@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,18 +19,9 @@
 package org.soulwing.prospecto.api.node;
 
 /**
- * A {@link ViewNode} representing an object structure.
+ * A {@link ViewNode} that represents a subtype.
  *
  * @author Carl Harris
  */
-public interface ObjectNode extends ContainerNode {
-
-  /**
-   * Gets the value associated with this node from the given model.
-   * @param model model which contains the associated object
-   * @return object
-   * @throws Exception
-   */
-  Object getObject(Object model) throws Exception;
-
+public interface SubtypeNode extends ViewNode {
 }

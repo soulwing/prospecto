@@ -23,5 +23,6 @@ package org.soulwing.prospecto.api.node;
  *
  * @author Carl Harris
  */
-public interface ArrayOfValuesNode extends ViewNode {
+public interface ArrayOfValuesNode extends ArrayNode {
+
 }

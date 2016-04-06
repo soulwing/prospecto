@@ -34,6 +34,14 @@ public interface ViewNodeVisitor {
   Object visitValue(ValueNode node, Object state);
 
   /**
+   * Visits a URL node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitUrl(UrlNode node, Object state);
+
+  /**
    * Visits an object node.
    * @param node the subject node
    * @param state visitor state
@@ -57,13 +65,7 @@ public interface ViewNodeVisitor {
    */
   Object visitEnvelope(EnvelopeNode node, Object state);
 
-  /**
-   * Visits a URL node.
-   * @param node the subject node
-   * @param state visitor state
-   * @return visit result
-   */
-  Object visitUrl(UrlNode node, Object state);
+  Object visitSubtype(SubtypeNode node, Object state);
 
   /**
    * Visits an array-of-values node.
