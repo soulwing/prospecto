@@ -170,7 +170,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private void copyInto(ConcreteContainerNode node) {
     assert root instanceof ContainerNode;
-    node.addChildren((ContainerNode) root);
+    node.addChildren((ConcreteContainerNode) root);
     node.putAll(root);
   }
 
