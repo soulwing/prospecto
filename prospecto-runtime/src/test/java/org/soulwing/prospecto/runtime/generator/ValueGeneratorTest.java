@@ -16,10 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.template;
+package org.soulwing.prospecto.runtime.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.eventOfType;
@@ -30,34 +31,32 @@ import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.UrlNode;
-import org.soulwing.prospecto.api.url.UrlResolver;
+import org.soulwing.prospecto.api.node.ValueNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * Unit tests for {@link UrlGenerator}.
+ * Unit tests for {@link ValueGenerator}.
  *
  * @author Carl Harris
  */
-public class UrlGeneratorTest extends AbstractViewEventGeneratorTest<UrlNode> {
+public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode> {
 
-  private static final Object URL = "url";
+  private static final Object MODEL_VALUE = new Object();
+  private static final Object TRANSFORMED_VALUE = new Object();
 
   @Mock
   private TransformationService transformationService;
 
-  @Mock
-  private UrlResolver urlResolver;
-
   @Override
-  UrlNode newNode() {
-    return context.mock(UrlNode.class);
+  ValueNode newNode() {
+    return context.mock(ValueNode.class);
   }
 
   @Override
-  AbstractViewEventGenerator<UrlNode> newGenerator(UrlNode node) {
-    return new UrlGenerator(node, transformationService);
+  AbstractViewEventGenerator<ValueNode> newGenerator(ValueNode node) {
+    return new ValueGenerator(node, transformationService);
   }
 
   @Test
@@ -65,21 +64,36 @@ public class UrlGeneratorTest extends AbstractViewEventGeneratorTest<UrlNode> {
     context.checking(baseExpectations());
     context.checking(new Expectations() {
       {
-        oneOf(viewContext).get(UrlResolver.class);
-        will(returnValue(urlResolver));
-        oneOf(urlResolver).resolve(node, viewContext);
-        will(returnValue(URL));
-        oneOf(transformationService).valueToExtract(MODEL, URL, node,
+        oneOf(node).getValue(MODEL);
+        will(returnValue(MODEL_VALUE));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
             viewContext);
-        will(returnValue(URL));
+        will(returnValue(TRANSFORMED_VALUE));
       }
     });
 
     assertThat(generator.generate(MODEL, viewContext),
         contains(
-            eventOfType(View.Event.Type.URL,
-                withName(NAME), inNamespace(NAMESPACE),
-                whereValue(is(sameInstance(URL))))));
+            eventOfType(View.Event.Type.VALUE,
+                withName(NAME),
+                inNamespace(NAMESPACE),
+                whereValue(is(sameInstance(TRANSFORMED_VALUE))))));
+  }
+
+  @Test
+  public void testGenerateWhenUndefinedValue() throws Exception {
+    context.checking(baseExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getValue(MODEL);
+        will(returnValue(MODEL_VALUE));
+        oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
+             node, viewContext);
+        will(returnValue(UndefinedValue.INSTANCE));
+      }
+    });
+
+    assertThat(generator.generate(MODEL, viewContext), is(empty()));
   }
 
 }

@@ -30,6 +30,8 @@ import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
 import org.soulwing.prospecto.runtime.editor.ModelEditorFactory;
+import org.soulwing.prospecto.runtime.generator.ViewEventGenerator;
+import org.soulwing.prospecto.runtime.generator.ViewGeneratingVisitor;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;

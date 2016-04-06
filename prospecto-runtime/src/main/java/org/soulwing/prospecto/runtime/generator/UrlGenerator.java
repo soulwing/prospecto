@@ -16,52 +16,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.template;
+package org.soulwing.prospecto.runtime.generator;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ValueNode;
+import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * A generator for the event associated with a value node.
+ * A generator for the event associated with a URL node.
  *
  * @author Carl Harris
  */
-class ValueGenerator extends AbstractViewEventGenerator<ValueNode> {
+class UrlGenerator extends AbstractViewEventGenerator<UrlNode> {
 
   private final TransformationService transformationService;
 
-  ValueGenerator(ValueNode node) {
+  UrlGenerator(UrlNode node) {
     this(node, ConcreteTransformationService.INSTANCE);
   }
 
-  ValueGenerator(ValueNode node, TransformationService transformationService) {
+  UrlGenerator(UrlNode node, TransformationService transformationService) {
     super(node);
     this.transformationService = transformationService;
   }
 
   @Override
-  List<View.Event> onGenerate(Object owner, ScopedViewContext context)
+  List<View.Event> onGenerate(Object source, ScopedViewContext context)
       throws Exception {
+    final Object modelValue =
+        context.get(UrlResolver.class).resolve(node, context);
 
-    final Object model = node.getValue(owner);
-
-    final Object transformedValue =
-        transformationService.valueToExtract(owner, model, node, context);
+    final Object transformedValue = transformationService.valueToExtract(
+        source, modelValue, node, context);
 
     if (transformedValue == UndefinedValue.INSTANCE) {
       return Collections.emptyList();
     }
 
     return Collections.singletonList((View.Event)
-        new ConcreteViewEvent(View.Event.Type.VALUE, node.getName(),
+        new ConcreteViewEvent(View.Event.Type.URL, node.getName(),
             node.getNamespace(), transformedValue));
   }
 

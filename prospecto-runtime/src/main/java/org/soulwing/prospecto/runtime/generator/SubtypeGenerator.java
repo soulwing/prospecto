@@ -16,27 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.template;
+package org.soulwing.prospecto.runtime.generator;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.EnvelopeNode;
+import org.soulwing.prospecto.api.node.SubtypeNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 
 /**
- * A generator for the events associated with an envelope node.
- *
+ * A generator for the events associated with a subtype node.
  * @author Carl Harris
  */
-class EnvelopeGenerator extends AbstractViewEventGenerator<EnvelopeNode> {
+class SubtypeGenerator extends AbstractViewEventGenerator<SubtypeNode> {
 
   private final List<ViewEventGenerator> children;
 
-  EnvelopeGenerator(EnvelopeNode node,
-      List<ViewEventGenerator> children) {
+  SubtypeGenerator(SubtypeNode node, List<ViewEventGenerator> children) {
     super(node);
     this.children = children;
   }
@@ -44,18 +41,13 @@ class EnvelopeGenerator extends AbstractViewEventGenerator<EnvelopeNode> {
   @Override
   List<View.Event> onGenerate(Object model, ScopedViewContext context)
       throws Exception {
-    final List<View.Event> events = new LinkedList<>();
-
-    events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT,
-        node.getName(), node.getNamespace()));
-
-    for (final ViewEventGenerator child : children) {
-      events.addAll(child.generate(model, context));
+    final List<View.Event> viewEvents = new LinkedList<>();
+    if (node.getModelType().isInstance(model)) {
+      for (final ViewEventGenerator child : children) {
+        viewEvents.addAll(child.generate(model, context));
+      }
     }
-
-    events.add(new ConcreteViewEvent(View.Event.Type.END_OBJECT,
-        node.getName(), node.getNamespace()));
-
-    return events;
+    return viewEvents;
   }
+
 }

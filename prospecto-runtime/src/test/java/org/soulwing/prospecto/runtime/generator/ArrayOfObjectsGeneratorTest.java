@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.template;
+package org.soulwing.prospecto.runtime.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -250,7 +250,7 @@ public class ArrayOfObjectsGeneratorTest
     };
   }
 
-  private static final Matcher<Class<?>> isAssignableFrom(final Class<?> expected) {
+  private static Matcher<Class<?>> isAssignableFrom(final Class<?> expected) {
     return new BaseMatcher<Class<?>>() {
       @Override
       public boolean matches(Object item) {
