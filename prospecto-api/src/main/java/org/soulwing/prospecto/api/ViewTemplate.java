@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.api;
 
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-
 /**
  * A template that can be used to generate a {@link View}.
  * <p>
@@ -34,6 +32,18 @@ import org.soulwing.prospecto.api.node.ViewNodeVisitor;
  * @author Carl Harris
  */
 public interface ViewTemplate {
+
+  /**
+   * Creates a new breadth first traversal.
+   * @return traversal
+   */
+  Traversal breadthFirst();
+
+  /**
+   * Creates a new breadth first traversal.
+   * @return traversal
+   */
+  Traversal depthFirst();
 
   /**
    * Generates a view using the given model as the root object represented by
@@ -70,26 +80,5 @@ public interface ViewTemplate {
    * @return model editor
    */
   ModelEditor generateEditor(View source, ViewContext context, String dataKey);
-
-  /**
-   * Traverses the view node tree associated with this template in breadth-first
-   * order.
-   *
-   * @param visitor visitor that will be invoked as nodes are visited during
-   *    the traversal
-   * @param state to pass to root node visitor
-   * @return result returned by root node visitor
-   */
-  Object traverseBreadthFirst(ViewNodeVisitor visitor, Object state);
-
-  /**
-   * Traverses the view node tree associated with this template in depth-first
-   * order.
-   *
-   * @param visitor visitor that will be invoked as nodes are visited
-   * @param state to pass to root node visitor
-   * @return result returned by root node visitor
-   */
-  Object traverseDepthFirst(ViewNodeVisitor visitor, Object state);
 
 }
