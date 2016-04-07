@@ -28,6 +28,7 @@ import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forM
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
+import static org.soulwing.prospecto.runtime.util.StringMatchers.matchesPattern;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -42,7 +43,6 @@ import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.util.ClassMatchers;
-import org.soulwing.prospecto.runtime.util.StringMatchers;
 
 /**
  * Unit tests for {@link ArrayOfObjectsGenerator}.
@@ -245,7 +245,7 @@ public class ArrayOfObjectsGeneratorTest
       {
         allowing(node).getElementName();
         will(returnValue(ELEMENT_NAME));
-        oneOf(viewContext).push(with(StringMatchers.matchesPattern("\\[\\d+\\]")),
+        oneOf(viewContext).push(with(matchesPattern("\\[\\d+\\]")),
             with(nullValue(Class.class)));
         oneOf(viewContext).put(elementModel);
         oneOf(viewContext).pop();

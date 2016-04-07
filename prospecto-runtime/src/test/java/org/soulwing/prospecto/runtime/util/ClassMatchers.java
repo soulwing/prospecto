@@ -38,7 +38,8 @@ public class ClassMatchers {
 
       @Override
       public void describeTo(Description description) {
-
+        description.appendText("is assignable from ")
+            .appendValue(expected.getSimpleName());
       }
     };
   }
