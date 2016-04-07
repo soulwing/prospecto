@@ -20,7 +20,8 @@ package org.soulwing.prospecto.api.node;
 
 /**
  * A {@link ViewNode} representing an envelope structure.
+ *
  * @author Carl Harris
  */
-public interface EnvelopeNode extends ViewNode {
+public interface EnvelopeNode extends ObjectNode {
 }

@@ -20,12 +20,20 @@ package org.soulwing.prospecto.api.node;
 
 import java.util.Iterator;
 
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+
 /**
  * A node that represents an array structure.
  *
  * @author Carl Harris
  */
-public interface ArrayNode extends ViewNode {
+public interface ArrayNode extends UpdatableNode {
+
+  /**
+   * Gets the data type of the elements of this node.
+   * @return component data type
+   */
+  Class<?> getComponentType();
 
   /**
    * Gets the name to use for elements of the array.
@@ -42,5 +50,11 @@ public interface ArrayNode extends ViewNode {
    * @throws Exception
    */
   Iterator<?> iterator(Object model) throws Exception;
+
+  /**
+   * Gets this node's default association manager.
+   * @return association manager
+   */
+  ToManyAssociationManager<?, ?> getDefaultManager();
 
 }

@@ -23,6 +23,6 @@ package org.soulwing.prospecto.api.node;
  *
  * @author Carl Harris
  */
-public interface ContainerNode extends ViewNode, Iterable<ViewNode> {
+public interface ContainerNode extends UpdatableNode, Iterable<ViewNode> {
 
 }

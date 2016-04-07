@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,27 +18,17 @@
  */
 package org.soulwing.prospecto.api.node;
 
-import org.soulwing.prospecto.api.association.ToOneAssociationManager;
-
 /**
- * A {@link ViewNode} representing an object structure.
+ * A {@link ViewNode} that can be used to update a corresponding model value.
  *
  * @author Carl Harris
  */
-public interface ObjectNode extends ContainerNode {
+public interface UpdatableNode extends ViewNode {
 
   /**
-   * Gets the value associated with this node from the given model.
-   * @param model model which contains the associated object
-   * @return object
-   * @throws Exception
+   * Gets the name of the updatable property.
+   * @return property name
    */
-  Object getObject(Object model) throws Exception;
-
-  /**
-   * Gets this node's default association manager.
-   * @return association manager
-   */
-  ToOneAssociationManager<?, ?> getDefaultManager();
+  String getPropertyName();
 
 }
