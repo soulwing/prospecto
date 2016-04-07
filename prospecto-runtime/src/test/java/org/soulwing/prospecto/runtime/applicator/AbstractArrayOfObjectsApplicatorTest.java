@@ -190,7 +190,7 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
         TRIGGER_EVENT, events, viewContext), is(empty()));
   }
 
-  @Test(expected = UnsupportedOperationException.class)
+  @Test
   public void testInject() throws Exception {
     context.checking(new Expectations() { {} });
     applicator.inject(MODEL, MODEL_ARRAY);
