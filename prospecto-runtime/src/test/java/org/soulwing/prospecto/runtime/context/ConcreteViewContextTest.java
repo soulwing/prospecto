@@ -255,11 +255,11 @@ public class ConcreteViewContextTest {
 
     viewContext.push(null, null);
     assertThat(viewContext.currentViewPath(),
-        is(equalTo(Arrays.asList(SCOPE0, null))));
+        is(equalTo(Arrays.asList(SCOPE0))));
 
     viewContext.push(SCOPE2, null);
     assertThat(viewContext.currentViewPath(),
-        is(equalTo(Arrays.asList(SCOPE0, null, SCOPE2))));
+        is(equalTo(Arrays.asList(SCOPE0, SCOPE2))));
   }
 
   @Test
@@ -292,13 +292,11 @@ public class ConcreteViewContextTest {
 
     viewContext.push(null, null);
     assertThat(viewContext.currentViewPathAsString(),
-        is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
-            + ViewContext.PATH_DELIMITER)));
+        is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0)));
 
     viewContext.push(SCOPE2, null);
     assertThat(viewContext.currentViewPathAsString(),
         is(equalTo(ViewContext.PATH_DELIMITER + SCOPE0
-            + ViewContext.PATH_DELIMITER
             + ViewContext.PATH_DELIMITER + SCOPE2)));
   }
 

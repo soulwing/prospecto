@@ -156,7 +156,9 @@ class ConcreteViewContext implements ScopedViewContext {
     final Iterator<ScopeFrame> frames = scopeStack.descendingIterator();
     while (frames.hasNext()) {
       final ScopeFrame frame = frames.next();
-      nodes.add(frame.getName());
+      if (frame.getName() != null) {
+        nodes.add(frame.getName());
+      }
     }
     return nodes;
   }
