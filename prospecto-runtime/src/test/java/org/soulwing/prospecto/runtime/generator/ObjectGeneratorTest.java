@@ -68,6 +68,7 @@ public class ObjectGeneratorTest
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).getObject(MODEL);
@@ -95,6 +96,7 @@ public class ObjectGeneratorTest
   @Test
   public void testGenerateWhenHasDiscriminator() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).getObject(MODEL);
@@ -126,6 +128,7 @@ public class ObjectGeneratorTest
   @Test
   public void testOnEvaluateWhenNull() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).getObject(MODEL);

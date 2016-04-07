@@ -62,6 +62,7 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).getValue(MODEL);
@@ -83,6 +84,7 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
   @Test
   public void testGenerateWhenUndefinedValue() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).getValue(MODEL);

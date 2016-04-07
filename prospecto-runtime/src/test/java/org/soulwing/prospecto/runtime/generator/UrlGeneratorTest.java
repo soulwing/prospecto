@@ -63,6 +63,7 @@ public class UrlGeneratorTest extends AbstractViewEventGeneratorTest<UrlNode> {
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(viewContext).get(UrlResolver.class);

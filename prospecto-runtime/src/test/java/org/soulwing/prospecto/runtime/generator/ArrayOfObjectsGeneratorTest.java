@@ -33,9 +33,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
@@ -44,6 +41,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
+import org.soulwing.prospecto.runtime.util.ClassMatchers;
+import org.soulwing.prospecto.runtime.util.StringMatchers;
 
 /**
  * Unit tests for {@link ArrayOfObjectsGenerator}.
@@ -90,6 +89,7 @@ public class ArrayOfObjectsGeneratorTest
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
@@ -135,6 +135,7 @@ public class ArrayOfObjectsGeneratorTest
   @Test
   public void testGenerateWhenDiscriminatorNeeded() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
@@ -154,7 +155,7 @@ public class ArrayOfObjectsGeneratorTest
         oneOf(discriminatorEventService).isDiscriminatorNeeded(node);
         will(returnValue(true));
         oneOf(discriminatorEventService).newDiscriminatorEvent(
-            with(node), with(isAssignableFrom(TransformedModel.class)),
+            with(node), with(ClassMatchers.isAssignableFrom(TransformedModel.class)),
             with(viewContext));
         will(returnValue(discriminatorEvent));
 
@@ -188,6 +189,7 @@ public class ArrayOfObjectsGeneratorTest
   @Test
   public void testGenerateWhenUndefinedElementValue() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
@@ -222,6 +224,7 @@ public class ArrayOfObjectsGeneratorTest
   @Test
   public void testOnEvaluateWhenNull() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
         oneOf(node).iterator(MODEL);
@@ -242,24 +245,10 @@ public class ArrayOfObjectsGeneratorTest
       {
         allowing(node).getElementName();
         will(returnValue(ELEMENT_NAME));
-        oneOf(viewContext).push(with(ELEMENT_NAME),
-            with(isAssignableFrom(ElementModel.class)));
+        oneOf(viewContext).push(with(StringMatchers.matchesPattern("\\[\\d+\\]")),
+            with(nullValue(Class.class)));
         oneOf(viewContext).put(elementModel);
         oneOf(viewContext).pop();
-      }
-    };
-  }
-
-  private static Matcher<Class<?>> isAssignableFrom(final Class<?> expected) {
-    return new BaseMatcher<Class<?>>() {
-      @Override
-      public boolean matches(Object item) {
-        return expected.isAssignableFrom((Class) item);
-      }
-
-      @Override
-      public void describeTo(Description description) {
-
       }
     };
   }

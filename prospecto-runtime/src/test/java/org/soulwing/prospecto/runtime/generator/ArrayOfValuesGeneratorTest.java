@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.soulwing.prospecto.runtime.util.StringMatchers.matchesPattern;
 
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ArrayOfValuesGeneratorTest
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(iteratorExpectations());
     context.checking(contextExpectations());
     context.checking(new Expectations() {
@@ -94,6 +96,7 @@ public class ArrayOfValuesGeneratorTest
   @Test
   public void testOnEvaluateWhenUndefinedValue() throws Exception {
     context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
     context.checking(contextExpectations());
     context.checking(iteratorExpectations());
     context.checking(new Expectations() {
@@ -113,7 +116,8 @@ public class ArrayOfValuesGeneratorTest
       {
         allowing(node).getElementName();
         will(returnValue(ELEMENT_NAME));
-        oneOf(viewContext).push(ELEMENT_NAME, null);
+        oneOf(viewContext).push(with(matchesPattern("\\[\\d+\\]")),
+            with(nullValue(Class.class)));
         oneOf(viewContext).pop();
       }
     };

@@ -65,6 +65,7 @@ public class SubtypeGeneratorTest
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations(model1, MockSubModel1.class));
+    context.checking(contextScopeExpectations(null, null, null));
     context.checking(new Expectations() {
       {
         oneOf(child).generate(model1, viewContext);
@@ -79,6 +80,7 @@ public class SubtypeGeneratorTest
   @Test
   public void testGenerateWithDifferentSubtype() throws Exception {
     context.checking(baseExpectations(model2, MockSubModel1.class));
+    context.checking(contextScopeExpectations(null, null, null));
     final List<View.Event> events = generator.generate(model2, viewContext);
     assertThat(events.isEmpty(), is(true));
   }

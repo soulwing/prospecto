@@ -60,8 +60,9 @@ class ArrayOfValuesGenerator
     events.add(new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY,
         node.getName(), node.getNamespace()));
 
+    int index = 0;
     while (i.hasNext()) {
-      context.push(node.getElementName(), null);
+      context.push(String.format("[%d]", index++), null);
       final Object value = i.next();
       final Object transformedValue = transformationService.valueToExtract(
           owner, value, node, context);

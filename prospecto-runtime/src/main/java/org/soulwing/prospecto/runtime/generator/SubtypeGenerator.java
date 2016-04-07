@@ -50,4 +50,9 @@ class SubtypeGenerator extends AbstractViewEventGenerator<SubtypeNode> {
     return viewEvents;
   }
 
+  @Override
+  void push(Object model, ScopedViewContext context) {
+    context.push(null, null);
+  }
+
 }

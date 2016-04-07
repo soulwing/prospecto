@@ -71,11 +71,12 @@ class ArrayOfObjectsGenerator
     viewEvents.add(new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY,
         node.getName(), node.getNamespace()));
 
+    int index = 0;
     while (i.hasNext()) {
 
       final Object elementModel = i.next();
 
-      context.push(node.getElementName(), elementModel.getClass());
+      context.push(String.format("[%d]", index++), null);
       context.put(elementModel);
 
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(

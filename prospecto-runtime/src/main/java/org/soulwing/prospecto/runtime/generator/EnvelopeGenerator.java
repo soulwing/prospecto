@@ -58,4 +58,10 @@ class EnvelopeGenerator extends AbstractViewEventGenerator<EnvelopeNode> {
 
     return events;
   }
+
+  @Override
+  void push(Object model, ScopedViewContext context) {
+    context.push(node.getName(), null);
+  }
+
 }

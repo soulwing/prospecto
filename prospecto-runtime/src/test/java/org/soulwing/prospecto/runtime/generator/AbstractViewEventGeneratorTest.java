@@ -122,13 +122,26 @@ public abstract class AbstractViewEventGeneratorTest<N extends ViewNode> {
         allowing(node).getNamespace();
         will(returnValue(NAMESPACE));
 
-        oneOf(viewContext).push(NAME, modelType);
-        oneOf(viewContext).put(model);
-        oneOf(viewContext).pop();
       }
     };
   }
 
+  Expectations contextScopeExpectations() throws Exception {
+    return contextScopeExpectations(NAME, MODEL, MODEL_TYPE);
+  }
+
+  Expectations contextScopeExpectations(final String name,
+      final Object model, final Class<?> modelType) throws Exception {
+    return new Expectations() {
+      {
+        oneOf(viewContext).push(name, modelType);
+        if (model != null) {
+          oneOf(viewContext).put(model);
+        }
+        oneOf(viewContext).pop();
+      }
+    };
+  }
 
   class MockGenerator extends AbstractViewEventGenerator<ViewNode> {
 

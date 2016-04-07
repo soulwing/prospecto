@@ -46,16 +46,24 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
         ViewNodeEvent.Mode.VIEW_GENERATION, node, model, context);
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
-      context.push(node.getName(), node.getModelType());
-      context.put(model);
+      push(model, context);
       final List<View.Event> viewEvents = onGenerate(model, context);
-      context.pop();
+      pop(context);
       context.getListeners().nodeVisited(nodeEvent);
       return viewEvents;
     }
     else {
       return Collections.emptyList();
     }
+  }
+
+  void push(Object model, ScopedViewContext context) {
+    context.push(node.getName(), node.getModelType());
+    context.put(model);
+  }
+
+  void pop(ScopedViewContext context) {
+    context.pop();
   }
 
   abstract List<View.Event> onGenerate(Object model, ScopedViewContext context)
