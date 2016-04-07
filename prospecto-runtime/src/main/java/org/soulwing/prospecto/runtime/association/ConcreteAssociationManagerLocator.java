@@ -21,8 +21,8 @@ package org.soulwing.prospecto.runtime.association;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * An {@link AssociationManager} implementation.
@@ -41,7 +41,7 @@ class ConcreteAssociationManagerLocator
   @SuppressWarnings("unchecked")
   public <M extends AssociationManager> M findManager(
       Class<M> managerClass, M defaultManager,
-      AssociationDescriptor descriptor, AbstractViewNode node,
+      AssociationDescriptor descriptor, UpdatableNode node,
       ScopedViewContext context) {
 
     AssociationManager manager = node.get(managerClass);

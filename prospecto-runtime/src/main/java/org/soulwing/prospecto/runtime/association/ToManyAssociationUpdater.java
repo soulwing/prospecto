@@ -19,8 +19,8 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * An updater for a to-many association between a target model object and
@@ -30,7 +30,7 @@ import org.soulwing.prospecto.runtime.node.AbstractViewNode;
  */
 public interface ToManyAssociationUpdater {
 
-  void update(AbstractViewNode node, Object target,
+  void update(UpdatableNode node, Object target,
       Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception;
 

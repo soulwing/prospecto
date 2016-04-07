@@ -25,9 +25,11 @@ import java.util.Objects;
 
 import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.applicator.RootViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.UpdatableRootNode;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A {@link ModelEditor} implementation.
@@ -40,21 +42,24 @@ class ConcreteModelEditor implements ModelEditor {
   private static final ModelEditorException NOT_WELL_FORMED_EXCEPTION =
       new ModelEditorException("view is not well-formed");
 
-  private final UpdatableRootNode root;
+  private final Class<?> modelType;
+  private final RootViewEventApplicator root;
   private final View source;
   private final ScopedViewContext context;
   private final String dataKey;
 
   /**
    * Constructs a new instance.
-   * @param root root node of the target view template
+   * @param modelType expected root model type
+   * @param root root root applicator
    * @param source source view
    * @param context view context
    * @param dataKey envelope key that contains the editable view data
-   *    or {@code null} if the view is not enveloped
+*    or {@code null} if the view is not enveloped
    */
-  ConcreteModelEditor(UpdatableRootNode root, View source,
+  ConcreteModelEditor(Class<?> modelType, RootViewEventApplicator root, View source,
       ScopedViewContext context, String dataKey) {
+    this.modelType = modelType;
     this.root = root;
     this.source = source;
     this.context = context;
@@ -64,8 +69,12 @@ class ConcreteModelEditor implements ModelEditor {
   @Override
   public Object create() throws ModelEditorException {
     try {
-      final Deque<View.Event> events = eventDeque(source);
-      return root.create(events, context);
+      final MutableViewEntity entity = deriveInjector();
+      if (entity == UndefinedValue.INSTANCE) return null;
+
+      final Object model = ((MutableViewEntity) entity).getType().newInstance();
+      root.apply(entity, model, context);
+      return model;
     }
     catch (ModelEditorException ex) {
       throw ex;
@@ -78,9 +87,11 @@ class ConcreteModelEditor implements ModelEditor {
   @Override
   public void update(Object model) throws ModelEditorException {
     try {
-      final Deque<View.Event> events = eventDeque(source);
       assertHasRootModelType(model);
-      root.update(model, events, context);
+      final MutableViewEntity entity = deriveInjector();
+      if (entity != UndefinedValue.INSTANCE) {
+        root.apply(entity, model, context);
+      }
     }
     catch (ModelEditorException ex) {
       throw ex;
@@ -90,10 +101,20 @@ class ConcreteModelEditor implements ModelEditor {
     }
   }
 
+  private MutableViewEntity deriveInjector() throws Exception {
+    final Deque<View.Event> events = eventDeque(source);
+    final View.Event triggerEvent = events.removeFirst();
+    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
+      throw new ModelEditorException("view must start with an object");
+    }
+    return (MutableViewEntity) root.toModelValue(null, triggerEvent, events,
+        context);
+  }
+
   private void assertHasRootModelType(Object model) {
-    if (!root.getModelType().isInstance(model)) {
+    if (!modelType.isInstance(model)) {
       throw new ModelEditorException("model is not an instance of "
-          + root.getModelType().getName());
+          + modelType.getName());
     }
   }
 

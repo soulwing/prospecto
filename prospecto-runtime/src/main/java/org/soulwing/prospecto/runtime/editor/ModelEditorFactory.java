@@ -21,7 +21,7 @@ package org.soulwing.prospecto.runtime.editor;
 import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 
 /**
  * A factory that produces {@link ModelEditor} objects.
@@ -32,14 +32,15 @@ public interface ModelEditorFactory {
 
   /**
    * Constructs a new instance.
-   * @param target root node of the target view template
+   * @param modelType expected root model type
+   * @param applicator root applicator
    * @param source source view
    * @param context view context
    * @param dataKey envelope key that contains the editable view data
    *    or {@code null} if the view is not enveloped
    * @return model editor
    */
-  ModelEditor newEditor(AbstractViewNode target, View source,
-      ViewContext context, String dataKey);
+  ModelEditor newEditor(Class<?> modelType, ViewEventApplicator applicator,
+      View source, ViewContext context, String dataKey);
 
 }

@@ -1,5 +1,5 @@
 /*
- * File created on Apr 2, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,56 +16,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Deque;
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * An {@link UpdatableViewNodeTemplate.Method} for an {@link ConcreteObjectNode}.
+ * An abstract base for container node applicators.
  *
  * @author Carl Harris
  */
-class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
+abstract class AbstractContainerApplicator<N extends ViewNode>
+    extends AbstractViewEventApplicator<N>  {
 
   private static final EnumSet<View.Event.Type> UPDATE_EVENT_TYPES =
       EnumSet.of(View.Event.Type.BEGIN_OBJECT,
           View.Event.Type.BEGIN_ARRAY,
           View.Event.Type.VALUE);
 
-  private final ConcreteContainerNode node;
-  private final View.Event triggerEvent;
-  private final Deque<View.Event> events;
-  private final ScopedViewContext context;
-  private final ViewEntityFactory entityFactory;
+  final ViewEntityFactory entityFactory;
+  final TransformationService transformationService;
 
-  public ObjectNodeUpdateMethod(ConcreteContainerNode node,
-      View.Event triggerEvent, Deque<View.Event> events,
-      ScopedViewContext context) {
-    this(node, triggerEvent, events, context,
-        ConcreteViewEntityFactory.INSTANCE);
-  }
+  private final List<ViewEventApplicator> children;
 
-  ObjectNodeUpdateMethod(ConcreteContainerNode node, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context,
-      ViewEntityFactory entityFactory) {
-    this.node = node;
-    this.triggerEvent = triggerEvent;
-    this.events = events;
-    this.context = context;
+  AbstractContainerApplicator(N node, List<ViewEventApplicator> children,
+      ViewEntityFactory entityFactory,
+      TransformationService transformationService) {
+    super(node);
+    this.children = children;
     this.entityFactory = entityFactory;
+    this.transformationService = transformationService;
   }
 
   @Override
-  public Object toModelValue() throws Exception {
+  Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
     final MutableViewEntity entity = entityFactory.newEntity(node, events, context);
     View.Event.Type eventType = triggerEvent.getType();
     while (!events.isEmpty()) {
@@ -83,31 +83,33 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
         throw new ModelEditorException("unexpected anonymous event: " + event);
       }
 
-      final ViewNode child = node.getChild(entity.getType(), name);
-      if (child == null) {
+      final ViewEventApplicator applicator = findDescendant(entity.getType(), name);
+      if (applicator == null) {
         if (context.getOptions().isEnabled(
             ViewKeys.IGNORE_UNKNOWN_PROPERTIES)) continue;
 
         throw new ModelEditorException("found no child named '" + name + "'"
-            + " in node " + node.getName());
+            + " in node '" + node.getName() + "'");
       }
 
-      if (!(child instanceof UpdatableViewNode)) continue;
+      if (!(applicator.getNode() instanceof UpdatableNode)) continue;
 
-      if (child instanceof ConcreteContainerNode
+      Object value = null;
+      if (applicator.getNode() instanceof ContainerNode
           && event.getType() == View.Event.Type.VALUE) {
         if (event.getValue() != null) {
           throw new ModelEditorException(
               "scalar value for object node must be null");
         }
-        entity.put(name, null, (UpdatableViewNode) child);
+        value = transformationService.valueToInject(parentEntity,
+            node.getModelType(), null, node, context);
       }
       else {
-        final Object value = ((UpdatableViewNode) child)
-            .toModelValue(entity, event, events, context);
-        if (value != UndefinedValue.INSTANCE) {
-          entity.put(name, value, (UpdatableViewNode) child);
-        }
+        value = applicator.toModelValue(entity, event, events, context);
+      }
+
+      if (value != UndefinedValue.INSTANCE) {
+        entity.put(name, value, applicator);
       }
 
     }
@@ -118,6 +120,29 @@ class ObjectNodeUpdateMethod implements UpdatableViewNodeTemplate.Method {
     }
 
     return entity;
+  }
+
+  ViewEventApplicator findDescendant(Class<?> subtype, String name) {
+    Iterator<ViewEventApplicator> i = children.iterator();
+    while (i.hasNext()) {
+      final ViewEventApplicator child = i.next();
+      if (child instanceof SubtypeApplicator
+          && subtype.isAssignableFrom(child.getNode().getModelType())) {
+        final ViewEventApplicator descendant =
+            ((SubtypeApplicator) child).findDescendant(subtype, name);
+        if (descendant != null) return descendant;
+      }
+    }
+
+    i = children.iterator();
+    while (i.hasNext()) {
+      final ViewEventApplicator child = i.next();
+      if (name.equals(child.getNode().getName())) {
+        return child;
+      }
+    }
+
+    return null;
   }
 
 }

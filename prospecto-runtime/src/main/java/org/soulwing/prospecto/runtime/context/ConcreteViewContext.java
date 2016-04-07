@@ -187,6 +187,11 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
+  public void push(int index) {
+    push(Integer.toString(index), null);
+  }
+
+  @Override
   public void pop() {
     scopeStack.pop();
   }

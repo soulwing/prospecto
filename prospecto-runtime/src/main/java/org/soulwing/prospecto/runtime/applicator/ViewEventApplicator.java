@@ -1,5 +1,5 @@
 /*
- * File created on Apr 1, 2016
+ * File created on Apr 6, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,24 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.Deque;
+
+import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A template for an {@link UpdatableViewNode}.
+ * An object that applies the state in a sequence of view events to a model.
  *
  * @author Carl Harris
  */
-interface UpdatableViewNodeTemplate {
+public interface ViewEventApplicator extends MutableViewEntity.Injector {
 
-  interface Method {
-    Object toModelValue() throws Exception;
-  }
+  ViewNode getNode();
 
-  Object toModelValue(ViewNode node, ViewEntity parentEntity,
-      ScopedViewContext context, Method method) throws Exception;
+  Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
+      Deque<View.Event> events, ScopedViewContext context) throws Exception;
 
 }

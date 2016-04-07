@@ -20,8 +20,8 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A service that locates an appropriate {@link AssociationManager} for
@@ -43,6 +43,6 @@ interface AssociationManagerLocator {
    */
   <M extends AssociationManager> M findManager(
       Class<M> managerClass, M defaultManager,
-      AssociationDescriptor descriptor, AbstractViewNode node,
+      AssociationDescriptor descriptor, UpdatableNode node,
       ScopedViewContext context);
 }

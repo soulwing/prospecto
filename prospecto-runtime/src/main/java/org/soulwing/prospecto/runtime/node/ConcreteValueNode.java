@@ -18,16 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ValueNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.converter.Convertible;
-import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
-import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
  * A view node that represents a value with a simple textual representation.
@@ -35,10 +28,7 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  * @author Carl Harris
  */
 public class ConcreteValueNode extends AbstractViewNode
-    implements Convertible, UpdatableViewNode, ValueNode {
-
-  private final TransformationService transformationService;
-  private final UpdatableViewNodeTemplate template;
+    implements Convertible, ValueNode {
 
   /**
    * Constructs a new instance.
@@ -46,16 +36,17 @@ public class ConcreteValueNode extends AbstractViewNode
    * @param namespace namespace for {@code name}
    */
   public ConcreteValueNode(String name, String namespace) {
-    this(name, namespace, ConcreteTransformationService.INSTANCE,
-        ConcreteUpdatableViewNodeTemplate.INSTANCE);
+    super(name, namespace, null);
   }
 
-  ConcreteValueNode(String name, String namespace,
-      TransformationService transformationService,
-      UpdatableViewNodeTemplate template) {
-    super(name, namespace, null);
-    this.transformationService = transformationService;
-    this.template = template;
+  @Override
+  public Class<?> getDataType() {
+    return getAccessor().getDataType();
+  }
+
+  @Override
+  public String getPropertyName() {
+    return getAccessor().getName();
   }
 
   @Override
@@ -64,50 +55,13 @@ public class ConcreteValueNode extends AbstractViewNode
   }
 
   @Override
+  public void setValue(Object model, Object value) throws Exception {
+    getAccessor().forSubtype(model.getClass()).set(model, value);
+  }
+
+  @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitValue(this, state);
-  }
-
-  @Override
-  public Object toModelValue(final ViewEntity parentEntity,
-      final View.Event triggerEvent, Deque<View.Event> events,
-      final ScopedViewContext context) throws Exception {
-
-    return template.toModelValue(this, parentEntity,
-        context, new Method(parentEntity, triggerEvent, context));
-  }
-
-  @Override
-  public void inject(Object target, Object value) throws Exception {
-    getAccessor().forSubtype(target.getClass()).set(target, value);
-  }
-
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    inject(target, value);
-  }
-
-  class Method implements UpdatableViewNodeTemplate.Method {
-
-    private final ViewEntity parentEntity;
-    private final View.Event triggerEvent;
-    private final ScopedViewContext context;
-
-    Method(ViewEntity parentEntity, View.Event triggerEvent,
-        ScopedViewContext context) {
-      this.parentEntity = parentEntity;
-      this.triggerEvent = triggerEvent;
-      this.context = context;
-    }
-
-    @Override
-    public Object toModelValue() throws Exception {
-      return transformationService.valueToInject(
-          parentEntity, getAccessor().getDataType(),
-          triggerEvent.getValue(), ConcreteValueNode.this, context);
-    }
-
   }
 
 }

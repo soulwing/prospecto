@@ -20,8 +20,6 @@ package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.node.EnvelopeNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an envelope.
@@ -47,12 +45,6 @@ public class ConcreteEnvelopeNode extends ConcreteObjectNode
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitEnvelope(this, state);
-  }
-
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    ((MutableViewEntity) value).inject(target, context);
   }
 
 }

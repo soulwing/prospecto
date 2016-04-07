@@ -19,7 +19,8 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 
 /**
  * A {@link AssociationDescriptorFactory} implementation.
@@ -35,21 +36,15 @@ class ConcreteAssociationDescriptorFactory
   private ConcreteAssociationDescriptorFactory() {}
 
   @Override
-  public AssociationDescriptor newDescriptor(AbstractViewNode node) {
+  public AssociationDescriptor newDescriptor(UpdatableNode node) {
     assertParentIsNotNull(node);
-    assertAccessorIsNotNull(node);
     return new ConcreteAssociationDescriptor(node.getParent().getModelType(),
-            node.getModelType(), node.getAccessor().getName());
+            node.getModelType(), node.getPropertyName());
   }
 
-  private void assertParentIsNotNull(AbstractViewNode node) {
+  private void assertParentIsNotNull(ViewNode node) {
     if (node.getParent() != null) return;
     throw new IllegalArgumentException("must be an interior node");
-  }
-
-  private void assertAccessorIsNotNull(AbstractViewNode node) {
-    if (node.getAccessor() != null) return;
-    throw new IllegalArgumentException("accesor is required");
   }
 
 }

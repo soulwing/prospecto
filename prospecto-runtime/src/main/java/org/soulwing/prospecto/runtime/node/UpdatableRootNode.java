@@ -29,7 +29,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  *
  * @author Carl Harris
  */
-public interface UpdatableRootNode extends UpdatableViewNode {
+public interface UpdatableRootNode {
 
   Class<?> getModelType();
 

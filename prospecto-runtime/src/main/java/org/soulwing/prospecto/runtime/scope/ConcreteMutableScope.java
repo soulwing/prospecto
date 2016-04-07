@@ -38,6 +38,7 @@ public class ConcreteMutableScope implements MutableScope {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T get(Class<T> type) {
+    assertNotNull(type, "type is required");
     Object result = null;
     for (Object obj : contentMap.values()) {
       if (type.isAssignableFrom(obj.getClass())) {
@@ -57,6 +58,8 @@ public class ConcreteMutableScope implements MutableScope {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T get(String name, Class<T> type) {
+    assertNotNull(name, "name is required");
+    assertNotNull(type, "type is required");
     Object value = nameMap.get(name);
     if (value == null) return null;
     if (!type.isAssignableFrom(value.getClass())) {
@@ -69,11 +72,14 @@ public class ConcreteMutableScope implements MutableScope {
 
   @Override
   public void put(Object obj) {
+    assertNotNull(obj, "value must not be null");
     contentMap.put(obj, obj);
   }
 
   @Override
   public Object put(String name, Object obj) {
+    assertNotNull(name, "name is required");
+    assertNotNull(obj, "value must not be null");
     Object previousObj = nameMap.put(name, obj);
     if (previousObj != null) {
       contentMap.remove(previousObj);
@@ -111,6 +117,11 @@ public class ConcreteMutableScope implements MutableScope {
   public void putAll(ConcreteMutableScope scope) {
     contentMap.putAll(scope.contentMap);
     nameMap.putAll(scope.nameMap);
+  }
+
+  private void assertNotNull(Object obj, String message) {
+    if (obj != null) return;
+    throw new NullPointerException(message);
   }
 
 }

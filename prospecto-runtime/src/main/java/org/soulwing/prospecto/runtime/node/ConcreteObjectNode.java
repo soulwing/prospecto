@@ -18,17 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.node.ObjectNode;
-import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
-import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents an object.
@@ -36,10 +28,7 @@ import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
  * @author Carl Harris
  */
 public class ConcreteObjectNode extends ConcreteContainerNode
-    implements UpdatableViewNode, ObjectNode {
-
-  private final ToOneAssociationUpdater associationUpdater;
-  private final UpdatableViewNodeTemplate template;
+    implements ObjectNode {
 
   /**
    * Constructs a new instance.
@@ -48,16 +37,7 @@ public class ConcreteObjectNode extends ConcreteContainerNode
    * @param modelType model type associated with node
    */
   public ConcreteObjectNode(String name, String namespace, Class<?> modelType) {
-    this(name, namespace, modelType, new ConcreteToOneAssociationUpdater(),
-        ConcreteUpdatableViewNodeTemplate.INSTANCE);
-  }
-
-  ConcreteObjectNode(String name, String namespace, Class<?> modelType,
-      ToOneAssociationUpdater associationUpdater,
-      UpdatableViewNodeTemplate template) {
     super(name, namespace, modelType);
-    this.associationUpdater = associationUpdater;
-    this.template = template;
   }
 
   @Override
@@ -66,33 +46,13 @@ public class ConcreteObjectNode extends ConcreteContainerNode
   }
 
   @Override
+  public ToOneAssociationManager<?, ?> getDefaultManager() {
+    return getAccessor();
+  }
+
+  @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitObject(this, state);
-  }
-
-  @Override
-  public Object toModelValue(ViewEntity parentEntity, View.Event triggerEvent,
-      Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    return template.toModelValue(this, parentEntity, context,
-        new ObjectNodeUpdateMethod(this, triggerEvent, events, context));
-  }
-
-  @Override
-  public void inject(Object target, Object value) throws Exception {
-    final MutableViewEntity entity = (MutableViewEntity) value;
-    for (final String name : entity.nameSet()) {
-      final ViewNode child = getChild(entity.getType(), name);
-      if (child instanceof ConcreteValueNode) {
-        ((ConcreteValueNode) child).inject(target, entity.get(name));
-      }
-    }
-  }
-
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    associationUpdater.update(this, target,
-        (MutableViewEntity) value, getAccessor(), context);
   }
 
 }

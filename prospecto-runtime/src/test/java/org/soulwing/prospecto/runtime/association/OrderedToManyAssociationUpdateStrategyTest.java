@@ -33,11 +33,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link OrderedToManyAssociationUpdateStrategy}.
@@ -48,11 +47,10 @@ import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery
 public class OrderedToManyAssociationUpdateStrategyTest {
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private AbstractViewNode node;
+  private UpdatableNode node;
 
   @Mock
   private ScopedViewContext viewContext;

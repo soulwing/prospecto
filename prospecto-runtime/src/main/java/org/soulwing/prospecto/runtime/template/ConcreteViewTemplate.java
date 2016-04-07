@@ -26,6 +26,8 @@ import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.runtime.applicator.ViewApplicationVisitor;
+import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
@@ -107,7 +109,11 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   @Override
   public ModelEditor generateEditor(View source, ViewContext context,
       String dataKey) {
-    return modelEditorFactory.newEditor(root, source, context, dataKey);
+
+    final ViewEventApplicator applicator = (ViewEventApplicator)
+        depthFirst().traverse(new ViewApplicationVisitor(), null);
+    return modelEditorFactory.newEditor(root.getModelType(), applicator,
+        source, context, dataKey);
   }
 
   @Override

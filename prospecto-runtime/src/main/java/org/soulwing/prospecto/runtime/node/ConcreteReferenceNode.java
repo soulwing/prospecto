@@ -20,8 +20,6 @@ package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.node.ReferenceNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A view node that represents a reference to an object.
@@ -44,17 +42,6 @@ public class ConcreteReferenceNode extends ConcreteObjectNode
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitReference(this, state);
-  }
-
-  @Override
-  public void inject(Object target, Object value) {}
-
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    final MutableViewEntity entity = (MutableViewEntity) value;
-    getAccessor().set(target, context.getReferenceResolvers()
-        .resolve(entity.getType(), (MutableViewEntity) value));
   }
 
 }

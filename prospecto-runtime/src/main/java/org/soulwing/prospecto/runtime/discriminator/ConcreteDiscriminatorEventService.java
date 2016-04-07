@@ -24,6 +24,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
@@ -57,7 +58,7 @@ public class ConcreteDiscriminatorEventService
   }
 
   @Override
-  public View.Event newDiscriminatorEvent(ContainerNode node,
+  public View.Event newDiscriminatorEvent(ViewNode node,
       Class<?> subtype, ScopedViewContext context) {
 
     final DiscriminatorStrategy strategy =
@@ -92,7 +93,7 @@ public class ConcreteDiscriminatorEventService
   }
 
   @Override
-  public DiscriminatorStrategy findStrategy(ContainerNode node,
+  public DiscriminatorStrategy findStrategy(ViewNode node,
       ScopedViewContext context) {
     return strategyLocator.findStrategy(node, context);
   }

@@ -21,10 +21,10 @@ package org.soulwing.prospecto.runtime.editor;
 import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.runtime.applicator.RootViewEventApplicator;
+import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.UpdatableRootNode;
 
 /**
  * A {@link ModelEditorFactory} that produces {@link ConcreteModelEditor}
@@ -45,12 +45,14 @@ public class ConcreteModelEditorFactory implements ModelEditorFactory {
   }
 
   @Override
-  public ModelEditor newEditor(AbstractViewNode target, View source,
-      ViewContext context, String dataKey) {
-    if (!(target instanceof UpdatableRootNode)) {
+  public ModelEditor newEditor(Class<?> modelType,
+      ViewEventApplicator applicator, View source, ViewContext context,
+      String dataKey) {
+    if (!(applicator instanceof RootViewEventApplicator)) {
       throw new IllegalArgumentException("view template is not updatable");
     }
-    return new ConcreteModelEditor((UpdatableRootNode) target, source,
+    return new ConcreteModelEditor(modelType,
+        (RootViewEventApplicator) applicator, source,
         viewContextFactory.newContext(context), dataKey);
   }
 

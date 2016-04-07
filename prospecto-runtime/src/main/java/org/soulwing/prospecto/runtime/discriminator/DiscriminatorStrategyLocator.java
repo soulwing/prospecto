@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.discriminator;
 
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -35,7 +35,7 @@ interface DiscriminatorStrategyLocator {
    * @param context view context
    * @return discriminator strategy (never {@code null})
    */
-  DiscriminatorStrategy findStrategy(ContainerNode node,
+  DiscriminatorStrategy findStrategy(ViewNode node,
       ScopedViewContext context);
 
 }

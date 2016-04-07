@@ -19,8 +19,8 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A strategy for updating a collection.
@@ -31,7 +31,7 @@ interface ToManyAssociationUpdateStrategy {
 
   boolean supports(ToManyAssociationManager manager);
 
-  void update(AbstractViewNode node, Object target,
+  void update(UpdatableNode node, Object target,
       Iterable<?> values, ToManyAssociationManager manager,
       ScopedViewContext context) throws Exception;
 

@@ -47,35 +47,17 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
   }
 
   @Override
+  public String getPropertyName() {
+    return getAccessor().getName();
+  }
+
+  @Override
   public Iterator<ViewNode> iterator() {
     return children.iterator();
   }
 
   public List<ViewNode> getChildren() {
     return children;
-  }
-
-  public ViewNode getChild(Class<?> modelType, String name) {
-    Iterator<ViewNode> i = children.iterator();
-    while (i.hasNext()) {
-      final ViewNode child = i.next();
-      if (child instanceof ConcreteSubtypeNode
-          && modelType.isAssignableFrom(((ConcreteSubtypeNode) child).getModelType())) {
-        final ViewNode node =
-            ((ConcreteSubtypeNode) child).getChild(modelType, name);
-        if (node != null) return node;
-      }
-    }
-
-    i = children.iterator();
-    while (i.hasNext()) {
-      final ViewNode child = i.next();
-      if (name.equals(child.getName())) {
-        return child;
-      }
-    }
-
-    return null;
   }
 
   public void addChild(ViewNode child) {

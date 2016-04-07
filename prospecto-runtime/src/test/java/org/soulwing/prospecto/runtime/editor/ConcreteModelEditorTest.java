@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.editor;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.nullValue;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
@@ -36,8 +37,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.applicator.RootViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.UpdatableRootNode;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.view.ViewBuilder;
 
 /**
@@ -57,10 +59,13 @@ public class ConcreteModelEditorTest {
   private ScopedViewContext viewContext;
 
   @Mock
-  private UpdatableRootNode root;
+  private RootViewEventApplicator root;
 
   @Mock
   private MockModel model;
+
+  @Mock
+  private MutableViewEntity entity;
 
   private ConcreteModelEditor editor;
 
@@ -75,22 +80,22 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteModelEditor editor = new ConcreteModelEditor(root, source,
-        viewContext, null);
+    final ConcreteModelEditor editor = new ConcreteModelEditor(MockModel.class,
+        root, source, viewContext, null);
 
     context.checking(new Expectations() {
       {
-        oneOf(root).getModelType();
-        will(returnValue(MockModel.class));
-        oneOf(root).update(with(model),
-            (Deque<View.Event>) with(
-                contains(
-                    eventOfType(BEGIN_OBJECT),
+        oneOf(root).toModelValue(
+            with(nullValue(MutableViewEntity.class)),
+            with(eventOfType(BEGIN_OBJECT)),
+            (Deque<View.Event>) with(contains(
                     eventOfType(VALUE, withName(NAME)),
                     eventOfType(END_OBJECT)
                 )
             ),
             with(viewContext));
+        will(returnValue(entity));
+        oneOf(root).apply(entity, model, viewContext);
       }
     });
 
@@ -111,17 +116,16 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteModelEditor editor = new ConcreteModelEditor(root, source,
-        viewContext, null);
+    final ConcreteModelEditor editor = new ConcreteModelEditor(MockModel.class,
+        root, source, viewContext, null);
 
     context.checking(new Expectations() {
       {
-        oneOf(root).getModelType();
-        will(returnValue(MockModel.class));
-        oneOf(root).update(with(model),
+        oneOf(root).toModelValue(
+            with(nullValue(MutableViewEntity.class)),
+            with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(
-                    eventOfType(BEGIN_OBJECT),
                     eventOfType(BEGIN_OBJECT),
                     eventOfType(VALUE, withName(NAME)),
                     eventOfType(END_OBJECT),
@@ -129,6 +133,8 @@ public class ConcreteModelEditorTest {
                 )
             ),
             with(viewContext));
+        will(returnValue(entity));
+        oneOf(root).apply(entity, model, viewContext);
       }
     });
 
@@ -149,7 +155,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -165,7 +171,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -181,7 +187,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -195,7 +201,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -208,7 +214,7 @@ public class ConcreteModelEditorTest {
         .type(VALUE).name(NAME)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -221,7 +227,7 @@ public class ConcreteModelEditorTest {
         .type(VALUE).name(NAME)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, null).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, null).update(model);
   }
 
 
@@ -233,7 +239,7 @@ public class ConcreteModelEditorTest {
         .begin()
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -246,7 +252,7 @@ public class ConcreteModelEditorTest {
         .type(END_ARRAY)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -258,7 +264,7 @@ public class ConcreteModelEditorTest {
         .type(VALUE)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -271,7 +277,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
   @Test(expected = ModelEditorException.class)
@@ -284,7 +290,7 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteModelEditor(root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteModelEditor(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
 
@@ -303,22 +309,22 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteModelEditor editor = new ConcreteModelEditor(root, source,
-        viewContext, DATA_KEY);
+    final ConcreteModelEditor editor = new ConcreteModelEditor(MockModel.class, root,
+        source, viewContext, DATA_KEY);
 
     context.checking(new Expectations() {
       {
-        oneOf(root).getModelType();
-        will(returnValue(MockModel.class));
-        oneOf(root).update(with(model),
+        oneOf(root).toModelValue(
+            with(nullValue(MutableViewEntity.class)),
+            with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(
-                    eventOfType(BEGIN_OBJECT),
                     eventOfType(VALUE, withName(NAME)),
-                    eventOfType(END_OBJECT)
-                )
+                    eventOfType(END_OBJECT))
             ),
             with(viewContext));
+        will(returnValue(entity));
+        oneOf(root).apply(entity, model, viewContext);
       }
     });
 
@@ -343,17 +349,16 @@ public class ConcreteModelEditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteModelEditor editor = new ConcreteModelEditor(root, source,
-        viewContext, DATA_KEY);
+    final ConcreteModelEditor editor = new ConcreteModelEditor(MockModel.class, root,
+        source, viewContext, DATA_KEY);
 
     context.checking(new Expectations() {
       {
-        oneOf(root).getModelType();
-        will(returnValue(MockModel.class));
-        oneOf(root).update(with(model),
+        oneOf(root).toModelValue(
+            with(nullValue(MutableViewEntity.class)),
+            with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(
-                    eventOfType(BEGIN_OBJECT),
                     eventOfType(BEGIN_OBJECT),
                     eventOfType(VALUE, withName(NAME)),
                     eventOfType(END_OBJECT),
@@ -361,6 +366,8 @@ public class ConcreteModelEditorTest {
                 )
             ),
             with(viewContext));
+        will(returnValue(entity));
+        oneOf(root).apply(entity, model, viewContext);
       }
     });
 

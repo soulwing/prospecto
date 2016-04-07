@@ -20,9 +20,6 @@ package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.node.ArrayOfReferencesNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.association.ReferenceCollectionToManyAssociationUpdater;
-import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A view node that represents an array of references.
@@ -31,8 +28,6 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
  */
 public class ConcreteArrayOfReferencesNode extends ConcreteArrayOfObjectsNode
     implements ArrayOfReferencesNode {
-
-  private final ToManyAssociationUpdater associationUpdater;
 
   /**
    * Constructs a new instance.
@@ -43,29 +38,12 @@ public class ConcreteArrayOfReferencesNode extends ConcreteArrayOfObjectsNode
    */
   public ConcreteArrayOfReferencesNode(String name, String elementName,
       String namespace, Class<?> modelType) {
-    this(name, elementName, namespace, modelType,
-        ReferenceCollectionToManyAssociationUpdater.INSTANCE);
-  }
-
-  ConcreteArrayOfReferencesNode(String name, String elementName, String namespace,
-      Class<?> modelType, ToManyAssociationUpdater associationUpdater) {
     super(name, elementName, namespace, modelType);
-    this.associationUpdater = associationUpdater;
   }
 
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
     return visitor.visitArrayOfReferences(this, state);
-  }
-
-  @Override
-  public void inject(Object target, Object value) {}
-
-  @Override
-  public void inject(Object target, Object value, ScopedViewContext context)
-      throws Exception {
-    associationUpdater.update(this, target, (Iterable<?>) value,
-        getMultiValuedAccessor(), context);
   }
 
 }

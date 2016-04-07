@@ -23,6 +23,7 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -48,7 +49,7 @@ public interface DiscriminatorEventService {
    * @param context view context
    * @return discriminator event
    */
-  View.Event newDiscriminatorEvent(ContainerNode node, Class<?> subtype,
+  View.Event newDiscriminatorEvent(ViewNode node, Class<?> subtype,
       ScopedViewContext context);
 
   /**
@@ -65,7 +66,7 @@ public interface DiscriminatorEventService {
    * @param context view context
    * @return discriminator strategy (never {@code null})
    */
-  DiscriminatorStrategy findStrategy(ContainerNode node,
+  DiscriminatorStrategy findStrategy(ViewNode node,
       ScopedViewContext context);
 
 }

@@ -29,6 +29,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
@@ -48,7 +49,6 @@ import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
-import org.soulwing.prospecto.runtime.node.ModelAccessingNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 
 /**
@@ -479,7 +479,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   protected void injectAccessor() {
     if (accessorBuilder != null
-        && this.node instanceof ModelAccessingNode) {
+        && this.node instanceof UpdatableNode) {
       this.node.setAccessor(accessorBuilder.build());
     }
   }

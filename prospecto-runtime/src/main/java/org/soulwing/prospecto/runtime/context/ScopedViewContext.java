@@ -68,6 +68,12 @@ public interface ScopedViewContext extends ViewContext {
   void push(String name, Class<?> modelType);
 
   /**
+   * Pushes a new frame onto the context stack for an indexed frame
+   * @param index index to associate with the frame
+   */
+  void push(int index);
+
+  /**
    * Pops the top frame from the context stack
    */
   void pop();

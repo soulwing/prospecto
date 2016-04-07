@@ -1,5 +1,5 @@
 /*
- * File created on Apr 2, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,29 +16,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
- * A factory that produces {@link MutableViewEntity} objects for an
- * {@link ConcreteObjectNode}.
+ * An applicator that can be applied to a target model.
  *
  * @author Carl Harris
  */
-interface ViewEntityFactory {
+public interface RootViewEventApplicator extends ViewEventApplicator {
 
   /**
-   * Creates a new view entity.
-   * @param node the subject node
-   * @param events events associated with the nodes
+   * Applies an injector to update target model.
+   * @param injector the subject injector
+   * @param target root of the target model
    * @param context view context
-   * @return view entity
    * @throws Exception
    */
-  MutableViewEntity newEntity(ConcreteContainerNode node, Iterable<View.Event> events,
-      ScopedViewContext context) throws Exception;
+  void apply(Object injector, Object target, ScopedViewContext context)
+      throws Exception;
 
 }

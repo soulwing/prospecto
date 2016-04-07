@@ -96,16 +96,7 @@ public class ValueCollectionToManyAssociationUpdaterTest {
   }
 
   protected Expectations resolveExpectations() throws Exception {
-    return new Expectations() {
-      {
-//        oneOf(associateEntity).getType();
-//        will(returnValue(MockModel.class));
-//        oneOf(viewContext).getReferenceResolvers();
-//        will(returnValue(resolvers));
-//        oneOf(resolvers).resolve(MockModel.class, associateEntity);
-//        will(returnValue(associate));
-      }
-    };
+    return new Expectations() { {} };
   }
 
   @SuppressWarnings("unchecked")

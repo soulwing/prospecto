@@ -80,6 +80,7 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     return modelType;
   }
 
+
   public Accessor getAccessor() {
     return accessor;
   }

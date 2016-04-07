@@ -1,5 +1,5 @@
 /*
- * File created on Apr 2, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,23 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.entity;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
-import org.soulwing.prospecto.runtime.entity.ConcreteMutableViewEntity;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * An {@link ViewEntityFactory} implementation.
  *
  * @author Carl Harris
  */
-class ConcreteViewEntityFactory implements ViewEntityFactory {
+public class ConcreteViewEntityFactory implements ViewEntityFactory {
 
   public static final ConcreteViewEntityFactory INSTANCE =
       new ConcreteViewEntityFactory();
@@ -49,7 +48,7 @@ class ConcreteViewEntityFactory implements ViewEntityFactory {
   }
 
   @Override
-  public MutableViewEntity newEntity(ConcreteContainerNode node,
+  public MutableViewEntity newEntity(ViewNode node,
       Iterable<View.Event> events, ScopedViewContext context) throws Exception {
     View.Event event = discriminatorEventService.findDiscriminatorEvent(
         events.iterator());

@@ -22,9 +22,9 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.node.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * An updater for a to-one association between a target model object and
@@ -35,10 +35,13 @@ import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 public class ConcreteToOneAssociationUpdater
     implements ToOneAssociationUpdater {
 
+  public static final ConcreteToOneAssociationUpdater INSTANCE =
+      new ConcreteToOneAssociationUpdater();
+
   private final AssociationDescriptorFactory descriptorFactory;
   private final AssociationManagerLocator managerLocator;
 
-  public ConcreteToOneAssociationUpdater() {
+  private ConcreteToOneAssociationUpdater() {
     this(ConcreteAssociationDescriptorFactory.INSTANCE,
         ConcreteAssociationManagerLocator.INSTANCE);
   }
@@ -52,7 +55,7 @@ public class ConcreteToOneAssociationUpdater
 
   @Override
   @SuppressWarnings("unchecked")
-  public void update(ConcreteContainerNode node, Object target,
+  public void update(ContainerNode node, Object target,
       MutableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception {

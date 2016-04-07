@@ -20,8 +20,8 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 
 /**
  * A {@link ToOneAssociationUpdater} implementation.
@@ -35,11 +35,14 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
       UnorderedToManyAssociationUpdateStrategy.INSTANCE
   };
 
+  public static final ConcreteToManyAssociationUpdater INSTANCE =
+      new ConcreteToManyAssociationUpdater();
+
   private final ToManyAssociationUpdateStrategy[] strategies;
   private final AssociationDescriptorFactory descriptorFactory;
   private final AssociationManagerLocator managerLocator;
 
-  public ConcreteToManyAssociationUpdater() {
+  private ConcreteToManyAssociationUpdater() {
     this(DEFAULT_STRATEGIES,
         ConcreteAssociationDescriptorFactory.INSTANCE,
         ConcreteAssociationManagerLocator.INSTANCE);
@@ -56,7 +59,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
 
   @Override
   @SuppressWarnings("unchecked")
-  public void update(AbstractViewNode node, Object target,
+  public void update(UpdatableNode node, Object target,
       Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 
@@ -74,9 +77,11 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
 
   private ToManyAssociationUpdateStrategy findStrategy(
       ToManyAssociationManager manager) {
-    for (final ToManyAssociationUpdateStrategy strategy : strategies) {
-      if (strategy.supports(manager)) {
-        return strategy;
+    if (strategies != null) {
+      for (final ToManyAssociationUpdateStrategy strategy : strategies) {
+        if (strategy.supports(manager)) {
+          return strategy;
+        }
       }
     }
     throw new AssertionError("no strategy");

@@ -29,9 +29,8 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
+import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ConcreteAssociationManagerLocator}.
@@ -41,8 +40,7 @@ import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery
 public class ConcreteAssociationManagerLocatorTest {
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   ScopedViewContext viewContext;
@@ -51,7 +49,7 @@ public class ConcreteAssociationManagerLocatorTest {
   AssociationManagerService associationManagers;
 
   @Mock
-  AbstractViewNode node;
+  UpdatableNode node;
 
   @Mock
   AssociationDescriptor descriptor;

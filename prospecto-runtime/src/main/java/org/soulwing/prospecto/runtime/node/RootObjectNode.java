@@ -18,23 +18,15 @@
  */
 package org.soulwing.prospecto.runtime.node;
 
-import java.util.Deque;
-
-import org.soulwing.prospecto.api.ModelEditorException;
-import org.soulwing.prospecto.api.UndefinedValue;
-import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 
 /**
  * A root view node that represents an object.
  *
  * @author Carl Harris
  */
-public class RootObjectNode extends ConcreteObjectNode
-    implements UpdatableRootNode {
+public class RootObjectNode extends ConcreteObjectNode {
 
   /**
    * Constructs a new instance
@@ -44,54 +36,6 @@ public class RootObjectNode extends ConcreteObjectNode
    */
   public RootObjectNode(String name, String namespace, Class<?> modelType) {
     super(name, namespace, modelType);
-  }
-
-  @Override
-  public Object create(Deque<View.Event> events, ScopedViewContext context)
-      throws ModelEditorException {
-    final View.Event triggerEvent = events.removeFirst();
-    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ModelEditorException("view must start with an object");
-    }
-    try {
-      Object target = null;
-      Object value = toModelValue(null, triggerEvent, events, context);
-      if (value != UndefinedValue.INSTANCE) {
-        target = ((MutableViewEntity) value).getType().newInstance();
-        ((MutableViewEntity) value).inject(target, context);
-      }
-      if (target == null) {
-        throw new ModelEditorException("view produced no object");
-      }
-      return target;
-    }
-    catch (RuntimeException ex) {
-      throw ex;
-    }
-    catch (Exception ex) {
-      throw new ModelEditorException(ex);
-    }
-  }
-
-  @Override
-  public void update(Object target, Deque<View.Event> events,
-      ScopedViewContext context) throws ModelEditorException {
-    final View.Event triggerEvent = events.removeFirst();
-    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ModelEditorException("view must start with an object");
-    }
-    try {
-      Object value = toModelValue(null, triggerEvent, events, context);
-      if (value != UndefinedValue.INSTANCE) {
-        ((MutableViewEntity) value).inject(target, context);
-      }
-    }
-    catch (RuntimeException ex) {
-      throw ex;
-    }
-    catch (Exception ex) {
-      throw new ModelEditorException(ex);
-    }
   }
 
   @Override
