@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -51,6 +51,11 @@ public abstract class AbstractViewNodeVisitor implements ViewNodeVisitor {
 
   @Override
   public Object visitEnvelope(EnvelopeNode node, Object state) {
+    return state;
+  }
+
+  @Override
+  public Object visitSubtype(SubtypeNode node, Object state) {
     return state;
   }
 

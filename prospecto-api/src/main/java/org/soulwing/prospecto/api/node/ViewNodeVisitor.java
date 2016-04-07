@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 7, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -65,6 +65,12 @@ public interface ViewNodeVisitor {
    */
   Object visitEnvelope(EnvelopeNode node, Object state);
 
+  /**
+   * Visits a subtype node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
   Object visitSubtype(SubtypeNode node, Object state);
 
   /**
