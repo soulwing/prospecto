@@ -48,7 +48,7 @@ public class PersonServiceBean implements PersonService {
 
   @Override
   public View createContact(View contactView) {
-    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.generateEditor(
+    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.createApplicator(
         contactView, viewContext);
     final Contact contact = (Contact) editor.create();
     entityManager.persist(contact);
@@ -74,7 +74,7 @@ public class PersonServiceBean implements PersonService {
       throw new NoSuchEntityException(Contact.class, id);
     }
 
-    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.generateEditor(
+    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.createApplicator(
         contactView, viewContext);
     editor.update(contact);
     entityManager.clear();

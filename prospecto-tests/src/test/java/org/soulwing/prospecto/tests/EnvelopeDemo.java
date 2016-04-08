@@ -89,7 +89,7 @@ public class EnvelopeDemo {
 
 
     final ViewContext context = ViewContextProducer.newContext();
-    ViewApplicator editor = TEMPLATE.generateEditor(updateView, context);
+    ViewApplicator editor = TEMPLATE.createApplicator(updateView, context);
 
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
         .getFactory("JSON", options);

@@ -21,7 +21,10 @@ package org.soulwing.prospecto.api;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 
 /**
- * A template that can be used to generate a {@link View}.
+ * A view template.
+ * <p>
+ * A template can be used to generate a view from a model and to apply a view
+ * to update a model.
  * <p>
  * A template is produced using a {@link ViewTemplateBuilder}.  Once a template
  * is created it is effectively immutable (i.e. stateless) and therefore thread
@@ -29,7 +32,7 @@ import org.soulwing.prospecto.api.template.ViewNodeVisitor;
  * <p>
  * The template construction process uses reflection and is thus relatively
  * expensive. For this reason, templates should be constructed once and then
- * used many times to generate views.
+ * used many times to generate views and to create applicators.
  *
  * @author Carl Harris
  */
@@ -82,22 +85,23 @@ public interface ViewTemplate {
   View generateView(Object model, ViewContext context);
 
   /**
-   * Generates a model editor using the given source view.
+   * Creates a view applicator using the given source view.
    * <p>
    * The given {@code view} is assumed not to have an outer envelope.
    * @param source source view (typically produced by a {@link ViewReader}
    * @param context view context
    * @return model editor
    */
-  ViewApplicator generateEditor(View source, ViewContext context);
+  ViewApplicator createApplicator(View source, ViewContext context);
 
   /**
-   * Generates a model editor using the given enveloped source view.
+   * Creates a view applicator using the given enveloped source view.
    * @param source source view (typically produced by a {@link ViewReader}
    * @param context view context
    * @param dataKey envelope key that contains the editable view data
    * @return model editor
    */
-  ViewApplicator generateEditor(View source, ViewContext context, String dataKey);
+  ViewApplicator createApplicator(View source, ViewContext context,
+      String dataKey);
 
 }

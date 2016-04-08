@@ -177,7 +177,7 @@ public class ArrayOfReferencesDemo {
     View jsonProducedView = readerFactory
         .newReader(new ByteArrayInputStream(json.getBytes())).readView();
 
-    test = (TestObject) TEMPLATE.generateEditor(jsonProducedView, context).create();
+    test = (TestObject) TEMPLATE.createApplicator(jsonProducedView, context).create();
     assertThat(test.getReferences().size(), is(2));
     for (ReferencedObject r : test.getReferences()) {
       assertThat(r, is(notNullValue()));
@@ -187,7 +187,7 @@ public class ArrayOfReferencesDemo {
     // Test for other json
     String json2 = "{\"id\":321,\"test\":" + json + "}";
     jsonProducedView = readerFactory.newReader(new ByteArrayInputStream(json2.getBytes())).readView();
-    ParentObject parent = (ParentObject) PARENT_TEMPLATE.generateEditor(jsonProducedView, context).create();
+    ParentObject parent = (ParentObject) PARENT_TEMPLATE.createApplicator(jsonProducedView, context).create();
     assertThat(parent.getTest(), is(notNullValue()));
     assertThat(parent.getTest().getReferences().size(), is(2));
 
@@ -196,7 +196,7 @@ public class ArrayOfReferencesDemo {
     String json3 = "{\"id\":321,\"tests\":[" + json + "]}";
     jsonProducedView = readerFactory.newReader(new ByteArrayInputStream(json3.getBytes())).readView();
     ParentUsingCollection parentUsingCollection = (ParentUsingCollection)
-        PARENT_COLLECTION_TEMPLATE.generateEditor(jsonProducedView, context).create();
+        PARENT_COLLECTION_TEMPLATE.createApplicator(jsonProducedView, context).create();
     assertThat(parentUsingCollection.getTests().size(), is(1));
     assertThat(parentUsingCollection.getTests().iterator().next().getReferences().size(), is(2));
   }

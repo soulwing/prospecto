@@ -93,12 +93,12 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ViewApplicator generateEditor(View source, ViewContext context) {
-    return generateEditor(source, context, null);
+  public ViewApplicator createApplicator(View source, ViewContext context) {
+    return createApplicator(source, context, null);
   }
 
   @Override
-  public ViewApplicator generateEditor(View source, ViewContext context,
+  public ViewApplicator createApplicator(View source, ViewContext context,
       String dataKey) {
 
     final ViewEventApplicator applicator = (ViewEventApplicator)

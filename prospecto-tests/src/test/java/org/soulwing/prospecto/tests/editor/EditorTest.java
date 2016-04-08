@@ -109,7 +109,7 @@ public class EditorTest {
             .type(END_OBJECT)
         .end();
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -134,7 +134,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -166,7 +166,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
     editor.update(model);
 
@@ -197,7 +197,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -228,7 +228,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
 
     final MockSubType1 model = new MockSubType1();
     editor.update(model);
@@ -273,7 +273,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -319,7 +319,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -360,7 +360,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -405,7 +405,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -450,7 +450,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -499,7 +499,7 @@ public class EditorTest {
       }
     });
 
-    final ViewApplicator editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.createApplicator(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);

@@ -72,7 +72,7 @@ public class LeagueServiceBean implements LeagueService {
       throw new NoSuchEntityException(League.class, id);
     }
 
-    final ViewApplicator editor = LeagueViews.LEAGUE_DETAIL.generateEditor(
+    final ViewApplicator editor = LeagueViews.LEAGUE_DETAIL.createApplicator(
         leagueView, viewContext);
     editor.update(league);
     league.setId(id);

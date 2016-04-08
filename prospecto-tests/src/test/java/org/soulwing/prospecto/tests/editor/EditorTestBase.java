@@ -70,13 +70,13 @@ public class EditorTestBase {
   protected void validate(ViewTemplate template, Representation representation)
       throws IOException {
     final View createView = readView("create", representation);
-    Object model = template.generateEditor(createView, context).create();
+    Object model = template.createApplicator(createView, context).create();
     final View createResultView = regenerateView(
         template.generateView(model, context), "create", representation);
     assertThat(createResultView, is(sameView(createView)));
 
     final View updateView = readView("update", representation);
-    template.generateEditor(updateView, context).update(model);
+    template.createApplicator(updateView, context).update(model);
     final View updateResultView = regenerateView(
         template.generateView(model, context), "update", representation);
     assertThat(updateResultView, is(sameView(updateView)));

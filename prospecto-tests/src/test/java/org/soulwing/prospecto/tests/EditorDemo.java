@@ -181,7 +181,7 @@ public class EditorDemo {
     });
 
     ViewApplicator editor =
-        PO_TEMPLATE.generateEditor(view, context);
+        PO_TEMPLATE.createApplicator(view, context);
 
     editor.update(order);
 

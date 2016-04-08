@@ -65,7 +65,7 @@ public class DivisionServiceBean implements DivisionService {
       throw new NoSuchEntityException(League.class, id);
     }
 
-    final ViewApplicator editor = DivisionViews.DIVISION_DETAIL.generateEditor(
+    final ViewApplicator editor = DivisionViews.DIVISION_DETAIL.createApplicator(
         divisionView, viewContext);
     editor.update(division);
     division.setId(id);
