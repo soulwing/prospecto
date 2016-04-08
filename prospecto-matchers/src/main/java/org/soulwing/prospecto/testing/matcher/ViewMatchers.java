@@ -247,18 +247,29 @@ public class ViewMatchers {
     }
 
     private boolean equals(View.Event actual, View.Event expected) {
-      return Objects.equals(actual.getType(), expected.getType())
+      return sameType(actual.getType(), expected.getType())
           && (index == 0 || Objects.equals(actual.getName(), expected.getName()))
           && (index == 0 || Objects.equals(actual.getNamespace(), expected.getNamespace()))
           && equals(actual.getValue(), expected.getValue());
     }
 
-    private boolean equals(Object actualValue, Object expectedValue) {
-      if (expectedValue == null && actualValue == null) return true;
-      if (expectedValue == null ^ actualValue == null) return false;
-      Class<?> expectedType = expectedValue.getClass();
-      actualValue = Coerce.toValueOfType(expectedType, actualValue);
-      return expectedValue.equals(actualValue);
+    private boolean equals(Object actual, Object expected) {
+      if (expected == null && actual == null) return true;
+      if (expected == null ^ actual == null) return false;
+      Class<?> expectedType = expected.getClass();
+      actual = Coerce.toValueOfType(expectedType, actual);
+      return expected.equals(actual);
+    }
+
+    private boolean sameType(View.Event.Type actual, View.Event.Type expected) {
+      if (expected == null && actual == null) return true;
+      if (expected == null ^ actual == null) return false;
+      if (expected == View.Event.Type.META
+          && (actual == View.Event.Type.META
+              || actual == View.Event.Type.VALUE)) {
+        return true;
+      }
+      return expected == actual;
     }
 
   }
