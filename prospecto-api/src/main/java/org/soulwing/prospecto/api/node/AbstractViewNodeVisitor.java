@@ -40,6 +40,11 @@ public abstract class AbstractViewNodeVisitor implements ViewNodeVisitor {
   }
 
   @Override
+  public Object visitMeta(MetaNode node, Object state) {
+    return state;
+  }
+
+  @Override
   public Object visitObject(ObjectNode node, Object state) {
     return state;
   }

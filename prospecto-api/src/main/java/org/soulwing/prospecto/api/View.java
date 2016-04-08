@@ -47,13 +47,17 @@ public interface View extends Iterable<View.Event> {
      * representation. However, the same event types could be used to
      * produce XML, YAML, etc.
      * <p>
+     * The {@link #META} type is used to allow dynamically generated metadata
+     * values to be produced in a view, but such events should be treated in
+     * a manner that is essentially similar to a {@link #VALUE} event.
+     * <p>
      * The {@link #URL} type is used to allow dynamically generated partial
      * URLs to be produced in a view, but such events should be treated in
      * a manner that is essential similar to a {@link #VALUE} event. The data
      * type of an event of type {@link #URL} is a String.
      */
     enum Type {
-      VALUE, URL, DISCRIMINATOR,
+      VALUE, META, URL, DISCRIMINATOR,
       BEGIN_OBJECT, END_OBJECT,
       BEGIN_ARRAY, END_ARRAY;
 

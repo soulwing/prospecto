@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,13 +18,19 @@
  */
 package org.soulwing.prospecto.api.node;
 
+import org.soulwing.prospecto.api.MetadataHandler;
+
 /**
- * A {@link MetaNode} representing a resolvable URL.
+ * A {@link ViewNode} that represents a metadata value.
  *
  * @author Carl Harris
  */
-public interface UrlNode extends MetaNode {
+public interface MetaNode extends ViewNode {
 
-  String DEFAULT_NAME = "href";
+  /**
+   * Gets the metadata handler associated with this node.
+   * @return handler instance (never {@code null})
+   */
+  MetadataHandler getHandler();
 
 }

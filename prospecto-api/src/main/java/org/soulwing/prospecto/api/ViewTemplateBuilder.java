@@ -507,6 +507,74 @@ public interface ViewTemplateBuilder {
   ViewTemplateBuilder url(String name, String namespace);
 
   /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Map configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Map configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handler handler instance
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, MetadataHandler handler);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handler handler instance
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      MetadataHandler handler);
+
+  /**
    * Specifies the name of the model property that is the source for the node
    * at the cursor.
    * @param name model property name

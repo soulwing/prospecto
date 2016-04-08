@@ -42,6 +42,14 @@ public interface ViewNodeVisitor {
   Object visitUrl(UrlNode node, Object state);
 
   /**
+   * Visits a metadata node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitMeta(MetaNode node, Object state);
+
+  /**
    * Visits an object node.
    * @param node the subject node
    * @param state visitor state
