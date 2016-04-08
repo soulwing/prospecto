@@ -25,6 +25,7 @@ import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
 import org.soulwing.prospecto.api.node.ArrayOfReferencesNode;
 import org.soulwing.prospecto.api.node.ArrayOfValuesNode;
 import org.soulwing.prospecto.api.node.EnvelopeNode;
+import org.soulwing.prospecto.api.node.MetaNode;
 import org.soulwing.prospecto.api.node.ObjectNode;
 import org.soulwing.prospecto.api.node.ReferenceNode;
 import org.soulwing.prospecto.api.node.SubtypeNode;
@@ -46,7 +47,12 @@ public class ViewApplicationVisitor extends AbstractViewNodeVisitor {
 
   @Override
   public Object visitUrl(UrlNode node, Object state) {
-    return new NoOpApplicator<>(node);
+    return new UrlApplicator(node);
+  }
+
+  @Override
+  public Object visitMeta(MetaNode node, Object state) {
+    return new MetaApplicator(node);
   }
 
   @Override

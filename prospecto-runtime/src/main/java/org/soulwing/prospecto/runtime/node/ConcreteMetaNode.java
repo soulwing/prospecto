@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.node;
 
 import org.soulwing.prospecto.api.MetadataHandler;
-import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.node.MetaNode;
 import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 
 /**
@@ -27,8 +27,10 @@ import org.soulwing.prospecto.api.node.ViewNodeVisitor;
  *
  * @author Carl Harris
  */
-public class ConcreteUrlNode extends ConcreteMetaNode
-    implements UrlNode {
+public class ConcreteMetaNode extends AbstractViewNode
+    implements MetaNode {
+
+  private final MetadataHandler handler;
 
   /**
    * Constructs a new instance.
@@ -36,14 +38,20 @@ public class ConcreteUrlNode extends ConcreteMetaNode
    * @param namespace namespace for {@code name}
    * @param handler metadata handler
    */
-  public ConcreteUrlNode(String name, String namespace,
+  public ConcreteMetaNode(String name, String namespace,
       MetadataHandler handler) {
-    super(name, namespace, handler);
+    super(name, namespace, null);
+    this.handler = handler;
+  }
+
+  @Override
+  public MetadataHandler getHandler() {
+    return handler;
   }
 
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
-    return visitor.visitUrl(this, state);
+    return visitor.visitMeta(this, state);
   }
 
 }

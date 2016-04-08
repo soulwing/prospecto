@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.xml.bind.DatatypeConverter;
@@ -38,7 +39,6 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -136,12 +136,12 @@ class XmlViewReader extends AbstractViewReader {
       case OBJECT:
         beginObject(name(event.getName()), namespace(event.getName()));
         discriminator(event);
-        url(event);
+        metas(event);
         break;
       case ARRAY:
         beginArray(name(event.getName()), namespace(event.getName()));
         discriminator(event);
-        url(event);
+        metas(event);
         break;
       default:
         throw new AssertionError("unrecognized element type");
@@ -174,12 +174,14 @@ class XmlViewReader extends AbstractViewReader {
     }
   }
 
-  private void url(StartElement event) {
-    final Attribute url = event.getAttributeByName(
-        new QName(XmlViewConstants.VIEW_NAMESPACE,
-            getOptions().get(ReaderKeys.URL_NAME, DEFAULT_URL_NAME).toString()));
-    if (url != null) {
-      url(url.getValue());
+  private void metas(StartElement event) {
+    final Iterator attributes = event.getAttributes();
+    while (attributes.hasNext()) {
+      final Attribute attribute = (Attribute) attributes.next();
+      if (XmlViewConstants.META_NAMESPACE.equals(
+          attribute.getName().getNamespaceURI())) {
+        meta(attribute.getName().getLocalPart(), attribute.getValue());
+      }
     }
   }
 

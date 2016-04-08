@@ -27,6 +27,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.node.MetaNode;
 import org.soulwing.prospecto.api.node.UpdatableNode;
 import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.options.ViewKeys;
@@ -101,17 +102,20 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
             + " in node '" + node.getName() + "'");
       }
 
-      if (!(applicator.getNode() instanceof UpdatableNode)) continue;
+      final ViewNode node = applicator.getNode();
+      if (!(node instanceof UpdatableNode) && !(node instanceof MetaNode)) {
+        continue;
+      }
 
       Object value = null;
-      if (applicator.getNode() instanceof ContainerNode
+      if (node instanceof ContainerNode
           && event.getType() == View.Event.Type.VALUE) {
         if (event.getValue() != null) {
           throw new ModelEditorException(
               "scalar value for object node must be null");
         }
         value = transformationService.valueToInject(parentEntity,
-            node.getModelType(), null, node, context);
+            this.node.getModelType(), null, this.node, context);
       }
       else {
         value = applicator.toModelValue(entity, event, events, context);

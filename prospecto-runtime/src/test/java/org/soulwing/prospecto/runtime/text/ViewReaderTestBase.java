@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
+import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.ReaderKeys;
@@ -154,7 +155,7 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.URL, null, Constants.URL_VALUE)));
+        is(expectedUrlEvent(UrlNode.DEFAULT_NAME)));
   }
 
   @Test
@@ -167,9 +168,11 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.URL, null, Constants.URL_VALUE)));
+        is(expectedUrlEvent(Constants.CUSTOM_NAME)));
   }
 
+
+  protected abstract Matcher<View.Event> expectedUrlEvent(String name);
 
   protected InputStream getTestResource(String resourceName) {
     final InputStream inputStream = getClass().getResourceAsStream(

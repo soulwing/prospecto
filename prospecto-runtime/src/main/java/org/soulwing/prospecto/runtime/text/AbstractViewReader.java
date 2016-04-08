@@ -145,6 +145,15 @@ public abstract class AbstractViewReader implements ViewReader {
   }
 
   /**
+   * Adds a metadata value to a view.
+   * @param name metadata name
+   * @param value metadata value
+   */
+  protected final void meta(String name, Object value) {
+    events.add(newEvent(View.Event.Type.META, name, null, value));
+  }
+
+  /**
    * Adds a resource location to the view.
    * @param value resource location
    */

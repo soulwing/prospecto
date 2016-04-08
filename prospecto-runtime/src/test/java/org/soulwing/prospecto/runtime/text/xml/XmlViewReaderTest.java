@@ -20,8 +20,11 @@ package org.soulwing.prospecto.runtime.text.xml;
 
 import java.io.InputStream;
 
+import org.hamcrest.Matcher;
+import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.runtime.text.Constants;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
 /**
@@ -39,6 +42,12 @@ public class XmlViewReaderTest extends ViewReaderTestBase {
   protected ViewReader newViewReader(InputStream inputStream,
       Options options) {
     return new XmlViewReader(inputStream, options);
+  }
+
+  @Override
+  protected Matcher<View.Event> expectedUrlEvent(String name) {
+    return eventWith(View.Event.Type.META, name,
+        Constants.URL_VALUE);
   }
 
 }

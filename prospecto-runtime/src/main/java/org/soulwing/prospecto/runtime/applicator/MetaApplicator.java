@@ -1,5 +1,5 @@
 /*
- * File created on Apr 6, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,32 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.generator;
+package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.UrlNode;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.api.node.MetaNode;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * A generator for the event associated with a URL node.
+ * An applicator for a meta node.
  *
  * @author Carl Harris
  */
-class UrlGenerator extends AbstractMetaGenerator<UrlNode> {
+class MetaApplicator extends AbstractMetaApplicator<MetaNode> {
 
-  UrlGenerator(UrlNode node) {
+  MetaApplicator(MetaNode node) {
     this(node, ConcreteTransformationService.INSTANCE);
   }
 
-  UrlGenerator(UrlNode node, TransformationService transformationService) {
+  MetaApplicator(MetaNode node,
+      TransformationService transformationService) {
     super(node, transformationService);
-  }
-
-  View.Event newEvent(Object value) {
-    return new ConcreteViewEvent(View.Event.Type.URL, node.getName(),
-        node.getNamespace(), value);
   }
 
 }

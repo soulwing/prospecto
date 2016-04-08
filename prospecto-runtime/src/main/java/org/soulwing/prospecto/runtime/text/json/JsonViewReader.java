@@ -102,11 +102,6 @@ class JsonViewReader extends AbstractViewReader {
         ReaderKeys.DISCRIMINATOR_NAME, DEFAULT_DISCRIMINATOR_NAME).toString());
   }
 
-  private boolean isUrl() {
-    return name != null && name.equals(getOptions().get(
-        ReaderKeys.URL_NAME, DEFAULT_URL_NAME));
-  }
-
   private String getName() {
     final String name = this.name;
     this.name = null;
@@ -140,10 +135,6 @@ class JsonViewReader extends AbstractViewReader {
   private void valueString(JsonParser parser) {
     if (isDiscriminator()) {
       discriminator(parser.getString());
-    }
-    else if (isUrl()) {
-      getName();   // don't need name but need to reset it
-      url(parser.getString());
     }
     else {
       value(getName(), parser.getString());

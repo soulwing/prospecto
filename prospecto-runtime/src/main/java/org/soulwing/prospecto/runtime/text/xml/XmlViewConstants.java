@@ -36,6 +36,8 @@ public interface XmlViewConstants {
 
   String VIEW_NAMESPACE = "urn:org.soulwing.prospecto:view";
 
+  String META_NAMESPACE = "urn:org.soulwing.prospecto:meta";
+
   String XS_NAMESPACE = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
   String XSI_NAMESPACE = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;

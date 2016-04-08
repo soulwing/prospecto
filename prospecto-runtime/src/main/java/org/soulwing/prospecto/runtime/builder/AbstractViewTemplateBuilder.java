@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
@@ -38,12 +39,14 @@ import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorBuilderFactory;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.injector.BeanFactory;
 import org.soulwing.prospecto.runtime.injector.JdkBeanFactory;
+import org.soulwing.prospecto.runtime.meta.UrlResolvingMetadataHandler;
 import org.soulwing.prospecto.runtime.node.AbstractViewNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
@@ -133,12 +136,64 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder url(String name, String namespace) {
-    final ConcreteUrlNode node = new ConcreteUrlNode(name, namespace);
+    final ConcreteUrlNode node = new ConcreteUrlNode(name, namespace,
+        UrlResolvingMetadataHandler.INSTANCE);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }
 
   protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteUrlNode node);
+
+  @Override
+  public ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration) {
+    return meta(name, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration) {
+    try {
+      return meta(name, namespace, beanFactory.construct(handlerClass,
+          configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Map configuration) {
+    return meta(name, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Map configuration) {
+    try {
+      return meta(name, namespace, beanFactory.construct(handlerClass,
+          configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, MetadataHandler handler) {
+    return meta(name, null, handler);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace,
+      MetadataHandler handler) {
+    final ConcreteMetaNode node = new ConcreteMetaNode(name, namespace, handler);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteMetaNode node);
 
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, Class<?> componentType) {

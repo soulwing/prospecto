@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <v:object
     xmlns:v="urn:org.soulwing.prospecto:view"
-    v:type="object" v:custom="url"/>
+    xmlns:m="urn:org.soulwing.prospecto:meta"
+    v:type="object" m:custom="url"/>

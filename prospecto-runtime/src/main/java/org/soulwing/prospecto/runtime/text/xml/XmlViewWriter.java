@@ -64,6 +64,7 @@ class XmlViewWriter extends AbstractViewWriter {
       XMLOutputFactory.newFactory();
 
   private static final String VIEW_PREFIX = "v";
+  private static final String META_PREFIX = "m";
   private static final String XS_PREFIX = "xs";
   private static final String XSI_PREFIX = "xsi";
 
@@ -170,6 +171,11 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   @Override
+  protected void onMeta(View.Event event) throws Exception {
+    writeMeta(event);
+  }
+
+  @Override
   protected void onUrl(View.Event event) throws Exception {
     writeUrl(event);
   }
@@ -200,6 +206,7 @@ class XmlViewWriter extends AbstractViewWriter {
 
     writer.setDefaultNamespace(namespaceStack.peek());
     writer.setPrefix(VIEW_PREFIX, XmlViewConstants.VIEW_NAMESPACE);
+    writer.setPrefix(META_PREFIX, XmlViewConstants.META_NAMESPACE);
     writer.setPrefix(XSI_PREFIX, XmlViewConstants.XSI_NAMESPACE);
     writer.setPrefix(XS_PREFIX, XmlViewConstants.XS_NAMESPACE);
     writer.writeStartDocument(encoding, XML_VERSION);
@@ -208,6 +215,7 @@ class XmlViewWriter extends AbstractViewWriter {
             XmlViewConstants.OBJECT_QNAME : XmlViewConstants.ARRAY_QNAME);
     writer.writeDefaultNamespace(namespaceStack.peek());
     writer.writeNamespace(VIEW_PREFIX, XmlViewConstants.VIEW_NAMESPACE);
+    writer.writeNamespace(META_PREFIX, XmlViewConstants.META_NAMESPACE);
     writer.writeNamespace(XSI_PREFIX, XmlViewConstants.XSI_NAMESPACE);
     writer.writeNamespace(XS_PREFIX, XmlViewConstants.XS_NAMESPACE);
     writeElementType(event);
@@ -279,9 +287,15 @@ class XmlViewWriter extends AbstractViewWriter {
     writer.writeCharacters(value);
     writer.writeEndElement();
   }
+
+  private void writeMeta(View.Event event) throws XMLStreamException {
+    writeAttributeString(event.getName(),
+        XmlViewConstants.META_NAMESPACE, event.getValue().toString());
+  }
+
   private void writeUrl(View.Event event) throws XMLStreamException {
     writeAttributeString(event.getName(),
-        XmlViewConstants.VIEW_NAMESPACE, event.getValue().toString());
+        XmlViewConstants.META_NAMESPACE, event.getValue().toString());
   }
 
   private void writeDiscriminator(View.Event event) throws XMLStreamException {

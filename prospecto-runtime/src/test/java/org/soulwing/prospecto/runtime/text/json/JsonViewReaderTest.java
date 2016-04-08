@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
@@ -48,6 +49,12 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
   @Override
   protected ViewReader newViewReader(InputStream inputStream, Options options) {
     return new JsonViewReader(inputStream, options);
+  }
+
+  @Override
+  protected Matcher<View.Event> expectedUrlEvent(String name) {
+    return eventWith(View.Event.Type.VALUE, name,
+        Constants.URL_VALUE);
   }
 
   @Test

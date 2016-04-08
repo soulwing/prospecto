@@ -92,6 +92,9 @@ public abstract class AbstractViewWriter implements ViewWriter {
           case VALUE:
             doValue(event);
             break;
+          case META:
+            onMeta(event);
+            break;
           case DISCRIMINATOR:
             onDiscriminator(event);
             break;
@@ -173,6 +176,14 @@ public abstract class AbstractViewWriter implements ViewWriter {
    * @throws Exception
    */
   protected abstract void onValue(View.Event event) throws Exception;
+
+  /**
+   * Notifies the recipient that the next {@code event} is of type
+   * {@link View.Event.Type#META}.
+   * @param event the subject event
+   * @throws Exception
+   */
+  protected abstract void onMeta(View.Event event) throws Exception;
 
   /**
    * Notifies the recipient that the next {@code event} is of type

@@ -73,6 +73,7 @@ public class ViewBuilder {
 
   public ViewBuilder with(ViewBuilder builder) {
     next();
+    builder.next();
     events.addAll(builder.events);
     return this;
   }

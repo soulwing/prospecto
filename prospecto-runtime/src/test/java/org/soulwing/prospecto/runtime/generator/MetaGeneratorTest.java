@@ -1,5 +1,5 @@
 /*
- * File created on Apr 6, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -27,28 +27,28 @@ import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.node.MetaNode;
 
 /**
- * Unit tests for {@link UrlGenerator}.
+ * Unit tests for {@link MetaGenerator}.
  *
  * @author Carl Harris
  */
-public class UrlGeneratorTest extends AbstractMetaGeneratorTest<UrlNode> {
+public class MetaGeneratorTest extends AbstractMetaGeneratorTest<MetaNode> {
 
   @Override
-  UrlNode newNode() {
-    return context.mock(UrlNode.class);
+  MetaNode newNode() {
+    return context.mock(MetaNode.class);
   }
 
   @Override
-  AbstractViewEventGenerator<UrlNode> newGenerator(UrlNode node) {
-    return new UrlGenerator(node, transformationService);
+  AbstractViewEventGenerator<MetaNode> newGenerator(MetaNode node) {
+    return new MetaGenerator(node, transformationService);
   }
 
   @Override
   Matcher<View.Event> expectedEvent(Object value) {
-    return eventOfType(View.Event.Type.URL,
+    return eventOfType(View.Event.Type.VALUE,
         withName(NAME), inNamespace(NAMESPACE),
         whereValue(is(sameInstance(value))));
   }

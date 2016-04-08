@@ -26,6 +26,7 @@ import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
+import static org.soulwing.prospecto.api.View.Event.Type.URL;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.eventOfType;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.hasEventSequence;
@@ -42,8 +43,13 @@ import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**
  * Tests for structures using object nodes.
@@ -58,6 +64,10 @@ public class ObjectTest {
   public static final String CHILDREN = "children";
   public static final String STRING = "string";
   public static final String STRINGS = "strings";
+  public static final String RESOLVED_URL = "resolvedUrl";
+  public static final String META = "meta";
+  public static final String META_VALUE = "metaValue";
+
 
   @SuppressWarnings("unused")
   public static class MockType1 {
@@ -154,6 +164,48 @@ public class ObjectTest {
         )
     );
   }
+
+  @Test
+  public void testObjectUrl() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(NAME, NAMESPACE, MockType1.class)
+            .url()
+        .end()
+        .build();
+
+    context.appendScope().put(MockUrlResolver.INSTANCE);
+    model.child = null;
+    assertThat(template.generateView(model, context),
+        hasEventSequence(
+            eventOfType(BEGIN_OBJECT),
+            eventOfType(URL, withName(UrlNode.DEFAULT_NAME),
+                inDefaultNamespace(),
+                whereValue(is(equalTo(RESOLVED_URL)))),
+            eventOfType(END_OBJECT)
+        )
+    );
+  }
+
+  @Test
+  public void testObjectMeta() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(NAME, NAMESPACE, MockType1.class)
+          .meta(META, MockMetadataHandler.INSTANCE)
+        .end()
+        .build();
+
+    model.child = null;
+    assertThat(template.generateView(model, context),
+        hasEventSequence(
+            eventOfType(BEGIN_OBJECT),
+            eventOfType(VALUE, withName(META),
+                inDefaultNamespace(),
+                whereValue(is(equalTo(META_VALUE)))),
+            eventOfType(END_OBJECT)
+        )
+    );
+  }
+
 
   @Test
   @SuppressWarnings("unchecked")
@@ -541,6 +593,34 @@ public class ObjectTest {
             eventOfType(END_OBJECT)
         )
     );
+  }
+
+  private static class MockUrlResolver implements UrlResolver {
+
+    static final MockUrlResolver INSTANCE = new MockUrlResolver();
+
+    @Override
+    public String resolve(ViewNode node, ViewContext context) {
+      return RESOLVED_URL;
+    }
+
+  }
+
+  private static class MockMetadataHandler implements MetadataHandler {
+
+    static final MockMetadataHandler INSTANCE = new MockMetadataHandler();
+
+    @Override
+    public Object produceValue(MetaNode node, ViewContext context)
+        throws Exception {
+      return META_VALUE;
+    }
+
+    @Override
+    public void consumeValue(MetaNode node, Object value, ViewContext context)
+        throws Exception {
+    }
+
   }
 
 }

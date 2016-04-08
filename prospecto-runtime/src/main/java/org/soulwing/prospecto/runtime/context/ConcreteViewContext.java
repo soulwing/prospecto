@@ -250,28 +250,36 @@ class ConcreteViewContext implements ScopedViewContext {
 
   @Override
   public void put(Object obj) {
-    scopeStack.peek().put(obj);
+    topFrame().put(obj);
   }
 
   @Override
   public void put(String name, Object obj) {
-    scopeStack.peek().put(name, obj);
+    topFrame().put(name, obj);
   }
 
   @Override
   public void putAll(Collection<?> objs) {
-    scopeStack.peek().putAll(objs);
+    topFrame().putAll(objs);
   }
 
   @Override
   public void putAll(Map<String, ?> objs) {
-    scopeStack.peek().putAll(objs);
+    topFrame().putAll(objs);
   }
 
   @Override
   public boolean remove(Object value) {
-    return scopeStack.peek().remove(value);
+    return topFrame().remove(value);
   }
+
+  private ScopeFrame topFrame() {
+    if (scopeStack.isEmpty()) {
+      throw new IllegalStateException("scope stack is empty");
+    }
+    return scopeStack.peek();
+  }
+
 
 }
 

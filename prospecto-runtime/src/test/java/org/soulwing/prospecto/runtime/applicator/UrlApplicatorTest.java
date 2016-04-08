@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,34 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.node;
+package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.node.UrlNode;
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
 
 /**
- * A view node that represents a value that is resolved as a URL.
+ * Unit tests for {@link MetaApplicator}.
  *
  * @author Carl Harris
  */
-public class ConcreteUrlNode extends ConcreteMetaNode
-    implements UrlNode {
+public class UrlApplicatorTest
+    extends AbstractMetaApplicatorTest<UrlNode> {
 
-  /**
-   * Constructs a new instance.
-   * @param name node name
-   * @param namespace namespace for {@code name}
-   * @param handler metadata handler
-   */
-  public ConcreteUrlNode(String name, String namespace,
-      MetadataHandler handler) {
-    super(name, namespace, handler);
+  @Override
+  UrlNode newNode() {
+    return context.mock(UrlNode.class);
   }
 
   @Override
-  public Object accept(ViewNodeVisitor visitor, Object state) {
-    return visitor.visitUrl(this, state);
+  AbstractViewEventApplicator<UrlNode> newApplicator(UrlNode node) {
+    return new UrlApplicator(node, transformationService);
   }
 
 }

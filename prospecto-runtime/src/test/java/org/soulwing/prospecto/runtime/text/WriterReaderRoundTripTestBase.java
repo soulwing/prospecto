@@ -24,6 +24,7 @@ import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
+import static org.soulwing.prospecto.api.View.Event.Type.META;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.sameView;
 
@@ -91,7 +92,8 @@ public abstract class WriterReaderRoundTripTestBase {
 
   @After
   public void tearDown() throws Exception {
-    assertThat(file.delete(), is(true));
+    System.out.println(file);
+//    assertThat(file.delete(), is(true));
   }
 
   @Test
@@ -99,6 +101,7 @@ public abstract class WriterReaderRoundTripTestBase {
     final View expected = ViewBuilder
         .begin()
         .type(BEGIN_OBJECT).name(name).namespace(namespace)
+        .with(metas())
         .with(namedValues())
         .type(END_OBJECT).name(name).namespace(namespace)
         .end();
@@ -113,6 +116,7 @@ public abstract class WriterReaderRoundTripTestBase {
         .begin()
         .type(BEGIN_OBJECT).name(name).namespace(namespace)
         .type(BEGIN_OBJECT).name(CHILD).namespace(namespace)
+        .with(metas())
         .with(namedValues())
         .type(END_OBJECT).name(CHILD).namespace(namespace)
         .type(END_OBJECT).name(name).namespace(namespace)
@@ -129,6 +133,7 @@ public abstract class WriterReaderRoundTripTestBase {
         .begin()
         .type(BEGIN_ARRAY).name(name).namespace(namespace)
         .type(BEGIN_OBJECT)
+        .with(metas())
         .with(namedValues())
         .type(END_OBJECT)
         .type(END_ARRAY).name(name).namespace(namespace)
@@ -148,6 +153,7 @@ public abstract class WriterReaderRoundTripTestBase {
         .type(BEGIN_OBJECT)
         .type(BEGIN_ARRAY).name(CHILDREN).namespace(namespace)
         .type(BEGIN_OBJECT)
+        .with(metas())
         .with(namedValues())
         .type(END_OBJECT)
         .type(END_ARRAY).name(CHILDREN).namespace(namespace)
@@ -208,6 +214,11 @@ public abstract class WriterReaderRoundTripTestBase {
     assertThat(actual, is(sameView(expected)));
   }
 
+  private ViewBuilder metas() {
+    return ViewBuilder
+        .begin()
+        .type(META).name("objectMeta").value("metaValue");
+  }
 
   private ViewBuilder namedValues() {
     return ViewBuilder
