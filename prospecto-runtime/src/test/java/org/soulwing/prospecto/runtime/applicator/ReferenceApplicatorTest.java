@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.Collections;
+
 import org.jmock.Expectations;
 import org.junit.Test;
 import org.soulwing.prospecto.api.node.ReferenceNode;
@@ -37,8 +39,9 @@ public class ReferenceApplicatorTest
 
   @Override
   AbstractViewEventApplicator<ReferenceNode> newApplicator(ReferenceNode node) {
-    return new ReferenceApplicator(node, children, entityFactory,
-        transformationService, associationUpdater);
+    return new ReferenceApplicator(node,
+        Collections.<ViewEventApplicator>emptyList(), entityFactory,
+        transformationService, associationUpdater, applicatorLocator);
   }
 
   @Test

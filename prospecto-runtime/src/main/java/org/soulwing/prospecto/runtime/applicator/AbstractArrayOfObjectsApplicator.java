@@ -47,8 +47,10 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
   AbstractArrayOfObjectsApplicator(N node, List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToManyAssociationUpdater associationUpdater) {
-    super(node, children, entityFactory, transformationService);
+      ToManyAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
+    super(node, children, entityFactory, transformationService,
+        applicatorLocator);
     this.associationUpdater = associationUpdater;
   }
 

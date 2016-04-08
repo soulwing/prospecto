@@ -1,5 +1,5 @@
 /*
- * File created on Apr 7, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,29 +18,22 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import java.util.Collections;
-
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
-
 /**
- * Unit tests for {@link ArrayOfValuesApplicator}.
+ * A locator that searches for a applicator for a given model property in
+ * a given {@link ContainerApplicator}.
  *
  * @author Carl Harris
  */
-public class ArrayOfObjectsApplicatorTest
-    extends AbstractArrayOfObjectsApplicatorTest<ArrayOfObjectsNode> {
+interface ContainerApplicatorLocator {
 
-  @Override
-  ArrayOfObjectsNode newNode() {
-    return context.mock(ArrayOfObjectsNode.class);
-  }
-
-  @Override
-  AbstractViewEventApplicator<ArrayOfObjectsNode> newApplicator(
-      ArrayOfObjectsNode node) {
-    return new ArrayOfObjectsApplicator(node, Collections.singletonList(child),
-        entityFactory, transformationService, associationUpdater,
-        applicatorLocator);
-  }
+  /**
+   * Finds the best applicator for a property with the given name.
+   * @param name name of the property
+   * @param targetType target model type
+   * @param container the container to search
+   * @return best applicator or {@code null} if no matching applicator exists
+   */
+  ViewEventApplicator findApplicator(String name, Class<?> targetType,
+      ContainerApplicator container);
 
 }

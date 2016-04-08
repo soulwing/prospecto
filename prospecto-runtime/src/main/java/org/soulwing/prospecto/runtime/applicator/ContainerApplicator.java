@@ -1,5 +1,5 @@
 /*
- * File created on Apr 7, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,15 +18,19 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.node.ContainerNode;
+import java.util.List;
 
 /**
- * An abstract base for unit tests of {@link AbstractContainerApplicator}
- * subtypes.
+ * A {@link ViewEventApplicator} that has a collection of children.
  *
  * @author Carl Harris
  */
-public abstract class AbstractContainerApplicatorTest<N extends ContainerNode>
-    extends AbstractViewEventApplicatorTest<N> {
+interface ContainerApplicator extends ViewEventApplicator {
+
+  /**
+   * Gets the children of this applicator.
+   * @return list of children
+   */
+  List<ViewEventApplicator> getChildren();
 
 }

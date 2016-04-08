@@ -41,7 +41,7 @@ public class ArrayOfReferencesApplicatorTest
     return new ArrayOfReferencesApplicator(node,
         Collections.singletonList(child),
         entityFactory, transformationService,
-        associationUpdater);
+        associationUpdater, applicatorLocator);
   }
 
 }

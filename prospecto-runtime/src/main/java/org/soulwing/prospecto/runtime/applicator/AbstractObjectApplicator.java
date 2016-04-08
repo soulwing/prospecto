@@ -41,8 +41,10 @@ abstract class AbstractObjectApplicator<N extends ObjectNode>
   AbstractObjectApplicator(N node, List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToOneAssociationUpdater associationUpdater) {
-    super(node, children, entityFactory, transformationService);
+      ToOneAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
+    super(node, children, entityFactory, transformationService,
+        applicatorLocator);
     this.associationUpdater = associationUpdater;
   }
 
@@ -52,7 +54,7 @@ abstract class AbstractObjectApplicator<N extends ObjectNode>
     for (final String name : entity.nameSet()) {
 
       final ViewEventApplicator applicator =
-          findDescendant(entity.getType(), name);
+          applicatorLocator.findApplicator(name, entity.getType(), this);
 
       if (applicator == null) continue;
 

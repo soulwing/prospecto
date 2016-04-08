@@ -96,6 +96,9 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
   @Mock
   ToManyAssociationManager<?, ?> defaultManager;
 
+  @Mock
+  ContainerApplicatorLocator applicatorLocator;
+
   Deque<View.Event> events = new LinkedList<>();
 
   @Test
@@ -104,12 +107,16 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
       {
         oneOf(entityFactory).newEntity(node, events, viewContext);
         will(returnValue(entity));
+        oneOf(entity).getType();
+        will(returnValue(MockModel.class));
+
+        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
+            (ContainerApplicator) applicator);
+        will(returnValue(child));
+
         allowing(child).getNode();
         will(returnValue(childNode));
-        oneOf(entity).getType();
-        will(returnValue(Object.class));
-        oneOf(childNode).getName();
-        will(returnValue(NAME));
+
         oneOf(child).toModelValue(entity, VALUE_EVENT, events, viewContext);
         will(returnValue(MODEL_VALUE));
         oneOf(viewContext).push(0);
@@ -209,5 +216,7 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
 
     applicator.inject(MODEL, MODEL_ARRAY, viewContext);
   }
+
+  private interface MockModel {}
 
 }

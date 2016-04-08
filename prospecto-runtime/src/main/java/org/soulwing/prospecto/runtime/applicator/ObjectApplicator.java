@@ -41,15 +41,17 @@ class ObjectApplicator extends AbstractObjectApplicator<ObjectNode>
   ObjectApplicator(ObjectNode node, List<ViewEventApplicator> children) {
     this(node, children, ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ConcreteToOneAssociationUpdater.INSTANCE);
+        ConcreteToOneAssociationUpdater.INSTANCE,
+        HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
   ObjectApplicator(ObjectNode node, List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToOneAssociationUpdater associationUpdater) {
+      ToOneAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
-      associationUpdater);
+      associationUpdater, applicatorLocator);
   }
 
   @Override

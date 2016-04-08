@@ -41,16 +41,18 @@ class ArrayOfObjectsApplicator
     this(node, children,
         ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ConcreteToManyAssociationUpdater.INSTANCE);
+        ConcreteToManyAssociationUpdater.INSTANCE,
+        HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
   ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
       List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToManyAssociationUpdater associationUpdater) {
+      ToManyAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
-        associationUpdater);
+        associationUpdater, applicatorLocator);
   }
 
 }

@@ -39,8 +39,9 @@ public class ObjectApplicatorTest
 
   @Override
   AbstractViewEventApplicator<ObjectNode> newApplicator(ObjectNode node) {
-    return new ObjectApplicator(node, children, entityFactory,
-        transformationService, associationUpdater);
+    return new ObjectApplicator(node,
+        Collections.<ViewEventApplicator>emptyList(), entityFactory,
+        transformationService, associationUpdater, applicatorLocator);
   }
 
   @Test
@@ -51,14 +52,14 @@ public class ObjectApplicatorTest
         will(returnValue(Collections.singleton(NAME)));
         oneOf(entity).getType();
         will(returnValue(MockModel.class));
-        allowing(child).getNode();
+        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
+            (ContainerApplicator) applicator);
+        will(returnValue(child));
+        oneOf(child).getNode();
         will(returnValue(childNode));
-        oneOf(childNode).getName();
-        will(returnValue(NAME));
       }
     });
 
-    children.add(child);
     applicator.inject(MODEL, entity);
   }
 
@@ -70,6 +71,9 @@ public class ObjectApplicatorTest
         will(returnValue(Collections.singleton(NAME)));
         oneOf(entity).getType();
         will(returnValue(MockModel.class));
+        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
+            (ContainerApplicator) applicator);
+        will(returnValue(null));
       }
     });
 

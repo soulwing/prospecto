@@ -38,15 +38,17 @@ class ReferenceApplicator extends AbstractObjectApplicator<ReferenceNode> {
   ReferenceApplicator(ReferenceNode node, List<ViewEventApplicator> children) {
     this(node, children, ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ReferenceToOneAssociationUpdater.INSTANCE);
+        ReferenceToOneAssociationUpdater.INSTANCE,
+        HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
   ReferenceApplicator(ReferenceNode node,
       List<ViewEventApplicator> children, ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToOneAssociationUpdater associationUpdater) {
+      ToOneAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
-        associationUpdater);
+        associationUpdater, applicatorLocator);
   }
 
   @Override

@@ -22,9 +22,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
@@ -93,10 +90,10 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
   TransformationService transformationService;
 
   @Mock
+  ContainerApplicatorLocator applicatorLocator;
+
+  @Mock
   Options options;
-
-  List<ViewEventApplicator> children = new ArrayList<>();
-
 
   @Test(expected = ModelEditorException.class)
   public void testToModelObjectWhenNoEndEvent() throws Exception {
@@ -120,7 +117,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(false));
     context.checking(contextScopeExpectations(false));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childNode));
+    context.checking(findDescendantExpectations(null, null));
     context.checking(new Expectations() {
       {
         oneOf(viewContext).getOptions();
@@ -138,7 +135,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(true));
     context.checking(contextScopeExpectations(true));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childNode));
+    context.checking(findDescendantExpectations(null, null));
     context.checking(new Expectations() {
       {
         oneOf(viewContext).getOptions();
@@ -161,7 +158,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(true));
     context.checking(contextScopeExpectations(true));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childContainer));
+    context.checking(findDescendantExpectations(child, childContainer));
     context.checking(entityPutExpectations(MODEL_VALUE));
     context.checking(new Expectations() {
       {
@@ -173,7 +170,6 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
       }
     });
 
-    children.add(child);
     events.add(NULL_VALUE_EVENT);
     events.add(END_EVENT);
     assertThat(applicator.toModelValue(
@@ -187,7 +183,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(true));
     context.checking(contextScopeExpectations(true));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childContainer));
+    context.checking(findDescendantExpectations(child, childContainer));
     context.checking(new Expectations() {
       {
         oneOf(node).getModelType();
@@ -198,7 +194,6 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
       }
     });
 
-    children.add(child);
     events.add(NULL_VALUE_EVENT);
     events.add(END_EVENT);
     assertThat(applicator.toModelValue(
@@ -213,9 +208,9 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(true));
     context.checking(contextScopeExpectations(true));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childNode));
+    context.checking(findDescendantExpectations(child, childNode));
     context.checking(childModelValueExpectations(UndefinedValue.INSTANCE));
-    children.add(child);
+
     events.add(VALUE_EVENT);
     events.add(END_EVENT);
     assertThat(applicator.toModelValue(
@@ -228,10 +223,10 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     context.checking(baseExpectations(true));
     context.checking(contextScopeExpectations(true));
     context.checking(entityFactoryExpectations());
-    context.checking(findDescedantExpectations(childNode));
+    context.checking(findDescendantExpectations(child, childNode));
     context.checking(childModelValueExpectations(MODEL_VALUE));
     context.checking(entityPutExpectations(MODEL_VALUE));
-    children.add(child);
+
     events.add(VALUE_EVENT);
     events.add(END_EVENT);
     assertThat(applicator.toModelValue(
@@ -248,16 +243,18 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     };
   }
 
-  private Expectations findDescedantExpectations(
-      final UpdatableNode childNode) throws Exception {
+  private Expectations findDescendantExpectations(
+      final ViewEventApplicator descendant, final UpdatableNode childNode)
+      throws Exception {
     return new Expectations() {
       {
         oneOf(entity).getType();
         will(returnValue(MockModel.class));
+        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
+            (ContainerApplicator) applicator);
+        will(returnValue(descendant));
         allowing(child).getNode();
         will(returnValue(childNode));
-        allowing(childNode).getName();
-        will(returnValue(NAME));
       }
     };
   }

@@ -36,7 +36,9 @@ import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 class SubtypeApplicator extends AbstractContainerApplicator<SubtypeNode> {
 
   SubtypeApplicator(SubtypeNode node, List<ViewEventApplicator> children) {
-    super(node, children, ConcreteViewEntityFactory.INSTANCE, ConcreteTransformationService.INSTANCE);
+    super(node, children, ConcreteViewEntityFactory.INSTANCE,
+        ConcreteTransformationService.INSTANCE,
+        HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
   @Override

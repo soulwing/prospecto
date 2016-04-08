@@ -20,7 +20,6 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Deque;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.soulwing.prospecto.api.ModelEditorException;
@@ -42,7 +41,7 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  * @author Carl Harris
  */
 abstract class AbstractContainerApplicator<N extends ViewNode>
-    extends AbstractViewEventApplicator<N>  {
+    extends AbstractViewEventApplicator<N> implements ContainerApplicator {
 
   private static final EnumSet<View.Event.Type> UPDATE_EVENT_TYPES =
       EnumSet.of(View.Event.Type.BEGIN_OBJECT,
@@ -51,16 +50,24 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
 
   final ViewEntityFactory entityFactory;
   final TransformationService transformationService;
+  final ContainerApplicatorLocator applicatorLocator;
 
   private final List<ViewEventApplicator> children;
 
   AbstractContainerApplicator(N node, List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
-      TransformationService transformationService) {
+      TransformationService transformationService,
+      ContainerApplicatorLocator applicatorLocator) {
     super(node);
     this.children = children;
     this.entityFactory = entityFactory;
     this.transformationService = transformationService;
+    this.applicatorLocator = applicatorLocator;
+  }
+
+  @Override
+  public List<ViewEventApplicator> getChildren() {
+    return children;
   }
 
   @Override
@@ -83,7 +90,9 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
         throw new ModelEditorException("unexpected anonymous event: " + event);
       }
 
-      final ViewEventApplicator applicator = findDescendant(entity.getType(), name);
+      final ViewEventApplicator applicator =
+          applicatorLocator.findApplicator(name, entity.getType(), this);
+
       if (applicator == null) {
         if (context.getOptions().isEnabled(
             ViewKeys.IGNORE_UNKNOWN_PROPERTIES)) continue;
@@ -120,29 +129,6 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
     }
 
     return entity;
-  }
-
-  ViewEventApplicator findDescendant(Class<?> subtype, String name) {
-    Iterator<ViewEventApplicator> i = children.iterator();
-    while (i.hasNext()) {
-      final ViewEventApplicator child = i.next();
-      if (child instanceof SubtypeApplicator
-          && subtype.isAssignableFrom(child.getNode().getModelType())) {
-        final ViewEventApplicator descendant =
-            ((SubtypeApplicator) child).findDescendant(subtype, name);
-        if (descendant != null) return descendant;
-      }
-    }
-
-    i = children.iterator();
-    while (i.hasNext()) {
-      final ViewEventApplicator child = i.next();
-      if (name.equals(child.getNode().getName())) {
-        return child;
-      }
-    }
-
-    return null;
   }
 
 }

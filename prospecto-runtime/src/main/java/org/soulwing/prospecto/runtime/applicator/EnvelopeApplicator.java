@@ -41,14 +41,17 @@ class EnvelopeApplicator extends AbstractObjectApplicator<EnvelopeNode> {
     this(node, children,
         ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ConcreteToOneAssociationUpdater.INSTANCE);
+        ConcreteToOneAssociationUpdater.INSTANCE,
+        HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
   EnvelopeApplicator(EnvelopeNode node, List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToOneAssociationUpdater associationUpdater) {
-    super(node, children, entityFactory, transformationService, associationUpdater);
+      ToOneAssociationUpdater associationUpdater,
+      ContainerApplicatorLocator applicatorLocator) {
+    super(node, children, entityFactory, transformationService,
+        associationUpdater, applicatorLocator);
   }
 
   @Override
