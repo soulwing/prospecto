@@ -264,7 +264,8 @@ public class ViewMatchers {
     private boolean sameType(View.Event.Type actual, View.Event.Type expected) {
       if (expected == null && actual == null) return true;
       if (expected == null ^ actual == null) return false;
-      if (expected == View.Event.Type.META
+      if ((expected == View.Event.Type.META ||
+            expected == View.Event.Type.VALUE)
           && (actual == View.Event.Type.META
               || actual == View.Event.Type.VALUE)) {
         return true;

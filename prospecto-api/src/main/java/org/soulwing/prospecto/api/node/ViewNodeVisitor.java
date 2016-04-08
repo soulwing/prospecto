@@ -34,14 +34,6 @@ public interface ViewNodeVisitor {
   Object visitValue(ValueNode node, Object state);
 
   /**
-   * Visits a URL node.
-   * @param node the subject node
-   * @param state visitor state
-   * @return visit result
-   */
-  Object visitUrl(UrlNode node, Object state);
-
-  /**
    * Visits a metadata node.
    * @param node the subject node
    * @param state visitor state

@@ -48,7 +48,7 @@ public class MetaGeneratorTest extends AbstractMetaGeneratorTest<MetaNode> {
 
   @Override
   Matcher<View.Event> expectedEvent(Object value) {
-    return eventOfType(View.Event.Type.VALUE,
+    return eventOfType(View.Event.Type.META,
         withName(NAME), inNamespace(NAMESPACE),
         whereValue(is(sameInstance(value))));
   }

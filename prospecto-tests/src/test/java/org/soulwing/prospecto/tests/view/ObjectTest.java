@@ -26,7 +26,7 @@ import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
-import static org.soulwing.prospecto.api.View.Event.Type.URL;
+import static org.soulwing.prospecto.api.View.Event.Type.META;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.eventOfType;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.hasEventSequence;
@@ -65,7 +65,7 @@ public class ObjectTest {
   public static final String STRING = "string";
   public static final String STRINGS = "strings";
   public static final String RESOLVED_URL = "resolvedUrl";
-  public static final String META = "meta";
+  public static final String META_NAME = "meta";
   public static final String META_VALUE = "metaValue";
 
 
@@ -178,7 +178,7 @@ public class ObjectTest {
     assertThat(template.generateView(model, context),
         hasEventSequence(
             eventOfType(BEGIN_OBJECT),
-            eventOfType(URL, withName(ViewDefaults.URL_NAME),
+            eventOfType(META, withName(ViewDefaults.URL_NAME),
                 inDefaultNamespace(),
                 whereValue(is(equalTo(RESOLVED_URL)))),
             eventOfType(END_OBJECT)
@@ -190,7 +190,7 @@ public class ObjectTest {
   public void testObjectMeta() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(NAME, NAMESPACE, MockType1.class)
-          .meta(META, MockMetadataHandler.INSTANCE)
+          .meta(META_NAME, MockMetadataHandler.INSTANCE)
         .end()
         .build();
 
@@ -198,7 +198,7 @@ public class ObjectTest {
     assertThat(template.generateView(model, context),
         hasEventSequence(
             eventOfType(BEGIN_OBJECT),
-            eventOfType(VALUE, withName(META),
+            eventOfType(META, withName(META_NAME),
                 inDefaultNamespace(),
                 whereValue(is(equalTo(META_VALUE)))),
             eventOfType(END_OBJECT)

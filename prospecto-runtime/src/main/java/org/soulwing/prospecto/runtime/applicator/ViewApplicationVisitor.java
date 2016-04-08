@@ -29,7 +29,6 @@ import org.soulwing.prospecto.api.node.MetaNode;
 import org.soulwing.prospecto.api.node.ObjectNode;
 import org.soulwing.prospecto.api.node.ReferenceNode;
 import org.soulwing.prospecto.api.node.SubtypeNode;
-import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.node.ValueNode;
 
 /**
@@ -43,11 +42,6 @@ public class ViewApplicationVisitor extends AbstractViewNodeVisitor {
   @Override
   public Object visitValue(ValueNode node, Object state) {
     return new ValueApplicator(node);
-  }
-
-  @Override
-  public Object visitUrl(UrlNode node, Object state) {
-    return new UrlApplicator(node);
   }
 
   @Override

@@ -50,7 +50,6 @@ import org.soulwing.prospecto.runtime.node.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 
@@ -136,13 +135,8 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder url(String name, String namespace) {
-    final ConcreteUrlNode node = new ConcreteUrlNode(name, namespace,
-        UrlResolvingMetadataHandler.INSTANCE);
-    addChildToTarget(node);
-    return newTemplateBuilder(node);
+    return meta(name, namespace, UrlResolvingMetadataHandler.INSTANCE);
   }
-
-  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteUrlNode node);
 
   @Override
   public ViewTemplateBuilder meta(String name,

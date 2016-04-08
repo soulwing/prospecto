@@ -40,7 +40,7 @@ class MetaGenerator extends AbstractMetaGenerator<MetaNode> {
   }
 
   View.Event newEvent(Object value) {
-    return new ConcreteViewEvent(View.Event.Type.VALUE, node.getName(),
+    return new ConcreteViewEvent(View.Event.Type.META, node.getName(),
         node.getNamespace(), value);
   }
 

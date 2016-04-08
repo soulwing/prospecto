@@ -53,9 +53,9 @@ import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.node.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteUrlNode;
 import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.node.RootObjectNode;
@@ -801,7 +801,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ConcreteUrlNode.class,
+                nodeOfType(ConcreteMetaNode.class,
                     named(ViewDefaults.URL_NAME), inDefaultNamespace()
                 )
             )
@@ -820,7 +820,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ConcreteUrlNode.class,
+                nodeOfType(ConcreteMetaNode.class,
                     named(URL_NAME), inDefaultNamespace()
                 )
             )
@@ -839,7 +839,7 @@ public class ViewTemplateBuilderTest {
         nodeOfType(RootObjectNode.class,
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
-                nodeOfType(ConcreteUrlNode.class,
+                nodeOfType(ConcreteMetaNode.class,
                     named(URL_NAME), inNamespace(NAMESPACE)
                 )
             )
