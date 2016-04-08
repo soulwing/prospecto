@@ -34,10 +34,10 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
-import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.ReaderKeys;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 
 /**
  * Common infrastructure and tests for view reader test classes.
@@ -155,7 +155,7 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(expectedUrlEvent(UrlNode.DEFAULT_NAME)));
+        is(expectedUrlEvent(ViewDefaults.URL_NAME)));
   }
 
   @Test

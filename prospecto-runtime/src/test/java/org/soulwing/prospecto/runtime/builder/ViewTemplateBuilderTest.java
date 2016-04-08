@@ -47,7 +47,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.api.node.UrlNode;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
@@ -802,7 +802,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
                 nodeOfType(ConcreteUrlNode.class,
-                    named(UrlNode.DEFAULT_NAME), inDefaultNamespace()
+                    named(ViewDefaults.URL_NAME), inDefaultNamespace()
                 )
             )
         )

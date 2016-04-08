@@ -47,8 +47,8 @@ import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.node.MetaNode;
-import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**
@@ -178,7 +178,7 @@ public class ObjectTest {
     assertThat(template.generateView(model, context),
         hasEventSequence(
             eventOfType(BEGIN_OBJECT),
-            eventOfType(URL, withName(UrlNode.DEFAULT_NAME),
+            eventOfType(URL, withName(ViewDefaults.URL_NAME),
                 inDefaultNamespace(),
                 whereValue(is(equalTo(RESOLVED_URL)))),
             eventOfType(END_OBJECT)

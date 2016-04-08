@@ -31,8 +31,8 @@ import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.node.UpdatableNode;
-import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilderFactory;
 import org.soulwing.prospecto.runtime.accessor.ReflectionAccessorBuilderFactory;
@@ -126,7 +126,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder url() {
-    return url(UrlNode.DEFAULT_NAME, null);
+    return url(ViewDefaults.URL_NAME, null);
   }
 
   @Override

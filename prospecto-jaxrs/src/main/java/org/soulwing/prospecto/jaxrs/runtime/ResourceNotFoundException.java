@@ -18,9 +18,9 @@
  */
 package org.soulwing.prospecto.jaxrs.runtime;
 
-import org.soulwing.prospecto.api.UnresolvedUrlException;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.api.url.UnresolvedUrlException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * An exception thrown to indicate that the path for a referenced resource 

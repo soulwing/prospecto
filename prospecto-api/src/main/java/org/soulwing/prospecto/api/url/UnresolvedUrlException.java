@@ -1,5 +1,5 @@
 /*
- * File created on Apr 5, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,13 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.node;
+package org.soulwing.prospecto.api.url;
 
 /**
- * A {@link MetaNode} representing a resolvable URL.
+ * An exception thrown when a {@link UrlResolver} fails to resolve a
+ * model path into a URL.
  *
  * @author Carl Harris
  */
-public interface UrlNode extends MetaNode {
+public class UnresolvedUrlException extends RuntimeException {
+
+  public UnresolvedUrlException(String message) {
+    super(message);
+  }
+
+  public UnresolvedUrlException(Throwable cause) {
+    super(cause);
+  }
+
+  public UnresolvedUrlException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
 }

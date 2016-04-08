@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.api.url;
 
-import org.soulwing.prospecto.api.UnresolvedUrlException;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.node.ViewNode;
 

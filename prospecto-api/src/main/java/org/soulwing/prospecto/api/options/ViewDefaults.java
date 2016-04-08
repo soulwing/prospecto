@@ -1,5 +1,5 @@
 /*
- * File created on Mar 11, 2016
+ * File created on Apr 8, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,24 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.options;
 
 /**
- * An exception thrown when a {@link UnresolvedUrlException}
+ * Default values for various view options.
+ *
  * @author Carl Harris
  */
-public class UnresolvedUrlException extends RuntimeException {
+public interface ViewDefaults {
 
-  public UnresolvedUrlException(String message) {
-    super(message);
-  }
-
-  public UnresolvedUrlException(Throwable cause) {
-    super(cause);
-  }
-
-  public UnresolvedUrlException(String message, Throwable cause) {
-    super(message, cause);
-  }
+  /**
+   * Default name for a URL node.
+   */
+  String URL_NAME = "href";
 
 }

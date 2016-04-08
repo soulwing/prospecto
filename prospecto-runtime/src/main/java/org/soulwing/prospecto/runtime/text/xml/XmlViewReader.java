@@ -37,8 +37,8 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import org.soulwing.prospecto.api.node.UrlNode;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -48,7 +48,7 @@ import org.soulwing.prospecto.runtime.text.AbstractViewReader;
  */
 class XmlViewReader extends AbstractViewReader {
 
-  public static final String DEFAULT_URL_NAME = UrlNode.DEFAULT_NAME;
+  public static final String DEFAULT_URL_NAME = ViewDefaults.URL_NAME;
 
   /**
    * A parser stack frame

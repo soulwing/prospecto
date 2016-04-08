@@ -20,9 +20,9 @@ package org.soulwing.prospecto.jaxrs.api;
 
 import java.util.List;
 
-import org.soulwing.prospecto.api.UnresolvedUrlException;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.api.url.UnresolvedUrlException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * An exception thrown when more the model path specification of more than one
