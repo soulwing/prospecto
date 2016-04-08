@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metaTest xmlns:v="urn:org.soulwing.prospecto:view"
     xmlns:m="urn:org.soulwing.prospecto:meta"
-    xmlns="urn:org.soulwing.prospecto:test"
+    xmlns="urn:org.soulwing.prospecto:default"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     v:type="object"

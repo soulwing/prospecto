@@ -45,8 +45,7 @@ public class ArrayOfObjectsSubtypeTest extends ObjectSubtypeTest {
 
   protected ViewTemplate newTemplate(AccessType accessType) {
     return ViewTemplateBuilderProducer
-        .object("arrayOfObjectsSubtypeTest",
-                "urn:org.soulwing.prospecto:test", ParentModel.class)
+        .object("arrayOfObjectsSubtypeTest", ParentModel.class)
             .accessType(accessType)
             .arrayOfObjects("vehicles", "vehicle", newVehicleTemplate(accessType))
             .end()

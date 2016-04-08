@@ -41,7 +41,7 @@ public class ObjectSubtypeTest extends EditorTestBase {
 
   protected ViewTemplate newTemplate(AccessType accessType) {
     return ViewTemplateBuilderProducer
-        .object("objectSubtypeTest", "urn:org.soulwing.prospecto:test", ParentModel.class)
+        .object("objectSubtypeTest", ParentModel.class)
             .accessType(accessType)
             .object("vehicle", newVehicleTemplate(accessType))
             .end()

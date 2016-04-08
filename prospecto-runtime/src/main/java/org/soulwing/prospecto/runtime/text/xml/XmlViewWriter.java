@@ -197,7 +197,7 @@ class XmlViewWriter extends AbstractViewWriter {
   private void writeRootElement(View.Event event)
       throws XMLStreamException {
     namespaceStack.push(event.getNamespace() != null ?
-        event.getNamespace() : XmlViewConstants.VIEW_NAMESPACE);
+        event.getNamespace() : XmlViewConstants.DEFAULT_NAMESPACE);
 
     writer.setDefaultNamespace(namespaceStack.peek());
     writer.setPrefix(VIEW_PREFIX, XmlViewConstants.VIEW_NAMESPACE);

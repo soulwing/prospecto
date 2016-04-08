@@ -57,7 +57,7 @@ public class NestedValueTest extends ValueTest {
   private ViewTemplate newTemplate(Class<?> parentType, Class<?> childType,
       AccessType accessType) {
     return ViewTemplateBuilderProducer
-        .object("nestedValueTest", "urn:org.soulwing.prospecto:test", parentType)
+        .object("nestedValueTest", parentType)
             .accessType(accessType)
             .object("child", super.newTemplate(childType, accessType))
             .end()

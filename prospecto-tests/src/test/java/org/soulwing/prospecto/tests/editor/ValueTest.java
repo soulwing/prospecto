@@ -62,7 +62,7 @@ public class ValueTest extends EditorTestBase {
 
   protected ViewTemplate newTemplate(Class<?> modelType, AccessType accessType) {
     return ViewTemplateBuilderProducer
-        .object("valueTest", "urn:org.soulwing.prospecto:test", modelType)
+        .object("valueTest", modelType)
             .accessType(accessType)
             .value("stringValue")
             .value("booleanValue")

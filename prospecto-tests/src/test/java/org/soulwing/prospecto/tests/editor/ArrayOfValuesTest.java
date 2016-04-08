@@ -66,7 +66,7 @@ public class ArrayOfValuesTest extends EditorTestBase {
 
   protected ViewTemplate newTemplate(Class<?> modelType, AccessType accessType) {
     return ViewTemplateBuilderProducer
-        .object("arrayOfValuesTest", "urn:org.soulwing.prospecto:test", modelType)
+        .object("arrayOfValuesTest", modelType)
             .accessType(accessType)
             .arrayOfValues("values", "value", Object.class)
             .end()

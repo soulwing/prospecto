@@ -41,7 +41,7 @@ public class MetaTest extends EditorTestBase {
     final MetadataHandler handler = new MockMetadataHandler();
     final UrlResolver urlResolver = new MockUrlResolver();
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .object("metaTest", "urn:org.soulwing.prospecto:test", MockModel.class)
+        .object("metaTest", MockModel.class)
             .url()
             .meta("foo", handler)
             .end()
