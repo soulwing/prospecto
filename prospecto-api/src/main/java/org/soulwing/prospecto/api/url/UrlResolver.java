@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.api.url;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 
 /**
  * A service that resolvers the actual URL string for a value node of type

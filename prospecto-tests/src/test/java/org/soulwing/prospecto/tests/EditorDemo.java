@@ -26,8 +26,8 @@ import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.AccessMode;
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewReader;
@@ -180,7 +180,7 @@ public class EditorDemo {
       }
     });
 
-    ModelEditor editor =
+    ViewApplicator editor =
         PO_TEMPLATE.generateEditor(view, context);
 
     editor.update(order);

@@ -22,7 +22,7 @@ import java.util.Deque;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.node.ValueNode;
+import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;

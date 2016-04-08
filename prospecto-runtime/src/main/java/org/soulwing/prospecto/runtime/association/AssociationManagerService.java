@@ -34,7 +34,7 @@ public interface AssociationManagerService extends AssociationManagers {
    * element type.
    * <p>
    * Registered managers are consulted in order. The first manager that
-   * claims to support the given owner and element types is returned.
+   * claims to support the given descriptor is returned.
    *
    * @param managerClass manager class
    * @param descriptor association descriptor

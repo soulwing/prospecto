@@ -25,14 +25,14 @@ import static org.hamcrest.Matchers.sameInstance;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.api.node.ObjectNode;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewKeys;
+import org.soulwing.prospecto.api.template.ContainerNode;
+import org.soulwing.prospecto.api.template.ObjectNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
@@ -95,7 +95,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
   @Mock
   Options options;
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testToModelObjectWhenNoEndEvent() throws Exception {
     context.checking(baseExpectations(false));
     context.checking(contextScopeExpectations(false));
@@ -103,7 +103,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     applicator.toModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testToModelObjectWhenAnonymousEvent() throws Exception {
     context.checking(baseExpectations(false));
     context.checking(contextScopeExpectations(false));
@@ -112,7 +112,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
     applicator.toModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testToModelObjectWhenChildNotFoundAndNotIgnored() throws Exception {
     context.checking(baseExpectations(false));
     context.checking(contextScopeExpectations(false));

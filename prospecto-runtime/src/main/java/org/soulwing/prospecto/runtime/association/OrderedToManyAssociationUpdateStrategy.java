@@ -22,8 +22,8 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
-import org.soulwing.prospecto.api.node.UpdatableNode;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 

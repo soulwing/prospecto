@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.api;
 
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
+
 /**
  * A template that can be used to generate a {@link View}.
  * <p>
@@ -32,6 +34,23 @@ package org.soulwing.prospecto.api;
  * @author Carl Harris
  */
 public interface ViewTemplate {
+
+  /**
+   * A traversal for a {@link ViewTemplate}.
+   *
+   * @author Carl Harris
+   */
+  interface Traversal {
+
+    /**
+     * Performs a traversal.
+     * @param visitor visitor that will be invoked as nodes are visited
+     * @param state input state
+     * @return traversal result
+     */
+    Object traverse(ViewNodeVisitor visitor, Object state);
+
+  }
 
   /**
    * Creates a new breadth first traversal.
@@ -70,7 +89,7 @@ public interface ViewTemplate {
    * @param context view context
    * @return model editor
    */
-  ModelEditor generateEditor(View source, ViewContext context);
+  ViewApplicator generateEditor(View source, ViewContext context);
 
   /**
    * Generates a model editor using the given enveloped source view.
@@ -79,6 +98,6 @@ public interface ViewTemplate {
    * @param dataKey envelope key that contains the editable view data
    * @return model editor
    */
-  ModelEditor generateEditor(View source, ViewContext context, String dataKey);
+  ViewApplicator generateEditor(View source, ViewContext context, String dataKey);
 
 }

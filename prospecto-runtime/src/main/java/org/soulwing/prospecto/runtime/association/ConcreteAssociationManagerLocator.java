@@ -18,10 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
-import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -48,7 +48,7 @@ class ConcreteAssociationManagerLocator
 
     if (manager != null) {
       if (!manager.supports(descriptor)) {
-        throw new ModelEditorException(
+        throw new ViewApplicatorException(
             "association manager does not support association");
       }
       return (M) manager;

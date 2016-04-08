@@ -28,7 +28,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.runtime.template.AbstractViewNode;
 
 /**
  * Support for handling unsupported configuration of template builders.

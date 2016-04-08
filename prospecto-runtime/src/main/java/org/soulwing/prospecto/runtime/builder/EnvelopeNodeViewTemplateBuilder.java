@@ -26,8 +26,8 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.AbstractViewNode;
+import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 
 /**
  * A template builder for an envelope node.

@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -102,7 +102,7 @@ public class ConcreteMutableViewEntity implements MutableViewEntity {
   }
 
   @Override
-  public void inject(Object target) throws ModelEditorException {
+  public void inject(Object target) throws ViewApplicatorException {
     try {
       for (String name : map.keySet()) {
         final InjectableValue injectableValue = map.get(name);
@@ -110,7 +110,7 @@ public class ConcreteMutableViewEntity implements MutableViewEntity {
       }
     }
     catch (Exception ex) {
-      throw new ModelEditorException(ex);
+      throw new ViewApplicatorException(ex);
     }
   }
 

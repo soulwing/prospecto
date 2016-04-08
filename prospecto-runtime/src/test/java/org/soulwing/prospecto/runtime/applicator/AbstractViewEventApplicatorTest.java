@@ -36,7 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;

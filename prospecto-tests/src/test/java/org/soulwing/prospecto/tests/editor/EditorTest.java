@@ -38,8 +38,8 @@ import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewTemplate;
@@ -109,7 +109,7 @@ public class EditorTest {
             .type(END_OBJECT)
         .end();
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -134,7 +134,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -166,7 +166,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
     editor.update(model);
 
@@ -197,7 +197,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
 
     final MockType1 model = new MockType1();
     editor.update(model);
@@ -228,7 +228,7 @@ public class EditorTest {
         .type(END_OBJECT)
         .end();
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
 
     final MockSubType1 model = new MockSubType1();
     editor.update(model);
@@ -273,7 +273,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -319,7 +319,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -360,7 +360,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -405,7 +405,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -450,7 +450,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);
@@ -499,7 +499,7 @@ public class EditorTest {
       }
     });
 
-    final ModelEditor editor = template.generateEditor(view, context);
+    final ViewApplicator editor = template.generateEditor(view, context);
     final MockType1 model = new MockType1();
 
     editor.update(model);

@@ -32,7 +32,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;

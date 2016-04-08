@@ -18,13 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
-import org.soulwing.prospecto.api.Traversal;
-import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.template.ContainerNode;
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 
 /**
- * A {@link Traversal} using depth-first order.
+ * A {@link ViewTemplate.Traversal} using depth-first order.
  *
  * @author Carl Harris
  */

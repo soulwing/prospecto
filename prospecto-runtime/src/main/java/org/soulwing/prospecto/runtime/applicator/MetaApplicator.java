@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 

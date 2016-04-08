@@ -18,30 +18,21 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
-import org.soulwing.prospecto.api.ModelEditor;
-import org.soulwing.prospecto.api.Traversal;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
-import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.template.ContainerNode;
+import org.soulwing.prospecto.runtime.applicator.ConcreteViewApplicatorFactory;
 import org.soulwing.prospecto.runtime.applicator.ViewApplicationVisitor;
+import org.soulwing.prospecto.runtime.applicator.ViewApplicatorFactory;
 import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
-import org.soulwing.prospecto.runtime.editor.ConcreteModelEditorFactory;
-import org.soulwing.prospecto.runtime.editor.ModelEditorFactory;
 import org.soulwing.prospecto.runtime.generator.ViewEventGenerator;
 import org.soulwing.prospecto.runtime.generator.ViewGeneratingVisitor;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfReferencesNode;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
-import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
-import org.soulwing.prospecto.runtime.node.ConcreteReferenceNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
 
 /**
@@ -53,7 +44,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   private final AbstractViewNode root;
   private final ScopedViewContextFactory viewContextFactory;
-  private final ModelEditorFactory modelEditorFactory;
+  private final ViewApplicatorFactory viewApplicatorFactory;
 
   public ConcreteViewTemplate(AbstractViewNode root) {
     this(root, ConcreteScopedViewContextFactory.INSTANCE);
@@ -61,15 +52,15 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   ConcreteViewTemplate(AbstractViewNode root,
       ScopedViewContextFactory viewContextFactory) {
-    this(root, viewContextFactory, new ConcreteModelEditorFactory());
+    this(root, viewContextFactory, new ConcreteViewApplicatorFactory());
   }
 
   ConcreteViewTemplate(AbstractViewNode root,
       ScopedViewContextFactory viewContextFactory,
-      ModelEditorFactory modelEditorFactory) {
+      ViewApplicatorFactory viewApplicatorFactory) {
     this.root = root;
     this.viewContextFactory = viewContextFactory;
-    this.modelEditorFactory = modelEditorFactory;
+    this.viewApplicatorFactory = viewApplicatorFactory;
   }
 
 
@@ -102,17 +93,17 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ModelEditor generateEditor(View source, ViewContext context) {
+  public ViewApplicator generateEditor(View source, ViewContext context) {
     return generateEditor(source, context, null);
   }
 
   @Override
-  public ModelEditor generateEditor(View source, ViewContext context,
+  public ViewApplicator generateEditor(View source, ViewContext context,
       String dataKey) {
 
     final ViewEventApplicator applicator = (ViewEventApplicator)
         depthFirst().traverse(new ViewApplicationVisitor(), null);
-    return modelEditorFactory.newEditor(root.getModelType(), applicator,
+    return viewApplicatorFactory.newEditor(root.getModelType(), applicator,
         source, context, dataKey);
   }
 

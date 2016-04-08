@@ -31,7 +31,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;

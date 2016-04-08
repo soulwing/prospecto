@@ -25,8 +25,8 @@ import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.ViewReaderFactory;
@@ -89,7 +89,7 @@ public class EnvelopeDemo {
 
 
     final ViewContext context = ViewContextProducer.newContext();
-    ModelEditor editor = TEMPLATE.generateEditor(updateView, context);
+    ViewApplicator editor = TEMPLATE.generateEditor(updateView, context);
 
     ViewWriterFactory writerFactory = ViewWriterFactoryProducer
         .getFactory("JSON", options);

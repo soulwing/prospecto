@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Collections;
 
-import org.soulwing.prospecto.api.node.ArrayOfReferencesNode;
+import org.soulwing.prospecto.api.template.ArrayOfReferencesNode;
 
 /**
  * Unit tests for {@link ArrayOfValuesApplicator}.

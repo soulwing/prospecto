@@ -50,16 +50,16 @@ import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteMetaNode;
-import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
-import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
+import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
+import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.template.RootObjectNode;
 
 /**
  * Unit tests for the template builder.

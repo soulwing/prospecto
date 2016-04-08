@@ -46,9 +46,9 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.node.MetaNode;
-import org.soulwing.prospecto.api.node.ViewNode;
 import org.soulwing.prospecto.api.options.ViewDefaults;
+import org.soulwing.prospecto.api.template.MetaNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**

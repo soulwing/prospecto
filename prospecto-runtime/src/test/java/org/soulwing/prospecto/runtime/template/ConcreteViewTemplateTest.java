@@ -38,16 +38,12 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.node.ViewNode;
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
+import org.soulwing.prospecto.api.template.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.generator.ViewEventGenerator;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
-import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
 
 /**
  * Unit tests for {@link ConcreteViewTemplate}.

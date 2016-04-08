@@ -31,7 +31,7 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**

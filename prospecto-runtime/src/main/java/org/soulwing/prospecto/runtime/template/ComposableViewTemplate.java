@@ -20,7 +20,6 @@ package org.soulwing.prospecto.runtime.template;
 
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
 
 /**
  * A view template that can be composed in another view template.

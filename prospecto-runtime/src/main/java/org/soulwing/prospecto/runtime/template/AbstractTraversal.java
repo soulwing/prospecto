@@ -21,17 +21,16 @@ package org.soulwing.prospecto.runtime.template;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.soulwing.prospecto.api.Traversal;
-import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.api.node.ViewNode;
-import org.soulwing.prospecto.api.node.ViewNodeVisitor;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
+import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.template.ContainerNode;
+import org.soulwing.prospecto.api.template.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 
 /**
  * An abstract base for traversal implementations.
  * @author Carl Harris
  */
-public abstract class AbstractTraversal implements Traversal {
+abstract class AbstractTraversal implements ViewTemplate.Traversal {
 
   private final AbstractViewNode root;
 

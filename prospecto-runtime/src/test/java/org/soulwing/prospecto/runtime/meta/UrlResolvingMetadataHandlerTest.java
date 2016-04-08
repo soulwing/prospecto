@@ -28,7 +28,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**

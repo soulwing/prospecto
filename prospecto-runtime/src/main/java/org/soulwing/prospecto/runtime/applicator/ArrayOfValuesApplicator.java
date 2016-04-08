@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.node.ArrayOfValuesNode;
+import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ValueCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -68,7 +68,7 @@ class ArrayOfValuesApplicator
       lastType = event.getType();
       if (lastType == triggerEvent.getType().complement()) break;
       if (lastType != View.Event.Type.VALUE) {
-        throw new ModelEditorException(
+        throw new ViewApplicatorException(
             "unexpected non-value event in array-of-values");
       }
 
@@ -82,7 +82,7 @@ class ArrayOfValuesApplicator
     }
 
     if (lastType != triggerEvent.getType().complement()) {
-      throw new ModelEditorException("expected "
+      throw new ViewApplicatorException("expected "
           + triggerEvent.getType().complement() + " event");
     }
 

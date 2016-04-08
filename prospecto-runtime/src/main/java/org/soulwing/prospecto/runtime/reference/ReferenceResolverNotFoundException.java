@@ -18,14 +18,14 @@
  */
 package org.soulwing.prospecto.runtime.reference;
 
-import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 
 /**
  * An exception thrown when no resolver can be found for a reference in a view.
  *
  * @author Carl Harris
  */
-public class ReferenceResolverNotFoundException extends ModelEditorException {
+public class ReferenceResolverNotFoundException extends ViewApplicatorException {
 
   public ReferenceResolverNotFoundException(Class<?> type) {
     super("cannot find a resolver for reference of type " + type.getName());

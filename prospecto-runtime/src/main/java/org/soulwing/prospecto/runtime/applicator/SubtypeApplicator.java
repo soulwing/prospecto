@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.node.SubtypeNode;
+import org.soulwing.prospecto.api.template.SubtypeNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;

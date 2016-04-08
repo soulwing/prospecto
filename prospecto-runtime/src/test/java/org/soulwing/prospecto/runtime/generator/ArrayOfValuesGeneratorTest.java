@@ -32,7 +32,7 @@ import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ArrayOfValuesNode;
+import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**

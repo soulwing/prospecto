@@ -31,7 +31,7 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ObjectNode;
+import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 
 /**

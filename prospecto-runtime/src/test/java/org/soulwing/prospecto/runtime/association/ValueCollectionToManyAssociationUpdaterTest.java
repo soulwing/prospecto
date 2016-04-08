@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**

@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.util.ClassMatchers;
 

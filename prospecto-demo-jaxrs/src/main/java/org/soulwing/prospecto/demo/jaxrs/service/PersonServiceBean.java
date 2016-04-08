@@ -25,8 +25,8 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
 import org.soulwing.prospecto.demo.jaxrs.views.PersonViews;
@@ -48,7 +48,7 @@ public class PersonServiceBean implements PersonService {
 
   @Override
   public View createContact(View contactView) {
-    final ModelEditor editor = PersonViews.CONTACT_DETAIL.generateEditor(
+    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.generateEditor(
         contactView, viewContext);
     final Contact contact = (Contact) editor.create();
     entityManager.persist(contact);
@@ -74,7 +74,7 @@ public class PersonServiceBean implements PersonService {
       throw new NoSuchEntityException(Contact.class, id);
     }
 
-    final ModelEditor editor = PersonViews.CONTACT_DETAIL.generateEditor(
+    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.generateEditor(
         contactView, viewContext);
     editor.update(contact);
     entityManager.clear();

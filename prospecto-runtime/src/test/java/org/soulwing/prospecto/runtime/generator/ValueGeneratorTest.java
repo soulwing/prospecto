@@ -33,7 +33,7 @@ import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ValueNode;
+import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**

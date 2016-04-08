@@ -24,13 +24,13 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.runtime.node.AbstractViewNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
-import org.soulwing.prospecto.runtime.node.ConcreteEnvelopeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteMetaNode;
-import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
+import org.soulwing.prospecto.runtime.template.AbstractViewNode;
+import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
+import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 
 /**
  * A template builder for a value node.

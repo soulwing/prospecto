@@ -30,7 +30,7 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.SubtypeNode;
+import org.soulwing.prospecto.api.template.SubtypeNode;
 
 /**
  * Unit tests for {@link SubtypeGeneratorTest}.

@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 
 /**
  * A {@link ViewTemplateBuilderFactory} that produces

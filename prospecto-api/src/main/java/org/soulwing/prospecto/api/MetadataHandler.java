@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.api;
 
-import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
  * A handler for values associated with a {@link MetaNode}.

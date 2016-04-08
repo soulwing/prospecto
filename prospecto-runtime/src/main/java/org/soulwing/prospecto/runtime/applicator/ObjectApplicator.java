@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.List;
 
-import org.soulwing.prospecto.api.node.ObjectNode;
+import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;

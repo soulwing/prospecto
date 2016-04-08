@@ -27,7 +27,7 @@ import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
  * Unit tests for {@link MetaGenerator}.

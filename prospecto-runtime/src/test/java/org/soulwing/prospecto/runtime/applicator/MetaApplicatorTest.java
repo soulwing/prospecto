@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.node.MetaNode;
+import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
  * Unit tests for {@link MetaApplicator}.

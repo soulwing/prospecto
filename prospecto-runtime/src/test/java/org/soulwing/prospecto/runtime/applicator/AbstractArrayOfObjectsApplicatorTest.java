@@ -32,12 +32,12 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
@@ -176,13 +176,13 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
   }
 
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testOnToModelValueWhenMissingEndEvent() throws Exception {
     context.checking(new Expectations() { {} });
     applicator.onToModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testOnToModelValueWhenNonObjectEvent() throws Exception {
     context.checking(new Expectations() { {} });
     events.add(VALUE_EVENT);

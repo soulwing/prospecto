@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import org.soulwing.prospecto.api.ModelEditorException;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -70,13 +70,13 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
       if (lastEvent == triggerEvent.getType().complement()) break;
 
       if (lastEvent == View.Event.Type.VALUE && event.getValue() != null) {
-          throw new ModelEditorException(
+          throw new ViewApplicatorException(
               "scalar value for object node must be null");
       }
 
       if (lastEvent != View.Event.Type.BEGIN_OBJECT
           && lastEvent != View.Event.Type.VALUE) {
-        throw new ModelEditorException(
+        throw new ViewApplicatorException(
             "unexpected non-object event in array-of-objects");
       }
 
@@ -101,7 +101,7 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
     }
 
     if (lastEvent != triggerEvent.getType().complement()) {
-      throw new ModelEditorException("expected "
+      throw new ViewApplicatorException("expected "
           + triggerEvent.getType().complement() + " event");
     }
 

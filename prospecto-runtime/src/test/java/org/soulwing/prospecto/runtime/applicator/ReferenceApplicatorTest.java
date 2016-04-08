@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import org.jmock.Expectations;
 import org.junit.Test;
-import org.soulwing.prospecto.api.node.ReferenceNode;
+import org.soulwing.prospecto.api.template.ReferenceNode;
 
 /**
  * Unit tests for {@link ReferenceApplicator}.

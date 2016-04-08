@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.ObjectNode;
+import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;

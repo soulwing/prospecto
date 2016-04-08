@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
-import org.soulwing.prospecto.api.node.ContainerNode;
+import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 

@@ -21,11 +21,11 @@ package org.soulwing.prospecto.runtime.builder;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
-import org.soulwing.prospecto.runtime.node.RootArrayOfObjectNode;
-import org.soulwing.prospecto.runtime.node.RootArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.node.RootObjectNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
+import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.template.RootArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.RootObjectNode;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**

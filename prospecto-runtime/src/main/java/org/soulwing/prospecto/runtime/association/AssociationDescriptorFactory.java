@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 
 /**
  * A factory that produces a association descriptor from a container view node.

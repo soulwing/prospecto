@@ -24,7 +24,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

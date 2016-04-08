@@ -19,8 +19,8 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
-import org.soulwing.prospecto.api.node.UpdatableNode;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 
 /**
  * A {@link AssociationDescriptorFactory} implementation.

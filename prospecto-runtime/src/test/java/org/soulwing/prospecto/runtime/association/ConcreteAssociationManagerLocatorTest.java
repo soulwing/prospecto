@@ -26,10 +26,10 @@ import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.api.ModelEditorException;
+import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -79,7 +79,7 @@ public class ConcreteAssociationManagerLocatorTest {
     assertThat(result, sameInstance(manager));
   }
 
-  @Test(expected = ModelEditorException.class)
+  @Test(expected = ViewApplicatorException.class)
   public void testNodeSpecificManagerDoesNotSupportAssociation() throws Exception {
     context.checking(new Expectations() {
       {

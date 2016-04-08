@@ -25,8 +25,8 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
 import org.soulwing.prospecto.demo.jaxrs.views.LeagueViews;
@@ -72,7 +72,7 @@ public class LeagueServiceBean implements LeagueService {
       throw new NoSuchEntityException(League.class, id);
     }
 
-    final ModelEditor editor = LeagueViews.LEAGUE_DETAIL.generateEditor(
+    final ViewApplicator editor = LeagueViews.LEAGUE_DETAIL.generateEditor(
         leagueView, viewContext);
     editor.update(league);
     league.setId(id);

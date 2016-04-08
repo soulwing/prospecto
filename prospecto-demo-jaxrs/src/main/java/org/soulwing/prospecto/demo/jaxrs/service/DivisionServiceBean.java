@@ -25,8 +25,8 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.soulwing.prospecto.api.ModelEditor;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
@@ -65,7 +65,7 @@ public class DivisionServiceBean implements DivisionService {
       throw new NoSuchEntityException(League.class, id);
     }
 
-    final ModelEditor editor = DivisionViews.DIVISION_DETAIL.generateEditor(
+    final ViewApplicator editor = DivisionViews.DIVISION_DETAIL.generateEditor(
         divisionView, viewContext);
     editor.update(division);
     division.setId(id);

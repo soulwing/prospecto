@@ -23,11 +23,11 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.api.node.ContainerNode;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ContainerNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
-import org.soulwing.prospecto.runtime.node.ConcreteSubtypeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
 
 /**
  * A {@link DiscriminatorEventService} implementation.

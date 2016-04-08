@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.converter;
 
 import org.soulwing.prospecto.api.converter.ValueTypeConverters;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 
 /**
  * A value type converter service.

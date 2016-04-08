@@ -31,12 +31,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.node.ConcreteArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.node.ConcreteObjectNode;
-import org.soulwing.prospecto.runtime.node.ConcreteValueNode;
-import org.soulwing.prospecto.runtime.node.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
+import org.soulwing.prospecto.runtime.template.RootObjectNode;
 
 /**
  * Tests for {@link ConcreteViewTemplateBuilderProvider}.

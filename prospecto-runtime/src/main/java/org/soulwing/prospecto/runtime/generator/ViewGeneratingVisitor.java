@@ -20,19 +20,19 @@ package org.soulwing.prospecto.runtime.generator;
 
 import java.util.List;
 
-import org.soulwing.prospecto.api.node.AbstractViewNodeVisitor;
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
-import org.soulwing.prospecto.api.node.ArrayOfReferencesNode;
-import org.soulwing.prospecto.api.node.ArrayOfValuesNode;
-import org.soulwing.prospecto.api.node.EnvelopeNode;
-import org.soulwing.prospecto.api.node.MetaNode;
-import org.soulwing.prospecto.api.node.ObjectNode;
-import org.soulwing.prospecto.api.node.ReferenceNode;
-import org.soulwing.prospecto.api.node.SubtypeNode;
-import org.soulwing.prospecto.api.node.ValueNode;
+import org.soulwing.prospecto.api.template.AbstractViewNodeVisitor;
+import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.template.ArrayOfReferencesNode;
+import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
+import org.soulwing.prospecto.api.template.EnvelopeNode;
+import org.soulwing.prospecto.api.template.MetaNode;
+import org.soulwing.prospecto.api.template.ObjectNode;
+import org.soulwing.prospecto.api.template.ReferenceNode;
+import org.soulwing.prospecto.api.template.SubtypeNode;
+import org.soulwing.prospecto.api.template.ValueNode;
 
 /**
- * A {@link org.soulwing.prospecto.api.node.ViewNodeVisitor} that produces a
+ * A {@link org.soulwing.prospecto.api.template.ViewNodeVisitor} that produces a
  * tree of {@link ViewEventGenerator} nodes.
  *
  * @author Carl Harris

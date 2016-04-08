@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
-import org.soulwing.prospecto.api.node.UpdatableNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**

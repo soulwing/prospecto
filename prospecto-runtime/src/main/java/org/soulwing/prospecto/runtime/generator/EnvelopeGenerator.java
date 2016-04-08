@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.node.EnvelopeNode;
+import org.soulwing.prospecto.api.template.EnvelopeNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 

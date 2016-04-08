@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.api.listener;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.node.ViewNode;
+import org.soulwing.prospecto.api.template.ViewNode;
 
 /**
  * An event about a view node.

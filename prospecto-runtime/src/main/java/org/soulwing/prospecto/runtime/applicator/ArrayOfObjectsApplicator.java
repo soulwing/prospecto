@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.List;
 
-import org.soulwing.prospecto.api.node.ArrayOfObjectsNode;
+import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
