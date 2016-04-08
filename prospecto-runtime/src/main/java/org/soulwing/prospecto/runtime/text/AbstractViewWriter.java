@@ -98,9 +98,6 @@ public abstract class AbstractViewWriter implements ViewWriter {
           case DISCRIMINATOR:
             onDiscriminator(event);
             break;
-          case URL:
-            onUrl(event);
-            break;
           default:
             throw new IllegalStateException("unrecognized event type: "
                 + event.getType().name());
@@ -184,14 +181,6 @@ public abstract class AbstractViewWriter implements ViewWriter {
    * @throws Exception
    */
   protected abstract void onMeta(View.Event event) throws Exception;
-
-  /**
-   * Notifies the recipient that the next {@code event} is of type
-   * {@link View.Event.Type#URL}.
-   * @param event the subject event
-   * @throws Exception
-   */
-  protected abstract void onUrl(View.Event event) throws Exception;
 
   /**
    * Notifies the recipient that the next {@code event} is of type

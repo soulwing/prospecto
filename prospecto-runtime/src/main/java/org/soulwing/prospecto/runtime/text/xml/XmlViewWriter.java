@@ -176,11 +176,6 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   @Override
-  protected void onUrl(View.Event event) throws Exception {
-    writeUrl(event);
-  }
-
-  @Override
   protected void onDiscriminator(View.Event event) throws Exception {
     writeDiscriminator(event);
   }
@@ -289,11 +284,6 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeMeta(View.Event event) throws XMLStreamException {
-    writeAttributeString(event.getName(),
-        XmlViewConstants.META_NAMESPACE, event.getValue().toString());
-  }
-
-  private void writeUrl(View.Event event) throws XMLStreamException {
     writeAttributeString(event.getName(),
         XmlViewConstants.META_NAMESPACE, event.getValue().toString());
   }

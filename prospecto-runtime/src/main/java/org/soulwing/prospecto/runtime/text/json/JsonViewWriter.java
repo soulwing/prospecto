@@ -119,11 +119,6 @@ class JsonViewWriter extends AbstractViewWriter {
   }
 
   @Override
-  protected void onUrl(View.Event event) throws Exception {
-    writeValue(event);
-  }
-
-  @Override
   protected void onDiscriminator(View.Event event) throws Exception {
     writeValue(event);
   }

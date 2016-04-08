@@ -154,14 +154,6 @@ public abstract class AbstractViewReader implements ViewReader {
   }
 
   /**
-   * Adds a resource location to the view.
-   * @param value resource location
-   */
-  protected final void url(String value) {
-    events.add(newEvent(View.Event.Type.URL, null, null, value));
-  }
-
-  /**
    * Adds a string value to the view.
    * @param name name of the value
    * @param value string value (not {@code null})

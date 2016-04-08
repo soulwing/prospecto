@@ -207,7 +207,7 @@ public abstract class ViewWriterTestBase {
   public void testUrlView() throws Exception {
     final List<View.Event> events = new ArrayList<>();
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
-    events.add(newEvent(View.Event.Type.URL,
+    events.add(newEvent(View.Event.Type.META,
         ViewDefaults.URL_NAME, Constants.URL_VALUE));
     events.add(newEvent(View.Event.Type.END_OBJECT));
 
