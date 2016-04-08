@@ -62,7 +62,7 @@ class ArrayOfValuesGenerator
 
     int index = 0;
     while (i.hasNext()) {
-      context.push(String.format("[%d]", index++), null);
+      context.push(index++);
       final Object value = i.next();
       final Object transformedValue = transformationService.valueToExtract(
           owner, value, node, context);

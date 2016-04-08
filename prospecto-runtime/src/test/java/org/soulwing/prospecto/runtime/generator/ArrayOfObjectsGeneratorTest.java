@@ -28,7 +28,6 @@ import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.forM
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inContext;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
-import static org.soulwing.prospecto.runtime.util.StringMatchers.matchesPattern;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -245,8 +244,7 @@ public class ArrayOfObjectsGeneratorTest
       {
         allowing(node).getElementName();
         will(returnValue(ELEMENT_NAME));
-        oneOf(viewContext).push(with(matchesPattern("\\[\\d+\\]")),
-            with(nullValue(Class.class)));
+        oneOf(viewContext).push(0);
         oneOf(viewContext).put(elementModel);
         oneOf(viewContext).pop();
       }

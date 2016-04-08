@@ -22,7 +22,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.soulwing.prospecto.runtime.util.StringMatchers.matchesPattern;
 
 import java.util.Iterator;
 import java.util.List;
@@ -116,8 +115,7 @@ public class ArrayOfValuesGeneratorTest
       {
         allowing(node).getElementName();
         will(returnValue(ELEMENT_NAME));
-        oneOf(viewContext).push(with(matchesPattern("\\[\\d+\\]")),
-            with(nullValue(Class.class)));
+        oneOf(viewContext).push(0);
         oneOf(viewContext).pop();
       }
     };

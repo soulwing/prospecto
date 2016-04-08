@@ -76,7 +76,7 @@ class ArrayOfObjectsGenerator
 
       final Object elementModel = i.next();
 
-      context.push(String.format("[%d]", index++), null);
+      context.push(index++);
       context.put(elementModel);
 
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
