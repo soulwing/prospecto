@@ -57,8 +57,7 @@ public class ConcreteViewEntityFactory implements ViewEntityFactory {
       return new ConcreteMutableViewEntity(node.getModelType());
     }
 
-    final Discriminator discriminator = new Discriminator(event.getName(),
-        event.getValue());
+    final Discriminator discriminator = new Discriminator(event.getValue());
 
     final DiscriminatorStrategy strategy =
         discriminatorEventService.findStrategy(node, context);

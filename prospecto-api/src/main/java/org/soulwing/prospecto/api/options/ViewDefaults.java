@@ -30,4 +30,9 @@ public interface ViewDefaults {
    */
   String URL_NAME = "href";
 
+  /**
+   * Default name for a discriminator node.
+   */
+  String DISCRIMINATOR_NAME = "type";
+
 }

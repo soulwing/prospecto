@@ -33,7 +33,6 @@ import java.util.List;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
-import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.ViewDefaults;
@@ -196,7 +195,7 @@ public abstract class ViewWriterTestBase {
     final List<View.Event> events = new ArrayList<>();
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
     events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-        Discriminator.DEFAULT_NAME,
+        ViewDefaults.DISCRIMINATOR_NAME,
         Constants.DISCRIMINATOR_VALUE));
     events.add(newEvent(View.Event.Type.END_OBJECT));
 

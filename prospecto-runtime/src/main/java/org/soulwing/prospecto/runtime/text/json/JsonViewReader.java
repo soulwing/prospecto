@@ -25,7 +25,6 @@ import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParserFactory;
 
-import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.api.options.ViewDefaults;
@@ -38,10 +37,8 @@ import org.soulwing.prospecto.runtime.text.AbstractViewReader;
  */
 class JsonViewReader extends AbstractViewReader {
 
-  public static final String DEFAULT_DISCRIMINATOR_NAME =
-      Discriminator.DEFAULT_NAME;
-
-  public static final String DEFAULT_URL_NAME = ViewDefaults.URL_NAME;
+  private static final String DEFAULT_DISCRIMINATOR_NAME =
+      ViewDefaults.DISCRIMINATOR_NAME;
 
   private static JsonParserFactory parserFactory = Json.createParserFactory(
       Collections.<String, Object>emptyMap());

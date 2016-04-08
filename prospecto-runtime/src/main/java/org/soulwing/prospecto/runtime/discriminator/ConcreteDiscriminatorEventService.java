@@ -23,6 +23,7 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -68,7 +69,7 @@ public class ConcreteDiscriminatorEventService
         strategy.toDiscriminator(node.getModelType(), subtype);
 
     return new ConcreteViewEvent(View.Event.Type.DISCRIMINATOR,
-        discriminator.getName(), null, discriminator.getValue());
+        ViewDefaults.DISCRIMINATOR_NAME, null, discriminator.getValue());
   }
 
   @Override

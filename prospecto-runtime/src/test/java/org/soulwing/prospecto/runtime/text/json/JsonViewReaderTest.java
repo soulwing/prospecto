@@ -28,10 +28,10 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
-import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.ReaderKeys;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.text.Constants;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
@@ -67,7 +67,7 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, Discriminator.DEFAULT_NAME,
+        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NAME,
             Constants.DISCRIMINATOR_VALUE)));
   }
 

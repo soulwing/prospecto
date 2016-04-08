@@ -20,6 +20,8 @@ package org.soulwing.prospecto.api.discriminator;
 
 import java.beans.Introspector;
 
+import org.soulwing.prospecto.api.options.ViewDefaults;
+
 /**
  * A {@link DiscriminatorStrategy} that utilizes the simple (unqualified)
  * class name.
@@ -37,7 +39,7 @@ import java.beans.Introspector;
  */
 public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrategy {
 
-  private String name = Discriminator.DEFAULT_NAME;
+  private String name = ViewDefaults.DISCRIMINATOR_NAME;
   private String prefix;
   private String suffix;
   private boolean decapitalize;
@@ -58,7 +60,7 @@ public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrate
     if (decapitalize) {
       value = Introspector.decapitalize(value);
     }
-    return new Discriminator(name, value);
+    return new Discriminator(value);
   }
 
   @Override

@@ -25,8 +25,8 @@ import java.util.List;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewReader;
-import org.soulwing.prospecto.api.discriminator.Discriminator;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEventFactory;
 import org.soulwing.prospecto.runtime.event.ViewEventFactory;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -141,7 +141,7 @@ public abstract class AbstractViewReader implements ViewReader {
    */
   protected final void discriminator(Object value) {
     events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-        Discriminator.DEFAULT_NAME, null, value));
+        ViewDefaults.DISCRIMINATOR_NAME, null, value));
   }
 
   /**
