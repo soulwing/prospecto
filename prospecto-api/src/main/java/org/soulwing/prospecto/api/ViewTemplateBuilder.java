@@ -77,6 +77,111 @@ public interface ViewTemplateBuilder {
   ViewTemplateBuilder value(String name, String namespace);
 
   /**
+   * Adds a URL node at the cursor.
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
+   * @return this builder
+   * @see UrlResolver
+   */
+  ViewTemplateBuilder url();
+
+  /**
+   * Adds a URL node at the cursor.
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
+   * @param name name for the node in the view
+   * @return this builder
+   * @see UrlResolver
+   */
+  ViewTemplateBuilder url(String name);
+
+  /**
+   * Adds a URL node at the cursor.
+   * <p>
+   * When generating a view from a template that includes a URL node, the
+   * {@link ViewContext} must contain a {@link UrlResolver}.
+   *
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}; used in only some view
+   *    types (e.g. XML)
+   * @return this builder
+   * @see UrlResolver
+   */
+  ViewTemplateBuilder url(String name, String namespace);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name,
+      Class<? extends MetadataHandler> handlerClass, Map configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handlerClass handler class
+   * @param configuration name-value pairs that will be used to configure the
+   *   handler instance after it has been constructed; each pair specifies
+   *   the name of a configuration property and the corresponding value
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      Class<? extends MetadataHandler> handlerClass, Map configuration);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param handler handler instance
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, MetadataHandler handler);
+
+  /**
+   * Adds a metadata node at the cursor.
+   * @param name name for the node in the view
+   * @param namespace namespace for {@code name}
+   * @param handler handler instance
+   * @return builder
+   */
+  ViewTemplateBuilder meta(String name, String namespace,
+      MetadataHandler handler);
+
+  /**
    * Adds an array-of-values node at the cursor.
    * @param name name for the array in the view
    * @param componentType common type of the elements; all elements need not
@@ -468,111 +573,6 @@ public interface ViewTemplateBuilder {
    * @return this builder
    */
   ViewTemplateBuilder discriminator(DiscriminatorStrategy discriminator);
-
-  /**
-   * Adds a URL node at the cursor.
-   * <p>
-   * When generating a view from a template that includes a URL node, the
-   * {@link ViewContext} must contain a {@link UrlResolver}.
-   *
-   * @return this builder
-   * @see UrlResolver
-   */
-  ViewTemplateBuilder url();
-
-  /**
-   * Adds a URL node at the cursor.
-   * <p>
-   * When generating a view from a template that includes a URL node, the
-   * {@link ViewContext} must contain a {@link UrlResolver}.
-   *
-   * @param name name for the node in the view
-   * @return this builder
-   * @see UrlResolver
-   */
-  ViewTemplateBuilder url(String name);
-
-  /**
-   * Adds a URL node at the cursor.
-   * <p>
-   * When generating a view from a template that includes a URL node, the
-   * {@link ViewContext} must contain a {@link UrlResolver}.
-   *
-   * @param name name for the node in the view
-   * @param namespace namespace for {@code name}; used in only some view
-   *    types (e.g. XML)
-   * @return this builder
-   * @see UrlResolver
-   */
-  ViewTemplateBuilder url(String name, String namespace);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param handlerClass handler class
-   * @param configuration name-value pairs that will be used to configure the
-   *   handler instance after it has been constructed; each pair specifies
-   *   the name of a configuration property and the corresponding value
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name,
-      Class<? extends MetadataHandler> handlerClass, Object... configuration);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param namespace namespace for {@code name}
-   * @param handlerClass handler class
-   * @param configuration name-value pairs that will be used to configure the
-   *   handler instance after it has been constructed; each pair specifies
-   *   the name of a configuration property and the corresponding value
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name, String namespace,
-      Class<? extends MetadataHandler> handlerClass, Object... configuration);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param handlerClass handler class
-   * @param configuration name-value pairs that will be used to configure the
-   *   handler instance after it has been constructed; each pair specifies
-   *   the name of a configuration property and the corresponding value
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name,
-      Class<? extends MetadataHandler> handlerClass, Map configuration);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param namespace namespace for {@code name}
-   * @param handlerClass handler class
-   * @param configuration name-value pairs that will be used to configure the
-   *   handler instance after it has been constructed; each pair specifies
-   *   the name of a configuration property and the corresponding value
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name, String namespace,
-      Class<? extends MetadataHandler> handlerClass, Map configuration);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param handler handler instance
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name, MetadataHandler handler);
-
-  /**
-   * Adds a metadata node at the cursor.
-   * @param name name for the node in the view
-   * @param namespace namespace for {@code name}
-   * @param handler handler instance
-   * @return builder
-   */
-  ViewTemplateBuilder meta(String name, String namespace,
-      MetadataHandler handler);
 
   /**
    * Specifies the name of the model property that is the source for the node
