@@ -23,8 +23,8 @@ import java.util.Iterator;
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
- * An object that during model update manages the association between an object
- * and a collection composed in the object.
+ * An object that during view application manages the association between an
+ * object and a collection composed in the object.
  * <p>
  * A manager is used, by the underlying framework, in a transactional fashion.
  * Before invoking methods to update the associated collection, the framework

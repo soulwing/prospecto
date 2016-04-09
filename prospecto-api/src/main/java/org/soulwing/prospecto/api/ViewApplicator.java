@@ -19,19 +19,25 @@
 package org.soulwing.prospecto.api;
 
 /**
- * An editor for a model.
+ * An applicator for a view.
  * <p>
- * An editor applies the model state in a source view to the model that backs
- * a target view.
+ * An applicator applies the properties in the source view to a model instance.
  *
  * @author Carl Harris
  */
 public interface ViewApplicator {
 
+  /**
+   * Creates a new instance of the model type represented by the source view,
+   * and injects it with the properties represented in the view.
+   * @return model instance
+   * @throws ViewApplicatorException
+   */
   Object create() throws ViewApplicatorException;
 
   /**
-   * Updates the given model.
+   * Updates the given model by injecting it with the properties represented
+   * in the source view.
    * @param model model (which must be an instance of the type associated with
    *    the root of the target view).
    * @throws ViewApplicatorException

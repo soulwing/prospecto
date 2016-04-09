@@ -28,7 +28,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 public interface RootViewEventApplicator extends ViewEventApplicator {
 
   /**
-   * Applies an injector to update target model.
+   * Applies an injector to update the target model.
    * @param injector the subject injector
    * @param target root of the target model
    * @param context view context

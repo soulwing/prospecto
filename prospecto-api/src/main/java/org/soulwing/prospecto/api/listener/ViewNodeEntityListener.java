@@ -20,7 +20,7 @@ package org.soulwing.prospecto.api.listener;
 
 /**
  * A listener that is notified as instances of model types are created or
- * discarded during model update.
+ * discarded during view application.
  *
  * @author Carl Harris
  */

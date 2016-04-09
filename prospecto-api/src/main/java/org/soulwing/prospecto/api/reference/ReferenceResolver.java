@@ -22,7 +22,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 
 /**
  * A strategy for resolving a reference entity in a view to an actual object
- * during a model update.
+ * during view application.
  * <p>
  * An implementation of this interface could, for example, use the properties
  * in the given {@link ViewEntity} to perform a database lookup.

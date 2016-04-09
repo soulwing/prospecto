@@ -24,7 +24,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A service that supports transformation of model values during view
- * generation and transformation of view values during model update.
+ * generation and transformation of view values during view application.
  *
  * @author Carl Harris
  */

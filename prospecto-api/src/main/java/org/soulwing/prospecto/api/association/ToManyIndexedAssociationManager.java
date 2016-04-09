@@ -21,8 +21,8 @@ package org.soulwing.prospecto.api.association;
 import org.soulwing.prospecto.api.ViewEntity;
 
 /**
- * An object that during model update manages the association between an object
- * and a indexed collection or array composed in the object.
+ * An object that during view application manages the association between an
+ * object and a indexed collection or array composed in the object.
  *
  * @author Carl Harris
  */

@@ -20,7 +20,7 @@ package org.soulwing.prospecto.api.listener;
 
 /**
  * A listener that is notified before property values are visited during view
- * generation or model update.
+ * generation or view application.
  *
  * @author Carl Harris
  */

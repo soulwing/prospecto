@@ -23,10 +23,11 @@ package org.soulwing.prospecto.api;
  * update.
  * <p>
  * Since {@code null} is used a view to mean that a property value should be
- * removed during update, we need another value to represent situations in which
- * a model property should not be updated. For example, if a listener does not
- * wish to allow a particular subtree of the model to be visited during update,
- * or for a calculated property value that cannot be produced during update.
+ * removed during view application, we need another value to represent
+ * situations in which a model property should not be updated. For example, if
+ * an interceptor does not wish to allow a particular subtree of the model to be
+ * visited during update, or for a calculated property value that cannot be
+ * produced during update.
  *
  * @author Carl Harris
  */

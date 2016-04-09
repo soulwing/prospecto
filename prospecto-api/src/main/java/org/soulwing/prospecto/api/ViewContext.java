@@ -76,7 +76,7 @@ public interface ViewContext {
    * object is found or until all available scopes have been exhausted.
    * <p>
    * The returned collection can be manipulated directly to add or remove scopes
-   * as needed. Manipulating the list during view generation or model update
+   * as needed. Manipulating the list during view generation or view application
    * has no effect on the generation/update in progress.
    * @return scope collection
    */
@@ -87,7 +87,7 @@ public interface ViewContext {
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * listeners as needed. Manipulating the collection during view generation
-   * or model update has no effect on the generation/update in progress.
+   * or view application has no effect on the generation/update in progress.
    * @return listener collection
    */
   ViewListeners getListeners();
@@ -115,18 +115,18 @@ public interface ViewContext {
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * resolvers as needed. Manipulating the collection during view generation
-   * or model update has no effect.
+   * or view application has no effect.
    * @return resolver collection
    */
   ReferenceResolvers getReferenceResolvers();
 
   /**
    * Gets the collection of association managers that will be consulted to
-   * manage collections in a view during model update.
+   * manage collections in a view during view applicaiton.
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * managers as needed. Manipulating the collection during view generation
-   * or model update has no effect.
+   * or view application has no effect.
    * @return
    */
   AssociationManagers getAssociationManagers();
@@ -136,7 +136,7 @@ public interface ViewContext {
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * options as needed.  Manipulating the options during view generation or
-   * model update has no effect.
+   * view application has no effect.
    *
    * @return options
    */
