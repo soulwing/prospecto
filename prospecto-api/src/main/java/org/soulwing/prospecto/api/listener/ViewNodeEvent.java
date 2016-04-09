@@ -29,8 +29,7 @@ import org.soulwing.prospecto.api.template.ViewNode;
 public class ViewNodeEvent implements ViewListener {
 
   public enum Mode {
-    VIEW_GENERATION,
-    MODEL_UPDATE
+    GENERATE, APPLY
   }
 
   private final Mode mode;
