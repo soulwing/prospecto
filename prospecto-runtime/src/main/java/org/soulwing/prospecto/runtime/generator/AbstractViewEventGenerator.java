@@ -48,8 +48,8 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
       push(model, context);
       final List<View.Event> viewEvents = onGenerate(model, context);
-      pop(context);
       context.getListeners().nodeVisited(nodeEvent);
+      pop(context);
       return viewEvents;
     }
     else {
