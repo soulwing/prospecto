@@ -77,14 +77,14 @@ public class ConcreteToOneAssociationUpdater
     else {
       if (currentAssociate != null) {
         context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
                 target, currentAssociate, context));
       }
       if (entity != null) {
         final Object newAssociate = manager.newAssociate(target, entity);
         entity.inject(newAssociate, context);
         context.getListeners().entityCreated(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
                 target, newAssociate, context));
         manager.set(target, newAssociate);
       }

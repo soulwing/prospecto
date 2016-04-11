@@ -80,7 +80,7 @@ class ArrayOfObjectsGenerator
       context.put(elementModel);
 
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
-          ViewNodeEvent.Mode.VIEW_GENERATION, node, model, elementModel, context);
+          ViewNodeEvent.Mode.GENERATE, node, model, elementModel, context);
 
       final Object transformedModel =
           context.getListeners().didExtractValue(elementEvent);

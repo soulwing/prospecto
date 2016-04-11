@@ -69,7 +69,7 @@ class UnorderedToManyAssociationUpdateStrategy
         entity.inject(newElement, context);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));
+            ViewNodeEvent.Mode.APPLY, node, target, newElement, context));
 
         manager.add(target, newElement);
         touched.put(newElement, newElement);
@@ -80,7 +80,7 @@ class UnorderedToManyAssociationUpdateStrategy
     for (final Object child : children) {
       if (!touched.containsKey(child)) {
         context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
                 target, child, context));
         manager.remove(target, child);
       }

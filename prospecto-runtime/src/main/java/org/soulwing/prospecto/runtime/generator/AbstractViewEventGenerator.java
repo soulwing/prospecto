@@ -44,7 +44,7 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
   public final List<View.Event> generate(Object model, ScopedViewContext context)
       throws Exception {
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-        ViewNodeEvent.Mode.VIEW_GENERATION, node, model, context);
+        ViewNodeEvent.Mode.GENERATE, node, model, context);
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
       push(model, context);
       final List<View.Event> viewEvents = onGenerate(model, context);

@@ -77,7 +77,7 @@ class OrderedToManyAssociationUpdateStrategy
         final Object newElement = manager.newAssociate(target, entity);
         entity.inject(newElement, context);
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            ViewNodeEvent.Mode.MODEL_UPDATE, node, target, newElement, context));
+            ViewNodeEvent.Mode.APPLY, node, target, newElement, context));
 
         manager.add(target, viewIndex, newElement);
       }
@@ -88,7 +88,7 @@ class OrderedToManyAssociationUpdateStrategy
     for (int i = 0; i < count; i++) {
       final Object element = manager.get(target, viewIndex);
       context.getListeners().entityDiscarded(
-          new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+          new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
               target, element, context));
       manager.remove(target, viewIndex);
     }

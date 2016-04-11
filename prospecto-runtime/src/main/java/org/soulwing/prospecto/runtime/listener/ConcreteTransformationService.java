@@ -41,14 +41,14 @@ public class ConcreteTransformationService implements TransformationService {
       ViewNode node, ScopedViewContext context) throws Exception {
 
     final Object extractedValue = context.getListeners().didExtractValue(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.VIEW_GENERATION, node,
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.GENERATE, node,
             owner, modelValue, context));
 
     final Object viewValue = context.getValueTypeConverters().toViewValue(
         extractedValue, node);
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.VIEW_GENERATION, node,
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.GENERATE, node,
             modelValue, viewValue, context));
 
     return viewValue;
@@ -63,11 +63,11 @@ public class ConcreteTransformationService implements TransformationService {
         .toModelValue(type, viewValue, node);
 
     final Object valueToInject = context.getListeners().willInjectValue(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
             ownerEntity, convertedValue, context));
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.MODEL_UPDATE, node,
+        new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
             ownerEntity, valueToInject, context));
 
     return valueToInject;
