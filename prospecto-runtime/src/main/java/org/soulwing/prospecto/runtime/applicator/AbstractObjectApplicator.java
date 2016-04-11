@@ -21,7 +21,6 @@ package org.soulwing.prospecto.runtime.applicator;
 import java.util.List;
 
 import org.soulwing.prospecto.api.template.ObjectNode;
-import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
@@ -46,22 +45,6 @@ abstract class AbstractObjectApplicator<N extends ObjectNode>
     super(node, children, entityFactory, transformationService,
         applicatorLocator);
     this.associationUpdater = associationUpdater;
-  }
-
-  @Override
-  public void inject(Object target, Object value) throws Exception {
-    final MutableViewEntity entity = (MutableViewEntity) value;
-    for (final String name : entity.nameSet()) {
-
-      final ViewEventApplicator applicator =
-          applicatorLocator.findApplicator(name, entity.getType(), this);
-
-      if (applicator == null) continue;
-
-      if (applicator.getNode() instanceof ValueNode) {
-        applicator.inject(target, entity.get(name));
-      }
-    }
   }
 
   @Override

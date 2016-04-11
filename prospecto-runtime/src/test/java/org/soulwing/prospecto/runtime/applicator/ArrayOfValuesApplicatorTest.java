@@ -153,12 +153,6 @@ public class ArrayOfValuesApplicatorTest
   }
 
   @Test
-  public void testInject() throws Exception {
-    context.checking(new Expectations() { {} });
-    applicator.inject(MODEL, MODEL_ARRAY);
-  }
-
-  @Test
   public void testInjectInContext() throws Exception {
     context.checking(new Expectations() {
       {

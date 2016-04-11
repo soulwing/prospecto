@@ -20,8 +20,6 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Collections;
 
-import org.jmock.Expectations;
-import org.junit.Test;
 import org.soulwing.prospecto.api.template.ObjectNode;
 
 /**
@@ -43,43 +41,5 @@ public class ObjectApplicatorTest
         Collections.<ViewEventApplicator>emptyList(), entityFactory,
         transformationService, associationUpdater, applicatorLocator);
   }
-
-  @Test
-  public void testInject() throws Exception {
-    context.checking(new Expectations() {
-      {
-        oneOf(entity).nameSet();
-        will(returnValue(Collections.singleton(NAME)));
-        oneOf(entity).getType();
-        will(returnValue(MockModel.class));
-        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
-            (ContainerApplicator) applicator);
-        will(returnValue(child));
-        oneOf(child).getNode();
-        will(returnValue(childNode));
-      }
-    });
-
-    applicator.inject(MODEL, entity);
-  }
-
-  @Test
-  public void testInjectWhenPropertyNotFound() throws Exception {
-    context.checking(new Expectations() {
-      {
-        oneOf(entity).nameSet();
-        will(returnValue(Collections.singleton(NAME)));
-        oneOf(entity).getType();
-        will(returnValue(MockModel.class));
-        oneOf(applicatorLocator).findApplicator(NAME, MockModel.class,
-            (ContainerApplicator) applicator);
-        will(returnValue(null));
-      }
-    });
-
-    applicator.inject(MODEL, entity);
-  }
-
-  private interface MockModel {}
 
 }

@@ -106,7 +106,11 @@ public class ConcreteMutableViewEntity implements MutableViewEntity {
     try {
       for (String name : map.keySet()) {
         final InjectableValue injectableValue = map.get(name);
-        injectableValue.injector.inject(target, injectableValue.value);
+        // only inject simple values, not composed objects
+        if (injectableValue.injector instanceof ValueInjector) {
+          ((ValueInjector) injectableValue.injector)
+              .inject(target, injectableValue.value);
+        }
       }
     }
     catch (Exception ex) {

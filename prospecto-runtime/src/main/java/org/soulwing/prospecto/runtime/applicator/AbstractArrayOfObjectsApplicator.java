@@ -109,10 +109,6 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
   }
 
   @Override
-  public void inject(Object target, Object value) throws Exception {
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {

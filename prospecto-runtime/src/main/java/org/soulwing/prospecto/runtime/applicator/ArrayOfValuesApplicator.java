@@ -90,9 +90,6 @@ class ArrayOfValuesApplicator
   }
 
   @Override
-  public void inject(Object target, Object value) throws Exception {}
-
-  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     associationUpdater.update(node, target, (Iterable<?>) value,

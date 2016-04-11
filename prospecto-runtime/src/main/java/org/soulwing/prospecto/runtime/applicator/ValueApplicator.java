@@ -24,6 +24,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
+import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -32,7 +33,8 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  *
  * @author Carl Harris
  */
-class ValueApplicator extends AbstractViewEventApplicator<ValueNode> {
+class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
+    implements MutableViewEntity.ValueInjector {
 
   private final TransformationService transformationService;
 

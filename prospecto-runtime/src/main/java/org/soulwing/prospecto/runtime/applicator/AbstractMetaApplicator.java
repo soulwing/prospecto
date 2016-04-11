@@ -50,9 +50,6 @@ abstract class AbstractMetaApplicator<N extends MetaNode>
   }
 
   @Override
-  public final void inject(Object target, Object value) throws Exception {}
-
-  @Override
   public final void inject(Object target, Object value,
       ScopedViewContext context) throws Exception {
     node.getHandler().consumeValue(node, value, context);

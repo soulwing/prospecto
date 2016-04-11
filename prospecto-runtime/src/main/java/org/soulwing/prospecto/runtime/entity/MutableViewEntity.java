@@ -30,13 +30,16 @@ public interface MutableViewEntity extends ViewEntity {
 
   interface Injector {
 
-    void inject(Object target, Object value) throws Exception;
-
     void inject(Object target, Object value, ScopedViewContext context)
         throws Exception;
 
   }
 
+  interface ValueInjector extends Injector {
+
+    void inject(Object target, Object value) throws Exception;
+
+  }
   /**
    * Puts a property into this entity.
    * @param name name of the property

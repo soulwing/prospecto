@@ -48,11 +48,6 @@ class SubtypeApplicator extends AbstractContainerApplicator<SubtypeNode> {
   }
 
   @Override
-  public void inject(Object target, Object value) throws Exception {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     throw new UnsupportedOperationException();

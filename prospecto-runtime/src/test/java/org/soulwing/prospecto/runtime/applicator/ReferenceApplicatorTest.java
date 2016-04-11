@@ -20,8 +20,6 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Collections;
 
-import org.jmock.Expectations;
-import org.junit.Test;
 import org.soulwing.prospecto.api.template.ReferenceNode;
 
 /**
@@ -42,12 +40,6 @@ public class ReferenceApplicatorTest
     return new ReferenceApplicator(node,
         Collections.<ViewEventApplicator>emptyList(), entityFactory,
         transformationService, associationUpdater, applicatorLocator);
-  }
-
-  @Test
-  public void testInject() throws Exception {
-    context.checking(new Expectations() { {} });
-    applicator.inject(MODEL, entity);
   }
 
 }

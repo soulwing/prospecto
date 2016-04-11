@@ -55,7 +55,7 @@ abstract class AbstractViewEventApplicator<N extends ViewNode>
     push(parentEntity, context);
 
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-        ViewNodeEvent.Mode.MODEL_UPDATE, node, parentEntity, context);
+        ViewNodeEvent.Mode.APPLY, node, parentEntity, context);
 
     Object value = UndefinedValue.INSTANCE;
     if (context.getListeners().shouldVisitNode(nodeEvent)) {

@@ -65,12 +65,6 @@ public abstract class AbstractMetaApplicatorTest<N extends MetaNode>
   }
 
   @Test
-  public void testInject() throws Exception {
-    context.checking(new Expectations() { {} });
-    applicator.inject(parentEntity, TRANSFORMED_VALUE);
-  }
-
-  @Test
   public void testInjectInContext() throws Exception {
     context.checking(new Expectations() {
       {

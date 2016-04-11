@@ -51,7 +51,4 @@ class ReferenceApplicator extends AbstractObjectApplicator<ReferenceNode> {
         associationUpdater, applicatorLocator);
   }
 
-  @Override
-  public void inject(Object target, Object value) {}
-
 }
