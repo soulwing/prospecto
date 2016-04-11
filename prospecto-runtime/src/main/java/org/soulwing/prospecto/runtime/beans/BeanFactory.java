@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.injector;
+package org.soulwing.prospecto.runtime.beans;
 
 import java.util.Map;
 
