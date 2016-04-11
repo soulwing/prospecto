@@ -24,14 +24,14 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * An object that applies the state in a sequence of view events to a model.
  *
  * @author Carl Harris
  */
-public interface ViewEventApplicator extends MutableViewEntity.Injector {
+public interface ViewEventApplicator extends InjectableViewEntity.Injector {
 
   ViewNode getNode();
 

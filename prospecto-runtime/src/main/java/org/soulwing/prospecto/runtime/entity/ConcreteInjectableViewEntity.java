@@ -28,11 +28,11 @@ import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * A {@link MutableViewEntity} implementation.
+ * A {@link InjectableViewEntity} implementation.
  *
  * @author Carl Harris
  */
-public class ConcreteMutableViewEntity implements MutableViewEntity {
+public class ConcreteInjectableViewEntity implements InjectableViewEntity {
 
   private static class InjectableValue {
     final Object value;
@@ -47,7 +47,7 @@ public class ConcreteMutableViewEntity implements MutableViewEntity {
   private final Class<?> type;
   private final Map<String, InjectableValue> map = new LinkedHashMap<>();
 
-  public ConcreteMutableViewEntity(Class<?> type) {
+  public ConcreteInjectableViewEntity(Class<?> type) {
     this.type = type;
   }
 

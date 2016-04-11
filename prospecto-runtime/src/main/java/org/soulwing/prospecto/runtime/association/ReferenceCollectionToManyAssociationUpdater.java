@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * A {@link ToManyAssociationUpdater} for a collection of values.
@@ -45,7 +45,7 @@ public class ReferenceCollectionToManyAssociationUpdater
   @Override
   protected Object resolve(Object value,
       ScopedViewContext context) {
-    final MutableViewEntity entity = (MutableViewEntity) value;
+    final InjectableViewEntity entity = (InjectableViewEntity) value;
     return context.getReferenceResolvers().resolve(entity.getType(), entity);
   }
 

@@ -22,7 +22,7 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * A {@link ToManyAssociationUpdater} for a collection of values.
@@ -52,7 +52,7 @@ public class ReferenceToOneAssociationUpdater implements ToOneAssociationUpdater
   @Override
   @SuppressWarnings("unchecked")
   public void update(ContainerNode node, Object target,
-      MutableViewEntity entity,
+      InjectableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception {
 

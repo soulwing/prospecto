@@ -34,7 +34,7 @@ import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
@@ -81,7 +81,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
   ViewEntityFactory entityFactory;
 
   @Mock
-  MutableViewEntity entity;
+  InjectableViewEntity entity;
 
   @Mock
   ToOneAssociationUpdater associationUpdater;

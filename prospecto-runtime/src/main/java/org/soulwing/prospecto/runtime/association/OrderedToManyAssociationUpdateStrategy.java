@@ -25,7 +25,7 @@ import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * A strategy for updating an unordered collection.
@@ -61,7 +61,7 @@ class OrderedToManyAssociationUpdateStrategy
       ScopedViewContext context) throws Exception {
     int viewIndex = 0;
     for (final Object value : values) {
-      final MutableViewEntity entity = (MutableViewEntity) value;
+      final InjectableViewEntity entity = (InjectableViewEntity) value;
       final int modelIndex = manager.indexOf(target, entity);
       if (modelIndex != -1) {
         final Object element = manager.get(target, modelIndex);

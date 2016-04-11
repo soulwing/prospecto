@@ -35,7 +35,7 @@ import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
@@ -62,13 +62,13 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
   private ToManyIndexedAssociationManager manager;
 
   @Mock
-  private MutableViewEntity a;
+  private InjectableViewEntity a;
 
   @Mock
-  private MutableViewEntity b;
+  private InjectableViewEntity b;
 
   @Mock
-  private MutableViewEntity c;
+  private InjectableViewEntity c;
 
   @Mock
   private MockModel elementA;
@@ -110,7 +110,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
     context.checking(copyElementsExpectations(elementA, elementB));
 
     UnorderedToManyAssociationUpdateStrategy.INSTANCE
-        .update(node, owner, Collections.<MutableViewEntity>emptyList(),
+        .update(node, owner, Collections.<InjectableViewEntity>emptyList(),
             manager, viewContext);
   }
 
@@ -147,7 +147,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
         .update(node, owner, Arrays.asList(a, b), manager, viewContext);
   }
 
-  private Expectations findElementExpectations(final MutableViewEntity entity,
+  private Expectations findElementExpectations(final InjectableViewEntity entity,
       final Object element) throws Exception {
     return new Expectations() {
       {
@@ -157,7 +157,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
     };
   }
 
-  private Expectations createElementExpectations(final MutableViewEntity entity,
+  private Expectations createElementExpectations(final InjectableViewEntity entity,
       final Object element) throws Exception {
     return new Expectations() {
       {
@@ -176,7 +176,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
     };
   }
 
-  private Expectations updateElementExpectations(final MutableViewEntity entity,
+  private Expectations updateElementExpectations(final InjectableViewEntity entity,
       final Object element) throws Exception {
     return new Expectations() {
       {

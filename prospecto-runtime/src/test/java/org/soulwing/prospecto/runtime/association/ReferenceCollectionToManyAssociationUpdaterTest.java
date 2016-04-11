@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
@@ -35,7 +35,7 @@ public class ReferenceCollectionToManyAssociationUpdaterTest
   MockModel associate;
 
   @Mock
-  MutableViewEntity associateEntity;
+  InjectableViewEntity associateEntity;
 
   @Mock
   ReferenceResolverService resolvers;

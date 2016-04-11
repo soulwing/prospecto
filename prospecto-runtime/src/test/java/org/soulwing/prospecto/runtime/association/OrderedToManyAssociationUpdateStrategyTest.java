@@ -35,7 +35,7 @@ import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
@@ -62,19 +62,19 @@ public class OrderedToManyAssociationUpdateStrategyTest {
   private ToManyIndexedAssociationManager manager;
 
   @Mock
-  private MutableViewEntity a;
+  private InjectableViewEntity a;
 
   @Mock
-  private MutableViewEntity b;
+  private InjectableViewEntity b;
 
   @Mock
-  private MutableViewEntity c;
+  private InjectableViewEntity c;
 
   @Mock
-  private MutableViewEntity d;
+  private InjectableViewEntity d;
 
   @Mock
-  private MutableViewEntity e;
+  private InjectableViewEntity e;
 
   @Mock
   private MockModel elementA;
@@ -122,7 +122,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
     context.checking(removeElementExpectations(0, elementB));
 
     OrderedToManyAssociationUpdateStrategy.INSTANCE
-        .update(node, owner, Collections.<MutableViewEntity>emptyList(),
+        .update(node, owner, Collections.<InjectableViewEntity>emptyList(),
             manager, viewContext);
   }
 
@@ -244,7 +244,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
         .update(node, owner, Arrays.asList(a, b, c), manager, viewContext);
   }
 
-  private Expectations findElementExpectations(final MutableViewEntity entity,
+  private Expectations findElementExpectations(final InjectableViewEntity entity,
       final int modelIndex) throws Exception {
     return new Expectations() {
       {
@@ -254,7 +254,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
     };
   }
 
-  private Expectations createElementExpectations(final MutableViewEntity entity,
+  private Expectations createElementExpectations(final InjectableViewEntity entity,
       final int modelIndex, final Object element) throws Exception {
     return new Expectations() {
       {
@@ -272,7 +272,7 @@ public class OrderedToManyAssociationUpdateStrategyTest {
     };
   }
 
-  private Expectations updateElementExpectations(final MutableViewEntity entity,
+  private Expectations updateElementExpectations(final InjectableViewEntity entity,
       final int modelIndex, final Object element) throws Exception {
     return new Expectations() {
       {

@@ -38,7 +38,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
@@ -64,7 +64,7 @@ public abstract class AbstractViewEventApplicatorTest<N extends ViewNode> {
   NotifiableViewListeners listeners;
 
   @Mock
-  MutableViewEntity parentEntity;
+  InjectableViewEntity parentEntity;
 
   @Mock
   View.Event triggerEvent;
@@ -113,7 +113,7 @@ public abstract class AbstractViewEventApplicatorTest<N extends ViewNode> {
   }
 
   Expectations baseExpectations(final String name,
-      final MutableViewEntity parentEntity, final boolean successful)
+      final InjectableViewEntity parentEntity, final boolean successful)
       throws Exception {
     return new Expectations() {
       {
@@ -143,7 +143,7 @@ public abstract class AbstractViewEventApplicatorTest<N extends ViewNode> {
   }
 
   Expectations contextScopeExpectations(final String name,
-      final MutableViewEntity parentEntity, final boolean successful)
+      final InjectableViewEntity parentEntity, final boolean successful)
       throws Exception {
     return new Expectations() {
       {

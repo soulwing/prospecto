@@ -23,7 +23,7 @@ import java.util.List;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -51,7 +51,7 @@ abstract class AbstractObjectApplicator<N extends ObjectNode>
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     associationUpdater.update(node, target,
-        (MutableViewEntity) value, node.getDefaultManager(), context);
+        (InjectableViewEntity) value, node.getDefaultManager(), context);
   }
 
 }

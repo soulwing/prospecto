@@ -32,7 +32,7 @@ import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -74,7 +74,7 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
   @Override
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    final MutableViewEntity entity = entityFactory.newEntity(node, events, context);
+    final InjectableViewEntity entity = entityFactory.newEntity(node, events, context);
     View.Event.Type eventType = triggerEvent.getType();
     while (!events.isEmpty()) {
       View.Event event = events.removeFirst();

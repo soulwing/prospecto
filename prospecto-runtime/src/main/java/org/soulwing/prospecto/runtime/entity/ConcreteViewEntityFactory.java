@@ -48,13 +48,13 @@ public class ConcreteViewEntityFactory implements ViewEntityFactory {
   }
 
   @Override
-  public MutableViewEntity newEntity(ViewNode node,
+  public InjectableViewEntity newEntity(ViewNode node,
       Iterable<View.Event> events, ScopedViewContext context) throws Exception {
     View.Event event = discriminatorEventService.findDiscriminatorEvent(
         events.iterator());
 
     if (event == null) {
-      return new ConcreteMutableViewEntity(node.getModelType());
+      return new ConcreteInjectableViewEntity(node.getModelType());
     }
 
     final Discriminator discriminator = new Discriminator(event.getValue());
@@ -62,7 +62,7 @@ public class ConcreteViewEntityFactory implements ViewEntityFactory {
     final DiscriminatorStrategy strategy =
         discriminatorEventService.findStrategy(node, context);
 
-    return new ConcreteMutableViewEntity(
+    return new ConcreteInjectableViewEntity(
         strategy.toSubtype(node.getModelType(), discriminator));
   }
 

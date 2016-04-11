@@ -34,7 +34,7 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
@@ -84,7 +84,7 @@ public class ConcreteToOneAssociationUpdaterTest {
   MockModel newAssociate;
 
   @Mock
-  MutableViewEntity associateEntity;
+  InjectableViewEntity associateEntity;
 
   ConcreteToOneAssociationUpdater updater;
 

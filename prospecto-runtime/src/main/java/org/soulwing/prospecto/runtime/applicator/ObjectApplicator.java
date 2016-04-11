@@ -25,7 +25,7 @@ import org.soulwing.prospecto.runtime.association.ConcreteToOneAssociationUpdate
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
@@ -57,7 +57,7 @@ class ObjectApplicator extends AbstractObjectApplicator<ObjectNode>
   @Override
   public void apply(Object injector, Object target, ScopedViewContext context)
       throws Exception {
-    ((MutableViewEntity) injector).inject(target, context);
+    ((InjectableViewEntity) injector).inject(target, context);
   }
 
 }

@@ -22,24 +22,51 @@ import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * A mutable {@link ViewEntity}.
+ * An {@link ViewEntity} that is capable of injecting its state into a target
+ * instance of the entity's model type.
  *
  * @author Carl Harris
  */
-public interface MutableViewEntity extends ViewEntity {
+public interface InjectableViewEntity extends ViewEntity {
 
+  /**
+   * A collaborator that injects a value into a target object.
+   * <p>
+   * This is the <em>contextual</em> injector, which performs a fully
+   * recursive injection of all nested {@link InjectableViewEntity} instances.
+   */
   interface Injector {
 
+    /**
+     * Injects {@code value} into {@code target}.
+     * @param target the target object
+     * @param value the value to inject
+     * @param context view context
+     * @throws Exception
+     */
     void inject(Object target, Object value, ScopedViewContext context)
         throws Exception;
 
   }
 
+  /**
+   * A collaborator that injects a value into a target object.
+   * <p>
+   * This is the <em>context-free</em> injector, that is used only to inject
+   * simple values into an {@link InjectableViewEntity}.
+   */
   interface ValueInjector extends Injector {
 
+    /**
+     * Injects {@code value} into {@code target}.
+     * @param target the target object
+     * @param value the value to inject
+     * @throws Exception
+     */
     void inject(Object target, Object value) throws Exception;
 
   }
+
   /**
    * Puts a property into this entity.
    * @param name name of the property

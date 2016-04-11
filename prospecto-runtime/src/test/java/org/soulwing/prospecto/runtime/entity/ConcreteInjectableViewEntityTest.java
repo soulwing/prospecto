@@ -27,11 +27,11 @@ import org.junit.Test;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * Unit tests for {@link ConcreteMutableViewEntity}.
+ * Unit tests for {@link ConcreteInjectableViewEntity}.
  *
  * @author Carl Harris
  */
-public class ConcreteMutableViewEntityTest {
+public class ConcreteInjectableViewEntityTest {
 
   private static final Object VALUE = new Object();
 
@@ -42,19 +42,19 @@ public class ConcreteMutableViewEntityTest {
   private ScopedViewContext viewContext;
 
   @Mock
-  private MutableViewEntity childEntity;
+  private InjectableViewEntity childEntity;
 
   @Mock
-  private MutableViewEntity.Injector childInjector;
+  private InjectableViewEntity.Injector childInjector;
 
   @Mock
-  private MutableViewEntity.ValueInjector valueInjector;
+  private InjectableViewEntity.ValueInjector valueInjector;
 
   @Mock
   private MockModel target;
 
-  private ConcreteMutableViewEntity entity =
-      new ConcreteMutableViewEntity(MockModel.class);
+  private ConcreteInjectableViewEntity entity =
+      new ConcreteInjectableViewEntity(MockModel.class);
 
   @Before
   public void setUp() throws Exception {

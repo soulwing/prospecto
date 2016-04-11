@@ -29,7 +29,7 @@ import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * A strategy for updating a to-many association (unordered)
@@ -58,7 +58,7 @@ class UnorderedToManyAssociationUpdateStrategy
 
     final Map<Object, Object> touched = new IdentityHashMap<>();
     for (final Object value : values)  {
-      final MutableViewEntity entity = (MutableViewEntity) value;
+      final InjectableViewEntity entity = (InjectableViewEntity) value;
       final Object element = manager.findAssociate(target, entity);
       if (element != null) {
         touched.put(element, element);

@@ -28,7 +28,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * A {@link ViewApplicator} implementation.
@@ -68,10 +68,10 @@ class ConcreteViewApplicator implements ViewApplicator {
   @Override
   public Object create() throws ViewApplicatorException {
     try {
-      final MutableViewEntity entity = deriveInjector();
+      final InjectableViewEntity entity = deriveInjector();
       if (entity == UndefinedValue.INSTANCE) return null;
 
-      final Object model = ((MutableViewEntity) entity).getType().newInstance();
+      final Object model = ((InjectableViewEntity) entity).getType().newInstance();
       root.apply(entity, model, context);
       return model;
     }
@@ -87,7 +87,7 @@ class ConcreteViewApplicator implements ViewApplicator {
   public void update(Object model) throws ViewApplicatorException {
     try {
       assertHasRootModelType(model);
-      final MutableViewEntity entity = deriveInjector();
+      final InjectableViewEntity entity = deriveInjector();
       if (entity != UndefinedValue.INSTANCE) {
         root.apply(entity, model, context);
       }
@@ -100,13 +100,13 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
   }
 
-  private MutableViewEntity deriveInjector() throws Exception {
+  private InjectableViewEntity deriveInjector() throws Exception {
     final Deque<View.Event> events = eventDeque(source);
     final View.Event triggerEvent = events.removeFirst();
     if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
       throw new ViewApplicatorException("view must start with an object");
     }
-    return (MutableViewEntity) root.toModelValue(null, triggerEvent, events,
+    return (InjectableViewEntity) root.toModelValue(null, triggerEvent, events,
         context);
   }
 

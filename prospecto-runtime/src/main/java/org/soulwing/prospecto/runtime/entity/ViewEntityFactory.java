@@ -21,11 +21,9 @@ package org.soulwing.prospecto.runtime.entity;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
 
 /**
- * A factory that produces {@link MutableViewEntity} objects for an
- * {@link ConcreteObjectNode}.
+ * A factory that produces {@link InjectableViewEntity} objects.
  *
  * @author Carl Harris
  */
@@ -39,7 +37,7 @@ public interface ViewEntityFactory {
    * @return view entity
    * @throws Exception
    */
-  MutableViewEntity newEntity(ViewNode node, Iterable<View.Event> events,
+  InjectableViewEntity newEntity(ViewNode node, Iterable<View.Event> events,
       ScopedViewContext context) throws Exception;
 
 }

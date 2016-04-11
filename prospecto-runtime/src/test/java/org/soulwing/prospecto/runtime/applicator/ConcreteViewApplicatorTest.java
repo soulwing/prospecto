@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.view.ViewBuilder;
 
 /**
@@ -64,7 +64,7 @@ public class ConcreteViewApplicatorTest {
   private MockModel model;
 
   @Mock
-  private MutableViewEntity entity;
+  private InjectableViewEntity entity;
 
   private ConcreteViewApplicator editor;
 
@@ -85,7 +85,7 @@ public class ConcreteViewApplicatorTest {
     context.checking(new Expectations() {
       {
         oneOf(root).toModelValue(
-            with(nullValue(MutableViewEntity.class)),
+            with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(contains(
                     eventOfType(VALUE, withName(NAME)),
@@ -121,7 +121,7 @@ public class ConcreteViewApplicatorTest {
     context.checking(new Expectations() {
       {
         oneOf(root).toModelValue(
-            with(nullValue(MutableViewEntity.class)),
+            with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(
@@ -314,7 +314,7 @@ public class ConcreteViewApplicatorTest {
     context.checking(new Expectations() {
       {
         oneOf(root).toModelValue(
-            with(nullValue(MutableViewEntity.class)),
+            with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(
@@ -354,7 +354,7 @@ public class ConcreteViewApplicatorTest {
     context.checking(new Expectations() {
       {
         oneOf(root).toModelValue(
-            with(nullValue(MutableViewEntity.class)),
+            with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
             (Deque<View.Event>) with(
                 contains(

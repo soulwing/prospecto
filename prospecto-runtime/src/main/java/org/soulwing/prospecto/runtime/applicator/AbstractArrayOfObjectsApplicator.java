@@ -29,7 +29,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -113,7 +113,7 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     associationUpdater.update(node, target,
-        (List<MutableViewEntity>) value, node.getDefaultManager(), context);
+        (List<InjectableViewEntity>) value, node.getDefaultManager(), context);
   }
 
 }

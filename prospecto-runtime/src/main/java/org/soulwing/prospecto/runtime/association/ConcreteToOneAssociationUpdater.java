@@ -24,7 +24,7 @@ import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.MutableViewEntity;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
  * An updater for a to-one association between a target model object and
@@ -56,7 +56,7 @@ public class ConcreteToOneAssociationUpdater
   @Override
   @SuppressWarnings("unchecked")
   public void update(ContainerNode node, Object target,
-      MutableViewEntity entity,
+      InjectableViewEntity entity,
       ToOneAssociationManager defaultManager, ScopedViewContext context)
       throws Exception {
 
