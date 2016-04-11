@@ -49,7 +49,7 @@ import javax.persistence.TemporalType;
 @Access(AccessType.FIELD)
 public class Player extends Person {
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Division division;
 
   @Temporal(TemporalType.DATE)
@@ -79,50 +79,26 @@ public class Player extends Person {
   @Column(name = "throwing_orientation")
   private Orientation throwingOrientation;
 
-  /**
-   * Gets the {@code division} property.
-   * @return property value
-   */
   public Division getDivision() {
     return division;
   }
 
-  /**
-   * Sets the {@code division} property.
-   * @param division the property value to set
-   */
   public void setDivision(Division division) {
     this.division = division;
   }
 
-  /**
-   * Gets the {@code birthDate} property.
-   * @return property value
-   */
   public Date getBirthDate() {
     return birthDate;
   }
 
-  /**
-   * Sets the {@code birthDate} property.
-   * @param birthDate the property value to set
-   */
   public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
   }
 
-  /**
-   * Gets the {@code residenceAddress} property.
-   * @return property value
-   */
   public PhysicalAddress getResidenceAddress() {
     return residenceAddress;
   }
 
-  /**
-   * Gets the {@code parents} property.
-   * @return property value
-   */
   public Set<Parent> getParents() {
     return parents;
   }
@@ -135,35 +111,36 @@ public class Player extends Person {
     return parents.remove(parent);
   }
 
-  /**
-   * Gets the {@code battingOrientation} property.
-   * @return property value
-   */
+  public MedicalInfo getMedicalInfo() {
+    return medicalInfo;
+  }
+
+  public void setMedicalInfo(MedicalInfo medicalInfo) {
+    this.medicalInfo = medicalInfo;
+  }
+
+  public UniformInfo getUniformInfo() {
+    return uniformInfo;
+  }
+
+  public void setUniformInfo(UniformInfo uniformInfo) {
+    this.uniformInfo = uniformInfo;
+  }
+
   public Orientation getBattingOrientation() {
     return battingOrientation;
   }
 
-  /**
-   * Sets the {@code battingOrientation} property.
-   * @param battingOrientation the property value to set
-   */
   public void setBattingOrientation(Orientation battingOrientation) {
     this.battingOrientation = battingOrientation;
   }
 
-  /**
-   * Gets the {@code throwingOrientation} property.
-   * @return property value
-   */
   public Orientation getThrowingOrientation() {
     return throwingOrientation;
   }
 
-  /**
-   * Sets the {@code throwingOrientation} property.
-   * @param throwingOrientation the property value to set
-   */
   public void setThrowingOrientation(Orientation throwingOrientation) {
     this.throwingOrientation = throwingOrientation;
   }
+
 }

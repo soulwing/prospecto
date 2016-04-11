@@ -18,15 +18,14 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
 import org.soulwing.prospecto.demo.jaxrs.views.LeagueViews;
@@ -38,13 +37,24 @@ import org.soulwing.prospecto.demo.jaxrs.views.LeagueViews;
  */
 @ApplicationScoped
 @Transactional
-public class LeagueServiceBean implements LeagueService {
+public class LeagueServiceBean extends EntityServiceBase<League>
+    implements LeagueService {
 
   @Inject
   private ViewContext viewContext;
 
   @PersistenceContext
   private EntityManager entityManager;
+
+  public LeagueServiceBean() {
+    super(League.class, LeagueViews.LEAGUE_DETAIL);
+  }
+
+  @PostConstruct
+  public void init() {
+    setEntityManager(entityManager);
+    setViewContext(viewContext);
+  }
 
   @Override
   public View findAllLeagues() {
@@ -56,36 +66,18 @@ public class LeagueServiceBean implements LeagueService {
 
   @Override
   public View findLeagueById(Long id) throws NoSuchEntityException {
-    final League league = entityManager.find(League.class, id);
-    if (league == null) {
-      throw new NoSuchEntityException(League.class, id);
-    }
-
-    return LeagueViews.LEAGUE_DETAIL.generateView(league, viewContext);
+    return findById(id);
   }
 
   @Override
   public View updateLeague(Long id, View leagueView)
       throws NoSuchEntityException, UpdateConflictException {
-    League league = entityManager.find(League.class, id);
-    if (league == null) {
-      throw new NoSuchEntityException(League.class, id);
-    }
+    return update(id, leagueView);
+  }
 
-    final ViewApplicator editor = LeagueViews.LEAGUE_DETAIL.createApplicator(
-        leagueView, viewContext);
-    editor.update(league);
-    league.setId(id);
-    entityManager.clear();
-
-    try {
-      league = entityManager.merge(league);
-      entityManager.flush();
-      return LeagueViews.LEAGUE_DETAIL.generateView(league, viewContext);
-    }
-    catch (OptimisticLockException ex) {
-      throw new UpdateConflictException(League.class, id, ex);
-    }
+  @Override
+  public void deleteLeague(Long id) {
+    delete(id);
   }
 
 }

@@ -21,6 +21,7 @@ package org.soulwing.prospecto.demo.jaxrs.ws;
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
@@ -37,6 +38,7 @@ import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
  * A JAX-RS resource used to access the {@link LeagueService}.
@@ -57,8 +59,8 @@ public class LeagueResource {
   }
 
   @GET
-  @Path("/{id}")
-  @ReferencedBy(League.class)
+  @Path("{id}")
+  @ReferencedBy({ AnyModelSequence.class, League.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getLeague(@PathParam("id") Long id) {
     try {
@@ -70,7 +72,7 @@ public class LeagueResource {
   }
 
   @PUT
-  @Path("/{id}")
+  @Path("{id}")
   public View putLeague(@PathParam("id") Long id, View leagueView) {
     try {
       return leagueService.updateLeague(id, leagueView);
@@ -81,6 +83,12 @@ public class LeagueResource {
     catch (UpdateConflictException ex) {
       throw new ClientErrorException(Response.Status.CONFLICT, ex);
     }
+  }
+
+  @DELETE
+  @Path("{id}")
+  public void deleteLeague(@PathParam("id") Long id) {
+    leagueService.deleteLeague(id);
   }
 
 }

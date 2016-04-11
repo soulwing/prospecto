@@ -32,4 +32,11 @@
     </query>
   </named-query>
 
+  <named-query name="findAllContacts">
+    <query>
+      select distinct c from Contact c
+      order by c.surname, c.givenNames
+    </query>
+  </named-query>
+
 </entity-mappings>

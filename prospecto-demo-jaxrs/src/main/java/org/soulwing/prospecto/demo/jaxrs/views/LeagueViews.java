@@ -44,6 +44,14 @@ public interface LeagueViews {
           .end()
       .build();
 
+  ViewTemplate LEAGUE_REFERENCE = ViewTemplateBuilderProducer
+      .object(League.class)
+          .url()
+          .value("id")
+          .value("name")
+          .end()
+      .build();
+
   ViewTemplate LEAGUE_DETAIL = ViewTemplateBuilderProducer
       .object(League.class)
           .value("id")
@@ -51,6 +59,5 @@ public interface LeagueViews {
           .value("name")
           .arrayOfObjects("divisions", "division", DivisionViews.DIVISION_SUMMARY)
       .build();
-
 
 }

@@ -37,7 +37,7 @@ import javax.persistence.ManyToOne;
 public class MedicalInfo implements Serializable {
 
   @Embedded
-  private InsuranceInfo insuranceInfo;
+  private InsuranceInfo insuranceInfo = new InsuranceInfo();
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "emergency_contact_id")
@@ -46,50 +46,26 @@ public class MedicalInfo implements Serializable {
   @Column(name = "medical_note", length = 8192)
   private String note;
 
-  /**
-   * Gets the {@code insuranceInfo} property.
-   * @return property value
-   */
   public InsuranceInfo getInsuranceInfo() {
     return insuranceInfo;
   }
 
-  /**
-   * Sets the {@code insuranceInfo} property.
-   * @param insuranceInfo the property value to set
-   */
   public void setInsuranceInfo(InsuranceInfo insuranceInfo) {
     this.insuranceInfo = insuranceInfo;
   }
 
-  /**
-   * Gets the {@code emergencyContact} property.
-   * @return property value
-   */
   public Contact getEmergencyContact() {
     return emergencyContact;
   }
 
-  /**
-   * Sets the {@code emergencyContact} property.
-   * @param emergencyContact the property value to set
-   */
   public void setEmergencyContact(Contact emergencyContact) {
     this.emergencyContact = emergencyContact;
   }
 
-  /**
-   * Gets the {@code note} property.
-   * @return property value
-   */
   public String getNote() {
     return note;
   }
 
-  /**
-   * Sets the {@code note} property.
-   * @param note the property value to set
-   */
   public void setNote(String note) {
     this.note = note;
   }

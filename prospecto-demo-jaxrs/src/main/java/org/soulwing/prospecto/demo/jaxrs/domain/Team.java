@@ -32,6 +32,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -44,7 +45,7 @@ import javax.persistence.Table;
 @Access(AccessType.FIELD)
 public class Team extends AbstractEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Division division;
 
   @Column(nullable = false)
@@ -60,6 +61,7 @@ public class Team extends AbstractEntity {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "team_id")
+  @OrderBy("position")
   private Set<RosterPlayer> roster = new HashSet<>();
 
   /**

@@ -18,22 +18,29 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.service.DivisionService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
+import org.soulwing.prospecto.demo.jaxrs.service.TeamService;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
@@ -52,8 +59,11 @@ public class DivisionResource {
   @Inject
   private DivisionService divisionService;
 
+  @Inject
+  private TeamService teamService;
+
   @GET
-  @Path("/{id}")
+  @Path("{id}")
   @ReferencedBy({ AnyModelSequence.class, Division.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getDivision(@PathParam("id") Long id) {
@@ -66,7 +76,7 @@ public class DivisionResource {
   }
 
   @PUT
-  @Path("/{id}")
+  @Path("{id}")
   public View putDivision(@PathParam("id") Long id, View divisionView) {
     try {
       return divisionService.updateDivision(id, divisionView);
@@ -77,6 +87,21 @@ public class DivisionResource {
     catch (UpdateConflictException ex) {
       throw new ClientErrorException(Response.Status.CONFLICT, ex);
     }
+  }
+
+  @DELETE
+  @Path("{id}")
+  public void deleteDivision(@PathParam("id") Long id) {
+    divisionService.deleteDivision(id);
+  }
+
+  @POST
+  @Path("{id}/teams")
+  public Response postTeam(View teamView, @PathParam("id") Long divisionId,
+      @Context UriInfo uriInfo) {
+    Object id = teamService.createTeam(divisionId, teamView);
+    URI location = uriInfo.getBaseUriBuilder().path("teams/{id}").build(id);
+    return Response.created(location).build();
   }
 
 }

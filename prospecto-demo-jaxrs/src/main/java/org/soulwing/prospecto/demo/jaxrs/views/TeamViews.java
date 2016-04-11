@@ -19,7 +19,9 @@
 package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.demo.jaxrs.domain.RosterPlayer;
 import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
@@ -28,12 +30,37 @@ import org.soulwing.prospecto.demo.jaxrs.domain.Team;
  */
 public interface TeamViews {
 
+  ViewTemplate ROSTER_PLAYER = ViewTemplateBuilderProducer
+      .object(RosterPlayer.class)
+          .value("id")
+          .value("version")
+          .reference("player", PersonViews.PLAYER_SUMMARY)
+          .value("jerseyNumber")
+          .value("position")
+          .end()
+      .build();
+
   ViewTemplate TEAM_SUMMARY = ViewTemplateBuilderProducer
       .object(Team.class)
+          .url()
           .value("id")
           .value("version")
           .value("name")
           .reference("manager", PersonViews.CONTACT_REFERENCE)
+          .end()
+      .build();
+
+  ViewTemplate TEAM_DETAIL = ViewTemplateBuilderProducer
+      .object(Team.class)
+          .value("id")
+          .value("version")
+          .value("name")
+          .reference("division", DivisionViews.DIVISION_REFERENCE)
+              .allow(AccessMode.READ)
+          .reference("manager", PersonViews.CONTACT_REFERENCE)
+          .arrayOfReferences("coaches", PersonViews.CONTACT_REFERENCE)
+          .arrayOfObjects("roster", ROSTER_PLAYER)
+          .end()
       .build();
 
 }

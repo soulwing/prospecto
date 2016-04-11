@@ -18,17 +18,17 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
+import org.soulwing.prospecto.demo.jaxrs.domain.Player;
 import org.soulwing.prospecto.demo.jaxrs.views.PersonViews;
 
 /**
@@ -40,53 +40,58 @@ import org.soulwing.prospecto.demo.jaxrs.views.PersonViews;
 @ApplicationScoped
 public class PersonServiceBean implements PersonService {
 
+  private final EntityService contactService =
+      new EntityServiceBase<>(Contact.class, PersonViews.CONTACT_DETAIL);
+
+  private final EntityService playerService =
+      new EntityServiceBase<>(Player.class, PersonViews.PLAYER_DETAIL);
+
   @PersistenceContext
   private EntityManager entityManager;
 
   @Inject
   private ViewContext viewContext;
 
+  @PostConstruct
+  public void init() {
+    contactService.setEntityManager(entityManager);
+    contactService.setViewContext(viewContext);
+    playerService.setEntityManager(entityManager);
+    playerService.setViewContext(viewContext);
+  }
+
   @Override
-  public View createContact(View contactView) {
-    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.createApplicator(
-        contactView, viewContext);
-    final Contact contact = (Contact) editor.create();
-    entityManager.persist(contact);
-    entityManager.flush();
-    return PersonViews.CONTACT_DETAIL.generateView(contact, viewContext);
+  public View findAllContacts() {
+    return PersonViews.CONTACT_LIST.generateView(
+        entityManager.createNamedQuery("findAllContacts").getResultList(),
+        viewContext);
   }
 
   @Override
   public View findContactById(Long id) throws NoSuchEntityException {
-    final Contact contact = entityManager.find(Contact.class, id);
-    if (contact == null) {
-      throw new NoSuchEntityException(Contact.class, id);
-    }
+    return contactService.findById(id);
+  }
 
-    return PersonViews.CONTACT_DETAIL.generateView(contact, viewContext);
+  @Override
+  public Object createContact(View contactView) {
+    return contactService.create(contactView);
   }
 
   @Override
   public View updateContact(Long id, View contactView)
       throws NoSuchEntityException, UpdateConflictException {
-    Contact contact = entityManager.find(Contact.class, id);
-    if (contact == null) {
-      throw new NoSuchEntityException(Contact.class, id);
-    }
+    return contactService.update(id, contactView);
+  }
 
-    final ViewApplicator editor = PersonViews.CONTACT_DETAIL.createApplicator(
-        contactView, viewContext);
-    editor.update(contact);
-    entityManager.clear();
+  @Override
+  public View findPlayerById(Long id) throws NoSuchEntityException {
+    return playerService.findById(id);
+  }
 
-    try {
-      contact = entityManager.merge(contact);
-      entityManager.flush();
-      return PersonViews.CONTACT_DETAIL.generateView(contact, viewContext);
-    }
-    catch (OptimisticLockException ex) {
-      throw new UpdateConflictException(Contact.class, id, ex);
-    }
+  @Override
+  public View updatePlayer(Long id, View playerView)
+      throws NoSuchEntityException, UpdateConflictException {
+    return playerService.update(id, playerView);
   }
 
 }

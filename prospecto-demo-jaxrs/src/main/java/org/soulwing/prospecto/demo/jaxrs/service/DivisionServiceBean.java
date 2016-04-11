@@ -18,18 +18,16 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
-import org.soulwing.prospecto.demo.jaxrs.domain.League;
 import org.soulwing.prospecto.demo.jaxrs.views.DivisionViews;
 
 /**
@@ -39,7 +37,12 @@ import org.soulwing.prospecto.demo.jaxrs.views.DivisionViews;
  */
 @ApplicationScoped
 @Transactional
-public class DivisionServiceBean implements DivisionService {
+public class DivisionServiceBean extends EntityServiceBase<Division>
+    implements DivisionService {
+
+  public DivisionServiceBean() {
+    super(Division.class, DivisionViews.DIVISION_DETAIL);
+  }
 
   @Inject
   private ViewContext viewContext;
@@ -47,38 +50,36 @@ public class DivisionServiceBean implements DivisionService {
   @PersistenceContext
   private EntityManager entityManager;
 
+  @PostConstruct
+  public void init() {
+    setViewContext(viewContext);
+    setEntityManager(entityManager);
+  }
+
   @Override
   public View findDivisionById(Long id) throws NoSuchEntityException {
-    final Division division = entityManager.find(Division.class, id);
-    if (division == null) {
-      throw new NoSuchEntityException(League.class, id);
-    }
+    return findById(id);
+  }
 
-    return DivisionViews.DIVISION_DETAIL.generateView(division, viewContext);
+  @Override
+  public Object createDivision(View divisionView) {
+    return create(divisionView);
   }
 
   @Override
   public View updateDivision(Long id, View divisionView)
       throws NoSuchEntityException, UpdateConflictException {
-    Division division = entityManager.find(Division.class, id);
-    if (division == null) {
-      throw new NoSuchEntityException(League.class, id);
-    }
+    return update(id, divisionView);
+  }
 
-    final ViewApplicator editor = DivisionViews.DIVISION_DETAIL.createApplicator(
-        divisionView, viewContext);
-    editor.update(division);
-    division.setId(id);
-    entityManager.clear();
+  @Override
+  public void deleteDivision(Long id) {
+    delete(id);
+  }
 
-    try {
-      division = entityManager.merge(division);
-      entityManager.flush();
-      return DivisionViews.DIVISION_DETAIL.generateView(division, viewContext);
-    }
-    catch (OptimisticLockException ex) {
-      throw new UpdateConflictException(League.class, id, ex);
-    }
+  @Override
+  protected void onDelete(Division division) {
+    division.getLeague().removeDivision(division);
   }
 
 }

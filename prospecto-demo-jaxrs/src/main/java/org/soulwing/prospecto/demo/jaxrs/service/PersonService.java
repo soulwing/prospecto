@@ -28,11 +28,18 @@ import org.soulwing.prospecto.api.View;
  */
 public interface PersonService {
 
-  View createContact(View contactView);
+  View findAllContacts();
 
   View findContactById(Long id) throws NoSuchEntityException;
 
-  View updateContact(Long id, View contactView) throws NoSuchEntityException,
-      UpdateConflictException;
+  Object createContact(View contactView);
+
+  View updateContact(Long id, View contactView)
+      throws NoSuchEntityException, UpdateConflictException;
+
+  View findPlayerById(Long id) throws NoSuchEntityException;
+
+  View updatePlayer(Long id, View playerView)
+      throws NoSuchEntityException, UpdateConflictException;
 
 }

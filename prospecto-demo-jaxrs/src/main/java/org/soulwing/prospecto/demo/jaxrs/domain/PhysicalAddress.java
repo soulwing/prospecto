@@ -45,26 +45,14 @@ public class PhysicalAddress extends AbstractEntity {
   @Column(name = "postal_code")
   private String postalCode;
 
-  /**
-   * Gets the {@code streetAddress} property.
-   * @return property value
-   */
   public String getStreetAddress() {
     return streetAddress;
   }
 
-  /**
-   * Sets the {@code streetAddress} property.
-   * @param streetAddress the property value to set
-   */
   public void setStreetAddress(String streetAddress) {
     this.streetAddress = streetAddress;
   }
 
-  /**
-   * Gets the {@code municipality} property.
-   * @return property value
-   */
   public String getMunicipality() {
     return municipality;
   }

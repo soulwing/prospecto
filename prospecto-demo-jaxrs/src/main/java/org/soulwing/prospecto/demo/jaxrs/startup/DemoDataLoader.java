@@ -89,6 +89,7 @@ public class DemoDataLoader {
   private static Player newPlayer(String surname, String givenNames,
       String preferredName, String birthDate, Parent... parents) {
     final Player player = new Player();
+    System.out.println(player.getMedicalInfo());
     player.setSurname(Token.valueOf(surname));
     player.setGivenNames(TokenList.valueOf(givenNames));
     player.setPreferredName(preferredName == null ?

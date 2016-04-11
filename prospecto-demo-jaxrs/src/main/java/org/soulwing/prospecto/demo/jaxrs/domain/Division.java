@@ -43,7 +43,7 @@ import javax.persistence.Table;
 @Access(AccessType.FIELD)
 public class Division extends AbstractEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private League league;
 
   @Column(nullable = false)

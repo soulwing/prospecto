@@ -37,34 +37,18 @@ public class InsuranceInfo implements Serializable {
   @Column(name = "insurance_policy_number")
   private String policyNumber;
 
-  /**
-   * Gets the {@code provider} property.
-   * @return property value
-   */
   public String getProvider() {
     return provider;
   }
 
-  /**
-   * Sets the {@code provider} property.
-   * @param provider the property value to set
-   */
   public void setProvider(String provider) {
     this.provider = provider;
   }
 
-  /**
-   * Gets the {@code policyNumber} property.
-   * @return property value
-   */
   public String getPolicyNumber() {
     return policyNumber;
   }
 
-  /**
-   * Sets the {@code policyNumber} property.
-   * @param policyNumber the property value to set
-   */
   public void setPolicyNumber(String policyNumber) {
     this.policyNumber = policyNumber;
   }

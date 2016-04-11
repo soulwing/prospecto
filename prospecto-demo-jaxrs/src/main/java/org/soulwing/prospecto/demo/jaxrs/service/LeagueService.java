@@ -28,30 +28,13 @@ import org.soulwing.prospecto.api.View;
  */
 public interface LeagueService {
 
-  /**
-   * Finds all leagues.
-   * @return view containing a summary of all leagues
-   */
   View findAllLeagues();
 
-  /**
-   * Finds a league using its persistent identifier.
-   * @param id persistent identifier of the subject league
-   * @return league view
-   * @throws NoSuchEntityException if there exists no league with the given
-   *    identifier
-   */
   View findLeagueById(Long id) throws NoSuchEntityException;
 
-  /**
-   * Updates a league.
-   * @param id persistent ID of the league to update
-   * @param leagueView detail view representation of the league
-   * @return updated league view
-   * @throws NoSuchEntityException
-   * @throws UpdateConflictException
-   */
   View updateLeague(Long id, View leagueView)
       throws NoSuchEntityException, UpdateConflictException;
+
+  void deleteLeague(Long id);
 
 }

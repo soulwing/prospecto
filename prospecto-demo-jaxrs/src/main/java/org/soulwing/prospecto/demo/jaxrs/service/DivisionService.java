@@ -28,24 +28,13 @@ import org.soulwing.prospecto.api.View;
  */
 public interface DivisionService {
 
-  /**
-   * Finds a division using its persistent identifier.
-   * @param id persistent identifier of the subject division
-   * @return league view
-   * @throws NoSuchEntityException if there exists no division with the given
-   *    identifier
-   */
   View findDivisionById(Long id) throws NoSuchEntityException;
 
-  /**
-   * Updates a league.
-   * @param id persistent ID of the league to update
-   * @param divisionView detail view representation of the division
-   * @return updated division view
-   * @throws NoSuchEntityException
-   * @throws UpdateConflictException
-   */
+  Object createDivision(View divisionView);
+
   View updateDivision(Long id, View divisionView)
       throws NoSuchEntityException, UpdateConflictException;
+
+  void deleteDivision(Long id);
 
 }

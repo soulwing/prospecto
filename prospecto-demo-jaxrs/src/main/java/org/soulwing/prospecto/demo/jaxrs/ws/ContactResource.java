@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.ws;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -28,8 +30,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
@@ -54,9 +58,17 @@ public class ContactResource {
   @Inject
   private PersonService personService;
 
+  @GET
+  public View getContacts() {
+    return personService.findAllContacts();
+  }
+
   @POST
-  public View postContact(View contactView) {
-    return personService.createContact(contactView);
+  public Response postContact(View contactView,
+      @Context UriInfo uriInfo) {
+    Object id = personService.createContact(contactView);
+    URI location = uriInfo.getRequestUriBuilder().path("{id}").build(id);
+    return Response.created(location).build();
   }
 
   @GET
