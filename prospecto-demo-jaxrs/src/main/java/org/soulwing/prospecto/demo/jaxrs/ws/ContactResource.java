@@ -37,15 +37,15 @@ import javax.ws.rs.core.UriInfo;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
+import org.soulwing.prospecto.demo.jaxrs.service.ContactService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
-import org.soulwing.prospecto.demo.jaxrs.service.PersonService;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
- * A JAX-RS resource used to access the {@link PersonService} to
+ * A JAX-RS resource used to access the {@link ContactService} to
  * access contacts.
  *
  * @author Carl Harris
@@ -56,17 +56,17 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 public class ContactResource {
 
   @Inject
-  private PersonService personService;
+  private ContactService contactService;
 
   @GET
   public View getContacts() {
-    return personService.findAllContacts();
+    return contactService.findAllContacts();
   }
 
   @POST
   public Response postContact(View contactView,
       @Context UriInfo uriInfo) {
-    Object id = personService.createContact(contactView);
+    Object id = contactService.createContact(contactView);
     URI location = uriInfo.getRequestUriBuilder().path("{id}").build(id);
     return Response.created(location).build();
   }
@@ -77,7 +77,7 @@ public class ContactResource {
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getContact(@PathParam("id") Long id) {
     try {
-      return personService.findContactById(id);
+      return contactService.findContactById(id);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException(ex);
@@ -88,7 +88,7 @@ public class ContactResource {
   @Path("/{id}")
   public View putContact(@PathParam("id") Long id, View contactView) {
     try {
-      return personService.updateContact(id, contactView);
+      return contactService.updateContact(id, contactView);
     }
     catch (NoSuchEntityException ex) {
       throw new NotFoundException(ex);

@@ -47,11 +47,6 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
   }
 
   @Override
-  public String getPropertyName() {
-    return getAccessor().getName();
-  }
-
-  @Override
   public Iterator<ViewNode> iterator() {
     return children.iterator();
   }

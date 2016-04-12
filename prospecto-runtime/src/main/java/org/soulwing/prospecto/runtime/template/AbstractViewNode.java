@@ -18,8 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
+import java.util.EnumSet;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
@@ -41,6 +44,7 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   private AbstractViewNode parent;
   private Accessor accessor;
+  private EnumSet<AccessMode> allowedModes = EnumSet.allOf(AccessMode.class);
 
   /**
    * Constructs a new instance.
@@ -80,13 +84,41 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
     return modelType;
   }
 
-
   public Accessor getAccessor() {
     return accessor;
   }
 
   public void setAccessor(Accessor accessor) {
     this.accessor = accessor;
+  }
+
+  public EnumSet<AccessMode> getAllowedModes() {
+    return allowedModes;
+  }
+
+  public void setAllowedModes(EnumSet<AccessMode> allowedModes) {
+    this.allowedModes = allowedModes;
+  }
+
+  public EnumSet<AccessMode> getSupportedModes() {
+    final Accessor accessor = getAccessor();
+    return accessor != null ?
+        accessor.getSupportedModes() : EnumSet.allOf(AccessMode.class);
+  }
+
+  public String getPropertyName() {
+    return getAccessor().getName();
+  }
+
+  public final void validateAccessModes() throws ViewTemplateException {
+    final EnumSet<AccessMode> modes = EnumSet.allOf(AccessMode.class);
+    modes.retainAll(getAllowedModes());
+    modes.removeAll(getSupportedModes());
+    if (!modes.isEmpty()) {
+      throw new ViewTemplateException(String.format(
+          "model property %s.%s does not support mode(s) %s",
+          getModelType().getSimpleName(), getPropertyName(), modes));
+    }
   }
 
   @Override

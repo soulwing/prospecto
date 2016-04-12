@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.runtime.accessor.AccessorMatchers.onModelType;
 import static org.soulwing.prospecto.runtime.accessor.AccessorMatchers.propertyNamed;
 import static org.soulwing.prospecto.runtime.accessor.AccessorMatchers.usingAccessType;
-import static org.soulwing.prospecto.runtime.accessor.AccessorMatchers.withModes;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.accessing;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.accessingNothing;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.containing;
@@ -38,6 +37,7 @@ import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.inDefaultN
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.inNamespace;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.named;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.nodeOfType;
+import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.withModes;
 
 import java.util.Collections;
 
@@ -559,11 +559,11 @@ public class ViewTemplateBuilderTest {
             containing(
                 nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
+                    withModes(AccessMode.READ),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
                         onModelType(MockModel.class),
-                        usingAccessType(AccessType.PROPERTY),
-                        withModes(AccessMode.READ)
+                        usingAccessType(AccessType.PROPERTY)
                     )
                 )
             )
@@ -586,11 +586,10 @@ public class ViewTemplateBuilderTest {
             containing(
                 nodeOfType(ConcreteValueNode.class,
                     named(MOCK_PROPERTY), inDefaultNamespace(),
+                    withModes(AccessMode.WRITE),
                     accessing(
                         propertyNamed(MOCK_PROPERTY),
-                        onModelType(MockModel.class),
-                        usingAccessType(AccessType.PROPERTY),
-                        withModes(AccessMode.WRITE)
+                        onModelType(MockModel.class)
                     )
                 )
             )
@@ -640,11 +639,11 @@ public class ViewTemplateBuilderTest {
             containing(
                 nodeOfType(ConcreteValueNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
+                    withModes(AccessMode.READ),
                     accessing(
                         propertyNamed(MOCK_FIELD),
                         onModelType(MockModel.class),
-                        usingAccessType(AccessType.FIELD),
-                        withModes(AccessMode.READ)
+                        usingAccessType(AccessType.FIELD)
                     )
                 )
             )
@@ -668,11 +667,11 @@ public class ViewTemplateBuilderTest {
             containing(
                 nodeOfType(ConcreteValueNode.class,
                     named(MOCK_FIELD), inDefaultNamespace(),
+                    withModes(AccessMode.WRITE),
                     accessing(
                         propertyNamed(MOCK_FIELD),
                         onModelType(MockModel.class),
-                        usingAccessType(AccessType.FIELD),
-                        withModes(AccessMode.WRITE)
+                        usingAccessType(AccessType.FIELD)
                     )
                 )
             )

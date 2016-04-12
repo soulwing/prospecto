@@ -1,5 +1,5 @@
 /*
- * File created on Mar 29, 2016
+ * File created on Apr 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,30 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.domain;
 
-import org.soulwing.prospecto.api.View;
+import java.util.List;
 
 /**
- * A service that provides access to
- * {@link org.soulwing.prospecto.demo.jaxrs.domain.Person} entities.
+ * Contact information for a person.
  *
  * @author Carl Harris
  */
-public interface PersonService {
+public interface ContactInfo extends Person {
 
-  View findAllContacts();
+  PhysicalAddress getMailingAddress();
 
-  View findContactById(Long id) throws NoSuchEntityException;
+  void setMailingAddress(PhysicalAddress mailingAddress);
 
-  Object createContact(View contactView);
+  EmailAddress getEmailAddress();
 
-  View updateContact(Long id, View contactView)
-      throws NoSuchEntityException, UpdateConflictException;
+  void setEmailAddress(EmailAddress emailAddress);
 
-  View findPlayerById(Long id) throws NoSuchEntityException;
+  List<Phone> getPhones();
 
-  View updatePlayer(Long id, View playerView)
-      throws NoSuchEntityException, UpdateConflictException;
+  void setPhones(List<Phone> phones);
 
 }

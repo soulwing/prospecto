@@ -37,34 +37,18 @@ public class UniformInfo implements Serializable {
   @Column(name = "preferred_jersey_numbers")
   private TokenList preferredNumbers = TokenList.empty();
 
-  /**
-   * Gets the {@code jerseySize} property.
-   * @return property value
-   */
   public Size getJerseySize() {
     return jerseySize;
   }
 
-  /**
-   * Sets the {@code jerseySize} property.
-   * @param size the property value to set
-   */
   public void setJerseySize(Size size) {
     this.jerseySize = size;
   }
 
-  /**
-   * Gets the {@code preferredNumbers} property.
-   * @return property value
-   */
   public TokenList getPreferredNumbers() {
     return preferredNumbers;
   }
 
-  /**
-   * Sets the {@code preferredNumbers} property.
-   * @param preferredNumbers the property value to set
-   */
   public void setPreferredNumbers(TokenList preferredNumbers) {
     this.preferredNumbers = preferredNumbers;
   }

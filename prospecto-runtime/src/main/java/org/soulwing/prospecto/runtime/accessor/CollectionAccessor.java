@@ -19,7 +19,10 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
+
+import org.soulwing.prospecto.api.AccessMode;
 
 /**
  * An accessor for the elements of a collection.
@@ -30,6 +33,11 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
 
   public CollectionAccessor(Accessor delegate, Class<?> componentType) {
     super(delegate, componentType);
+  }
+
+  @Override
+  public EnumSet<AccessMode> getSupportedModes() {
+    return EnumSet.allOf(AccessMode.class);
   }
 
   @Override

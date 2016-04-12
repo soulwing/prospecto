@@ -41,17 +41,12 @@ public abstract class AbstractAccessor
   private final AccessType accessType;
   private final EnumSet<AccessMode> supportedModes;
 
-  private EnumSet<AccessMode> allowedModes =
-      EnumSet.allOf(AccessMode.class);
-
-  protected AbstractAccessor(Class<?> modelType, String name,
-      AccessType accessType, EnumSet<AccessMode> supportedModes,
-      EnumSet<AccessMode> allowedModes) {
+  AbstractAccessor(Class<?> modelType, String name,
+      AccessType accessType, EnumSet<AccessMode> supportedModes) {
     this.modelType = modelType;
     this.name = name;
     this.accessType = accessType;
     this.supportedModes = supportedModes;
-    this.allowedModes = allowedModes;
   }
 
   @Override
@@ -70,22 +65,18 @@ public abstract class AbstractAccessor
   }
 
   @Override
+  public EnumSet<AccessMode> getSupportedModes() {
+    return supportedModes;
+  }
+
+  @Override
   public boolean canRead() {
-    return supportedModes.contains(AccessMode.READ)
-        && allowedModes.contains(AccessMode.READ);
+    return supportedModes.contains(AccessMode.READ);
   }
 
   @Override
   public boolean canWrite() {
-    return supportedModes.contains(AccessMode.WRITE)
-        && allowedModes.contains(AccessMode.WRITE);
-  }
-
-  @Override
-  public EnumSet<AccessMode> getAccessModes() {
-    final EnumSet<AccessMode> accessModes = EnumSet.copyOf(supportedModes);
-    accessModes.retainAll(allowedModes);
-    return accessModes;
+    return supportedModes.contains(AccessMode.WRITE);
   }
 
   @Override

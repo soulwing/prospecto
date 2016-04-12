@@ -27,9 +27,13 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.util.EnumSet;
+
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.accessor.Accessor;
 
@@ -223,4 +227,25 @@ public class ViewNodeMatchers {
     return hasProperty("children", empty());
   }
 
+  public static Matcher<ViewNode> withModes(final AccessMode first,
+      final AccessMode... rest) {
+    return new BaseMatcher<ViewNode>() {
+      @Override
+      public boolean matches(Object item) {
+        return ((UpdatableNode) item).getAllowedModes().equals(EnumSet.of(first, rest));
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("having modes ")
+            .appendValue(EnumSet.of(first, rest));
+      }
+
+      @Override
+      public void describeMismatch(Object item, Description description) {
+        description.appendText("instead has modes ")
+            .appendValue(((UpdatableNode) item).getAllowedModes());
+      }
+    };
+  }
 }

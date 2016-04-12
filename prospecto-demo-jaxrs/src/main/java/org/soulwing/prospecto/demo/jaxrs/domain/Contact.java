@@ -48,7 +48,7 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "contact_type",
     discriminatorType = DiscriminatorType.STRING)
-public class Contact extends Person {
+public class Contact extends AbstractPerson implements ContactInfo {
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "mailing_address_id")
@@ -62,50 +62,32 @@ public class Contact extends Person {
   @OrderColumn(name = "list_index")
   private List<Phone> phones = new ArrayList<>();
 
-  /**
-   * Gets the {@code mailingAddress} property.
-   * @return property value
-   */
+  @Override
   public PhysicalAddress getMailingAddress() {
     return mailingAddress;
   }
 
-  /**
-   * Sets the {@code mailingAddress} property.
-   * @param mailingAddress the property value to set
-   */
+  @Override
   public void setMailingAddress(PhysicalAddress mailingAddress) {
     this.mailingAddress = mailingAddress;
   }
 
-  /**
-   * Gets the {@code emailAddress} property.
-   * @return property value
-   */
+  @Override
   public EmailAddress getEmailAddress() {
     return emailAddress;
   }
 
-  /**
-   * Sets the {@code emailAddress} property.
-   * @param emailAddress the property value to set
-   */
+  @Override
   public void setEmailAddress(EmailAddress emailAddress) {
     this.emailAddress = emailAddress;
   }
 
-  /**
-   * Gets the {@code phones} property.
-   * @return property value
-   */
+  @Override
   public List<Phone> getPhones() {
     return phones;
   }
 
-  /**
-   * Sets the {@code phones} property.
-   * @param phones the property value to set
-   */
+  @Override
   public void setPhones(List<Phone> phones) {
     this.phones = phones;
   }

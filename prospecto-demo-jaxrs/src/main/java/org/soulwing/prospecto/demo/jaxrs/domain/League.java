@@ -48,26 +48,14 @@ public class League extends AbstractEntity {
   @OrderBy("ageLimit, name")
   private Set<Division> divisions = new HashSet<>();
 
-  /**
-   * Gets the {@code name} property.
-   * @return property value
-   */
   public String getName() {
     return name;
   }
 
-  /**
-   * Sets the {@code name} property.
-   * @param name the property value to set
-   */
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * Gets the {@code divisions} property.
-   * @return property value
-   */
   public Set<Division> getDivisions() {
     return divisions;
   }
@@ -87,9 +75,7 @@ public class League extends AbstractEntity {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof League)) return false;
-    return super.equals(obj);
+    return obj == this || obj instanceof League && super.equals(obj);
   }
 
 }

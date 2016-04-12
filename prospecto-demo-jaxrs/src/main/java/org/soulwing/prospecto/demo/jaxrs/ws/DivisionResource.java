@@ -40,6 +40,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.service.DivisionService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
+import org.soulwing.prospecto.demo.jaxrs.service.PlayerService;
 import org.soulwing.prospecto.demo.jaxrs.service.TeamService;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
@@ -61,6 +62,9 @@ public class DivisionResource {
 
   @Inject
   private TeamService teamService;
+
+  @Inject
+  private PlayerService playerService;
 
   @GET
   @Path("{id}")
@@ -101,6 +105,15 @@ public class DivisionResource {
       @Context UriInfo uriInfo) {
     Object id = teamService.createTeam(divisionId, teamView);
     URI location = uriInfo.getBaseUriBuilder().path("teams/{id}").build(id);
+    return Response.created(location).build();
+  }
+
+  @POST
+  @Path("{id}/players")
+  public Response postPlayer(View teamView, @PathParam("id") Long divisionId,
+      @Context UriInfo uriInfo) {
+    Object id = playerService.createPlayer(divisionId, teamView);
+    URI location = uriInfo.getBaseUriBuilder().path("players/{id}").build(id);
     return Response.created(location).build();
   }
 

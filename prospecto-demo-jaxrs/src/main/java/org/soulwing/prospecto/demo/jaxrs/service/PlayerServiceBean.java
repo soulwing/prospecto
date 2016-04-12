@@ -1,5 +1,5 @@
 /*
- * File created on Mar 29, 2016
+ * File created on Apr 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -27,18 +27,19 @@ import javax.transaction.Transactional;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.demo.jaxrs.domain.League;
-import org.soulwing.prospecto.demo.jaxrs.views.LeagueViews;
+import org.soulwing.prospecto.demo.jaxrs.domain.Division;
+import org.soulwing.prospecto.demo.jaxrs.domain.Player;
+import org.soulwing.prospecto.demo.jaxrs.views.PlayerViews;
 
 /**
- * A {@link LeagueService} implemented as an injectable bean.
+ * A {@link PlayerService} implemented as an injectable bean
  *
  * @author Carl Harris
  */
-@ApplicationScoped
 @Transactional
-public class LeagueServiceBean extends EntityServiceBase<League>
-    implements LeagueService {
+@ApplicationScoped
+public class PlayerServiceBean extends EntityServiceBase<Player>
+    implements PlayerService {
 
   @PersistenceContext
   private EntityManager entityManager;
@@ -46,8 +47,8 @@ public class LeagueServiceBean extends EntityServiceBase<League>
   @Inject
   private ViewContext viewContext;
 
-  public LeagueServiceBean() {
-    super(League.class, LeagueViews.LEAGUE_DETAIL);
+  public PlayerServiceBean() {
+    super(Player.class, PlayerViews.PLAYER_DETAIL);
   }
 
   @PostConstruct
@@ -57,32 +58,30 @@ public class LeagueServiceBean extends EntityServiceBase<League>
   }
 
   @Override
-  public View findAllLeagues() {
-    return LeagueViews.LEAGUE_LIST.generateView(
-        entityManager.createNamedQuery("findAllLeagues", League.class)
-            .getResultList(),
-        viewContext);
-  }
-
-  @Override
-  public View findLeagueById(Long id) throws NoSuchEntityException {
+  public View findPlayerById(Long id) throws NoSuchEntityException {
     return findById(id);
   }
 
   @Override
-  public Object createLeague(View leagueView) {
-    return create(leagueView);
+  public Object createPlayer(Long divisionId, View playerView) {
+    entityListener.begin();
+    try {
+      final Player player = newEntity(playerView);
+      player.setDivision(entityManager.getReference(Division.class, divisionId));
+      entityListener.apply(entityManager);
+      entityManager.persist(player);
+      entityManager.flush();
+      return player.getId();
+    }
+    finally {
+      entityListener.end();
+    }
   }
 
   @Override
-  public View updateLeague(Long id, View leagueView)
+  public View updatePlayer(Long id, View playerView)
       throws NoSuchEntityException, UpdateConflictException {
-    return update(id, leagueView);
-  }
-
-  @Override
-  public void deleteLeague(Long id) {
-    delete(id);
+    return update(id, playerView);
   }
 
 }

@@ -34,8 +34,8 @@ public class RootAccessor extends AbstractAccessor {
 
   private RootAccessor() {
     super(Object.class, null, null,
-        EnumSet.allOf(AccessMode.class),
-        EnumSet.of(AccessMode.READ));
+        EnumSet.allOf(AccessMode.class)
+    );
   }
 
   @Override

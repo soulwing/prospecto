@@ -33,7 +33,7 @@ public abstract class AbstractMultiValuedAccessor
   protected final Accessor delegate;
   protected final Class<?> componentType;
 
-  protected AbstractMultiValuedAccessor(Accessor delegate,
+  AbstractMultiValuedAccessor(Accessor delegate,
       Class<?> componentType) {
     this.delegate = delegate;
     this.componentType = componentType;

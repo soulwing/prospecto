@@ -21,7 +21,6 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
-import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
  * Views for the {@link org.soulwing.prospecto.demo.jaxrs.domain.Division} type.
@@ -46,10 +45,7 @@ public interface DivisionViews {
           .value("ageLimit")
           .value("gender")
           .value("playerCount")
-          .arrayOfReferences("teams", "team", Team.class)
-              .value("name")
-              .reference("manager", PersonViews.CONTACT_REFERENCE)
-              .end()
+          .arrayOfReferences("teams", "team", TeamViews.TEAM_SUMMARY)
           .end()
       .build();
 
@@ -62,7 +58,7 @@ public interface DivisionViews {
           .value("ageLimit")
           .value("gender")
           .arrayOfObjects("teams", "team", TeamViews.TEAM_SUMMARY)
-          .arrayOfObjects("players", "player", PersonViews.PLAYER_SUMMARY)
+          .arrayOfObjects("players", "player", PlayerViews.PLAYER_SUMMARY)
           .end()
       .build();
 

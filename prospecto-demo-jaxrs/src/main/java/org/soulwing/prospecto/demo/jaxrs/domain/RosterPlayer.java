@@ -42,55 +42,31 @@ public class RosterPlayer extends AbstractEntity {
   private Player player;
 
   @Column(name = "jersey_number")
-  private Integer jerseyNumber;
+  private String jerseyNumber;
 
   @Enumerated(EnumType.STRING)
   private Position position;
 
-  /**
-   * Gets the {@code player} property.
-   * @return property value
-   */
   public Player getPlayer() {
     return player;
   }
 
-  /**
-   * Sets the {@code player} property.
-   * @param player the property value to set
-   */
   public void setPlayer(Player player) {
     this.player = player;
   }
 
-  /**
-   * Gets the {@code jerseyNumber} property.
-   * @return property value
-   */
-  public Integer getJerseyNumber() {
+  public String getJerseyNumber() {
     return jerseyNumber;
   }
 
-  /**
-   * Sets the {@code jerseyNumber} property.
-   * @param jerseyNumber the property value to set
-   */
-  public void setJerseyNumber(Integer jerseyNumber) {
+  public void setJerseyNumber(String jerseyNumber) {
     this.jerseyNumber = jerseyNumber;
   }
 
-  /**
-   * Gets the {@code position} property.
-   * @return property value
-   */
   public Position getPosition() {
     return position;
   }
 
-  /**
-   * Sets the {@code position} property.
-   * @param position the property value to set
-   */
   public void setPosition(Position position) {
     this.position = position;
   }

@@ -34,7 +34,7 @@ public interface TeamViews {
       .object(RosterPlayer.class)
           .value("id")
           .value("version")
-          .reference("player", PersonViews.PLAYER_SUMMARY)
+          .reference("player", PlayerViews.PLAYER_SUMMARY)
           .value("jerseyNumber")
           .value("position")
           .end()
@@ -46,7 +46,7 @@ public interface TeamViews {
           .value("id")
           .value("version")
           .value("name")
-          .reference("manager", PersonViews.CONTACT_REFERENCE)
+          .reference("manager", ContactViews.CONTACT_REFERENCE)
           .end()
       .build();
 
@@ -57,8 +57,8 @@ public interface TeamViews {
           .value("name")
           .reference("division", DivisionViews.DIVISION_REFERENCE)
               .allow(AccessMode.READ)
-          .reference("manager", PersonViews.CONTACT_REFERENCE)
-          .arrayOfReferences("coaches", PersonViews.CONTACT_REFERENCE)
+          .reference("manager", ContactViews.CONTACT_REFERENCE)
+          .arrayOfReferences("coaches", ContactViews.CONTACT_REFERENCE)
           .arrayOfObjects("roster", ROSTER_PLAYER)
           .end()
       .build();

@@ -241,7 +241,7 @@ public class ArrayAccessorTest {
     }
 
     @Override
-    public EnumSet<AccessMode> getAccessModes() {
+    public EnumSet<AccessMode> getSupportedModes() {
       return null;
     }
 

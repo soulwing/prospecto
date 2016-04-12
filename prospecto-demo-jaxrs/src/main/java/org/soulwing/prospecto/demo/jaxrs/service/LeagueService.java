@@ -32,6 +32,8 @@ public interface LeagueService {
 
   View findLeagueById(Long id) throws NoSuchEntityException;
 
+  Object createLeague(View leagueView);
+
   View updateLeague(Long id, View leagueView)
       throws NoSuchEntityException, UpdateConflictException;
 

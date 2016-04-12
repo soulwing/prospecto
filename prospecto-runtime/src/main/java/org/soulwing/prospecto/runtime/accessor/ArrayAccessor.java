@@ -21,8 +21,11 @@ package org.soulwing.prospecto.runtime.accessor;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+
+import org.soulwing.prospecto.api.AccessMode;
 
 /**
  * An accessor for the elements of an array.
@@ -42,6 +45,11 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
           + " is not compatible with array type "
           + delegate.getDataType().getComponentType());
     }
+  }
+
+  @Override
+  public EnumSet<AccessMode> getSupportedModes() {
+    return delegate.getSupportedModes();
   }
 
   @Override

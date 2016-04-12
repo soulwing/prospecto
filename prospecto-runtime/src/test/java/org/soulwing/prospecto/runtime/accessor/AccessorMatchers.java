@@ -18,12 +18,9 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.EnumSet;
-
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 
 /**
@@ -94,28 +91,6 @@ public class AccessorMatchers {
         description.appendText("instead uses ")
             .appendValue(((Accessor) item).getAccessType())
             .appendText(" access");
-      }
-    };
-  }
-
-  public static Matcher<Accessor> withModes(final AccessMode first,
-      final AccessMode... rest) {
-    return new BaseMatcher<Accessor>() {
-      @Override
-      public boolean matches(Object item) {
-        return ((Accessor) item).getAccessModes().equals(EnumSet.of(first, rest));
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("having modes ")
-            .appendValue(EnumSet.of(first, rest));
-      }
-
-      @Override
-      public void describeMismatch(Object item, Description description) {
-        description.appendText("instead has modes ")
-            .appendValue(((Accessor) item).getAccessModes());
       }
     };
   }

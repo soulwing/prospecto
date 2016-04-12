@@ -45,9 +45,9 @@ public final class TokenList implements Serializable, Cloneable {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof TokenList)) return false;
-    return Objects.equals(this.tokens, ((TokenList) obj).tokens);
+    return obj == this
+        || obj instanceof TokenList
+            && Objects.equals(this.tokens, ((TokenList) obj).tokens);
   }
 
   @Override

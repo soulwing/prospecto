@@ -45,11 +45,6 @@ public class ConcreteValueNode extends AbstractViewNode
   }
 
   @Override
-  public String getPropertyName() {
-    return getAccessor().getName();
-  }
-
-  @Override
   public Object getValue(Object model) throws Exception {
     return getAccessor().get(model);
   }

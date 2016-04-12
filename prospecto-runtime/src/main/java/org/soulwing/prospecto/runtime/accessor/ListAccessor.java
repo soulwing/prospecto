@@ -18,8 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+
+import org.soulwing.prospecto.api.AccessMode;
 
 /**
  * A {@link MultiValuedAccessor} for a {@link List}.
@@ -30,6 +33,11 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
 
   public ListAccessor(Accessor delegate, Class<?> componentType) {
     super(delegate, componentType);
+  }
+
+  @Override
+  public EnumSet<AccessMode> getSupportedModes() {
+    return EnumSet.allOf(AccessMode.class);
   }
 
   @Override

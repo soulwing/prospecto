@@ -19,9 +19,7 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.beans.IntrospectionException;
-import java.util.EnumSet;
 
-import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 
@@ -36,7 +34,6 @@ class ReflectionAccessorBuilder implements AccessorBuilder {
 
   private String propertyName;
   private AccessType accessType = AccessType.PROPERTY;
-  private EnumSet<AccessMode> accessModes = EnumSet.allOf(AccessMode.class);
 
   ReflectionAccessorBuilder(Class<?> modelType) {
     this.modelType = modelType;
@@ -55,26 +52,13 @@ class ReflectionAccessorBuilder implements AccessorBuilder {
   }
 
   @Override
-  public AccessorBuilder accessModes(AccessMode first, AccessMode... rest) {
-    return accessModes(EnumSet.of(first, rest));
-  }
-
-  @Override
-  public AccessorBuilder accessModes(EnumSet<AccessMode> modes) {
-    this.accessModes = modes;
-    return this;
-  }
-
-  @Override
   public Accessor build() {
     try {
       switch (accessType) {
         case FIELD:
-          return ReflectionAccessorFactory.field(modelType, propertyName,
-              accessModes);
+          return ReflectionAccessorFactory.field(modelType, propertyName);
         case PROPERTY:
-          return ReflectionAccessorFactory.property(modelType, propertyName,
-              accessModes);
+          return ReflectionAccessorFactory.property(modelType, propertyName);
         default:
           throw new IllegalArgumentException("unrecognized access type: "
               + accessType.name());

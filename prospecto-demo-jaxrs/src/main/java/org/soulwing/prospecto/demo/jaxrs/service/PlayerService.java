@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,23 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.accessor;
+package org.soulwing.prospecto.demo.jaxrs.service;
 
-import java.util.EnumSet;
-
-import org.soulwing.prospecto.api.AccessMode;
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.View;
 
 /**
- * An accessor for a multi-valued property such as an array or a collection.
+ * A service for accessing
+ * {@link org.soulwing.prospecto.demo.jaxrs.domain.Player} entities.
  *
  * @author Carl Harris
  */
-public interface MultiValuedAccessor
-    extends ToManyAssociationManager<Object, Object> {
+public interface PlayerService {
 
-  Class<?> getComponentType();
+  View findPlayerById(Long id) throws NoSuchEntityException;
 
-  EnumSet<AccessMode> getSupportedModes();
+  Object createPlayer(Long divisionId, View playerView);
+
+  View updatePlayer(Long id, View playerView)
+      throws NoSuchEntityException, UpdateConflictException;
 
 }

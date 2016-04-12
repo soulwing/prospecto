@@ -51,7 +51,7 @@ public class Team extends AbstractEntity {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Contact manager;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -64,66 +64,37 @@ public class Team extends AbstractEntity {
   @OrderBy("position")
   private Set<RosterPlayer> roster = new HashSet<>();
 
-  /**
-   * Gets the {@code division} property.
-   * @return property value
-   */
   public Division getDivision() {
     return division;
   }
 
-  /**
-   * Sets the {@code division} property.
-   * @param division the property value to set
-   */
   public void setDivision(Division division) {
     this.division = division;
   }
 
-  /**
-   * Gets the {@code name} property.
-   * @return property value
-   */
   public String getName() {
     return name;
   }
 
-  /**
-   * Sets the {@code name} property.
-   * @param name the property value to set
-   */
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * Gets the {@code manager} property.
-   * @return property value
-   */
   public Contact getManager() {
     return manager;
   }
 
-  /**
-   * Sets the {@code manager} property.
-   * @param manager the property value to set
-   */
   public void setManager(Contact manager) {
     this.manager = manager;
+    if (manager != null && getName() == null) {
+      setName(manager.getSurname().toString());
+    }
   }
 
-  /**
-   * Gets the {@code coaches} property.
-   * @return property value
-   */
   public Set<Contact> getCoaches() {
     return coaches;
   }
 
-  /**
-   * Gets the {@code roster} property.
-   * @return property value
-   */
   public Set<RosterPlayer> getRoster() {
     return roster;
   }
@@ -138,9 +109,7 @@ public class Team extends AbstractEntity {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof Team)) return false;
-    return super.equals(obj);
+    return obj == this || obj instanceof Team && super.equals(obj);
   }
 
 }

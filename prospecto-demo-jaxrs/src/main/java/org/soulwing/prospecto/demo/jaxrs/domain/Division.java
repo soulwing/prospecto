@@ -65,74 +65,38 @@ public class Division extends AbstractEntity {
   @OrderBy("surname, givenNames")
   private Set<Player> players = new HashSet<>();
 
-  /**
-   * Gets the {@code league} property.
-   * @return property value
-   */
   public League getLeague() {
     return league;
   }
 
-  /**
-   * Sets the {@code league} property.
-   * @param league the property value to set
-   */
   public void setLeague(League league) {
     this.league = league;
   }
 
-  /**
-   * Gets the {@code name} property.
-   * @return property value
-   */
   public String getName() {
     return name;
   }
 
-  /**
-   * Sets the {@code name} property.
-   * @param name the property value to set
-   */
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * Gets the {@code ageLimit} property.
-   * @return property value
-   */
   public Integer getAgeLimit() {
     return ageLimit;
   }
 
-  /**
-   * Sets the {@code ageLimit} property.
-   * @param ageLimit the property value to set
-   */
   public void setAgeLimit(Integer ageLimit) {
     this.ageLimit = ageLimit;
   }
 
-  /**
-   * Gets the {@code gender} property.
-   * @return property value
-   */
   public Gender getGender() {
     return gender;
   }
 
-  /**
-   * Sets the {@code gender} property.
-   * @param gender the property value to set
-   */
   public void setGender(Gender gender) {
     this.gender = gender;
   }
 
-  /**
-   * Gets the {@code teams} property.
-   * @return property value
-   */
   public Set<Team> getTeams() {
     return teams;
   }
@@ -150,10 +114,6 @@ public class Division extends AbstractEntity {
     return removed;
   }
 
-  /**
-   * Gets the {@code players} property.
-   * @return property value
-   */
   public Set<Player> getPlayers() {
     return players;
   }
@@ -177,9 +137,7 @@ public class Division extends AbstractEntity {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof Division)) return false;
-    return super.equals(obj);
+    return obj == this || obj instanceof Division && super.equals(obj);
   }
 
 }

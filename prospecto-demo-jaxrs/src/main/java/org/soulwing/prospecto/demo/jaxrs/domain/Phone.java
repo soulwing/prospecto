@@ -42,59 +42,33 @@ public class Phone extends AbstractEntity {
   @Column(name = "text_enabled")
   private boolean textEnabled;
 
-  /**
-   * Gets the {@code label} property.
-   * @return property value
-   */
   public String getLabel() {
     return label;
   }
 
-  /**
-   * Sets the {@code label} property.
-   * @param label the property value to set
-   */
   public void setLabel(String label) {
     this.label = label;
   }
 
-  /**
-   * Gets the {@code number} property.
-   * @return property value
-   */
   public String getNumber() {
     return number;
   }
 
-  /**
-   * Sets the {@code number} property.
-   * @param number the property value to set
-   */
   public void setNumber(String number) {
     this.number = number;
   }
 
-  /**
-   * Gets the {@code textEnabled} property.
-   * @return property value
-   */
   public boolean isTextEnabled() {
     return textEnabled;
   }
 
-  /**
-   * Sets the {@code textEnabled} property.
-   * @param textEnabled the property value to set
-   */
   public void setTextEnabled(boolean textEnabled) {
     this.textEnabled = textEnabled;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof Phone)) return false;
-    return super.equals(obj);
+    return obj == this || obj instanceof Phone && super.equals(obj);
   }
 
 }

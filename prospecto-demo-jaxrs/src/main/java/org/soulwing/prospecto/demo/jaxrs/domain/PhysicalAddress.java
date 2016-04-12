@@ -99,9 +99,7 @@ public class PhysicalAddress extends AbstractEntity {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof PhysicalAddress)) return false;
-    return super.equals(obj);
+    return obj == this || obj instanceof PhysicalAddress && super.equals(obj);
   }
 
 }

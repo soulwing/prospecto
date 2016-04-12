@@ -28,23 +28,17 @@ import javax.transaction.Transactional;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
-import org.soulwing.prospecto.demo.jaxrs.domain.Player;
-import org.soulwing.prospecto.demo.jaxrs.views.PersonViews;
+import org.soulwing.prospecto.demo.jaxrs.views.ContactViews;
 
 /**
- * A {@link PersonService} implemented as an injectable bean
+ * A {@link ContactService} implemented as an injectable bean
  *
  * @author Carl Harris
  */
 @Transactional
 @ApplicationScoped
-public class PersonServiceBean implements PersonService {
-
-  private final EntityService contactService =
-      new EntityServiceBase<>(Contact.class, PersonViews.CONTACT_DETAIL);
-
-  private final EntityService playerService =
-      new EntityServiceBase<>(Player.class, PersonViews.PLAYER_DETAIL);
+public class ContactServiceBean extends EntityServiceBase<Contact>
+    implements ContactService {
 
   @PersistenceContext
   private EntityManager entityManager;
@@ -52,46 +46,37 @@ public class PersonServiceBean implements PersonService {
   @Inject
   private ViewContext viewContext;
 
+  public ContactServiceBean() {
+    super(Contact.class, ContactViews.CONTACT_DETAIL);
+  }
+
   @PostConstruct
   public void init() {
-    contactService.setEntityManager(entityManager);
-    contactService.setViewContext(viewContext);
-    playerService.setEntityManager(entityManager);
-    playerService.setViewContext(viewContext);
+    setEntityManager(entityManager);
+    setViewContext(viewContext);
   }
 
   @Override
   public View findAllContacts() {
-    return PersonViews.CONTACT_LIST.generateView(
+    return ContactViews.CONTACT_LIST.generateView(
         entityManager.createNamedQuery("findAllContacts").getResultList(),
         viewContext);
   }
 
   @Override
   public View findContactById(Long id) throws NoSuchEntityException {
-    return contactService.findById(id);
+    return findById(id);
   }
 
   @Override
   public Object createContact(View contactView) {
-    return contactService.create(contactView);
+    return create(contactView);
   }
 
   @Override
   public View updateContact(Long id, View contactView)
       throws NoSuchEntityException, UpdateConflictException {
-    return contactService.update(id, contactView);
-  }
-
-  @Override
-  public View findPlayerById(Long id) throws NoSuchEntityException {
-    return playerService.findById(id);
-  }
-
-  @Override
-  public View updatePlayer(Long id, View playerView)
-      throws NoSuchEntityException, UpdateConflictException {
-    return playerService.update(id, playerView);
+    return update(id, contactView);
   }
 
 }

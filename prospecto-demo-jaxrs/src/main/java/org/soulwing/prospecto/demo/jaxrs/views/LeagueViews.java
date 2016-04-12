@@ -20,9 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.domain.League;
-import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
  * Views for the {@link org.soulwing.prospecto.demo.jaxrs.domain.League} type.
@@ -30,26 +28,19 @@ import org.soulwing.prospecto.demo.jaxrs.domain.Team;
  */
 public interface LeagueViews {
 
+  ViewTemplate LEAGUE_REFERENCE = ViewTemplateBuilderProducer
+      .object(League.class)
+      .url()
+      .value("id")
+      .value("name")
+      .end()
+      .build();
+
   ViewTemplate LEAGUE_LIST = ViewTemplateBuilderProducer
       .arrayOfObjects("leagues", "league", Namespace.URI, League.class)
           .url()
           .value("name")
-          .arrayOfObjects("divisions", "division", Division.class)
-              .value("name")
-              .value("playerCount")
-              .arrayOfObjects("teams", "team", Team.class)
-                  .value("name")
-                  .reference("manager", PersonViews.CONTACT_REFERENCE)
-              .end()
-          .end()
-      .build();
-
-  ViewTemplate LEAGUE_REFERENCE = ViewTemplateBuilderProducer
-      .object(League.class)
-          .url()
-          .value("id")
-          .value("name")
-          .end()
+          .arrayOfReferences("divisions", "division", DivisionViews.DIVISION_SUMMARY)
       .build();
 
   ViewTemplate LEAGUE_DETAIL = ViewTemplateBuilderProducer

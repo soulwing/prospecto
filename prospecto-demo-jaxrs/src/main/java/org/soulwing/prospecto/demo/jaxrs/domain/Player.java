@@ -35,6 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,7 +48,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "player")
 @Access(AccessType.FIELD)
-public class Player extends Person {
+public class Player extends AbstractPerson {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Division division;
@@ -63,6 +64,7 @@ public class Player extends Person {
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(name = "player_parent",
       inverseJoinColumns = @JoinColumn(name = "parent_id"))
+  @OrderBy("relationship")
   private Set<Parent> parents = new HashSet<>();
 
   @Embedded

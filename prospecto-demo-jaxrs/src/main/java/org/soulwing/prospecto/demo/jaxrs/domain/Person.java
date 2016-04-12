@@ -1,5 +1,5 @@
 /*
- * File created on Mar 29, 2016
+ * File created on Apr 11, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,103 +18,27 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
-
 /**
- * An entity that describes a person.
+ * A person.
  *
  * @author Carl Harris
  */
-@MappedSuperclass
-@Access(AccessType.FIELD)
-public class Person extends AbstractEntity {
+public interface Person {
 
-  @Column(nullable = false)
-  private Token surname;
+  Token getSurname();
 
-  @Column(name = "given_names", nullable = false)
-  private TokenList givenNames;
+  void setSurname(Token surname);
 
-  @Column(name = "preferred_name")
-  private Token preferredName;
+  TokenList getGivenNames();
 
-  @Enumerated(EnumType.STRING)
-  private Gender gender;
+  void setGivenNames(TokenList givenNames);
 
-  /**
-   * Gets the {@code surname} property.
-   * @return property value
-   */
-  public Token getSurname() {
-    return surname;
-  }
+  Token getPreferredName();
 
-  /**
-   * Sets the {@code surname} property.
-   * @param surname the property value to set
-   */
-  public void setSurname(Token surname) {
-    this.surname = surname;
-  }
+  void setPreferredName(Token preferredName);
 
-  /**
-   * Gets the {@code givenNames} property.
-   * @return property value
-   */
-  public TokenList getGivenNames() {
-    return givenNames;
-  }
+  Gender getGender();
 
-  /**
-   * Sets the {@code givenNames} property.
-   * @param givenNames the property value to set
-   */
-  public void setGivenNames(TokenList givenNames) {
-    this.givenNames = givenNames;
-  }
-
-  /**
-   * Gets the {@code preferredName} property.
-   * @return property value
-   */
-  public Token getPreferredName() {
-    return preferredName;
-  }
-
-  /**
-   * Sets the {@code preferredName} property.
-   * @param preferredName the property value to set
-   */
-  public void setPreferredName(Token preferredName) {
-    this.preferredName = preferredName;
-  }
-
-  /**
-   * Gets the {@code gender} property.
-   * @return property value
-   */
-  public Gender getGender() {
-    return gender;
-  }
-
-  /**
-   * Sets the {@code gender} property.
-   * @param gender the property value to set
-   */
-  public void setGender(Gender gender) {
-    this.gender = gender;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof Person)) return false;
-    return super.equals(obj);
-  }
+  void setGender(Gender gender);
 
 }

@@ -50,10 +50,10 @@ public interface Accessor extends ToOneAssociationManager<Object, Object> {
   AccessType getAccessType();
 
   /**
-   * Gets the effective access modes of this accessor.
+   * Gets the supported access modes of this accessor.
    * @return set of supported access modes
    */
-  EnumSet<AccessMode> getAccessModes();
+  EnumSet<AccessMode> getSupportedModes();
 
   /**
    * Tests whether this accessor can be called to read (get) a value.

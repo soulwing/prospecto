@@ -35,10 +35,9 @@ import org.soulwing.prospecto.api.AccessMode;
 public class ReflectionAccessorFactory {
 
 
-  static Accessor field(Class<?> ownerClass, String name,
-      EnumSet<AccessMode> allowedModes) throws NoSuchFieldException {
+  static Accessor field(Class<?> ownerClass, String name) throws NoSuchFieldException {
     return new FieldAccessor(ownerClass, name,
-        findField(ownerClass, name), allowedModes);
+        findField(ownerClass, name));
   }
 
   private static Field findField(Class<?> ownerClass, String name)
@@ -54,8 +53,7 @@ public class ReflectionAccessorFactory {
     }
   }
 
-  static Accessor property(Class<?> declaringClass, String name,
-      EnumSet<AccessMode> allowedModes) throws NoSuchMethodException,
+  static Accessor property(Class<?> declaringClass, String name) throws NoSuchMethodException,
       IntrospectionException {
     final EnumSet<AccessMode> supportedModes = EnumSet.noneOf(AccessMode.class);
 
@@ -73,7 +71,7 @@ public class ReflectionAccessorFactory {
         }
 
         return new PropertyAccessor(declaringClass, name, readMethod,
-            writeMethod, supportedModes, allowedModes);
+            writeMethod, supportedModes);
       }
     }
     throw new NoSuchMethodException(declaringClass.getName()

@@ -44,34 +44,18 @@ public abstract class AbstractEntity implements Serializable {
   @Version
   private Long version;
 
-  /**
-   * Gets the {@code id} property.
-   * @return property value
-   */
   public Long getId() {
     return id;
   }
 
-  /**
-   * Sets the {@code id} property.
-   * @param id the property value to set
-   */
   public void setId(Long id) {
     this.id = id;
   }
 
-  /**
-   * Gets the {@code version} property.
-   * @return property value
-   */
   public Long getVersion() {
     return version;
   }
 
-  /**
-   * Sets the {@code version} property.
-   * @param version the property value to set
-   */
   public void setVersion(Long version) {
     this.version = version;
   }

@@ -18,9 +18,14 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.domain;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 /**
  * An entity that represents a player's parent/guardian.
@@ -28,7 +33,8 @@ import javax.persistence.Enumerated;
  * @author Carl Harris
  */
 @Entity
-public class Parent extends Contact {
+@Access(AccessType.FIELD)
+public class Parent extends AbstractEntity implements Person, ContactInfo {
 
   public enum Relationship {
     MOTHER,
@@ -37,23 +43,107 @@ public class Parent extends Contact {
     OTHER
   }
 
-  @Enumerated(EnumType.STRING)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  private Contact contact;
+
   private Relationship relationship;
 
-  /**
-   * Gets the {@code relationship} property.
-   * @return property value
-   */
+  public Contact getContact() {
+    return contact;
+  }
+
+  public void setContact(Contact contact) {
+    this.contact = contact;
+  }
+
+  @Override
+  public Token getSurname() {
+    if (contact == null) return null;
+    return contact.getSurname();
+  }
+
+  @Override
+  public void setSurname(Token surname) {
+    contact.setSurname(surname);
+  }
+
+  @Override
+  public TokenList getGivenNames() {
+    if (contact == null) return null;
+    return contact.getGivenNames();
+  }
+
+  @Override
+  public void setGivenNames(TokenList givenNames) {
+    contact.setGivenNames(givenNames);
+  }
+
+  @Override
+  public Token getPreferredName() {
+    if (contact == null) return null;
+    return contact.getPreferredName();
+  }
+
+  @Override
+  public void setPreferredName(Token preferredName) {
+    contact.setPreferredName(preferredName);
+  }
+
+  @Override
+  public Gender getGender() {
+    if (contact == null) return null;
+    return contact.getGender();
+  }
+
+  @Override
+  public void setGender(Gender gender) {
+    contact.setGender(gender);
+  }
+
+  @Override
+  public PhysicalAddress getMailingAddress() {
+    if (contact == null) return null;
+    return contact.getMailingAddress();
+  }
+
+  @Override
+  public void setMailingAddress(PhysicalAddress mailingAddress) {
+    contact.setMailingAddress(mailingAddress);
+  }
+
+  @Override
+  public EmailAddress getEmailAddress() {
+    if (contact == null) return null;
+    return contact.getEmailAddress();
+  }
+
+  @Override
+  public void setEmailAddress(EmailAddress emailAddress) {
+    contact.setEmailAddress(emailAddress);
+  }
+
+  @Override
+  public List<Phone> getPhones() {
+    if (contact == null) return Collections.emptyList();
+    return contact.getPhones();
+  }
+
+  @Override
+  public void setPhones(List<Phone> phones) {
+    contact.setPhones(phones);
+  }
+
   public Relationship getRelationship() {
     return relationship;
   }
 
-  /**
-   * Sets the {@code relationship} property.
-   * @param relationship the property value to set
-   */
   public void setRelationship(Relationship relationship) {
     this.relationship = relationship;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj == this || obj instanceof Parent && super.equals(obj);
   }
 
 }

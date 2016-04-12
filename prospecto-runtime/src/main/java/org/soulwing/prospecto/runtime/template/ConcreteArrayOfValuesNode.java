@@ -18,8 +18,10 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
@@ -67,18 +69,15 @@ public class ConcreteArrayOfValuesNode extends AbstractViewNode
   }
 
   @Override
+  public void setAccessor(Accessor accessor) {
+    super.setAccessor(accessor);
+    this.multiValuedAccessor = accessor != null ?
+        accessorFactory.newAccessor(accessor, componentType) : null;
+  }
+
+  @Override
   public String getPropertyName() {
     return getAccessor().getName();
-  }
-
-  @Override
-  public String getElementName() {
-    return elementName;
-  }
-
-  @Override
-  public Iterator<?> iterator(Object model) throws Exception {
-    return getModelIterator(model);
   }
 
   @Override
@@ -87,24 +86,33 @@ public class ConcreteArrayOfValuesNode extends AbstractViewNode
   }
 
   @Override
+  public String getElementName() {
+    return elementName;
+  }
+
+  @Override
+  public EnumSet<AccessMode> getSupportedModes() {
+    return multiValuedAccessor != null ?
+        multiValuedAccessor.getSupportedModes() : EnumSet.allOf(AccessMode.class);
+  }
+
+  @Override
   public ToManyAssociationManager<?, ?> getDefaultManager() {
     return multiValuedAccessor;
   }
 
   @Override
-  public Object accept(ViewNodeVisitor visitor, Object state) {
-    return visitor.visitArrayOfValues(this, state);
-  }
-
-  @Override
-  public void setAccessor(Accessor accessor) {
-    super.setAccessor(accessor);
-    this.multiValuedAccessor = accessor != null ?
-        accessorFactory.newAccessor(accessor, componentType) : null;
+  public Iterator<?> iterator(Object model) throws Exception {
+    return getModelIterator(model);
   }
 
   protected Iterator<Object> getModelIterator(Object source) throws Exception {
     return multiValuedAccessor.iterator(source);
+  }
+
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitArrayOfValues(this, state);
   }
 
 }

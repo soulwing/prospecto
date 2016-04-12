@@ -465,7 +465,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder allow(EnumSet<AccessMode> modes) {
-    accessorBuilder.accessModes(modes);
+    node.setAllowedModes(modes);
     return this;
   }
 
@@ -521,8 +521,9 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   protected abstract ViewTemplateBuilder onEnd();
 
-  protected void addChildToTarget(AbstractViewNode node) {
+  private void addChildToTarget(AbstractViewNode node) {
     injectAccessor();
+    node.validateAccessModes();
     target.addChild(node);
   }
 

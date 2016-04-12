@@ -18,9 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.accessor;
 
-import java.util.EnumSet;
-
-import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplateException;
 
@@ -34,10 +31,6 @@ public interface AccessorBuilder {
   AccessorBuilder propertyName(String name);
 
   AccessorBuilder accessType(AccessType accessType);
-
-  AccessorBuilder accessModes(AccessMode first, AccessMode... rest);
-
-  AccessorBuilder accessModes(EnumSet<AccessMode> modes);
 
   Accessor build() throws ViewTemplateException;
 
