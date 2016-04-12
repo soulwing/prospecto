@@ -24,6 +24,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.template.ContainerNode;
@@ -89,12 +90,26 @@ public class ReferenceToOneAssociationUpdaterTest {
 
   @Test
   public void testUpdate() throws Exception {
-    context.checking(resolveExpectations());
-    context.checking(managerExpectations());
+    context.checking(resolveExpectations(associate));
+    context.checking(managerExpectations(associate));
     updater.update(node, OWNER, associateEntity, defaultManager, viewContext);
   }
 
-  protected Expectations resolveExpectations() throws Exception {
+  @Test
+  public void testUpdateWhenEntityNull() throws Exception {
+    context.checking(managerExpectations(null));
+    updater.update(node, OWNER, null, defaultManager, viewContext);
+  }
+
+  @Test
+  public void testUpdateWhenUndefinedAssociate() throws Exception {
+    context.checking(resolveExpectations(UndefinedValue.INSTANCE));
+    context.checking(managerExpectations(UndefinedValue.INSTANCE));
+    updater.update(node, OWNER, associateEntity, defaultManager, viewContext);
+  }
+
+  protected Expectations resolveExpectations(final Object associate)
+      throws Exception {
     return new Expectations() {
       {
         oneOf(associateEntity).getType();
@@ -108,7 +123,8 @@ public class ReferenceToOneAssociationUpdaterTest {
   }
 
   @SuppressWarnings("unchecked")
-  private Expectations managerExpectations() throws Exception {
+  private Expectations managerExpectations(final Object associate)
+      throws Exception {
     return new Expectations() {
       {
         oneOf(descriptorFactory).newDescriptor(node);
@@ -116,7 +132,9 @@ public class ReferenceToOneAssociationUpdaterTest {
         oneOf(managerLocator).findManager(ToOneAssociationManager.class,
             defaultManager, descriptor, node, viewContext);
         will(returnValue(manager));
-        oneOf(manager).set(OWNER, associate);
+        if (associate != UndefinedValue.INSTANCE) {
+          oneOf(manager).set(OWNER, associate);
+        }
       }
     };
   }

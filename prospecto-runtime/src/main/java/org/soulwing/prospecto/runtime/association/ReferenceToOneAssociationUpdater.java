@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.association;
 
+import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.template.ContainerNode;
@@ -63,8 +64,12 @@ public class ReferenceToOneAssociationUpdater implements ToOneAssociationUpdater
         managerLocator.findManager(ToOneAssociationManager.class,
             defaultManager, descriptor, node, context);
 
-    manager.set(target,
-        context.getReferenceResolvers().resolve(entity.getType(), entity));
+    final Object associate = entity != null ?
+        context.getReferenceResolvers().resolve(entity.getType(), entity) : null;
+
+    if (associate != UndefinedValue.INSTANCE) {
+      manager.set(target, associate);
+    }
   }
 
 }
