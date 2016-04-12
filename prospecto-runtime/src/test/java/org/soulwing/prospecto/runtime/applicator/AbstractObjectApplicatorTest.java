@@ -22,12 +22,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
+import java.util.EnumSet;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
+import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.api.template.ContainerNode;
@@ -85,6 +89,9 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
 
   @Mock
   ToOneAssociationUpdater associationUpdater;
+
+  @Mock
+  ToOneAssociationManager defaultManager;
 
   @Mock
   TransformationService transformationService;
@@ -233,6 +240,35 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
         parentEntity, TRIGGER_EVENT, events, viewContext),
         is(sameInstance((Object) entity)));
   }
+
+  @Test
+  public void testInject() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.WRITE)));
+        oneOf(node).getDefaultManager();
+        will(returnValue(defaultManager));
+        oneOf(associationUpdater).update(node, MODEL, entity,
+             defaultManager, viewContext);
+      }
+    });
+
+    applicator.inject(MODEL, entity, viewContext);
+  }
+
+  @Test
+  public void testInjectWhenNotWritable() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
+      }
+    });
+
+    applicator.inject(MODEL, entity, viewContext);
+  }
+
 
   private Expectations entityFactoryExpectations() throws Exception {
     return new Expectations() {

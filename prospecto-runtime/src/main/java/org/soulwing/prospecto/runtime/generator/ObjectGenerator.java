@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ObjectNode;
@@ -56,7 +57,9 @@ class ObjectGenerator extends AbstractViewEventGenerator<ObjectNode> {
   List<View.Event> onGenerate(Object owner, ScopedViewContext context)
       throws Exception {
     final List<View.Event> viewEvents = new LinkedList<>();
-    final Object model = node.getObject(owner);
+    final Object model = node.getAllowedModes().contains(AccessMode.READ) ?
+        node.getObject(owner) : UndefinedValue.INSTANCE;
+
     if (model == UndefinedValue.INSTANCE) return Collections.emptyList();
 
     if (model != null) {

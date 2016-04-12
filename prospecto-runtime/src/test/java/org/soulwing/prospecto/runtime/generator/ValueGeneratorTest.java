@@ -28,9 +28,12 @@ import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.inNamespa
 import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.whereValue;
 import static org.soulwing.prospecto.testing.matcher.ViewEventMatchers.withName;
 
+import java.util.EnumSet;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ValueNode;
@@ -65,6 +68,8 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getValue(MODEL);
         will(returnValue(MODEL_VALUE));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
@@ -87,11 +92,27 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getValue(MODEL);
         will(returnValue(MODEL_VALUE));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
              node, viewContext);
         will(returnValue(UndefinedValue.INSTANCE));
+      }
+    });
+
+    assertThat(generator.generate(MODEL, viewContext), is(empty()));
+  }
+
+  @Test
+  public void testGenerateWhenNotReadable() throws Exception {
+    context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
       }
     });
 

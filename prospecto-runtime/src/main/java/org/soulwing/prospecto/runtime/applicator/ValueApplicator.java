@@ -20,6 +20,7 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.Deque;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.template.ValueNode;
@@ -57,7 +58,9 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
 
   @Override
   public void inject(Object target, Object value) throws Exception {
-    node.setValue(target, value);
+    if (node.getAllowedModes().contains(AccessMode.WRITE)) {
+      node.setValue(target, value);
+    }
   }
 
   @Override

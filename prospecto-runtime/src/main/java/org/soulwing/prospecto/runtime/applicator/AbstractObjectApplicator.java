@@ -20,6 +20,7 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.List;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -50,8 +51,10 @@ abstract class AbstractObjectApplicator<N extends ObjectNode>
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    associationUpdater.update(node, target,
-        (InjectableViewEntity) value, node.getDefaultManager(), context);
+    if (node.getAllowedModes().contains(AccessMode.WRITE)) {
+      associationUpdater.update(node, target,
+          (InjectableViewEntity) value, node.getDefaultManager(), context);
+    }
   }
 
 }

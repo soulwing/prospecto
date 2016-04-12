@@ -22,9 +22,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
+import java.util.EnumSet;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -70,6 +73,31 @@ public class ValueApplicatorTest
 
     assertThat(applicator.toModelValue(parentEntity, triggerEvent, events,
         viewContext), is(sameInstance(MODEL_VALUE)));
+  }
+
+  @Test
+  public void testInjectInContext() throws Exception {
+    validateInject(EnumSet.of(AccessMode.WRITE));
+  }
+
+  @Test
+  public void testInjectInContextWhenNotWritable() throws Exception {
+    validateInject(EnumSet.noneOf(AccessMode.class));
+  }
+
+  private void validateInject(final EnumSet<AccessMode> allowedModes)
+      throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(allowedModes));
+        if (!allowedModes.isEmpty()) {
+          oneOf(node).setValue(MODEL, MODEL_VALUE);
+        }
+      }
+    });
+
+    applicator.inject(MODEL, MODEL_VALUE, viewContext);
   }
 
   interface MockDataType {}

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
@@ -60,6 +61,10 @@ class ArrayOfObjectsGenerator
   @Override
   List<View.Event> onGenerate(Object model, ScopedViewContext context)
       throws Exception {
+    if (!node.getAllowedModes().contains(AccessMode.READ)) {
+      return Collections.emptyList();
+    }
+
     final Iterator<?> i = node.iterator(model);
     if (i == null) {
       return Collections.singletonList((View.Event)

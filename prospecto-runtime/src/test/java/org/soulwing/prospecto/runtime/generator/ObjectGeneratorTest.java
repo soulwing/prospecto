@@ -19,17 +19,20 @@
 package org.soulwing.prospecto.runtime.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
@@ -71,6 +74,8 @@ public class ObjectGeneratorTest
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getObject(MODEL);
         will(returnValue(MODEL));
         oneOf(discriminatorEventService).isDiscriminatorNeeded(node);
@@ -101,6 +106,8 @@ public class ObjectGeneratorTest
       {
         oneOf(node).getObject(MODEL);
         will(returnValue(MODEL));
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(discriminatorEventService).isDiscriminatorNeeded(node);
         will(returnValue(true));
         oneOf(discriminatorEventService).newDiscriminatorEvent(
@@ -126,11 +133,13 @@ public class ObjectGeneratorTest
   }
 
   @Test
-  public void testOnEvaluateWhenNull() throws Exception {
+  public void testGenerateWhenNull() throws Exception {
     context.checking(baseExpectations());
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getObject(MODEL);
         will(returnValue(null));
       }
@@ -142,6 +151,20 @@ public class ObjectGeneratorTest
     assertThat(events.get(0).getName(), is(equalTo(NAME)));
     assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(0).getValue(), is(nullValue()));
+  }
+
+  @Test
+  public void testGenerateWhenNotReadable() throws Exception {
+    context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
+      }
+    });
+
+    assertThat(generator.generate(MODEL, viewContext), is(empty()));
   }
 
 }

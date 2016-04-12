@@ -26,12 +26,14 @@ import static org.hamcrest.Matchers.is;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
@@ -201,10 +203,24 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
   public void testInjectInContext() throws Exception {
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.WRITE)));
         oneOf(node).getDefaultManager();
         will(returnValue(defaultManager));
         oneOf(associationUpdater).update(node, MODEL, MODEL_ARRAY,
             defaultManager, viewContext);
+      }
+    });
+
+    applicator.inject(MODEL, MODEL_ARRAY, viewContext);
+  }
+
+  @Test
+  public void testInjectInContextWhenNotWritable() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
       }
     });
 

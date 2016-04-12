@@ -19,16 +19,19 @@
 package org.soulwing.prospecto.runtime.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
@@ -70,6 +73,8 @@ public class ArrayOfValuesGeneratorTest
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
             viewContext);
         will(returnValue(TRANSFORMED_VALUE));
@@ -93,13 +98,15 @@ public class ArrayOfValuesGeneratorTest
   }
 
   @Test
-  public void testOnEvaluateWhenUndefinedValue() throws Exception {
+  public void testGenerateWhenUndefinedValue() throws Exception {
     context.checking(baseExpectations());
     context.checking(contextScopeExpectations());
     context.checking(contextExpectations());
     context.checking(iteratorExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE,
             node, viewContext);
         will(returnValue(UndefinedValue.INSTANCE));
@@ -108,6 +115,20 @@ public class ArrayOfValuesGeneratorTest
 
     final List<View.Event> events = generator.generate(MODEL, viewContext);
     validateEmptyArray(events);
+  }
+
+  @Test
+  public void testGenerateWhenNotReadable() throws Exception {
+    context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
+      }
+    });
+
+    assertThat(generator.generate(MODEL, viewContext), is(empty()));
   }
 
   private Expectations contextExpectations() throws Exception {

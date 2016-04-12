@@ -18,10 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.generator;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
@@ -53,6 +55,10 @@ class ArrayOfValuesGenerator
   @Override
   List<View.Event> onGenerate(Object owner, ScopedViewContext context)
       throws Exception {
+
+    if (!node.getAllowedModes().contains(AccessMode.READ)) {
+      return Collections.emptyList();
+    }
 
     final Iterator<?> i = node.iterator(owner);
     final List<View.Event> events = new LinkedList<>();

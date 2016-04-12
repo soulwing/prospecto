@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
@@ -112,8 +113,10 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
   @SuppressWarnings("unchecked")
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    associationUpdater.update(node, target,
-        (List<InjectableViewEntity>) value, node.getDefaultManager(), context);
+    if (node.getAllowedModes().contains(AccessMode.WRITE)) {
+      associationUpdater.update(node, target,
+          (List<InjectableViewEntity>) value, node.getDefaultManager(), context);
+    }
   }
 
 }

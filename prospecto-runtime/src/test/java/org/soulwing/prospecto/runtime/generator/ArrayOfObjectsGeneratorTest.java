@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.runtime.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -30,12 +31,14 @@ import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.prop
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
@@ -92,6 +95,8 @@ public class ArrayOfObjectsGeneratorTest
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).iterator(MODEL);
         will(returnValue(iterator));
         exactly(2).of(iterator).hasNext();
@@ -138,6 +143,8 @@ public class ArrayOfObjectsGeneratorTest
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).iterator(MODEL);
         will(returnValue(iterator));
         exactly(2).of(iterator).hasNext();
@@ -192,6 +199,8 @@ public class ArrayOfObjectsGeneratorTest
     context.checking(contextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).iterator(MODEL);
         will(returnValue(iterator));
         exactly(2).of(iterator).hasNext();
@@ -218,14 +227,14 @@ public class ArrayOfObjectsGeneratorTest
     assertThat(events.get(1).getValue(), is(nullValue()));
   }
 
-
-
   @Test
-  public void testOnEvaluateWhenNull() throws Exception {
+  public void testGenerateWhenNull() throws Exception {
     context.checking(baseExpectations());
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).iterator(MODEL);
         will(returnValue(null));
       }
@@ -238,6 +247,21 @@ public class ArrayOfObjectsGeneratorTest
     assertThat(events.get(0).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(0).getValue(), is(nullValue()));
   }
+
+  @Test
+  public void testGenerateWhenNotReadable() throws Exception {
+    context.checking(baseExpectations());
+    context.checking(contextScopeExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getAllowedModes();
+        will(returnValue(EnumSet.noneOf(AccessMode.class)));
+      }
+    });
+
+    assertThat(generator.generate(MODEL, viewContext), is(empty()));
+  }
+
 
   private Expectations contextExpectations() throws Exception {
     return new Expectations() {
