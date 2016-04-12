@@ -23,7 +23,6 @@ import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
-import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
@@ -56,9 +55,10 @@ class OrderedToManyAssociationUpdateStrategy
   }
 
   @SuppressWarnings("unchecked")
-  private void doUpdate(ViewNode node, Object target,
+  private void doUpdate(UpdatableNode node, Object target,
       Iterable<?> values, ToManyIndexedAssociationManager manager,
       ScopedViewContext context) throws Exception {
+
     int viewIndex = 0;
     for (final Object value : values) {
       final InjectableViewEntity entity = (InjectableViewEntity) value;
