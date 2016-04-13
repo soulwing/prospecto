@@ -1,0 +1,8 @@
+{
+  "medicalInfo":{
+    "insuranceInfo":{
+      "provider":"Foo",
+      "policyNumber":"Bar"
+    }
+  }
+}
