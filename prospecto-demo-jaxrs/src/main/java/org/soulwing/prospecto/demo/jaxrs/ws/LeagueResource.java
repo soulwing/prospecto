@@ -20,6 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import java.net.URI;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -41,6 +42,7 @@ import org.soulwing.prospecto.demo.jaxrs.domain.League;
 import org.soulwing.prospecto.demo.jaxrs.service.LeagueService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
+import org.soulwing.prospecto.demo.jaxrs.views.RootView;
 import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
@@ -50,7 +52,7 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
  *
  * @author Carl Harris
  */
-@Path("/leagues")
+@Dependent
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class LeagueResource {
@@ -59,6 +61,8 @@ public class LeagueResource {
   private LeagueService leagueService;
 
   @GET
+  @ReferencedBy(value = { RootView.Root.class, RootView.Leagues.class })
+  @TemplateResolver(RootPathResolver.class)
   public View getLeagues() {
     return leagueService.findAllLeagues();
   }
