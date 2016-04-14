@@ -46,6 +46,9 @@ public class RootResource {
   private Instance<ContactResource> contactResources;
 
   @Inject
+  private Instance<ExportResource> exportResources;
+
+  @Inject
   private RootService rootService;
 
   @GET
@@ -61,6 +64,11 @@ public class RootResource {
   @Path("/contacts")
   public ContactResource getContacts() {
     return contactResources.get();
+  }
+
+  @Path("/export")
+  public ExportResource getExport() {
+    return exportResources.get();
   }
 
 }

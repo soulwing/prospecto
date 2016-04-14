@@ -20,7 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import java.net.URI;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -49,19 +49,18 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
 /**
  * A JAX-RS resource used to access the {@link LeagueService}.
- *
  * @author Carl Harris
  */
-@Dependent
-@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+@ApplicationScoped
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class LeagueResource {
 
   @Inject
   private LeagueService leagueService;
 
   @GET
-  @ReferencedBy(value = { RootView.Root.class, RootView.Leagues.class })
+  @ReferencedBy(value = {RootView.Root.class, RootView.Leagues.class})
   @TemplateResolver(RootPathResolver.class)
   public View getLeagues() {
     return leagueService.findAllLeagues();
@@ -77,7 +76,7 @@ public class LeagueResource {
 
   @GET
   @Path("{id}")
-  @ReferencedBy({ AnyModelSequence.class, League.class })
+  @ReferencedBy({AnyModelSequence.class, League.class})
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getLeague(@PathParam("id") Long id) {
     try {

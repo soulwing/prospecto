@@ -20,7 +20,7 @@ package org.soulwing.prospecto.demo.jaxrs.ws;
 
 import java.net.URI;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -52,7 +52,7 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
  *
  * @author Carl Harris
  */
-@Dependent
+@ApplicationScoped
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class ContactResource {

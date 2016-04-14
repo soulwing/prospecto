@@ -102,6 +102,10 @@
       <artifactId>jboss-javaee-${javaEE.version}</artifactId>
       <type>pom</type>
     </dependency>
+    <dependency>
+      <groupId>org.soulwing.jdbc</groupId>
+      <artifactId>fluent-jdbc</artifactId>
+    </dependency>
   </dependencies>
 
   <properties>
