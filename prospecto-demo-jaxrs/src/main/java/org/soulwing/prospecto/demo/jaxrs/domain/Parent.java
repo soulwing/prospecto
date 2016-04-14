@@ -26,6 +26,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * An entity that represents a player's parent/guardian.
@@ -33,6 +34,7 @@ import javax.persistence.ManyToOne;
  * @author Carl Harris
  */
 @Entity
+@Table(name = "parent")
 @Access(AccessType.FIELD)
 public class Parent extends AbstractEntity implements Person, ContactInfo {
 

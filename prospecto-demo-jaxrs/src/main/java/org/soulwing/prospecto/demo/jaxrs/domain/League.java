@@ -44,7 +44,7 @@ public class League extends AbstractEntity {
   private String name;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      mappedBy = "league")
+      mappedBy = "league", orphanRemoval = true)
   @OrderBy("ageLimit, name")
   private Set<Division> divisions = new HashSet<>();
 

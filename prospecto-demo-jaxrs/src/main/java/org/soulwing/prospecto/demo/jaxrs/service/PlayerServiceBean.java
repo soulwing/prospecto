@@ -64,18 +64,11 @@ public class PlayerServiceBean extends EntityServiceBase<Player>
 
   @Override
   public Object createPlayer(Long divisionId, View playerView) {
-    entityListener.begin();
-    try {
-      final Player player = newEntity(playerView);
-      player.setDivision(entityManager.getReference(Division.class, divisionId));
-      entityListener.apply(entityManager);
-      entityManager.persist(player);
-      entityManager.flush();
-      return player.getId();
-    }
-    finally {
-      entityListener.end();
-    }
+    final Player player = newEntity(playerView);
+    player.setDivision(entityManager.getReference(Division.class, divisionId));
+    entityManager.persist(player);
+    entityManager.flush();
+    return player.getId();
   }
 
   @Override

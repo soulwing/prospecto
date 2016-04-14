@@ -56,12 +56,12 @@ public class Division extends AbstractEntity {
   private Gender gender;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      mappedBy = "division")
+      mappedBy = "division", orphanRemoval = true)
   @OrderBy("name")
   private Set<Team> teams = new HashSet<>();
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      mappedBy = "division")
+      mappedBy = "division", orphanRemoval = true)
   @OrderBy("surname, givenNames")
   private Set<Player> players = new HashSet<>();
 

@@ -92,4 +92,10 @@ public class Contact extends AbstractPerson implements ContactInfo {
     this.phones = phones;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    return obj == this || obj instanceof Contact && super.equals(obj);
+  }
+
+
 }

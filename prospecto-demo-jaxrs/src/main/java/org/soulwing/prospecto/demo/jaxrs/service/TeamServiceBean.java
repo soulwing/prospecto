@@ -59,18 +59,11 @@ public class TeamServiceBean extends EntityServiceBase<Team>
 
   @Override
   public Object createTeam(Long divisionId, View teamView) {
-    entityListener.begin();
-    try {
-      final Team team = newEntity(teamView);
-      team.setDivision(entityManager.getReference(Division.class, divisionId));
-      entityListener.apply(entityManager);
-      entityManager.persist(team);
-      entityManager.flush();
-      return team.getId();
-    }
-    finally {
-      entityListener.end();
-    }
+    final Team team = newEntity(teamView);
+    team.setDivision(entityManager.getReference(Division.class, divisionId));
+    entityManager.persist(team);
+    entityManager.flush();
+    return team.getId();
   }
 
   @Override

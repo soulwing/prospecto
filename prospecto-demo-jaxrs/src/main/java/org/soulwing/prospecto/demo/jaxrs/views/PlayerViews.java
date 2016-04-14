@@ -73,6 +73,7 @@ public interface PlayerViews {
           .value("battingOrientation")
           .value("throwingOrientation")
           .arrayOfObjects("parents", Parent.class)
+              .url()
               .value("id")
               .value("version")
               .reference("contact", Contact.class)
@@ -99,8 +100,6 @@ public interface PlayerViews {
           .value("version")
           .value("surname")
           .value("givenNames")
-          .value("birthDate")
-              .allow(AccessMode.WRITE)
           .end()
       .build();
 

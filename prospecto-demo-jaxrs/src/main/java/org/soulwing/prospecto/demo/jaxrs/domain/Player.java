@@ -32,9 +32,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -61,9 +60,9 @@ public class Player extends AbstractPerson {
   @JoinColumn(name = "residence_address_id")
   private PhysicalAddress residenceAddress = new PhysicalAddress();
 
-  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinTable(name = "player_parent",
-      inverseJoinColumns = @JoinColumn(name = "parent_id"))
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  @JoinColumn(name = "player_id")
   @OrderBy("relationship")
   private Set<Parent> parents = new HashSet<>();
 

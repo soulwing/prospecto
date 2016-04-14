@@ -22,8 +22,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -44,7 +42,6 @@ public class RosterPlayer extends AbstractEntity {
   @Column(name = "jersey_number")
   private String jerseyNumber;
 
-  @Enumerated(EnumType.STRING)
   private Position position;
 
   public Player getPlayer() {
@@ -70,5 +67,11 @@ public class RosterPlayer extends AbstractEntity {
   public void setPosition(Position position) {
     this.position = position;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj == this || obj instanceof RosterPlayer && super.equals(obj);
+  }
+
 
 }

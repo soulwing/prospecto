@@ -59,7 +59,8 @@ public class Team extends AbstractEntity {
       inverseJoinColumns = @JoinColumn(name = "coach_id"))
   private Set<Contact> coaches = new HashSet<>();
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+      orphanRemoval = true)
   @JoinColumn(name = "team_id")
   @OrderBy("position")
   private Set<RosterPlayer> roster = new HashSet<>();

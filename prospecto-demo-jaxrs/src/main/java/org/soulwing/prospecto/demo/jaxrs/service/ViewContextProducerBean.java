@@ -77,7 +77,6 @@ public class ViewContextProducerBean {
     context.getListeners().append(LoggingViewNodeListener.INSTANCE);
     context.getListeners().append(LoggingViewNodePropertyListener.INSTANCE);
     context.getListeners().append(RoleBasedViewNodeAcceptor.INSTANCE);
-    context.getListeners().append(JpaViewNodeEntityListener.INSTANCE);
 
     context.getOptions().put(ViewKeys.IGNORE_UNKNOWN_PROPERTIES, true);
     return context;

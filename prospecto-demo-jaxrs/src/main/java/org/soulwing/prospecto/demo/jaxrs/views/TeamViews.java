@@ -21,6 +21,7 @@ package org.soulwing.prospecto.demo.jaxrs.views;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.demo.jaxrs.domain.Player;
 import org.soulwing.prospecto.demo.jaxrs.domain.RosterPlayer;
 import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
@@ -34,7 +35,13 @@ public interface TeamViews {
       .object(RosterPlayer.class)
           .value("id")
           .value("version")
-          .reference("player", PlayerViews.PLAYER_SUMMARY)
+          .reference("player", Player.class)
+              .value("id")
+                  .allow(AccessMode.WRITE)
+              .value("surname")
+              .value("givenNames")
+              .value("preferredName")
+              .end()
           .value("jerseyNumber")
           .value("position")
           .end()
@@ -56,7 +63,6 @@ public interface TeamViews {
           .value("version")
           .value("name")
           .reference("division", DivisionViews.DIVISION_REFERENCE)
-              .allow(AccessMode.READ)
           .reference("manager", ContactViews.CONTACT_REFERENCE)
           .arrayOfReferences("coaches", ContactViews.CONTACT_REFERENCE)
           .arrayOfObjects("roster", ROSTER_PLAYER)

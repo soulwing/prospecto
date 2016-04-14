@@ -35,9 +35,6 @@ import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
 public class EntityServiceBase<T extends AbstractEntity>
     implements EntityService<T> {
 
-  final JpaViewNodeEntityListener entityListener =
-      JpaViewNodeEntityListener.INSTANCE;
-
   private final Class<T> entityClass;
   private final ViewTemplate detailView;
 
@@ -66,17 +63,10 @@ public class EntityServiceBase<T extends AbstractEntity>
 
   @Override
   public Object create(View view) {
-    entityListener.begin();
-    try {
-      final T entity = newEntity(view);
-      entityListener.apply(entityManager);
-      entityManager.persist(entity);
-      entityManager.flush();
-      return entity.getId();
-    }
-    finally {
-      entityListener.end();
-    }
+    final T entity = newEntity(view);
+    entityManager.persist(entity);
+    entityManager.flush();
+    return entity.getId();
   }
 
   @Override
@@ -88,23 +78,16 @@ public class EntityServiceBase<T extends AbstractEntity>
       throw new NoSuchEntityException(entityClass, id);
     }
 
-    ViewApplicator applicator = detailView.createApplicator(view, viewContext);
-    applicator.update(entity);
-    entityManager.clear();
-
-    entityListener.begin();
     try {
-      entity = entityManager.merge(entity);
+      ViewApplicator applicator = detailView.createApplicator(view, viewContext);
       applicator.update(entity);
-      entityListener.apply(entityManager);
+      entityManager.detach(entity);
+      entity = entityManager.merge(entity);
       entityManager.flush();
       return detailView.generateView(entity, viewContext);
     }
     catch (OptimisticLockException ex) {
       throw new UpdateConflictException(Contact.class, id, ex);
-    }
-    finally {
-      entityListener.end();
     }
   }
 

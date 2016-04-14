@@ -86,11 +86,4 @@ public class AbstractPerson extends AbstractEntity implements Person {
     this.gender = gender;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) return true;
-    if (!(obj instanceof AbstractPerson)) return false;
-    return super.equals(obj);
-  }
-
 }
