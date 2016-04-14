@@ -38,6 +38,7 @@ import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.inNamespac
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.named;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.nodeOfType;
 import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.withModes;
+import static org.soulwing.prospecto.runtime.builder.ViewNodeMatchers.withValue;
 
 import java.util.Collections;
 
@@ -45,8 +46,10 @@ import org.junit.Test;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
+import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.meta.LiteralMetadataHandler;
 import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.accessor.RootAccessor;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
@@ -88,6 +91,8 @@ public class ViewTemplateBuilderTest {
 
   private static final String ATTRIBUTE_NAME = "attributeName";
   private static final Object ATTRIBUTE_VALUE = new Object() { };
+  private static final String META_NAME = "metaName";
+  private static final Object META_VALUE = "metaValue";
 
   @Test
   public void testRootObject() throws Exception {
@@ -787,6 +792,117 @@ public class ViewTemplateBuilderTest {
     ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
         .arrayOfValues(MOCK_PROPERTY, Object.class)
         .build();
+  }
+
+  @Test
+  public void testObjectMetaValue() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .meta(META_NAME, META_VALUE)
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteMetaNode.class,
+                    named(META_NAME), inDefaultNamespace(),
+                    withValue(equalTo(META_VALUE)),
+                    havingAttribute(MetadataHandler.class,
+                      sameInstance(LiteralMetadataHandler.INSTANCE))
+                )
+            )
+        )
+    ));
+  }
+
+  @Test
+  public void testObjectMetaNamespaceValue() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .meta(META_NAME, NAMESPACE, META_VALUE)
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteMetaNode.class,
+                    named(META_NAME), inNamespace(NAMESPACE),
+                    withValue(equalTo(META_VALUE)),
+                    havingAttribute(MetadataHandler.class,
+                        sameInstance(LiteralMetadataHandler.INSTANCE))
+                )
+            )
+        )
+    ));
+  }
+
+  @Test
+  public void testObjectMetaHandler() throws Exception {
+    MockMetadataHandler handler = new MockMetadataHandler();
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .meta(META_NAME, NAMESPACE, META_VALUE, handler)
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteMetaNode.class,
+                    named(META_NAME), inNamespace(NAMESPACE),
+                    withValue(equalTo(META_VALUE)),
+                    havingAttribute(MetadataHandler.class,
+                        sameInstance(handler))
+                )
+            )
+        )
+    ));
+  }
+
+  @Test
+  public void testObjectMetaHandlerClass() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .meta(META_NAME, MockMetadataHandler.class,
+                MOCK_PROPERTY, MOCK_PROPERTY_VALUE)
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteMetaNode.class,
+                    named(META_NAME), inDefaultNamespace(),
+                    havingAttribute(MetadataHandler.class,
+                        hasProperty(MOCK_PROPERTY, equalTo(MOCK_PROPERTY_VALUE)))
+                )
+            )
+        )
+    ));
+  }
+
+  @Test
+  public void testObjectMetaHandlerMap() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .meta(META_NAME, MockMetadataHandler.class,
+                Collections.singletonMap(MOCK_PROPERTY, MOCK_PROPERTY_VALUE))
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteMetaNode.class,
+                    named(META_NAME), inDefaultNamespace(),
+                    havingAttribute(MetadataHandler.class,
+                        hasProperty(MOCK_PROPERTY, equalTo(MOCK_PROPERTY_VALUE)))
+                )
+            )
+        )
+    ));
   }
 
   @Test

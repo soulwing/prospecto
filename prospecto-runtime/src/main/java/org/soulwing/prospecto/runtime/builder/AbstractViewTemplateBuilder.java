@@ -30,6 +30,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.meta.LiteralMetadataHandler;
 import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
@@ -139,16 +140,32 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder meta(String name, Object value) {
+    return meta(name, null, value, LiteralMetadataHandler.INSTANCE);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace, Object value) {
+    return meta(name, namespace, value, LiteralMetadataHandler.INSTANCE);
+  }
+
+  @Override
   public ViewTemplateBuilder meta(String name,
       Class<? extends MetadataHandler> handlerClass, Object... configuration) {
-    return meta(name, null, handlerClass, configuration);
+    return meta(name, null, null, handlerClass, configuration);
   }
 
   @Override
   public ViewTemplateBuilder meta(String name, String namespace,
       Class<? extends MetadataHandler> handlerClass, Object... configuration) {
+    return meta(name, namespace, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace, Object value,
+      Class<? extends MetadataHandler> handlerClass, Object... configuration) {
     try {
-      return meta(name, namespace, beanFactory.construct(handlerClass,
+      return meta(name, namespace, value, beanFactory.construct(handlerClass,
           configuration));
     }
     catch (Exception ex) {
@@ -165,8 +182,14 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   @Override
   public ViewTemplateBuilder meta(String name, String namespace,
       Class<? extends MetadataHandler> handlerClass, Map configuration) {
+    return meta(name, namespace, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace, Object value,
+      Class<? extends MetadataHandler> handlerClass, Map configuration) {
     try {
-      return meta(name, namespace, beanFactory.construct(handlerClass,
+      return meta(name, namespace, value, beanFactory.construct(handlerClass,
           configuration));
     }
     catch (Exception ex) {
@@ -176,13 +199,20 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
 
   @Override
   public ViewTemplateBuilder meta(String name, MetadataHandler handler) {
-    return meta(name, null, handler);
+    return meta(name, null, null, handler);
   }
 
   @Override
   public ViewTemplateBuilder meta(String name, String namespace,
       MetadataHandler handler) {
-    final ConcreteMetaNode node = new ConcreteMetaNode(name, namespace, handler);
+    return meta(name, namespace, null, handler);
+  }
+
+  @Override
+  public ViewTemplateBuilder meta(String name, String namespace, Object value,
+      MetadataHandler handler) {
+    final ConcreteMetaNode node = new ConcreteMetaNode(name, namespace, value);
+    node.put(handler);
     addChildToTarget(node);
     return newTemplateBuilder(node);
   }

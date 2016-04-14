@@ -114,6 +114,11 @@ public class ViewNodeMatchers {
     return hasProperty("name", equalTo(name));
   }
 
+  public static <T extends ViewNode> Matcher<T> withValue(
+      Matcher<Object> matcher) {
+    return hasProperty("value", matcher);
+  }
+
   public static <T extends ViewNode> Matcher<T> elementsNamed(String elementName) {
     return hasProperty("elementName", equalTo(elementName));
   }

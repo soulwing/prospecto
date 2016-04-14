@@ -30,23 +30,28 @@ import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 public class ConcreteMetaNode extends AbstractViewNode
     implements MetaNode {
 
-  private final MetadataHandler handler;
+  private final Object value;
 
   /**
    * Constructs a new instance.
    * @param name node name
    * @param namespace namespace for {@code name}
-   * @param handler metadata handler
+   * @param value constant value to associate with this node
    */
   public ConcreteMetaNode(String name, String namespace,
-      MetadataHandler handler) {
+      Object value) {
     super(name, namespace, null);
-    this.handler = handler;
+    this.value = value;
+  }
+
+  @Override
+  public Object getValue() {
+    return value;
   }
 
   @Override
   public MetadataHandler getHandler() {
-    return handler;
+    return get(MetadataHandler.class);
   }
 
   @Override

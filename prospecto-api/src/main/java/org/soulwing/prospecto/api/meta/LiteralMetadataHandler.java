@@ -1,5 +1,5 @@
 /*
- * File created on Apr 8, 2016
+ * File created on Apr 13, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,27 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.template;
+package org.soulwing.prospecto.api.meta;
 
 import org.soulwing.prospecto.api.MetadataHandler;
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
- * A {@link ViewNode} that represents a metadata value.
+ * A {@link MetadataHandler} for literal metadata values.
  *
  * @author Carl Harris
  */
-public interface MetaNode extends ViewNode {
+public class LiteralMetadataHandler implements MetadataHandler {
 
-  /**
-   * Gets the metadata handler associated with this node.
-   * @return handler instance (never {@code null})
-   */
-  MetadataHandler getHandler();
+  public static final LiteralMetadataHandler INSTANCE =
+      new LiteralMetadataHandler();
 
-  /**
-   * Gets the (constant) value associated with this node.
-   * @return value (which may be {@code null})
-   */
-  Object getValue();
+  private LiteralMetadataHandler() {}
+
+  @Override
+  public Object produceValue(MetaNode node, ViewContext context)
+      throws Exception {
+    return node.getValue();
+  }
+
+  @Override
+  public void consumeValue(MetaNode node, Object value, ViewContext context)
+      throws Exception {
+  }
 
 }

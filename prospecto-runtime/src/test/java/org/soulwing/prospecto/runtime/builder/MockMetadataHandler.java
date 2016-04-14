@@ -1,5 +1,5 @@
 /*
- * File created on Mar 28, 2016
+ * File created on Apr 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,14 +18,16 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
-import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.MetadataHandler;
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
- * A mock {@link ValueTypeConverter} used in testing the template builder.
+ * A mock {@link MetadataHandler} used in testing the template builder.
  *
  * @author Carl Harris
  */
-public class MockConverter implements ValueTypeConverter<Object> {
+public class MockMetadataHandler implements MetadataHandler {
 
   private String mockProperty;
 
@@ -38,23 +40,14 @@ public class MockConverter implements ValueTypeConverter<Object> {
   }
 
   @Override
-  public boolean supports(Class<?> type) {
-    return false;
-  }
-
-  @Override
-  public Class<?> getViewType() {
+  public Object produceValue(MetaNode node, ViewContext context)
+      throws Exception {
     return null;
   }
 
   @Override
-  public Object toValue(Object model) throws Exception {
-    return null;
-  }
-
-  @Override
-  public Object toObject(Object value) throws Exception {
-    return null;
+  public void consumeValue(MetaNode node, Object value, ViewContext context)
+      throws Exception {
   }
 
 }
