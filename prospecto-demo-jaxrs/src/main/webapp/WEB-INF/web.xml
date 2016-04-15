@@ -21,10 +21,21 @@
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
   version="3.1">
 
+  <listener>
+    <listener-class>
+      org.soulwing.prospecto.jaxrs.api.UrlResolverInitializingContextListener
+    </listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>javax.ws.rs.core.Application</servlet-name>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
+  <servlet-mapping>
+    <servlet-name>javax.ws.rs.core.Application</servlet-name>
+    <url-pattern>/api</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>javax.ws.rs.core.Application</servlet-name>
