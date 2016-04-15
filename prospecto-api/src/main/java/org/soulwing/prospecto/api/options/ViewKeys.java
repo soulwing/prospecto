@@ -27,9 +27,15 @@ package org.soulwing.prospecto.api.options;
 public interface ViewKeys {
 
   /**
+   * Prefix used for all built-in option names.
+   */
+  String PREFIX = "org.soulwing.prospecto";
+
+  /**
    * When set to {@code true} a model editor will ignore unknown property names
    * that appear in an input view.
    */
-  String IGNORE_UNKNOWN_PROPERTIES = "editor.IgnoresUnknownProperties";
+  String IGNORE_UNKNOWN_PROPERTIES = PREFIX
+      + ".applicator.ignoreUnknownProperties";
 
 }

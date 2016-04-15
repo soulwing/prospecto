@@ -30,18 +30,21 @@ public interface WriterKeys {
    * When set to {@code true} a writer will include properties from the view
    * whose value is null.
    */
-  String INCLUDE_NULL_PROPERTIES = "writer.includeNullProperties";
+  String INCLUDE_NULL_PROPERTIES = ViewKeys.PREFIX
+      + ".writer.includeNullProperties";
 
   /**
    * When set to {@code true} a view whose root is of object type will be
    * wrapped in an envelope if the root element is named.
    */
-  String WRAP_OBJECT_IN_ENVELOPE = "writer.wrapObject";
+  String WRAP_OBJECT_IN_ENVELOPE = ViewKeys.PREFIX
+      + ".writer.wrapObject";
 
   /**
    * When set to {@code false} a view whose root is of array type will not be
    * wrapped in an envelope.
    */
-  String WRAP_ARRAY_IN_ENVELOPE = "writer.wrapArray";
+  String WRAP_ARRAY_IN_ENVELOPE = ViewKeys.PREFIX
+      + ".writer.wrapArray";
   
 }
