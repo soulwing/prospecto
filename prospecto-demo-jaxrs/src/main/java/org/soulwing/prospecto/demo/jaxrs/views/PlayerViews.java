@@ -101,6 +101,8 @@ public interface PlayerViews {
           .value("version")
           .value("surname")
           .value("givenNames")
+          .value("birthDate")
+              .attribute("roleRequired", "MANAGER")
           .end()
       .build();
 

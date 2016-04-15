@@ -40,7 +40,9 @@
   <url>https://github.com/soulwing/${project.artifactId}</url>
 
   <properties>
-    <web.demo.module>prospecto-demo-jaxrs</web.demo.module>
+    <demo.module>prospecto-demo-jaxrs</demo.module>
+    <demo.userName>jane</demo.userName>
+    <demo.roles>USER</demo.roles>
   </properties>
 
   <licenses>
@@ -74,9 +76,11 @@
         <version>1.1.0.Alpha7</version>
         <configuration>
           <version>9.0.2.Final</version>
-          <targetDir>${project.basedir}/${web.demo.module}/target</targetDir>
-          <filename>${web.demo.module}-${project.version}.war</filename>
+          <targetDir>${project.basedir}/${demo.module}/target</targetDir>
+          <filename>${demo.module}-${project.version}.war</filename>
           <javaOpts>
+            <javaOpt>-DuserContext.userName=${demo.userName}</javaOpt>
+            <javaOpt>-DuserContext.roles=${demo.roles}</javaOpt>
             <javaOpt>-XX:MaxPermSize=256m</javaOpt>
           </javaOpts>
         </configuration>

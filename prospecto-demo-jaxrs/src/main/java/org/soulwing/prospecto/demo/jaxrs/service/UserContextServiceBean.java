@@ -18,6 +18,9 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 
 /**
@@ -29,14 +32,21 @@ import javax.enterprise.context.ApplicationScoped;
 public class UserContextServiceBean implements UserContextService {
 
   private final UserContext context = new UserContext() {
+
+    private final String userName =
+        System.getProperty("userContext.userName", "jane");
+
+    private final List<String> roles = Arrays.asList(
+        System.getProperty("userContext.roles", "").split("\\s*[,\\s]\\s*"));
+
     @Override
     public String getUserName() {
-      return "jane";
+      return userName;
     }
 
     @Override
     public boolean hasRole(String role) {
-      return false;
+      return roles.contains(role);
     }
   };
 

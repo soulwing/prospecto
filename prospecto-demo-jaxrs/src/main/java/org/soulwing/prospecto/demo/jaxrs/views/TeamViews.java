@@ -41,6 +41,8 @@ public interface TeamViews {
               .value("surname")
               .value("givenNames")
               .value("preferredName")
+              .value("birthDate")
+                  .attribute("roleRequired", "MANAGER")
               .end()
           .value("jerseyNumber")
           .value("position")

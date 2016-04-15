@@ -26,7 +26,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.soulwing.jdbc.FluentJdbc;
+import org.soulwing.jdbc.logger.Slf4jJdbcLogger;
 import org.soulwing.jdbc.source.ResourceSQLSource;
 
 /**
@@ -38,13 +41,16 @@ import org.soulwing.jdbc.source.ResourceSQLSource;
 @TransactionAttribute(TransactionAttributeType.NEVER)
 public class DemoDataLoader {
 
+  private static final Logger logger =
+      LoggerFactory.getLogger(DemoDataLoader.class);
+
   @Resource
   private DataSource dataSource;
 
   @PostConstruct
   public void init() {
     final FluentJdbc jdbc = new FluentJdbc(dataSource);
-    jdbc.setLogger(System.out);
+    jdbc.setLogger(new Slf4jJdbcLogger(logger));
     jdbc.executeScript(ResourceSQLSource.with("classpath:"
         + DemoDataLoader.class.getSimpleName() + ".sql"));
   }
