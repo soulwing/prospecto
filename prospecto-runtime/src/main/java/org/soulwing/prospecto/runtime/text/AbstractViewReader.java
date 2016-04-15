@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewException;
+import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewDefaults;
@@ -38,7 +39,7 @@ import org.soulwing.prospecto.runtime.view.ConcreteView;
  */
 public abstract class AbstractViewReader implements ViewReader {
 
-  private final Deque<View.Event> stack = new LinkedList<>();
+  private final Deque<StackFrame> stack = new LinkedList<>();
   private final List<View.Event> events = new LinkedList<>();
 
   private final Options options;
@@ -101,7 +102,8 @@ public abstract class AbstractViewReader implements ViewReader {
    */
   protected final void beginObject(String name, String namespace) {
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT, name, namespace, null));
-    stack.push(newEvent(View.Event.Type.END_OBJECT, name, namespace, null));
+    stack.push(new StackFrame(events.size(),
+        newEvent(View.Event.Type.END_OBJECT, name, namespace, null)));
   }
 
   /**
@@ -120,7 +122,8 @@ public abstract class AbstractViewReader implements ViewReader {
    */
   protected final void beginArray(String name, String namespace) {
     events.add(newEvent(View.Event.Type.BEGIN_ARRAY, name, namespace, null));
-    stack.push(newEvent(View.Event.Type.END_ARRAY, name, namespace, null));
+    stack.push(new StackFrame(events.size(),
+        newEvent(View.Event.Type.END_ARRAY, name, namespace, null)));
   }
 
   /**
@@ -132,7 +135,7 @@ public abstract class AbstractViewReader implements ViewReader {
     if (stack.isEmpty()) {
       throw new AssertionError("stack underflow");
     }
-    events.add(stack.pop());
+    events.add(stack.pop().event);
   }
 
   /**
@@ -140,7 +143,18 @@ public abstract class AbstractViewReader implements ViewReader {
    * @param value discriminator value
    */
   protected final void discriminator(Object value) {
-    events.add(newEvent(View.Event.Type.DISCRIMINATOR,
+    if (stack.isEmpty()) {
+      throw new AssertionError("stack underflow");
+    }
+    final StackFrame frame = stack.peek();
+    if (events.size() > frame.index) {
+      final View.Event event = events.get(frame.index);
+      if (event.getType() == View.Event.Type.DISCRIMINATOR) {
+        throw new ViewInputException(
+            "an object may have only one discriminator");
+      }
+    }
+    events.add(frame.index, newEvent(View.Event.Type.DISCRIMINATOR,
         ViewDefaults.DISCRIMINATOR_NAME, null, value));
   }
 
@@ -195,6 +209,17 @@ public abstract class AbstractViewReader implements ViewReader {
   private View.Event newEvent(View.Event.Type type, String name,
       String namespace, Object value) {
     return eventFactory.newEvent(type, name, namespace, value);
+  }
+
+  private class StackFrame {
+    final int index;
+    final View.Event event;
+
+    public StackFrame(int index, View.Event event) {
+      this.index = index;
+      this.event = event;
+    }
+
   }
 
 }

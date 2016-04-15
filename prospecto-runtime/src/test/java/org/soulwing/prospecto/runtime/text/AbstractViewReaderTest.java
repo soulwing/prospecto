@@ -31,7 +31,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.event.ViewEventFactory;
 
 /**
@@ -45,6 +47,7 @@ public class AbstractViewReaderTest {
   private static final String STRING = "string";
   private static final Number NUMBER = -1;
   private static final Boolean BOOLEAN = true;
+  private static final String DISCRIMINATOR = "discriminator";
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -57,6 +60,9 @@ public class AbstractViewReaderTest {
 
   @Mock
   private View.Event endEvent;
+
+  @Mock
+  private View.Event discriminatorEvent;
 
   @Mock
   private View.Event valueEvent;
@@ -140,12 +146,76 @@ public class AbstractViewReaderTest {
         is(sameInstance(valueEvent)));
   }
 
+  @Test
+  public void testPromoteDiscriminator() throws Exception {
+    context.checking(valueExpectations(NAME, STRING));
+    context.checking(discriminatorExpectations(
+        ViewDefaults.DISCRIMINATOR_NAME, DISCRIMINATOR));
+    context.checking(new Expectations() {
+      {
+        oneOf(eventFactory).newEvent(View.Event.Type.BEGIN_OBJECT,
+            NAME, null, null);
+        will(returnValue(beginEvent));
+        oneOf(eventFactory).newEvent(View.Event.Type.END_OBJECT,
+            NAME, null, null);
+        will(returnValue(endEvent));
+        oneOf(valueEvent).getType();
+        will((returnValue(View.Event.Type.VALUE)));
+      }
+    });
+
+    viewReader.beginObject(NAME);
+    viewReader.value(NAME, STRING);
+    viewReader.discriminator(DISCRIMINATOR);
+    viewReader.end();
+
+    final Iterator<View.Event> events = viewReader.readView().iterator();
+    assertThat(events.next(), is(sameInstance(beginEvent)));
+    assertThat(events.next(), is(sameInstance(discriminatorEvent)));
+    assertThat(events.next(), is(sameInstance(valueEvent)));
+    assertThat(events.next(), is(sameInstance(endEvent)));
+  }
+
+  @Test(expected = ViewInputException.class)
+  public void testMultipleDiscriminators() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(eventFactory).newEvent(View.Event.Type.BEGIN_OBJECT,
+            NAME, null, null);
+        will(returnValue(beginEvent));
+        oneOf(eventFactory).newEvent(View.Event.Type.DISCRIMINATOR,
+            ViewDefaults.DISCRIMINATOR_NAME, null, DISCRIMINATOR);
+        will(returnValue(discriminatorEvent));
+        oneOf(eventFactory).newEvent(View.Event.Type.END_OBJECT,
+            NAME, null, null);
+        will(returnValue(endEvent));
+        oneOf(discriminatorEvent).getType();
+        will((returnValue(View.Event.Type.DISCRIMINATOR)));
+      }
+    });
+
+    viewReader.beginObject(NAME);
+    viewReader.discriminator(DISCRIMINATOR);
+    viewReader.discriminator(DISCRIMINATOR);
+  }
+
   private Expectations valueExpectations(final String name,
       final Object value) {
     return new Expectations() {
       {
         oneOf(eventFactory).newEvent(View.Event.Type.VALUE, name, null, value);
         will(returnValue(valueEvent));
+      }
+    };
+  }
+
+  private Expectations discriminatorExpectations(final String name,
+      final Object value) {
+    return new Expectations() {
+      {
+        oneOf(eventFactory).newEvent(View.Event.Type.DISCRIMINATOR,
+            name, null, value);
+        will(returnValue(discriminatorEvent));
       }
     };
   }
