@@ -26,7 +26,6 @@ import org.soulwing.prospecto.UrlResolverProducer;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
-import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.cdi.BeanManagerScope;
 import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
@@ -81,7 +80,6 @@ public class ViewContextProducerBean {
     context.getListeners().append(LoggingViewNodePropertyListener.INSTANCE);
     context.getListeners().append(RoleBasedViewNodeAcceptor.INSTANCE);
 
-    context.getOptions().put(ViewKeys.IGNORE_UNKNOWN_PROPERTIES, true);
     return context;
   }
 
