@@ -25,6 +25,8 @@ package org.soulwing.prospecto.demo.jaxrs.service;
  */
 public interface UserContext {
 
+  String getUserName();
+
   boolean hasRole(String role);
 
 }

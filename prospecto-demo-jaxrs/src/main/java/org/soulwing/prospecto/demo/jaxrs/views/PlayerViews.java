@@ -67,6 +67,7 @@ public interface PlayerViews {
           .value("preferredName")
           .value("gender")
           .value("birthDate")
+              .attribute("roleRequired", "MANAGER")
           .object("residenceAddress", ContactViews.PHYSICAL_ADDRESS)
           .object("medicalInfo", MEDICAL_INFO)
           .object("uniformInfo", UNIFORM_INFO)

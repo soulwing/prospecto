@@ -1,5 +1,5 @@
 /*
- * File created on Apr 9, 2016
+ * File created on Apr 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,17 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
-
-import java.util.Iterator;
+package org.soulwing.prospecto.demo.jaxrs.service.view;
 
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.association.AbstractAssociationManager;
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 
 /**
- * An abstract base for association managers that manage a to-many association
+ * An abstract base for association managers that manage a to-one association
  * between an object and an entity type.
  *
  * @param <T> type of the owning side of the association
@@ -34,28 +32,18 @@ import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
  *
  * @author Carl Harris
  */
-abstract class AbstractEntityToManyAssociationManager
+abstract class AbstractEntityToOneAssociationManager
     <T extends Object, E extends AbstractEntity>
-        extends AbstractAssociationManager<T, E>
-        implements ToManyAssociationManager<T, E> {
+    extends AbstractAssociationManager<T, E>
+    implements ToOneAssociationManager<T, E> {
 
   @Override
-  public E findAssociate(T owner, ViewEntity elementEntity) throws Exception {
-    if (elementEntity.get("id") == null) return null;
-    final Iterator<E> i = iterator(owner);
-    while (i.hasNext()) {
-      final E element = i.next();
-      if (element.getId().equals(elementEntity.get("id"))) {
-        return element;
-      }
-    }
-    return null;
+  public boolean isSameAssociate(T owner, ViewEntity associateEntity)
+      throws Exception {
+    final E currentAssociate = get(owner);
+    if (currentAssociate == null && associateEntity == null) return true;
+    if (currentAssociate == null || associateEntity == null) return false;
+    return currentAssociate.getId().equals(associateEntity.get("id"));
   }
-
-  @Override
-  public void begin(T owner) throws Exception {}
-
-  @Override
-  public void end(T owner) throws Exception {}
 
 }

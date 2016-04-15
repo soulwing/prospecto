@@ -1,5 +1,5 @@
 /*
- * File created on Apr 9, 2016
+ * File created on Apr 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.service.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.listener.ViewNodeAcceptor;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.demo.jaxrs.service.UserContext;
+import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
 /**
  * A {@link ViewNodeAcceptor} that applies role constraints.
@@ -47,16 +49,25 @@ class RoleBasedViewNodeAcceptor implements ViewNodeAcceptor {
     if (role == null) return true;
 
     ViewContext context = event.getContext();
-    logger.debug("role required for node {}: {}",
-        context.currentViewPathAsString(), role);
-
     UserContextService userContextService = context.get(UserContextService.class);
     UserContext user = userContextService.currentUser();
     boolean shouldVisit = user.hasRole(role);
 
-    if (!shouldVisit) {
-      logger.debug("user {} does not have role needed for node {}",
-          context.currentViewPathAsString());
+    if (logger.isDebugEnabled()) {
+      String parentPath = context.currentViewPathAsString();
+      if (parentPath.charAt(parentPath.length() - 1)
+          != ViewContext.PATH_DELIMITER) {
+        parentPath = parentPath + ViewContext.PATH_DELIMITER;
+      }
+      final String path = parentPath + event.getSource().getName();
+      if (!shouldVisit) {
+        logger.debug("user {} does not have role needed for node {}",
+            user.getUserName(), path);
+      }
+      else {
+        logger.debug("user {} is authorized for node {}",
+            user.getUserName(), path);
+      }
     }
 
     return shouldVisit;

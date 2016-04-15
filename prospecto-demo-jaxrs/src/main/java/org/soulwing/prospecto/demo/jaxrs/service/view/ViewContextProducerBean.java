@@ -1,5 +1,5 @@
 /*
- * File created on Apr 9, 2016
+ * File created on Apr 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.service.view;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -28,6 +28,8 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.DateTypeConverter;
 import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.api.scope.MutableScope;
+import org.soulwing.prospecto.cdi.BeanManagerScope;
+import org.soulwing.prospecto.demo.jaxrs.service.UserContextService;
 
 /**
  * A bean that produces {@link ViewContext} instances.
@@ -49,10 +51,11 @@ public class ViewContextProducerBean {
 
     final ViewContext context = ViewContextProducer.newContext();
 
+    context.getScopes().append(BeanManagerScope.newInstance());
+
     final MutableScope scope = context.appendScope();
 
     scope.put(UrlResolverProducer.getResolver());
-    scope.put(userContextService);
 
     context.getValueTypeConverters().append(DateTypeConverter.Builder.with()
         .format(DateTypeConverter.Format.ISO8601_DATE)

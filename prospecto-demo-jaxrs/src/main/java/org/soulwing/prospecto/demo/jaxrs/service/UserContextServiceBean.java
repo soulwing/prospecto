@@ -30,6 +30,11 @@ public class UserContextServiceBean implements UserContextService {
 
   private final UserContext context = new UserContext() {
     @Override
+    public String getUserName() {
+      return "jane";
+    }
+
+    @Override
     public boolean hasRole(String role) {
       return false;
     }

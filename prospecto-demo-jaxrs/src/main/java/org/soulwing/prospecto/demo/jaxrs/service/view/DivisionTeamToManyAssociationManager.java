@@ -1,5 +1,5 @@
 /*
- * File created on Apr 9, 2016
+ * File created on Apr 14, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,38 +16,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.demo.jaxrs.service;
+package org.soulwing.prospecto.demo.jaxrs.service.view;
 
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
-import org.soulwing.prospecto.demo.jaxrs.domain.Player;
+import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
  * A {@link ToManyAssociationManager} that manages the relationship between
- * a {@link Division} and its {@link Player} elements.
+ * a {@link Division} and its {@link Team} elements.
  *
  * @author Carl Harris
  */
-class DivisionPlayerToManyAssociationManager
-    extends AbstractEntityToManyAssociationManager<Division, Player> {
+class DivisionTeamToManyAssociationManager
+    extends AbstractEntityToManyAssociationManager<Division, Team> {
 
-  static final DivisionPlayerToManyAssociationManager INSTANCE =
-      new DivisionPlayerToManyAssociationManager();
+  static final DivisionTeamToManyAssociationManager INSTANCE =
+      new DivisionTeamToManyAssociationManager();
 
-  private DivisionPlayerToManyAssociationManager() {}
+  private DivisionTeamToManyAssociationManager() {}
 
   @Override
   public boolean supports(AssociationDescriptor descriptor) {
     return Division.class.isAssignableFrom(descriptor.getOwnerType())
-        && Player.class.isAssignableFrom(descriptor.getAssociateType());
+        && Team.class.isAssignableFrom(descriptor.getAssociateType());
   }
 
   @Override
-  public Iterator<Player> iterator(Division division) {
-    return division.getPlayers().iterator();
+  public Iterator<Team> iterator(Division division) {
+    return division.getTeams().iterator();
   }
 
   @Override
@@ -56,18 +56,18 @@ class DivisionPlayerToManyAssociationManager
   }
 
   @Override
-  public void add(Division division, Player player) throws Exception {
-    division.addPlayer(player);
+  public void add(Division division, Team team) throws Exception {
+    division.addTeam(team);
   }
 
   @Override
-  public boolean remove(Division division, Player player) throws Exception {
-    return division.removePlayer(player);
+  public boolean remove(Division division, Team team) throws Exception {
+    return division.removeTeam(team);
   }
 
   @Override
   public void clear(Division division) throws Exception {
-    division.getPlayers().clear();
+    division.getTeams().clear();
   }
 
 }
