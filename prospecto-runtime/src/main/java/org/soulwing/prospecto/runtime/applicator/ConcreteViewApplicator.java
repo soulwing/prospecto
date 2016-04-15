@@ -27,6 +27,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewApplicatorException;
+import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
@@ -38,8 +39,8 @@ import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 @SuppressWarnings("ThrowableInstanceNeverThrown")
 class ConcreteViewApplicator implements ViewApplicator {
 
-  private static final ViewApplicatorException NOT_WELL_FORMED_EXCEPTION =
-      new ViewApplicatorException("view is not well-formed");
+  private static final ViewInputException NOT_WELL_FORMED_EXCEPTION =
+      new ViewInputException("view is not well-formed");
 
   private final Class<?> modelType;
   private final RootViewEventApplicator root;
@@ -100,24 +101,32 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
   }
 
-  private InjectableViewEntity deriveInjector() throws Exception {
+  private InjectableViewEntity deriveInjector() throws ViewInputException {
     final Deque<View.Event> events = eventDeque(source);
     final View.Event triggerEvent = events.removeFirst();
     if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
       throw new ViewApplicatorException("view must start with an object");
     }
-    return (InjectableViewEntity) root.toModelValue(null, triggerEvent, events,
-        context);
+    try {
+      return (InjectableViewEntity) root.toModelValue(null, triggerEvent,
+          events, context);
+    }
+    catch (ViewInputException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ViewInputException(ex);
+    }
   }
 
   private void assertHasRootModelType(Object model) {
     if (!modelType.isInstance(model)) {
-      throw new ViewApplicatorException("model is not an instance of "
+      throw new ViewInputException("model is not an instance of "
           + modelType.getName());
     }
   }
 
-  private Deque<View.Event> eventDeque(View view) throws ViewApplicatorException {
+  private Deque<View.Event> eventDeque(View view) throws ViewInputException {
     final Deque<View.Event> deque = new LinkedList<>();
     final Iterator<View.Event> events = view.iterator();
     if (!events.hasNext()) {
@@ -126,7 +135,7 @@ class ConcreteViewApplicator implements ViewApplicator {
 
     final View.Event firstEvent = events.next();
     if (firstEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ViewApplicatorException("root view type must be an object");
+      throw new ViewInputException("root view type must be an object");
     }
 
     View.Event triggerEvent = firstEvent;
@@ -181,11 +190,11 @@ class ConcreteViewApplicator implements ViewApplicator {
         return event;
       }
       if (event.getType() == View.Event.Type.END_OBJECT) {
-        throw new ViewApplicatorException("object '" + dataKey
+        throw new ViewInputException("object '" + dataKey
             + "' not found in view envelope");
       }
       if (event.getType() != event.getType().complement()) {
-        throw new ViewApplicatorException("unexpected structure in view envelope");
+        throw new ViewInputException("unexpected structure in view envelope");
       }
     }
     throw NOT_WELL_FORMED_EXCEPTION;

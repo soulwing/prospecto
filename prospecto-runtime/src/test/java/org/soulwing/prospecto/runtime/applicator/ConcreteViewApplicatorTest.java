@@ -36,7 +36,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewApplicatorException;
+import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.view.ViewBuilder;
@@ -141,7 +141,7 @@ public class ConcreteViewApplicatorTest {
 
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWithUnexpectedObject() throws Exception {
 
@@ -157,7 +157,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWithUnexpectedArray() throws Exception {
 
@@ -173,7 +173,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWithNonObjectData() throws Exception {
 
@@ -189,7 +189,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWhenDataKeyNotFound() throws Exception {
 
@@ -203,7 +203,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWhenNotWellFormed() throws Exception {
 
@@ -216,7 +216,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateWhenNotWellFormed() throws Exception {
 
@@ -230,7 +230,7 @@ public class ConcreteViewApplicatorTest {
   }
 
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateEnvelopeWithEmptyView() throws Exception {
 
@@ -241,7 +241,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateWithArrayView() throws Exception {
 
@@ -254,7 +254,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateWithValueView() throws Exception {
 
@@ -266,7 +266,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateWithNameMismatch() throws Exception {
 
@@ -279,7 +279,7 @@ public class ConcreteViewApplicatorTest {
     new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
   }
 
-  @Test(expected = ViewApplicatorException.class)
+  @Test(expected = ViewInputException.class)
   @SuppressWarnings("unchecked")
   public void testUpdateWithNamespaceMismatch() throws Exception {
 
