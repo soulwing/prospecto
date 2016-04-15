@@ -27,10 +27,10 @@ package org.soulwing.prospecto.api.options;
 public interface WriterKeys {
 
   /**
-   * When set to {@code true} a writer will omit properties from the view
+   * When set to {@code true} a writer will include properties from the view
    * whose value is null.
    */
-  String OMIT_NULL_PROPERTIES = "writer.omitNullProperties";
+  String INCLUDE_NULL_PROPERTIES = "writer.includeNullProperties";
 
   /**
    * When set to {@code true} a view whose root is of object type will be

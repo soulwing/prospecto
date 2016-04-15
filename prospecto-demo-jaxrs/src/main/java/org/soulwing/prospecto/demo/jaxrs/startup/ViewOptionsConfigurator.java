@@ -25,7 +25,6 @@ import javax.ejb.Startup;
 import org.soulwing.prospecto.ViewOptionsRegistry;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewKeys;
-import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
  * A startup bean that configures view options.
@@ -39,7 +38,6 @@ public class ViewOptionsConfigurator {
   @PostConstruct
   public void init() {
     final Options options = ViewOptionsRegistry.getOptions();
-    options.put(WriterKeys.OMIT_NULL_PROPERTIES, true);
     options.put(ViewKeys.IGNORE_UNKNOWN_PROPERTIES, true);
   }
 

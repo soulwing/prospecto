@@ -114,9 +114,10 @@ public abstract class AbstractViewWriter implements ViewWriter {
   }
 
   private void doValue(View.Event event) throws Exception {
-    if (event.getValue() == null
-        && getOptions().isEnabled(WriterKeys.OMIT_NULL_PROPERTIES)) return;
-    onValue(event);
+    if (event.getValue() != null
+        || getOptions().isEnabled(WriterKeys.INCLUDE_NULL_PROPERTIES)) {
+      onValue(event);
+    }
   }
 
   /**

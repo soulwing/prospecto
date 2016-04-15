@@ -53,6 +53,7 @@ public abstract class ViewWriterTestBase {
 
   public ViewWriterTestBase(String fileSuffix) {
     this.fileSuffix = fileSuffix;
+    options.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
   }
 
   private ViewWriter newViewWriter(View view, OutputStream outputStream) {
@@ -172,7 +173,7 @@ public abstract class ViewWriterTestBase {
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
     addObjectProperties(events);
     events.add(newEvent(View.Event.Type.END_OBJECT));
-    options.put(WriterKeys.OMIT_NULL_PROPERTIES, true);
+    options.put(WriterKeys.INCLUDE_NULL_PROPERTIES, false);
     writeAndValidateView("omitNullView", events);
   }
 
