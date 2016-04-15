@@ -18,15 +18,9 @@
  */
 package org.soulwing.prospecto;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
-
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewContextProvider;
-import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**
  * An object that produces {@link ViewContext} instances.
@@ -55,7 +49,16 @@ public class ViewContextProducer {
    * @return view context
    */
   public static ViewContext newContext() {
-    return singleton.getInstance().provider.newContext();
+    return newContext(ViewOptionsRegistry.getOptions());
   }
-  
+
+  /**
+   * Creates a new view context.
+   * @param options context options
+   * @return view context
+   */
+  public static ViewContext newContext(Options options) {
+    return singleton.getInstance().provider.newContext(options);
+  }
+
 }

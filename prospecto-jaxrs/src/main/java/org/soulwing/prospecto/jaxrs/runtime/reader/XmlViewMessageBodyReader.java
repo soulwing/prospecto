@@ -33,7 +33,6 @@ import javax.ws.rs.ext.Provider;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReaderFactory;
-import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
  * A {@link MessageBodyReader} for XML.
@@ -45,7 +44,7 @@ import org.soulwing.prospecto.api.options.OptionsMap;
 public class XmlViewMessageBodyReader implements MessageBodyReader<View> {
 
   private static final ViewReaderFactory readerFactory =
-      ViewReaderFactoryProducer.getFactory("XML", new OptionsMap());
+      ViewReaderFactoryProducer.getFactory("XML");
 
   @Override
   public boolean isReadable(Class<?> aClass, Type type, Annotation[] annotations,

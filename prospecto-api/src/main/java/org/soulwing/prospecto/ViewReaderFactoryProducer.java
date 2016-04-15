@@ -20,7 +20,6 @@ package org.soulwing.prospecto;
 
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.spi.ViewReaderFactoryProvider;
 
 /**
@@ -46,7 +45,7 @@ public class ViewReaderFactoryProducer {
    */
   public static ViewReaderFactory getFactory(String providerName)
       throws NoSuchProviderException {
-    return getFactory(providerName, new OptionsMap());
+    return getFactory(providerName, ViewOptionsRegistry.getOptions());
   }
 
   /**

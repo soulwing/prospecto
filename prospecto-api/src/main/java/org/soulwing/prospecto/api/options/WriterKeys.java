@@ -40,7 +40,7 @@ public interface WriterKeys {
 
   /**
    * When set to {@code false} a view whose root is of array type will not be
-   * wwrapped in an envelope.
+   * wrapped in an envelope.
    */
   String WRAP_ARRAY_IN_ENVELOPE = "writer.wrapArray";
   

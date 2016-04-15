@@ -1,5 +1,5 @@
 /*
- * File created on Mar 10, 2016
+ * File created on Apr 15, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,22 +16,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.context;
+package org.soulwing.prospecto;
 
-import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.spi.ViewContextProvider;
+import org.soulwing.prospecto.api.options.OptionsMap;
 
 /**
- * A trivial {@link ViewContextProvider} implementation.
+ * A static registry for view options.
  *
  * @author Carl Harris
  */
-public class ConcreteViewContextProvider implements ViewContextProvider {
+public class ViewOptionsRegistry {
 
-  @Override
-  public ViewContext newContext(Options options) {
-    return new ConcreteViewContext(options);
+  private static Singleton<Options> singleton =
+      new Singleton<Options>() {
+        @Override
+        protected Options newInstance() {
+          return new OptionsMap();
+        }
+      };
+
+  public static Options getOptions() {
+    return singleton.getInstance();
   }
 
 }

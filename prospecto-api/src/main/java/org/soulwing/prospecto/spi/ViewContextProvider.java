@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.spi;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.options.Options;
 
 /**
  * A {@link ViewContext} provider.
@@ -32,8 +33,9 @@ public interface ViewContextProvider {
 
   /**
    * Creates a new view context.
+   * @param options context options
    * @return context
    */
-  ViewContext newContext();
+  ViewContext newContext(Options options);
 
 }

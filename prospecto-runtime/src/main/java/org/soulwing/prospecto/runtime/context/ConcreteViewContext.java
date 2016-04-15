@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.api.scope.Scopes;
@@ -65,7 +65,7 @@ class ConcreteViewContext implements ScopedViewContext {
   private final AssociationManagerService collectionManagers =
       new LinkedListAssociationManagerService();
 
-  private final OptionsMap options = new OptionsMap();
+  private final Options options;
 
   private static class ScopeFrame extends ConcreteMutableScope {
 
@@ -89,16 +89,17 @@ class ConcreteViewContext implements ScopedViewContext {
 
   private final Deque<ScopeFrame> scopeStack = new LinkedList<>();
 
-  ConcreteViewContext() {
+  ConcreteViewContext(Options options) {
+    this.options = options;
   }
 
   ConcreteViewContext(ViewContext source) {
+    this(source.getOptions());
     this.scopes.toList().addAll(source.getScopes().toList());
     this.listeners.toList().addAll(source.getListeners().toList());
     this.valueTypeConverters.toList().addAll(source.getValueTypeConverters().toList());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
-    this.options.toMap().putAll(source.getOptions().toMap());
   }
 
   @Override
@@ -146,7 +147,7 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public OptionsMap getOptions() {
+  public Options getOptions() {
     return options;
   }
 

@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.discriminator.SimpleClassNameDiscriminatorStrategy;
+import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.scope.MutableScope;
 
 /**
@@ -35,7 +36,7 @@ import org.soulwing.prospecto.api.scope.MutableScope;
  */
 public class ConcreteScopedViewContextFactoryTest {
 
-  private ViewContext source = new ConcreteViewContext();
+  private ViewContext source = new ConcreteViewContext(new OptionsMap());
 
   @Test
   public void testDefaultDiscriminatorStrategy() throws Exception {

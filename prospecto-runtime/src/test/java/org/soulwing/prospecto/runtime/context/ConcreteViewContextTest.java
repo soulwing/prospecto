@@ -29,13 +29,16 @@ import static org.hamcrest.Matchers.sameInstance;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.listener.ViewListener;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
@@ -61,7 +64,10 @@ public class ConcreteViewContextTest {
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
-  private ConcreteViewContext viewContext = new ConcreteViewContext();
+  @Mock
+  private Options options;
+
+  private ConcreteViewContext viewContext;
 
   interface MockScope0Type {
   }
@@ -70,6 +76,11 @@ public class ConcreteViewContextTest {
   }
 
   interface MockScope2Type {
+  }
+
+  @Before
+  public void setUp() throws Exception {
+    viewContext = new ConcreteViewContext(options);
   }
 
   @Test
@@ -348,7 +359,6 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().append(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
     viewContext.getAssociationManagers().append(associationManager);
-    viewContext.getOptions().put(OPTION_KEY, OPTION_VALUE);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
@@ -356,7 +366,6 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().toList().clear();
     viewContext.getReferenceResolvers().toList().clear();
     viewContext.getAssociationManagers().toList().clear();
-    viewContext.getOptions().toMap().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
@@ -366,8 +375,7 @@ public class ConcreteViewContextTest {
         contains(resolver));
     assertThat(contextCopy.getAssociationManagers().toList(),
         contains(associationManager));
-    assertThat(contextCopy.getOptions().get(OPTION_KEY),
-        is(sameInstance(OPTION_VALUE)));
+    assertThat(contextCopy.getOptions(), is(sameInstance(options)));
   }
 
 }
