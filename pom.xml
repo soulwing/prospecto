@@ -130,6 +130,11 @@
         <artifactId>fluent-jdbc</artifactId>
         <version>1.1.4</version>
       </dependency>
+      <dependency>
+        <groupId>org.soulwing</groupId>
+        <artifactId>bean-manager-locator</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -140,6 +145,7 @@
     <module>prospecto-jaxrs</module>
     <module>prospecto-demo-jaxrs</module>
     <module>prospecto-matchers</module>
+    <module>prospecto-cdi-scope</module>
   </modules>
 
 </project>
