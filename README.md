@@ -3,7 +3,7 @@ Prospecto
 
 [![Build Status](https://travis-ci.org/soulwing/prospecto.svg?branch=master)](https://travis-ci.org/soulwing/prospecto)
 
-Prospecto is a toolkit for producing client views of a domain model in an
+Prospecto is a toolkit for producing client views of a domain model in as
 Java application that provides a RESTful web API.
 
 Demo
@@ -11,6 +11,13 @@ Demo
 
 Until I can write a more reasonable README, the best way to learn what
 Prospecto can do is to look at a demo.
+
+### Setup
+
+1. Clone this repository into some convenient location.
+2. Install the stupidly simple RESTful client [rc] 
+   (https://github.com/soulwing/rc) which you'll use to interact with the
+   web service in the demo.
 
 ### Running the Demo
 
@@ -24,28 +31,30 @@ mvn wildfly:run
 
 This will build Prospecto and will run it's JAX-RS demo module 
 `prospecto-demo-jaxrs` in a Wildfly container. After the demo is running you
-can use `curl` to access its resources.
+can use `rc` to access its resources.
 
 ```
-curl -H "Accept: application/json" http://localhost:8080/prospecto-demo/api/leagues
+rc get /prospecto-demo/api
 ```
 
 This should produce some JSON.
 
-If you look carefully at the data returned by `curl` you'll see that it 
-contains some `href` elements for other resources. For example, `/api/leagues/2`.
-If you append this path to the base URL for the application, you can fetch the
-corresponding resource.  For example:
+If you look carefully at the data returned by `rc` you'll see that it 
+contains some `href` elements for other resources. For example, 
+`/prospecto-demo/api/leagues` and `/prospecto-demo/api/contacts`. Any time
+you see an `href` element in a response from the demo, you can use the 
+absolute path it specifies to interact with another demo resource.  
+For example:
 
 ```
-curl -H "Accept: application/json" http://localhost:8080/prospecto-demo/api/leagues/2
+rc get /prospecto-demo/api/leagues
 ```
 
 Prospecto has built-in support for producing views using JSON or XML. You can
 ask for XML instead of JSON as follows.
 
 ```
-curl -H "Accept: application/xml" http://localhost:8080/prospecto-demo/api/leagues
+rc -xml get /prospecto-demo/api/leagues
 ```
 
 
@@ -54,7 +63,9 @@ curl -H "Accept: application/xml" http://localhost:8080/prospecto-demo/api/leagu
 Investigate the source code for the demo at  `prospecto-demo-jaxrs/src/main/java`.
 
 Start in the `domain` package. You'll see a domain model for representing 
-softball or baseball leagues, with JPA annotations for persistence.
+softball or baseball leagues, with JPA annotations for persistence. See the
+[UML diagram] (prospecto-demo-jaxrs/doc/domain-model.pdf) of the 
+major components to get acquainted with the model. 
 
 The `startup` package contains a bean that loads some demo data into the 
 database when the application starts.
