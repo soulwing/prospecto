@@ -186,14 +186,12 @@ class XmlViewReader extends AbstractViewReader {
   }
 
   private void value(Frame frame) throws XMLStreamException {
-    final String type = frame.getType();
+    final String type = frame.getType() != null ?
+        frame.getType() : XmlViewConstants.XS_STRING;
     final String text = frame.getText();
-    if (type == null) {
-      if (text.isEmpty()) {
-        nullValue(frame.getName());
-        return;
-      }
-      throw new XMLStreamException("xsi:type is required");
+    if (text.isEmpty()) {
+      nullValue(frame.getName());
+      return;
     }
     switch (type) {
       case XmlViewConstants.XS_BOOLEAN:

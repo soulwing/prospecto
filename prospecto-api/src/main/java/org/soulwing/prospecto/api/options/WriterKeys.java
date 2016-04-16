@@ -46,5 +46,12 @@ public interface WriterKeys {
    */
   String WRAP_ARRAY_IN_ENVELOPE = ViewKeys.PREFIX
       + ".writer.wrapArray";
-  
+
+  /**
+   * When set to {@code true} an XML view will include the appropriate
+   * {@code xsi:type} attribute on each value element.
+   */
+  String INCLUDE_XML_XSI_TYPE = ViewKeys.PREFIX
+      + ".writer.includeXmlXsiType";
+
 }

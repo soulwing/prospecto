@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.testing.matcher;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -258,6 +259,10 @@ public class ViewMatchers {
       if (expected == null ^ actual == null) return false;
       Class<?> expectedType = expected.getClass();
       actual = Coerce.toValueOfType(expectedType, actual);
+      if (expected instanceof Calendar) {
+        return ((Calendar) expected).getTime().equals(
+            ((Calendar) actual).getTime());
+      }
       return expected.equals(actual);
     }
 

@@ -44,6 +44,9 @@ import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.api.discriminator.UnqualifiedClassNameDiscriminatorStrategy;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.scope.MutableScope;
 
 /**
@@ -63,7 +66,7 @@ public class EditorTestBase {
 
   protected void validate(ViewTemplate template)
       throws IOException {
-    validate(template, Representation.JSON);
+//    validate(template, Representation.JSON);
     validate(template, Representation.XML);
   }
 
@@ -121,8 +124,13 @@ public class EditorTestBase {
     private final ViewWriterFactory writerFactory;
 
     Representation() {
-      readerFactory = ViewReaderFactoryProducer.getFactory(this.name());
-      writerFactory = ViewWriterFactoryProducer.getFactory(this.name());
+      final Options options = new OptionsMap();
+      options.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
+      options.put(WriterKeys.INCLUDE_XML_XSI_TYPE, true);
+      readerFactory = ViewReaderFactoryProducer.getFactory(
+          this.name(), options);
+      writerFactory = ViewWriterFactoryProducer.getFactory(
+          this.name(), options);
     }
 
     public String resourceName(String name) {

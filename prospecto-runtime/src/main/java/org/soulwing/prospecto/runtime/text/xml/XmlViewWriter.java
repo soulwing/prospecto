@@ -40,6 +40,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -277,8 +278,10 @@ class XmlViewWriter extends AbstractViewWriter {
   private void writeString(String name, String namespace, String type,
       String value) throws XMLStreamException {
     writeStartElement(name, namespace, XmlViewConstants.VALUE_QNAME);
-    writer.writeAttribute(XmlViewConstants.XSI_NAMESPACE,
-        XmlViewConstants.XSI_TYPE_NAME, type);
+    if (getOptions().isEnabled(WriterKeys.INCLUDE_XML_XSI_TYPE)) {
+      writer.writeAttribute(XmlViewConstants.XSI_NAMESPACE,
+          XmlViewConstants.XSI_TYPE_NAME, type);
+    }
     writer.writeCharacters(value);
     writer.writeEndElement();
   }

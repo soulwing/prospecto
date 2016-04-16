@@ -54,6 +54,7 @@ public abstract class ViewWriterTestBase {
   public ViewWriterTestBase(String fileSuffix) {
     this.fileSuffix = fileSuffix;
     options.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
+    options.put(WriterKeys.INCLUDE_XML_XSI_TYPE, true);
   }
 
   private ViewWriter newViewWriter(View view, OutputStream outputStream) {
