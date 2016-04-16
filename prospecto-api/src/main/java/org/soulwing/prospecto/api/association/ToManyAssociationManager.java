@@ -54,27 +54,34 @@ public interface ToManyAssociationManager<T, E>
    */
   int size(T owner) throws Exception;
 
-  E findAssociate(T owner, ViewEntity elementEntity) throws Exception;
-
   /**
-   * Adds an element to the associated collection.
-   * @param owner association owner
-   * @param element the element to add to the collection
+   * Finds the associate of {@code owner} that matches the given entity.
+   * @param owner owner of the association
+   * @param associateEntity entity that describes a possible associate
+   * @return matching associate instance or {@code null} if no match found
    * @throws Exception
    */
-  void add(T owner, E element) throws Exception;
+  E findAssociate(T owner, ViewEntity associateEntity) throws Exception;
 
   /**
-   * Removes an element from the associated collection.
+   * Adds an associate from the collection.
    * @param owner association owner
-   * @param element the element to remove from the collection
-   * @return {@code true} if an element was removed
+   * @param associate the associate to add to the collection
    * @throws Exception
    */
-  boolean remove(T owner, E element) throws Exception;
+  void add(T owner, E associate) throws Exception;
 
   /**
-   * Removes all elements from the associated collection.
+   * Removes an associate from the collection.
+   * @param owner association owner
+   * @param associate the associate to remove from the collection
+   * @return {@code true} if an associate was removed
+   * @throws Exception
+   */
+  boolean remove(T owner, E associate) throws Exception;
+
+  /**
+   * Removes all associates from the collection.
    * @param owner association owner
    * @throws Exception
    */

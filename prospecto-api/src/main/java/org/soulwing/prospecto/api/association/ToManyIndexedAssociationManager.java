@@ -29,14 +29,60 @@ import org.soulwing.prospecto.api.ViewEntity;
 public interface ToManyIndexedAssociationManager<T, E>
     extends ToManyAssociationManager<T, E> {
 
-  int indexOf(T owner, ViewEntity elementEntity) throws Exception;
+  /**
+   * Finds the index of the associate of the given owner that is logically
+   * equivalent to given view entity.
+   * @param owner the subject owner
+   * @param associateEntity a view entity representing the state of the
+   *    associate in the view
+   * @return index of the associate of {@code code} that is logically equivalent
+   *    to the given view entity or {@code -1} if no such associate exists
+   * @throws Exception
+   */
+  int indexOf(T owner, ViewEntity associateEntity) throws Exception;
 
+
+  /**
+   * Gets the associate of the given owner at a specified index.
+   * @param owner the subject owner
+   * @param index index of the desired associate
+   * @return associate
+   * @throws IndexOutOfBoundsException if not
+   *    {@code 0 <= index < number of associates}
+   * @throws Exception
+   */
   E get(T owner, int index) throws Exception;
 
-  void set(T owner, int index, E element) throws Exception;
+  /**
+   * Sets (replaces) the associate of the given owner at a specified index.
+   * @param owner the subject owner
+   * @param index index of the associate to set
+   * @param associate replacement associate
+   * @throws IndexOutOfBoundsException if not
+   *    {@code 0 <= index < number of associates}
+   * @throws Exception
+   */
+  void set(T owner, int index, E associate) throws Exception;
 
-  void add(T owner, int index, E element) throws Exception;
+  /**
+   * Adds (inserts) an associate of the given owner at a specified index.
+   * @param owner the subject owner
+   * @param index index at which the new associate will be inserted
+   * @param associate replacement associate
+   * @throws IndexOutOfBoundsException if not
+   *    {@code 0 <= index <= number of associates}
+   * @throws Exception
+   */
+  void add(T owner, int index, E associate) throws Exception;
 
+  /**
+   * Removes an associate of the given owner at a specified index.
+   * @param owner the subject owner
+   * @param index index of the associate to remove
+   * @throws IndexOutOfBoundsException if not
+   *    {@code 0 <= index < number of associates}
+   * @throws Exception
+   */
   void remove(T owner, int index) throws Exception;
 
 }

@@ -53,13 +53,13 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
   }
 
   @Override
-  public void add(Object target, Object value) throws Exception {
-    get(target).add(value);
+  public void add(Object target, Object associate) throws Exception {
+    get(target).add(associate);
   }
 
   @Override
-  public boolean remove(Object target, Object value) throws Exception {
-    return get(target).remove(value);
+  public boolean remove(Object target, Object associate) throws Exception {
+    return get(target).remove(associate);
   }
 
   @Override

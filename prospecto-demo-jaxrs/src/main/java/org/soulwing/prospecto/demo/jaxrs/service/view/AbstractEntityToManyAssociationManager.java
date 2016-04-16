@@ -40,12 +40,12 @@ abstract class AbstractEntityToManyAssociationManager
         implements ToManyAssociationManager<T, E> {
 
   @Override
-  public E findAssociate(T owner, ViewEntity elementEntity) throws Exception {
-    if (elementEntity.get("id") == null) return null;
+  public E findAssociate(T owner, ViewEntity associateEntity) throws Exception {
+    if (associateEntity.get("id") == null) return null;
     final Iterator<E> i = iterator(owner);
     while (i.hasNext()) {
       final E element = i.next();
-      if (element.getId().equals(elementEntity.get("id"))) {
+      if (element.getId().equals(associateEntity.get("id"))) {
         return element;
       }
     }

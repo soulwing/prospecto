@@ -32,22 +32,6 @@ public abstract class AbstractToManyIndexedAssociationManager<T, E>
     implements ToManyIndexedAssociationManager<T, E> {
 
   /**
-   * Finds the associate of the given owner that is logically equivalent
-   * to given view entity.
-   * <p>
-   * This implementation instantiates and populates an instance of type
-   * {@code E} using the implementation of {@link #newAssociate(Object, ViewEntity)}
-   * on the supertype and compares it to each associate of {@code owner}
-   * using {@link #equals(Object)} until a match is found.
-   *
-   * @param owner the subject owner
-   * @param associateEntity a view entity representing the state of the
-   *    associate in the view
-   * @return the associate of {@code code} that is logically equivalent to
-   *    the given view entity or {@code null} if no such entity exists
-   * @throws Exception
-   */
-  /**
    * Finds the index of the associate of the given owner that is logically
    * equivalent to given view entity.
    * <p>

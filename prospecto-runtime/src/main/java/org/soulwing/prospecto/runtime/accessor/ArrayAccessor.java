@@ -70,26 +70,26 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
-  public void set(Object target, int index, Object value) throws Exception {
-    getAsList(target, TransactionStatus.OPTIONAL).set(index, value);
+  public void set(Object target, int index, Object associate) throws Exception {
+    getAsList(target, TransactionStatus.OPTIONAL).set(index, associate);
   }
 
   @Override
-  public void add(Object target, Object value) throws Exception {
+  public void add(Object target, Object associate) throws Exception {
     assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).add(value);
+    getAsList(target, TransactionStatus.MANDATORY).add(associate);
   }
 
   @Override
-  public boolean remove(Object target, Object value) throws Exception {
+  public boolean remove(Object target, Object associate) throws Exception {
     assertHasTransaction();
-    return getAsList(target, TransactionStatus.MANDATORY).remove(value);
+    return getAsList(target, TransactionStatus.MANDATORY).remove(associate);
   }
 
   @Override
-  public void add(Object target, int index, Object value) throws Exception {
+  public void add(Object target, int index, Object associate) throws Exception {
     assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).add(index, value);
+    getAsList(target, TransactionStatus.MANDATORY).add(index, associate);
   }
 
   @Override

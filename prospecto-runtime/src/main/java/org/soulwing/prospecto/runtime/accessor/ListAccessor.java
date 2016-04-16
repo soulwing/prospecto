@@ -56,23 +56,23 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
-  public void set(Object target, int index, Object value) throws Exception {
-    get(target).set(index, value);
+  public void set(Object target, int index, Object associate) throws Exception {
+    get(target).set(index, associate);
   }
 
   @Override
-  public void add(Object target, Object value) throws Exception {
-    get(target).add(value);
+  public void add(Object target, Object associate) throws Exception {
+    get(target).add(associate);
   }
 
   @Override
-  public boolean remove(Object target, Object value) throws Exception {
-    return get(target).remove(value);
+  public boolean remove(Object target, Object associate) throws Exception {
+    return get(target).remove(associate);
   }
 
   @Override
-  public void add(Object target, int index, Object value) throws Exception {
-    get(target).add(index, value);
+  public void add(Object target, int index, Object associate) throws Exception {
+    get(target).add(index, associate);
   }
 
   @Override
