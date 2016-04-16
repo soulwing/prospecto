@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.xml.bind.DatatypeConverter;
+
 /**
  * A type coercion utility.
  *
@@ -47,38 +49,71 @@ public class Coerce {
     if (type == null) throw new NullPointerException("type is required");
     if (type.isInstance(value)) return (T) value;
 
-    if (boolean.class.isAssignableFrom(type) && value instanceof Boolean) {
-      return (T) value;
+    if (String.class.equals(type)) {
+      return (T) value.toString();
+    }
+
+    if (boolean.class.isAssignableFrom(type)) {
+      if (value instanceof Boolean) {
+        return (T) value;
+      }
+      if (value instanceof String) {
+        return (T) Boolean.valueOf((String) value);
+      }
     }
     if (Enum.class.isAssignableFrom(type) && value instanceof String) {
       return coerceUsingValueOf(type, value);
     }
-    if ((Integer.class.equals(type) || int.class.equals(type))
-        && value instanceof Number) {
-      return (T) Integer.valueOf(((Number) value).intValue());
+    if ((Integer.class.equals(type) || int.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Integer.valueOf(((Number) value).intValue());
+      }
+      if (value instanceof String) {
+        return (T) Integer.valueOf((String) value);
+      }
     }
-    if ((Long.class.equals(type) || long.class.equals(type))
-        && value instanceof Number) {
-      return (T) Long.valueOf(((Number) value).longValue());
+    if ((Long.class.equals(type) || long.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Long.valueOf(((Number) value).longValue());
+      }
+      if (value instanceof String) {
+        return (T) Long.valueOf((String) value);
+      }
     }
-    if ((Byte.class.equals(type) || byte.class.equals(type))
-        && value instanceof Number) {
-      return (T) Byte.valueOf(((Number) value).byteValue());
+    if ((Byte.class.equals(type) || byte.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Byte.valueOf(((Number) value).byteValue());
+      }
+      if (value instanceof String) {
+        return (T) Byte.valueOf((String) value);
+      }
     }
-    if ((Short.class.equals(type) || short.class.equals(type))
-        && value instanceof Number) {
-      return (T) Short.valueOf(((Number) value).shortValue());
+    if ((Short.class.equals(type) || short.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Short.valueOf(((Number) value).shortValue());
+      }
+      if (value instanceof String) {
+        return (T) Short.valueOf((String) value);
+      }
     }
     if (BigInteger.class.equals(type) && value instanceof Number) {
       return (T) BigInteger.valueOf(((Number) value).longValue());
     }
-    if ((Double.class.equals(type) || double.class.equals(type))
-        && value instanceof Number) {
-      return (T) Double.valueOf(((Number) value).doubleValue());
+    if ((Double.class.equals(type) || double.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Double.valueOf(((Number) value).doubleValue());
+      }
+      if (value instanceof String) {
+        return (T) Double.valueOf((String) value);
+      }
     }
-    if ((Float.class.equals(type) || float.class.equals(type))
-        && value instanceof Number) {
-      return (T) Float.valueOf(((Number) value).floatValue());
+    if ((Float.class.equals(type) || float.class.equals(type))) {
+      if (value instanceof Number) {
+        return (T) Float.valueOf(((Number) value).floatValue());
+      }
+      if (value instanceof String) {
+        return (T) Float.valueOf((String) value);
+      }
     }
     if (BigDecimal.class.equals(type)
         && (value instanceof Double || value instanceof Float)) {
@@ -87,13 +122,23 @@ public class Coerce {
     if (BigDecimal.class.equals(type) && value instanceof Number) {
       return (T) BigDecimal.valueOf(((Number) value).longValue());
     }
-    if (Date.class.isAssignableFrom(type) && value instanceof Number) {
-      return coerceUsingConstructor(type, ((Number) value).longValue());
+    if (Date.class.isAssignableFrom(type)) {
+      if (value instanceof Number) {
+        return coerceUsingConstructor(type, ((Number) value).longValue());
+      }
+      if (value instanceof String) {
+        return (T) DatatypeConverter.parseDateTime((String) value).getTime();
+      }
     }
-    if (Calendar.class.isAssignableFrom(type) && value instanceof Number) {
-      final Calendar calendar = Calendar.getInstance();
-      calendar.setTimeInMillis(((Number) value).longValue());
-      return (T) calendar;
+    if (Calendar.class.isAssignableFrom(type)) {
+      if (value instanceof Number) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(((Number) value).longValue());
+        return (T) calendar;
+      }
+      if (value instanceof String) {
+        return (T)  DatatypeConverter.parseDateTime((String) value);
+      }
     }
     if (UUID.class.equals(type) && value instanceof String) {
       return (T) UUID.fromString((String) value);

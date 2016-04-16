@@ -25,9 +25,12 @@ import static org.hamcrest.Matchers.is;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
 
@@ -55,9 +58,42 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToBooleanPrimitive() throws Exception {
+    coerceAndValidate(boolean.class, Boolean.TRUE.toString(), true);
+  }
+
+  @Test
+  public void testCoerceStringToBoolean() throws Exception {
+    coerceAndValidate(Boolean.class, Boolean.TRUE.toString(), Boolean.TRUE);
+  }
+
+  @Test
   public void testCoerceNumberToDate() throws Exception {
     final Date date = new Date();
     coerceAndValidate(Date.class, date.getTime(), date);
+  }
+
+  @Test
+  public void testCoerceStringToDate() throws Exception {
+    final Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MILLISECOND, 0);
+    coerceAndValidate(Date.class,
+        DatatypeConverter.printDateTime(calendar), calendar.getTime());
+  }
+
+  @Test
+  public void testCoerceNumberToCalendar() throws Exception {
+    final Calendar calendar = Calendar.getInstance();
+    coerceAndValidate(Calendar.class, calendar.getTimeInMillis(), calendar);
+  }
+
+  @Test
+  public void testCoerceStringToCalendar() throws Exception {
+    final Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MILLISECOND, 0);
+    final Calendar actual = Coerce.toValueOfType(Calendar.class,
+        DatatypeConverter.printDateTime(calendar));
+    assertThat(actual.getTime(), is(equalTo(calendar.getTime())));
   }
 
   @Test
@@ -66,8 +102,18 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToByte() throws Exception {
+    coerceAndValidate(Byte.class, "-1", (byte) -1);
+  }
+
+  @Test
   public void testCoerceNumberToBytePrimitive() throws Exception {
     coerceAndValidate(byte.class, -1L, (byte) -1);
+  }
+
+  @Test
+  public void testCoerceStringToBytePrimitive() throws Exception {
+    coerceAndValidate(byte.class, "-1", (byte) -1);
   }
 
   @Test
@@ -76,8 +122,18 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToShort() throws Exception {
+    coerceAndValidate(Short.class, "-1", (short) -1);
+  }
+
+  @Test
   public void testCoerceNumberToShortPrimitive() throws Exception {
     coerceAndValidate(short.class, -1L, (short) -1);
+  }
+
+  @Test
+  public void testCoerceStringToShortPrimitive() throws Exception {
+    coerceAndValidate(short.class, "-1", (short) -1);
   }
 
   @Test
@@ -86,8 +142,18 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToInteger() throws Exception {
+    coerceAndValidate(Integer.class, "-1", -1);
+  }
+
+  @Test
   public void testCoerceNumberToIntegerPrimitive() throws Exception {
     coerceAndValidate(int.class, -1L, -1);
+  }
+
+  @Test
+  public void testCoerceStringToIntegerPrimitive() throws Exception {
+    coerceAndValidate(int.class, "-1", -1);
   }
 
   @Test
@@ -96,8 +162,18 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToLong() throws Exception {
+    coerceAndValidate(Long.class, "-1", -1L);
+  }
+
+  @Test
   public void testCoerceNumberToLongPrimitive() throws Exception {
     coerceAndValidate(long.class, -1L, -1L);
+  }
+
+  @Test
+  public void testCoerceStringToLongPrimitive() throws Exception {
+    coerceAndValidate(long.class, "-1", -1L);
   }
 
   @Test
@@ -106,8 +182,18 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToFloat() throws Exception {
+    coerceAndValidate(Float.class, "-1.0", -1.0f);
+  }
+
+  @Test
   public void testCoerceNumberToFloatPrimitive() throws Exception {
     coerceAndValidate(float.class, -1L, -1.0f);
+  }
+
+  @Test
+  public void testCoerceStringToFloatPrimitive() throws Exception {
+    coerceAndValidate(float.class, "-1.0", -1.0f);
   }
 
   @Test
@@ -116,13 +202,28 @@ public class CoerceTest {
   }
 
   @Test
+  public void testCoerceStringToDouble() throws Exception {
+    coerceAndValidate(Double.class, "-1.0", -1.0);
+  }
+
+  @Test
   public void testCoerceNumberToDoublePrimitive() throws Exception {
     coerceAndValidate(double.class, -1L, -1.0);
   }
 
   @Test
+  public void testCoerceStringToDoublePrimitive() throws Exception {
+    coerceAndValidate(double.class, "-1.0", -1.0);
+  }
+
+  @Test
   public void testCoerceNumberToBigInteger() throws Exception {
     coerceAndValidate(BigInteger.class, -1L, BigInteger.ONE.negate());
+  }
+
+  @Test
+  public void testCoerceStringToBigInteger() throws Exception {
+    coerceAndValidate(BigInteger.class, "-1", BigInteger.ONE.negate());
   }
 
   @Test
@@ -133,6 +234,11 @@ public class CoerceTest {
   @Test
   public void testCoerceFloatingPointNumberToBigDecimal() throws Exception {
     coerceAndValidate(BigDecimal.class, -1.0, BigDecimal.valueOf(1.0).negate());
+  }
+
+  @Test
+  public void testCoerceStringToBigDecimal() throws Exception {
+    coerceAndValidate(BigDecimal.class, "-1.0", BigDecimal.valueOf(1.0).negate());
   }
 
   @Test
