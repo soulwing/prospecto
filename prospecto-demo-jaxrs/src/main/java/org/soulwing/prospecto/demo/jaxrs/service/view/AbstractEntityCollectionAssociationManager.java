@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.association.AbstractAssociationManager;
+import org.soulwing.prospecto.api.association.AbstractCollectionAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
 
@@ -34,10 +35,9 @@ import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
  *
  * @author Carl Harris
  */
-abstract class AbstractEntityToManyAssociationManager
+abstract class AbstractEntityCollectionAssociationManager
     <T extends Object, E extends AbstractEntity>
-        extends AbstractAssociationManager<T, E>
-        implements ToManyAssociationManager<T, E> {
+        extends AbstractCollectionAssociationManager<T, E> {
 
   @Override
   public E findAssociate(T owner, ViewEntity associateEntity) throws Exception {
@@ -51,11 +51,5 @@ abstract class AbstractEntityToManyAssociationManager
     }
     return null;
   }
-
-  @Override
-  public void begin(T owner) throws Exception {}
-
-  @Override
-  public void end(T owner) throws Exception {}
 
 }

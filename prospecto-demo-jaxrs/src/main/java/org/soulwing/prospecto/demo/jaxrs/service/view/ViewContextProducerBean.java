@@ -66,13 +66,13 @@ public class ViewContextProducerBean {
         .build());
 
     context.getAssociationManagers()
-        .append(LeagueDivisionToManyAssociationManager.INSTANCE);
+        .append(LeagueDivisionAssociationManager.INSTANCE);
 
     context.getAssociationManagers()
-        .append(DivisionTeamToManyAssociationManager.INSTANCE);
+        .append(DivisionTeamAssociationManager.INSTANCE);
 
     context.getAssociationManagers()
-        .append(DivisionPlayerToManyAssociationManager.INSTANCE);
+        .append(DivisionPlayerAssociationManager.INSTANCE);
 
     context.getReferenceResolvers().append(referenceResolver);
 

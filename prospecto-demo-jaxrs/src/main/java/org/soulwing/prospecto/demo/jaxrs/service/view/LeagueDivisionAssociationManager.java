@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service.view;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
@@ -31,13 +31,13 @@ import org.soulwing.prospecto.demo.jaxrs.domain.League;
  *
  * @author Carl Harris
  */
-class LeagueDivisionToManyAssociationManager
-    extends AbstractEntityToManyAssociationManager<League, Division> {
+class LeagueDivisionAssociationManager
+    extends AbstractEntityCollectionAssociationManager<League, Division> {
 
-  static final LeagueDivisionToManyAssociationManager INSTANCE =
-      new LeagueDivisionToManyAssociationManager();
+  static final LeagueDivisionAssociationManager INSTANCE =
+      new LeagueDivisionAssociationManager();
 
-  private LeagueDivisionToManyAssociationManager() {}
+  private LeagueDivisionAssociationManager() {}
 
   @Override
   public boolean supports(AssociationDescriptor descriptor) {
@@ -46,18 +46,8 @@ class LeagueDivisionToManyAssociationManager
   }
 
   @Override
-  public Iterator<Division> iterator(League league) {
-    return league.getDivisions().iterator();
-  }
-
-  @Override
-  public int size(League league) throws Exception {
-    return league.getDivisions().size();
-  }
-
-  @Override
-  public void add(League league, Division division) throws Exception {
-    league.addDivision(division);
+  public boolean add(League league, Division division) throws Exception {
+    return league.addDivision(division);
   }
 
   @Override
@@ -67,7 +57,15 @@ class LeagueDivisionToManyAssociationManager
 
   @Override
   public void clear(League league) throws Exception {
+    for (final Division division : league.getDivisions()) {
+      division.setLeague(null);
+    }
     league.getDivisions().clear();
+  }
+
+  @Override
+  protected Collection<Division> getAssociates(League league) throws Exception {
+    return league.getDivisions();
   }
 
 }

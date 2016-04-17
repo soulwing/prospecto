@@ -37,7 +37,6 @@ public interface TeamViews {
           .value("version")
           .reference("player", Player.class)
               .value("id")
-                  .allow(AccessMode.WRITE)
               .value("surname")
               .value("givenNames")
               .value("preferredName")

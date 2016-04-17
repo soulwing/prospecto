@@ -18,56 +18,55 @@
  */
 package org.soulwing.prospecto.demo.jaxrs.service.view;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.demo.jaxrs.domain.Division;
 import org.soulwing.prospecto.demo.jaxrs.domain.Player;
+import org.soulwing.prospecto.demo.jaxrs.domain.Team;
 
 /**
  * A {@link ToManyAssociationManager} that manages the relationship between
- * a {@link Division} and its {@link Player} elements.
+ * a {@link Division} and its {@link Team} elements.
  *
  * @author Carl Harris
  */
-class DivisionPlayerToManyAssociationManager
-    extends AbstractEntityToManyAssociationManager<Division, Player> {
+class DivisionTeamAssociationManager
+    extends AbstractEntityCollectionAssociationManager<Division, Team> {
 
-  static final DivisionPlayerToManyAssociationManager INSTANCE =
-      new DivisionPlayerToManyAssociationManager();
+  static final DivisionTeamAssociationManager INSTANCE =
+      new DivisionTeamAssociationManager();
 
-  private DivisionPlayerToManyAssociationManager() {}
+  private DivisionTeamAssociationManager() {}
 
   @Override
   public boolean supports(AssociationDescriptor descriptor) {
     return Division.class.isAssignableFrom(descriptor.getOwnerType())
-        && Player.class.isAssignableFrom(descriptor.getAssociateType());
+        && Team.class.isAssignableFrom(descriptor.getAssociateType());
   }
 
   @Override
-  public Iterator<Player> iterator(Division division) {
-    return division.getPlayers().iterator();
+  public boolean add(Division division, Team team) throws Exception {
+    return division.addTeam(team);
   }
 
   @Override
-  public int size(Division division) throws Exception {
-    return division.getTeams().size();
-  }
-
-  @Override
-  public void add(Division division, Player player) throws Exception {
-    division.addPlayer(player);
-  }
-
-  @Override
-  public boolean remove(Division division, Player player) throws Exception {
-    return division.removePlayer(player);
+  public boolean remove(Division division, Team team) throws Exception {
+    return division.removeTeam(team);
   }
 
   @Override
   public void clear(Division division) throws Exception {
-    division.getPlayers().clear();
+    for (final Team team : division.getTeams()) {
+      team.setDivision(null);
+    }
+    division.getTeams().clear();
+  }
+
+  @Override
+  protected Collection<Team> getAssociates(Division division) throws Exception {
+    return division.getTeams();
   }
 
 }
