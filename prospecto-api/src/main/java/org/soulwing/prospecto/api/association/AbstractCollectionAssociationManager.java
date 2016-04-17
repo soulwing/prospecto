@@ -46,8 +46,8 @@ public abstract class AbstractCollectionAssociationManager<T, E>
   }
 
   @Override
-  public void add(T owner, E associate) throws Exception {
-    getOrInitAssociates(owner).add(associate);
+  public boolean add(T owner, E associate) throws Exception {
+    return getOrInitAssociates(owner).add(associate);
   }
 
   @Override

@@ -93,9 +93,9 @@ public class ArrayAccessor
   }
 
   @Override
-  public void add(Object target, Object associate) throws Exception {
+  public boolean add(Object target, Object associate) throws Exception {
     assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).add(associate);
+    return getAsList(target, TransactionStatus.MANDATORY).add(associate);
   }
 
   @Override

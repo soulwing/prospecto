@@ -67,9 +67,10 @@ public interface ToManyAssociationManager<T, E>
    * Adds an associate from the collection.
    * @param owner association owner
    * @param associate the associate to add to the collection
+   * @return {@code true} if an associate was added
    * @throws Exception
    */
-  void add(T owner, E associate) throws Exception;
+  boolean add(T owner, E associate) throws Exception;
 
   /**
    * Removes an associate from the collection.
