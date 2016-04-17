@@ -26,18 +26,23 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.association.AbstractToManyIndexedAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * An accessor for the elements of an array.
  *
  * @author Carl Harris
  */
-public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
+public class ArrayAccessor
+    extends AbstractToManyIndexedAssociationManager<Object, Object>
+    implements IndexedMultiValuedAccessor {
 
+  private final Accessor delegate;
+  private final Class<?> componentType;
   private List<Object> buffer;
 
   public ArrayAccessor(Accessor delegate, Class<?> componentType) {
-    super(delegate, componentType);
     if (!delegate.getDataType().getComponentType()
         .isAssignableFrom(componentType)) {
       throw new IllegalArgumentException("component type "
@@ -45,6 +50,19 @@ public class ArrayAccessor extends AbstractIndexedMultiValuedAccessor {
           + " is not compatible with array type "
           + delegate.getDataType().getComponentType());
     }
+
+    this.delegate = delegate;
+    this.componentType = componentType;
+  }
+
+  @Override
+  public Class<?> getComponentType() {
+    return componentType;
+  }
+
+  @Override
+  public boolean supports(AssociationDescriptor descriptor) {
+    return true;
   }
 
   @Override

@@ -19,20 +19,36 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.association.AbstractListAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * A {@link MultiValuedAccessor} for a {@link List}.
  *
  * @author Carl Harris
  */
-public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
+public class ListAccessor extends AbstractListAssociationManager<Object, Object>
+    implements IndexedMultiValuedAccessor {
+
+  private final Accessor delegate;
+  private final Class<?> componentType;
 
   public ListAccessor(Accessor delegate, Class<?> componentType) {
-    super(delegate, componentType);
+    this.delegate = delegate;
+    this.componentType = componentType;
+  }
+
+  @Override
+  public Class<?> getComponentType() {
+    return componentType;
+  }
+
+  @Override
+  public boolean supports(AssociationDescriptor descriptor) {
+    return true;
   }
 
   @Override
@@ -41,53 +57,15 @@ public class ListAccessor extends AbstractIndexedMultiValuedAccessor {
   }
 
   @Override
-  public Iterator<Object> iterator(Object source) throws Exception {
-    return get(source).iterator();
-  }
-
-  @Override
-  public int size(Object source) throws Exception {
-    return get(source).size();
-  }
-
-  @Override
-  public Object get(Object source, int index) throws Exception {
-    return get(source).get(index);
-  }
-
-  @Override
-  public void set(Object target, int index, Object associate) throws Exception {
-    get(target).set(index, associate);
-  }
-
-  @Override
-  public void add(Object target, Object associate) throws Exception {
-    get(target).add(associate);
-  }
-
-  @Override
-  public boolean remove(Object target, Object associate) throws Exception {
-    return get(target).remove(associate);
-  }
-
-  @Override
-  public void add(Object target, int index, Object associate) throws Exception {
-    get(target).add(index, associate);
-  }
-
-  @Override
-  public void remove(Object target, int index) throws Exception {
-    get(target).remove(index);
-  }
-
-  @Override
-  public void clear(Object target) throws Exception {
-    get(target).clear();
-  }
-
   @SuppressWarnings("unchecked")
-  private List<Object> get(Object source) throws Exception {
-    return (List<Object>) delegate.get(source);
+  protected List<Object> getAssociates(Object owner) throws Exception {
+    return (List<Object>) delegate.get(owner);
+  }
+
+  @Override
+  protected void setAssociates(Object owner, List<Object> associates)
+      throws Exception {
+    delegate.set(owner, associates);
   }
 
 }

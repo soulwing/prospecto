@@ -20,19 +20,26 @@ package org.soulwing.prospecto.runtime.accessor;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Iterator;
 
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.association.AbstractCollectionAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
  * An accessor for the elements of a collection.
  *
  * @author Carl Harris
  */
-public class CollectionAccessor extends AbstractMultiValuedAccessor {
+public class CollectionAccessor
+    extends AbstractCollectionAssociationManager<Object, Object>
+    implements MultiValuedAccessor {
+
+  private final Accessor delegate;
+  private final Class<?> componentType;
 
   public CollectionAccessor(Accessor delegate, Class<?> componentType) {
-    super(delegate, componentType);
+    this.delegate = delegate;
+    this.componentType = componentType;
   }
 
   @Override
@@ -41,35 +48,25 @@ public class CollectionAccessor extends AbstractMultiValuedAccessor {
   }
 
   @Override
-  public Iterator<Object> iterator(Object source) throws Exception {
-    final Collection<Object> collection = get(source);
-    if (collection == null) return null;
-    return collection.iterator();
+  public Class<?> getComponentType() {
+    return componentType;
   }
 
   @Override
-  public int size(Object source) throws Exception {
-    return get(source).size();
+  public boolean supports(AssociationDescriptor descriptor) {
+    return true;
   }
 
   @Override
-  public void add(Object target, Object associate) throws Exception {
-    get(target).add(associate);
-  }
-
-  @Override
-  public boolean remove(Object target, Object associate) throws Exception {
-    return get(target).remove(associate);
-  }
-
-  @Override
-  public void clear(Object target) throws Exception {
-    get(target).clear();
-  }
-
   @SuppressWarnings("unchecked")
-  private Collection<Object> get(Object source) throws Exception {
-    return (Collection<Object>) delegate.get(source);
+  protected Collection<Object> getAssociates(Object owner) throws Exception {
+    return (Collection<Object>) delegate.get(owner);
+  }
+
+  @Override
+  protected void setAssociates(Object owner, Collection<Object> associates)
+      throws Exception {
+    delegate.set(owner, associates);
   }
 
 }

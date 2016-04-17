@@ -51,13 +51,15 @@ public abstract class AbstractToManyIndexedAssociationManager<T, E>
   public int indexOf(T owner, ViewEntity associateEntity) throws Exception {
     E element = newAssociate(owner, associateEntity);
     final Iterator<E> i = iterator(owner);
-    int index = 0;
-    while (i.hasNext()) {
-      final E candidate = i.next();
-      if (candidate.equals(element)) {
-        return index;
+    if (i != null) {
+      int index = 0;
+      while (i.hasNext()) {
+        final E candidate = i.next();
+        if (candidate.equals(element)) {
+          return index;
+        }
+        index++;
       }
-      index++;
     }
     return -1;
   }

@@ -52,10 +52,12 @@ public abstract class AbstractToManyAssociationManager<T, E>
   public E findAssociate(T owner, ViewEntity associateEntity) throws Exception {
     E associate = newAssociate(owner, associateEntity);
     final Iterator<E> i = iterator(owner);
-    while (i.hasNext()) {
-      E candidate = i.next();
-      if (candidate.equals(associate)) {
-        return candidate;
+    if (i != null) {
+      while (i.hasNext()) {
+        E candidate = i.next();
+        if (candidate.equals(associate)) {
+          return candidate;
+        }
       }
     }
     return null;
