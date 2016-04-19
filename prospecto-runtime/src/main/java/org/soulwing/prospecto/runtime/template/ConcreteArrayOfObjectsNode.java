@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
+import java.beans.Introspector;
 import java.util.EnumSet;
 import java.util.Iterator;
 
@@ -84,7 +85,10 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
 
   @Override
   public String getElementName() {
-    return elementName;
+    if (elementName != null) return elementName;
+    if (multiValuedAccessor == null) return null;
+    return Introspector.decapitalize(
+        multiValuedAccessor.getComponentType().getSimpleName());
   }
 
   @Override

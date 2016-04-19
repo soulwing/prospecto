@@ -36,6 +36,7 @@ import static org.soulwing.prospecto.testing.matcher.ViewMatchers.whereValue;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.withName;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.withNoName;
 
+import java.beans.Introspector;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,9 +103,13 @@ public class ObjectTest {
 
     assertThat(template.generateView(model, context),
         hasEventSequence(
-            eventOfType(BEGIN_OBJECT, withNoName(), inDefaultNamespace(),
+            eventOfType(BEGIN_OBJECT,
+                withName(Introspector.decapitalize(MockType1.class.getSimpleName())),
+                inDefaultNamespace(),
                 whereValue(is(nullValue()))),
-            eventOfType(END_OBJECT, withNoName(), inDefaultNamespace(),
+            eventOfType(END_OBJECT,
+                withName(Introspector.decapitalize(MockType1.class.getSimpleName())),
+                inDefaultNamespace(),
                 whereValue(is(nullValue())))
         )
     );

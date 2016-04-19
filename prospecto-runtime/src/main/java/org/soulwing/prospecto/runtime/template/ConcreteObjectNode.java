@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
+import java.beans.Introspector;
+
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
@@ -38,6 +40,15 @@ public class ConcreteObjectNode extends ConcreteContainerNode
    */
   public ConcreteObjectNode(String name, String namespace, Class<?> modelType) {
     super(name, namespace, modelType);
+  }
+
+  @Override
+  public String getName() {
+    String name = super.getName();
+    if (name == null) {
+      name = Introspector.decapitalize(getModelType().getSimpleName());
+    }
+    return name;
   }
 
   @Override
