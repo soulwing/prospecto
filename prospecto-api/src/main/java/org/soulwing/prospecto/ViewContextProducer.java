@@ -23,7 +23,7 @@ import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewContextProvider;
 
 /**
- * An object that produces {@link ViewContext} instances.
+ * A singleton object that produces {@link ViewContext} instances.
  *
  * @author Carl Harris
  */

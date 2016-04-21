@@ -24,7 +24,7 @@ import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**
- * An object that produces {@link ViewTemplateBuilder} instances.
+ * A singleton object that produces {@link ViewTemplateBuilder} instances.
  *
  * @author Carl Harris
  */

@@ -24,7 +24,7 @@ import org.soulwing.prospecto.api.url.UrlResolver;
 import org.soulwing.prospecto.spi.UrlResolverProvider;
 
 /**
- * An object that produces {@link UrlResolver} instances.
+ * A singleton object that produces {@link UrlResolver} instances.
  *
  * @author Carl Harris
  */
