@@ -33,6 +33,7 @@ import static org.soulwing.prospecto.testing.matcher.ViewMatchers.whereValue;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.withName;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.withNoName;
 
+import java.beans.Introspector;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +52,9 @@ import org.soulwing.prospecto.api.ViewTemplate;
 public class ArrayOfObjectsTest {
 
   public static final String NAME = "root";
+  public static final String DEFAULT_NAME =
+      Introspector.decapitalize(MockType1.class.getSimpleName());
+
   public static final String NAMESPACE = "namespace";
   public static final String CHILD = "child";
   public static final String CHILDREN = "children";
@@ -162,8 +166,10 @@ public class ArrayOfObjectsTest {
         hasEventSequence(
             eventOfType(BEGIN_ARRAY, withNoName(), inDefaultNamespace(),
                 whereValue(is(nullValue()))),
-            eventOfType(BEGIN_OBJECT, withNoName(), inDefaultNamespace()),
-            eventOfType(END_OBJECT, withNoName(), inDefaultNamespace()),
+            eventOfType(BEGIN_OBJECT, withName(DEFAULT_NAME),
+                inDefaultNamespace()),
+            eventOfType(END_OBJECT, withName(DEFAULT_NAME),
+                inDefaultNamespace()),
             eventOfType(END_ARRAY, withNoName(), inDefaultNamespace(),
                 whereValue(is(nullValue())))
         )
@@ -176,8 +182,8 @@ public class ArrayOfObjectsTest {
         hasEventSequence(
             eventOfType(BEGIN_ARRAY, withName(NAME), inDefaultNamespace(),
                 whereValue(is(nullValue()))),
-            eventOfType(BEGIN_OBJECT, withNoName(), inDefaultNamespace()),
-            eventOfType(END_OBJECT, withNoName(), inDefaultNamespace()),
+            eventOfType(BEGIN_OBJECT, withName(DEFAULT_NAME), inDefaultNamespace()),
+            eventOfType(END_OBJECT, withName(DEFAULT_NAME), inDefaultNamespace()),
             eventOfType(END_ARRAY, withName(NAME), inDefaultNamespace(),
                 whereValue(is(nullValue())))
         )

@@ -86,9 +86,7 @@ public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
   @Override
   public String getElementName() {
     if (elementName != null) return elementName;
-    if (multiValuedAccessor == null) return null;
-    return Introspector.decapitalize(
-        multiValuedAccessor.getComponentType().getSimpleName());
+    return Introspector.decapitalize(getModelType().getSimpleName());
   }
 
   @Override
