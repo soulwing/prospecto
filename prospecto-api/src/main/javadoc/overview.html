@@ -1,0 +1,62 @@
+<!--
+  ~ File created on Apr 21, 2016
+  ~
+  ~ Copyright (c) 2016 Carl Harris, Jr
+  ~ and others as noted
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+>
+<body>
+<p>
+  Prospecto is a toolkit for producing textual views of the information in the
+  domain model of a Java application.
+</p>
+<p>
+  Using Prospecto, you write _view templates_ in Java using a fluent builder API
+  to describe the model objects and properties to include in a view. You can
+  then
+  your templates to generate views which Prospecto can easily transform into
+  JSON,
+  XML, and practically any other structured representation format. ASN.1 anyone?
+</p>
+<p>
+  In addition to supporting the generation of views to produce a textual
+  representation of your domain model, Prospecto can also apply the information
+  in
+  a textual representation of your model to create or update domain model
+  instances. In other words, you can use Prospecto to facilitate "editing" of
+  your
+  domain model instances, as well as creating new model instances.
+</p>
+<p>
+  When Prospecto applies a view to create or update a model instance, it does so
+  transitively with respect to associated model objects. So you can even edit
+  objects that are composed inside of other objects; e.g. when a one-to-one
+  relationship exists between a model entity and another model entity. The
+  transitive update also applies to collections/arrays of model objects;
+  e.g. where you have a one-to-many relationship between a model entity and a
+  collection/array of related entities. Prospecto's collection update supports
+  adding new objects to a collection, edit existing objects in the collection,
+  and removing objects from the the collection.
+</p>
+<p>
+  When applying a view to update a model instance, Prospecto uses standard
+  JavaBeans mechanisms for property injection and collection management. Often a
+  domain model provides its own methods to manage relationships between
+  entities.
+  For these situations, Prospecto provides powerful hooks to allow you to
+  customize the model update process to ensure that your domain model is updated
+  according to the API it exposes.
+</p>
+</body>
