@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.api;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ import org.soulwing.prospecto.api.scope.Scopes;
  *
  * @author Carl Harris
  */
-public interface ViewContext {
+public interface ViewContext extends MutableScope {
 
   /**
    * Delimiter used in the string representation of a view path
@@ -122,12 +121,12 @@ public interface ViewContext {
 
   /**
    * Gets the collection of association managers that will be consulted to
-   * manage collections in a view during view applicaiton.
+   * manage collections in a view during view application.
    * <p>
    * The returned collection can be manipulated directly to add or remove
    * managers as needed. Manipulating the collection during view generation
    * or view application has no effect.
-   * @return
+   * @return association manager collection
    */
   AssociationManagers getAssociationManagers();
 
@@ -229,15 +228,16 @@ public interface ViewContext {
    * any unnamed object
    * @param name name of the object
    * @param obj the object to associate with {@code name}
+   * @return the object that was replaced
    */
-  void put(String name, Object obj);
+  Object put(String name, Object obj);
 
   /**
-   * Puts all of the objects from the given collection into the current frame
+   * Puts all of the objects from the given iterable into the current frame
    * of the context stack.
    * @param objs the collection of values to put
    */
-  void putAll(Collection<?> objs);
+  void putAll(Iterable<?> objs);
 
   /**
    * Puts all of the named objects from the given map into the current frame

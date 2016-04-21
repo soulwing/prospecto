@@ -19,7 +19,6 @@
 package org.soulwing.prospecto.runtime.context;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -255,12 +254,12 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public void put(String name, Object obj) {
-    topFrame().put(name, obj);
+  public Object put(String name, Object obj) {
+    return topFrame().put(name, obj);
   }
 
   @Override
-  public void putAll(Collection<?> objs) {
+  public void putAll(Iterable<?> objs) {
     topFrame().putAll(objs);
   }
 
