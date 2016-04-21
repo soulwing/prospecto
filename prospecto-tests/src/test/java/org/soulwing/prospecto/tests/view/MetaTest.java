@@ -37,9 +37,9 @@ import java.util.Collections;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
-import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.meta.MetadataHandler;
 import org.soulwing.prospecto.api.template.MetaNode;
 
 /**

@@ -24,13 +24,13 @@ import java.util.Map;
 
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
-import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.meta.LiteralMetadataHandler;
+import org.soulwing.prospecto.api.meta.MetadataHandler;
 import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;

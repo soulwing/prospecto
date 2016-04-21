@@ -1,5 +1,5 @@
 /*
- * File created on Apr 8, 2016
+ * File created on Apr 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,8 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.meta;
 
+import org.soulwing.prospecto.api.UndefinedValue;
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.template.MetaNode;
 
 /**

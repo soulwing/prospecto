@@ -18,8 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.meta;
 
-import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.meta.MetadataHandler;
 import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.api.url.UrlResolver;
 

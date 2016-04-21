@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.api.meta;
 
-import org.soulwing.prospecto.api.MetadataHandler;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.template.MetaNode;
 

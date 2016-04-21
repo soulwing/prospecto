@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.api.template;
 
-import org.soulwing.prospecto.api.MetadataHandler;
+import org.soulwing.prospecto.api.meta.MetadataHandler;
 
 /**
  * A {@link ViewNode} that represents a metadata value.

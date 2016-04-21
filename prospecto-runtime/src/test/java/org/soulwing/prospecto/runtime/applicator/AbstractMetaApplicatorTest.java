@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.sameInstance;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
-import org.soulwing.prospecto.api.MetadataHandler;
+import org.soulwing.prospecto.api.meta.MetadataHandler;
 import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
