@@ -91,12 +91,14 @@ public interface ToManyAssociationManager<T, E>
   /**
    * Begins a transaction for updating the associated collection.
    * @param owner association owner
+   * @throws Exception
    */
   void begin(T owner) throws Exception;
 
   /**
    * Ends a transaction that has updated the associated collection.
    * @param owner association owner
+   * @throws Exception
    */
   void end(T owner) throws Exception;
 

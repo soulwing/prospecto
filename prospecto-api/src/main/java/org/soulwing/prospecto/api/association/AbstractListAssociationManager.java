@@ -31,6 +31,17 @@ import java.util.List;
 public abstract class AbstractListAssociationManager<T, E>
     extends AbstractToManyIndexedAssociationManager<T, E> {
 
+  /**
+   * Gets an iterator for the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list and if the result is not null, returns its iterator.
+   *
+   * @param owner association owner
+   * @return {@link #getAssociates(Object)}.{@link List#iterator()} or
+   *     {@code null} if the collection of associates is {@code null}
+   * @throws Exception
+   */
   @Override
   public Iterator<E> iterator(T owner) throws Exception {
     final List<E> associates = getAssociates(owner);
@@ -38,6 +49,17 @@ public abstract class AbstractListAssociationManager<T, E>
     return associates.iterator();
   }
 
+  /**
+   * Gets the size of the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list and if the result is not null, returns its size.
+   *
+   * @param owner association owner
+   * @return {@link #getAssociates(Object)}.{@link List#size()} or
+   *     {@code 0} if the list of associates is {@code null}
+   * @throws Exception
+   */
   @Override
   public int size(T owner) throws Exception {
     final List<E> associates = getAssociates(owner);
@@ -55,26 +77,93 @@ public abstract class AbstractListAssociationManager<T, E>
     getOrInitAssociates(owner).set(index, associate);
   }
 
+  /**
+   * Adds an associate to the list of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list of associates.  If {@code null} it creates a new list
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, List)}). The associate is added
+   * using {@link List#add(Object)}.
+   *
+   * @param owner association owner
+   * @param associate the associate to add to the collection
+   * @return same as {@link List#add(Object)}
+   * @throws Exception
+   */
   @Override
   public boolean add(T owner, E associate) throws Exception {
     return getOrInitAssociates(owner).add(associate);
   }
 
+  /**
+   * Adds an associate to the list of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list of associates.  If {@code null} it creates a new list
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, List)}). The associate is added
+   * using {@link List#add(int, Object)}.
+   *
+   * @param owner the subject owner
+   * @param index index at which the new associate will be inserted
+   * @param associate replacement associate
+   * @throws Exception
+   */
   @Override
   public void add(T owner, int index, E associate) throws Exception {
     getOrInitAssociates(owner).add(index, associate);
   }
 
+  /**
+   * Removes an associate from the list of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list of associates.  If {@code null} it creates a new list
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, List)}). The associate is added
+   * using {@link List#remove(Object)}.
+   *
+   * @param owner association owner
+   * @param associate the associate to remove from the collection
+   * @return same as {@link List#remove(Object)}
+   * @throws Exception
+   */
   @Override
   public boolean remove(T owner, E associate) throws Exception {
     return getOrInitAssociates(owner).remove(associate);
   }
 
+  /**
+   * Removes an associate from the list of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list of associates.  If {@code null} it creates a new list
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, List)}). The associate is removed
+   * using {@link List#remove(int)}.
+   *
+   * @param owner the subject owner
+   * @param index index of the associate to remove
+   * @throws Exception
+   */
   @Override
   public void remove(T owner, int index) throws Exception {
     getOrInitAssociates(owner).remove(index);
   }
 
+  /**
+   * Clears the list of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * list of associates.  If {@code null} it creates a new list
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, List)}). The list is cleared
+   * using {@link List#clear()}.
+   *
+   * @param owner association owner
+   * @throws Exception
+   */
   @Override
   public void clear(T owner) throws Exception {
     getOrInitAssociates(owner).clear();

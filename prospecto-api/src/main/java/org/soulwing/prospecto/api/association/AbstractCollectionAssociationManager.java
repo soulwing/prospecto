@@ -31,6 +31,17 @@ import java.util.LinkedHashSet;
 public abstract class AbstractCollectionAssociationManager<T, E>
     extends AbstractToManyAssociationManager<T, E> {
 
+  /**
+   * Gets an iterator for the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * collection and if the result is not null, returns its iterator.
+   *
+   * @param owner association owner
+   * @return {@link #getAssociates(Object)}.{@link Collection#iterator()} or
+   *     {@code null} if the collection of associates is {@code null}
+   * @throws Exception
+   */
   @Override
   public Iterator<E> iterator(T owner) throws Exception {
     final Collection<E> associates = getAssociates(owner);
@@ -38,6 +49,17 @@ public abstract class AbstractCollectionAssociationManager<T, E>
     return associates.iterator();
   }
 
+  /**
+   * Gets the size of the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * collection and if the result is not null, returns its size.
+   *
+   * @param owner association owner
+   * @return {@link #getAssociates(Object)}.{@link Collection#size()} or
+   *     {@code 0} if the collection of associates is {@code null}
+   * @throws Exception
+   */
   @Override
   public int size(T owner) throws Exception {
     final Collection<E> associates = getAssociates(owner);
@@ -45,16 +67,56 @@ public abstract class AbstractCollectionAssociationManager<T, E>
     return associates.size();
   }
 
+  /**
+   * Adds an associate to the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * collection of associates.  If {@code null} it creates a new collection
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, Collection)}). The associate is added
+   * using {@link Collection#add(Object)}.
+   *
+   * @param owner association owner
+   * @param associate the associate to add to the collection
+   * @return same as {@link Collection#add(Object)}
+   * @throws Exception
+   */
   @Override
   public boolean add(T owner, E associate) throws Exception {
     return getOrInitAssociates(owner).add(associate);
   }
 
+  /**
+   * Removes an associate to the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * collection of associates.  If {@code null} it creates a new collection
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, Collection)}). The associate is removed
+   * using {@link Collection#remove(Object)}.
+   *
+   * @param owner association owner
+   * @param associate the associate to add to the collection
+   * @return same as {@link Collection#remove(Object)}
+   * @throws Exception
+   */
   @Override
   public boolean remove(T owner, E associate) throws Exception {
     return getOrInitAssociates(owner).remove(associate);
   }
 
+  /**
+   * Clears the collection of associates.
+   * <p>
+   * This implementation calls {@link #getAssociates(Object)} to get the
+   * collection of associates.  If {@code null} it creates a new collection
+   * and sets it on the owner (using {@link #newAssociates()}  and
+   * {@link #setAssociates(Object, Collection)}). The collection is cleared
+   * using {@link Collection#clear()}.
+   *
+   * @param owner association owner
+   * @throws Exception
+   */
   @Override
   public void clear(T owner) throws Exception {
     getOrInitAssociates(owner).clear();

@@ -41,7 +41,6 @@ public interface ToManyIndexedAssociationManager<T, E>
    */
   int indexOf(T owner, ViewEntity associateEntity) throws Exception;
 
-
   /**
    * Gets the associate of the given owner at a specified index.
    * @param owner the subject owner

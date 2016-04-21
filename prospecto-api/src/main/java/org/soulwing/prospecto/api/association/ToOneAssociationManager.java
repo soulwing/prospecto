@@ -29,10 +29,31 @@ import org.soulwing.prospecto.api.ViewEntity;
 public interface ToOneAssociationManager<T, E>
     extends AssociationManager<T, E> {
 
+  /**
+   * Tests whether the given view entity representing an associate is logically
+   * the same object as the owner's current associate.
+   * @param owner the subject owner
+   * @param associateEntity view entity representing the associate in the view
+   * @return {@code true} if {@code associateEntity} is logically the same
+   *   associate as the current associate of {@code owner}
+   * @throws Exception
+   */
   boolean isSameAssociate(T owner, ViewEntity associateEntity) throws Exception;
 
+  /**
+   * Gets the current associate.
+   * @param owner the subject owner
+   * @return associate or {@code null} if there is no associate
+   * @throws Exception
+   */
   E get(T owner) throws Exception;
 
+  /**
+   * Sets the current associate.
+   * @param owner the subject owner
+   * @param associate the associate to set
+   * @throws Exception
+   */
   void set(T owner, E associate) throws Exception;
 
 }

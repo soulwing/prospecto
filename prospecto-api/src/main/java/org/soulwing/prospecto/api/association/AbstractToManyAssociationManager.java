@@ -63,9 +63,23 @@ public abstract class AbstractToManyAssociationManager<T, E>
     return null;
   }
 
+  /**
+   * Begins a transaction for updating the associated collection.
+   * <p>
+   * This implementation does nothing. Subclasses should override as needed.
+   * @param owner association owner
+   * @throws Exception
+   */
   @Override
   public void begin(T owner) throws Exception {}
 
+  /**
+   * Ends a transaction that has updated the associated collection.
+   * <p>
+   * This implementation does nothing. Subclasses should override as needed.
+   * @param owner association owner
+   * @throws Exception
+   */
   @Override
   public void end(T owner) throws Exception {}
 
