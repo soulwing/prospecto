@@ -1,5 +1,5 @@
 /*
- * File created on Mar 23, 2016
+ * File created on Apr 21, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,12 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.listener;
-
 /**
- * A marker that identifies an event for a {@link ViewListener}.
+ * Association manager API
  *
- * @author Carl Harris
+ * An association manager is responsible for managing to-one and to-many
+ * associations between model types. Default implementations of this API use
+ * JavaBeans accessors and the methods of the JDK Collections API to manage
+ * associations.
+ * <p>
+ * If your domain model exposes is own API for managing associations between
+ * its model types, you can implement an association manager and register it
+ * with a {@link org.soulwing.prospecto.api.ViewContext} when applying views
+ * to update your model instances.
  */
-public interface ViewEvent {
-}
+package org.soulwing.prospecto.api.association;

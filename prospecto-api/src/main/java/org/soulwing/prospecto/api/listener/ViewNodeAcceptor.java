@@ -19,8 +19,31 @@
 package org.soulwing.prospecto.api.listener;
 
 /**
- * A listener that is notified before nodes are visited during view generation
- * or view application.
+ * A listener that is notified before nodes are visited during a view processing
+ * lifecycle.
+ * <p>
+ * When generating a view or applying a view to update a model, the
+ * {@link ViewNodeAcceptor} instances registered with the view context are
+ * consulted for each node in the view template's node tree.  In the order
+ * in which they are registered, each acceptor is given an opportunity to allow
+ * or deny the visitation of a given node. If all acceptors return {@code true}
+ * from the {@link #shouldVisitNode(ViewNodeEvent)} method, the node is visited.
+ * The first registered acceptor to return {@code false} effectively vetoes the
+ * visitation of the node, and no other acceptors are consulted.
+ * <p>
+ * A listener of this type can be used to filter subtrees from a generated
+ * view, or to ignore subtrees of a view provided as input when a view is
+ * applied to update a model. If an acceptor vetoes the visitation of a given
+ * node, none of the descendants of that node will be visited during view
+ * processing.
+ * <p>
+ * The event object passed to the listener methods identifies the subject
+ * view template node for the event. During view generation, the
+ * {@link ViewNodeEvent#getModel() model} property of the event is the model
+ * object that corresponds to the parent of the subject node.
+ * During view application, the model property of the event is a
+ * {@link org.soulwing.prospecto.api.ViewEntity} that represents an instance
+ * of the object type that corresponds to the parent of the subject node.
  *
  * @author Carl Harris
  */
