@@ -116,9 +116,9 @@ public interface View extends Iterable<View.Event> {
     /**
      * Gets the value associated with this event.
      * <p>
-     * Only events of type {@link Type#VALUE} and {@link Type#URL} have a
+     * Only events of type {@link Type#VALUE} and {@link Type#META} have a
      * value, and the value is of a simple type (e.g. String, Number, Date,
-     * Boolean, etc). The data type of a an event of type {@link Type#URL} is
+     * Boolean, etc). The data type of a an event of type {@link Type#META} is
      * always String.
      *
      * @return value or {@code null} if this event has no associated value
@@ -152,6 +152,7 @@ public interface View extends Iterable<View.Event> {
      * @param value value to associate with {@code name}
      */
     void putProperty(String name, Object value);
+
   }
 
   /**

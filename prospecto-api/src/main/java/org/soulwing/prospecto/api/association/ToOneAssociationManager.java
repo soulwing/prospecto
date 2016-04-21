@@ -22,7 +22,7 @@ import org.soulwing.prospecto.api.ViewEntity;
 
 /**
  * An object that during view application manages the association between an
- * object and associated object.
+ * object and an associated object.
  *
  * @author Carl Harris
  */
