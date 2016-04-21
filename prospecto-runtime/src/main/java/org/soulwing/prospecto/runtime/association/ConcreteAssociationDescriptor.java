@@ -25,17 +25,15 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
  *
  * @author Carl Harris
  */
-public class ConcreteAssociationDescriptor implements AssociationDescriptor {
+class ConcreteAssociationDescriptor implements AssociationDescriptor {
 
   private final Class<?> ownerType;
   private final Class<?> associateType;
-  private final String associateName;
 
-  public ConcreteAssociationDescriptor(Class<?> ownerType,
-      Class<?> associateType, String associateName) {
+  ConcreteAssociationDescriptor(Class<?> ownerType,
+      Class<?> associateType) {
     this.ownerType = ownerType;
     this.associateType = associateType;
-    this.associateName = associateName;
   }
 
   @Override
@@ -46,11 +44,6 @@ public class ConcreteAssociationDescriptor implements AssociationDescriptor {
   @Override
   public Class<?> getAssociateType() {
     return associateType;
-  }
-
-  @Override
-  public String getAssociateName() {
-    return associateName;
   }
 
 }
