@@ -18,7 +18,7 @@
  */
 /**
  * View node listener API
- *
+ * <p>
  * When generating a view or applying a view to update a model, several types
  * of listeners can be use to allow application code to observe and/or
  * manipulate the process. All listeners implement the

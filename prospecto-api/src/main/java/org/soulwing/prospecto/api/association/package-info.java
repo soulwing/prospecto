@@ -18,7 +18,7 @@
  */
 /**
  * Association manager API
- *
+ * <p>
  * An association manager is responsible for managing to-one and to-many
  * associations between model types. Default implementations of this API use
  * JavaBeans accessors and the methods of the JDK Collections API to manage
