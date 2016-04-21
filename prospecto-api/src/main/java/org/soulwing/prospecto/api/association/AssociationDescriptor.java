@@ -37,4 +37,10 @@ public interface AssociationDescriptor {
    */
   Class<?> getAssociateType();
 
+  /**
+   * Gets the property name of the association in the owner type.
+   * @return association property name
+   */
+  String getPropertyName();
+
 }

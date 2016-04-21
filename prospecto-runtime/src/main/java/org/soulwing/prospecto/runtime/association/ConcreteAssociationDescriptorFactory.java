@@ -39,7 +39,7 @@ class ConcreteAssociationDescriptorFactory
   public AssociationDescriptor newDescriptor(UpdatableNode node) {
     assertParentIsNotNull(node);
     return new ConcreteAssociationDescriptor(node.getParent().getModelType(),
-            node.getModelType());
+            node.getModelType(), node.getPropertyName());
   }
 
   private void assertParentIsNotNull(ViewNode node) {

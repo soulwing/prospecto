@@ -29,11 +29,13 @@ class ConcreteAssociationDescriptor implements AssociationDescriptor {
 
   private final Class<?> ownerType;
   private final Class<?> associateType;
+  private final String propertyName;
 
   ConcreteAssociationDescriptor(Class<?> ownerType,
-      Class<?> associateType) {
+      Class<?> associateType, String propertyName) {
     this.ownerType = ownerType;
     this.associateType = associateType;
+    this.propertyName = propertyName;
   }
 
   @Override
@@ -44,6 +46,11 @@ class ConcreteAssociationDescriptor implements AssociationDescriptor {
   @Override
   public Class<?> getAssociateType() {
     return associateType;
+  }
+
+  @Override
+  public String getPropertyName() {
+    return propertyName;
   }
 
 }
