@@ -42,6 +42,6 @@ public interface Constants {
   String URL_VALUE = "url";
   String DISCRIMINATOR_VALUE = "discriminator";
 
-  String NAMESPACE = "urn:org.soulwing.prospecto:test";
+  String NAMESPACE = "urn:prospecto.soulwing.org:test";
 
 }

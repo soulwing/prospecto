@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<v:object xmlns="urn:org.soulwing.prospecto:test"
-  xmlns:v="urn:org.soulwing.prospecto:view"
+<v:object xmlns="urn:prospecto.soulwing.org:test"
+  xmlns:v="urn:prospecto.soulwing.org:view"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   v:type="object">

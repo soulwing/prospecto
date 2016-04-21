@@ -31,14 +31,14 @@ public interface XmlViewConstants {
   enum ElementType {
     VALUE,
     OBJECT,
-    ARRAY;
+    ARRAY
   }
 
-  String VIEW_NAMESPACE = "urn:org.soulwing.prospecto:view";
+  String VIEW_NAMESPACE = "urn:prospecto.soulwing.org:view";
 
-  String META_NAMESPACE = "urn:org.soulwing.prospecto:meta";
+  String META_NAMESPACE = "urn:prospecto.soulwing.org:meta";
 
-  String DEFAULT_NAMESPACE = "urn:org.soulwing.prospecto:default";
+  String DEFAULT_NAMESPACE = "urn:prospecto.soulwing.org:default";
 
   String XS_NAMESPACE = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
