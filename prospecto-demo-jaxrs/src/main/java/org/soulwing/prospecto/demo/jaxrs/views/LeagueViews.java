@@ -30,17 +30,17 @@ public interface LeagueViews {
 
   ViewTemplate LEAGUE_REFERENCE = ViewTemplateBuilderProducer
       .object(League.class)
-      .url()
-      .value("id")
-      .value("name")
-      .end()
+          .url()
+          .value("id")
+          .value("name")
+          .end()
       .build();
 
   ViewTemplate LEAGUE_LIST = ViewTemplateBuilderProducer
-      .arrayOfObjects("leagues", "league", Namespace.URI, League.class)
+      .arrayOfObjects("leagues", League.class)
           .url()
           .value("name")
-          .arrayOfReferences("divisions", "division", DivisionViews.DIVISION_SUMMARY)
+          .arrayOfReferences("divisions", DivisionViews.DIVISION_SUMMARY)
       .build();
 
   ViewTemplate LEAGUE_DETAIL = ViewTemplateBuilderProducer
@@ -48,7 +48,7 @@ public interface LeagueViews {
           .value("id")
           .value("version")
           .value("name")
-          .arrayOfObjects("divisions", "division", DivisionViews.DIVISION_SUMMARY)
+          .arrayOfObjects("divisions", DivisionViews.DIVISION_SUMMARY)
       .build();
 
 }
