@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 /**
- * Model type to value type conversion
+ * Model type to view type conversion API
  * <p>
  * View nodes of value type have a limited range of supported data types
  * (String, Number, Boolean, Enum). This package provides an API for converting

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 /**
- * Polymorphic type discrimination
+ * Polymorphic type discrimination API
  * <p>
  * When an object or array-of-objects node has a polymorphic type, it is
  * generally necessary to include an attribute in the view identifying the

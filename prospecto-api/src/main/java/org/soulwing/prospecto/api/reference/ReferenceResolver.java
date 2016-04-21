@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.reference;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.ViewInputException;
 
 /**
  * A strategy for resolving a reference entity in a view to an actual object
@@ -41,10 +42,16 @@ public interface ReferenceResolver {
   /**
    * Resolves the given reference entity to an actual object instance of the
    * type represented by the reference.
+   * <p>
+   * If the referenced object does not exist, the resolver may choose to either
+   * (1) return {@code null} to cause the reference property to be set to
+   * {@code null}, (2) create a new instance of the referenced entity and
+   * return it, or (3) throw {@link org.soulwing.prospecto.api.ViewInputException}
+   * to cause the view application in progress to be terminated with an error.
+   *
    * @param reference the subject entity reference to resolve
-   * @return reference object or {@code null} if the reference cannot be
-   *    resolved (e.g. it does not exist)
+   * @return reference object or {@code null} as noted above
    */
-  Object resolve(Class<?> type, ViewEntity reference);
+  Object resolve(Class<?> type, ViewEntity reference) throws ViewInputException;
 
 }

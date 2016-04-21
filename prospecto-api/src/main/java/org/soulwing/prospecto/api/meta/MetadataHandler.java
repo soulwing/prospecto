@@ -24,6 +24,9 @@ import org.soulwing.prospecto.api.template.MetaNode;
 
 /**
  * A handler for values associated with a {@link MetaNode}.
+ * <p>
+ * An implementation of this class can produce and consume a metadata value
+ * associated with a view.
  *
  * @author Carl Harris
  */
