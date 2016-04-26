@@ -20,9 +20,8 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
-import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
-import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A {@link ViewApplicatorFactory} that produces {@link ConcreteViewApplicator}
@@ -32,26 +31,20 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
  */
 public class ConcreteViewApplicatorFactory implements ViewApplicatorFactory {
 
-  private final ScopedViewContextFactory viewContextFactory;
+  public static final ConcreteViewApplicatorFactory INSTANCE =
+      new ConcreteViewApplicatorFactory();
 
-  public ConcreteViewApplicatorFactory() {
-    this(ConcreteScopedViewContextFactory.INSTANCE);
-  }
-
-  ConcreteViewApplicatorFactory(ScopedViewContextFactory viewContextFactory) {
-    this.viewContextFactory = viewContextFactory;
-  }
+  private ConcreteViewApplicatorFactory() {}
 
   @Override
-  public ViewApplicator newEditor(Class<?> modelType,
-      ViewEventApplicator applicator, View source, ViewContext context,
-      String dataKey) {
+  public ViewApplicator newApplicator(Class<?> modelType,
+      ViewEventApplicator applicator, View source, ScopedViewContext context,
+      String dataKey, ViewTraversalEvent event) {
     if (!(applicator instanceof RootViewEventApplicator)) {
       throw new IllegalArgumentException("view template is not updatable");
     }
     return new ConcreteViewApplicator(modelType,
-        (RootViewEventApplicator) applicator, source,
-        viewContextFactory.newContext(context), dataKey);
+        (RootViewEventApplicator) applicator, source, context, dataKey, event);
   }
 
 }

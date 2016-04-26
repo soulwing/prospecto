@@ -37,8 +37,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
+import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.view.ViewBuilder;
 
 /**
@@ -50,6 +52,8 @@ public class ConcreteViewApplicatorTest {
 
   private static final String NAME = "name";
   private static final String DATA_KEY = "data";
+  private static final ViewTraversalEvent EVENT =
+      new ViewTraversalEvent(null, null, null);
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -66,6 +70,9 @@ public class ConcreteViewApplicatorTest {
   @Mock
   private InjectableViewEntity entity;
 
+  @Mock
+  private NotifiableViewListeners listeners;
+
   private ConcreteViewApplicator editor;
 
   @Test
@@ -80,10 +87,13 @@ public class ConcreteViewApplicatorTest {
         .end();
 
     final ConcreteViewApplicator editor = new ConcreteViewApplicator(MockModel.class,
-        root, source, viewContext, null);
+        root, source, viewContext, null, EVENT);
 
     context.checking(new Expectations() {
       {
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).afterTraversing(EVENT);
         oneOf(root).toModelValue(
             with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
@@ -116,10 +126,13 @@ public class ConcreteViewApplicatorTest {
         .end();
 
     final ConcreteViewApplicator editor = new ConcreteViewApplicator(MockModel.class,
-        root, source, viewContext, null);
+        root, source, viewContext, null, EVENT);
 
     context.checking(new Expectations() {
       {
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).afterTraversing(EVENT);
         oneOf(root).toModelValue(
             with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
@@ -154,7 +167,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source,
+        viewContext, DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -170,7 +184,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -186,7 +201,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -200,7 +216,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -213,7 +230,8 @@ public class ConcreteViewApplicatorTest {
         .type(VALUE).name(NAME)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -226,7 +244,8 @@ public class ConcreteViewApplicatorTest {
         .type(VALUE).name(NAME)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, null).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        null, EVENT).update(model);
   }
 
 
@@ -238,7 +257,8 @@ public class ConcreteViewApplicatorTest {
         .begin()
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -251,7 +271,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_ARRAY)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -263,7 +284,8 @@ public class ConcreteViewApplicatorTest {
         .type(VALUE)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -276,7 +298,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
   @Test(expected = ViewInputException.class)
@@ -289,7 +312,8 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    new ConcreteViewApplicator(MockModel.class, root, source, viewContext, DATA_KEY).update(model);
+    new ConcreteViewApplicator(MockModel.class, root, source, viewContext,
+        DATA_KEY, EVENT).update(model);
   }
 
 
@@ -308,11 +332,14 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteViewApplicator editor = new ConcreteViewApplicator(MockModel.class, root,
-        source, viewContext, DATA_KEY);
+    final ConcreteViewApplicator editor = new ConcreteViewApplicator(
+        MockModel.class, root, source, viewContext, DATA_KEY, EVENT);
 
     context.checking(new Expectations() {
       {
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).afterTraversing(EVENT);
         oneOf(root).toModelValue(
             with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),
@@ -348,11 +375,14 @@ public class ConcreteViewApplicatorTest {
         .type(END_OBJECT)
         .end();
 
-    final ConcreteViewApplicator editor = new ConcreteViewApplicator(MockModel.class, root,
-        source, viewContext, DATA_KEY);
+    final ConcreteViewApplicator editor = new ConcreteViewApplicator(
+        MockModel.class, root, source, viewContext, DATA_KEY, EVENT);
 
     context.checking(new Expectations() {
       {
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).afterTraversing(EVENT);
         oneOf(root).toModelValue(
             with(nullValue(InjectableViewEntity.class)),
             with(eventOfType(BEGIN_OBJECT)),

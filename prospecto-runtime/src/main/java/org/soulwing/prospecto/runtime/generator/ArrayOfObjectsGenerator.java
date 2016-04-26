@@ -26,7 +26,7 @@ import java.util.List;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -85,7 +85,7 @@ class ArrayOfObjectsGenerator
       context.put(elementModel);
 
       final ViewNodePropertyEvent elementEvent = new ViewNodePropertyEvent(
-          ViewNodeEvent.Mode.GENERATE, node, model, elementModel, context);
+          ViewMode.GENERATE, node, model, elementModel, context);
 
       final Object transformedModel =
           context.getListeners().didExtractValue(elementEvent);

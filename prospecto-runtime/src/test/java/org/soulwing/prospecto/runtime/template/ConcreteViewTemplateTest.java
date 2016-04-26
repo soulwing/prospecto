@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.runtime.template;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
@@ -35,11 +37,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
+import org.soulwing.prospecto.runtime.applicator.ViewApplicatorFactory;
+import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.generator.ViewEventGenerator;
@@ -57,6 +63,7 @@ public class ConcreteViewTemplateTest {
   private static final String NAME = "name";
   private static final String ELEMENT_NAME = "elementName";
   private static final String NAMESPACE = "namespace";
+  private static final String DATA_KEY = "dataKey";
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -79,13 +86,32 @@ public class ConcreteViewTemplateTest {
   @Mock
   private ViewEventGenerator generator;
 
-  private MockViewNode root = new MockViewNode();
+  @Mock
+  private ViewEventApplicator applicator;
 
-  private ConcreteViewTemplate template;
+  @Mock
+  private ViewApplicator viewApplicator;
+
+  @Mock
+  private View view;
+
+  @Mock
+  private ViewApplicatorFactory viewApplicatorFactory;
+
+  private MockGeneratorViewNode generatorRoot = new MockGeneratorViewNode();
+
+  private MockApplicatorViewNode applicatorRoot = new MockApplicatorViewNode();
+
+  private ConcreteViewTemplate generatorTemplate;
+
+  private ConcreteViewTemplate applicatorTemplate;
 
   @Before
   public void setUp() throws Exception {
-    template = new ConcreteViewTemplate(root, viewContextFactory);
+    generatorTemplate = new ConcreteViewTemplate(generatorRoot,
+        viewContextFactory);
+    applicatorTemplate = new ConcreteViewTemplate(applicatorRoot,
+        viewContextFactory, viewApplicatorFactory);
   }
 
   @Test
@@ -93,12 +119,20 @@ public class ConcreteViewTemplateTest {
     context.checking(viewContextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(listeners).beforeTraversing(
+            (ViewTraversalEvent) with(allOf(
+                hasProperty("mode", equalTo(ViewMode.GENERATE)),
+                hasProperty("source", sameInstance(generatorTemplate)))));
         oneOf(generator).generate(MODEL, scopedViewContext);
         will(returnValue(Collections.singletonList(event)));
+        oneOf(listeners).afterTraversing(
+            (ViewTraversalEvent) with(allOf(
+                hasProperty("mode", equalTo(ViewMode.GENERATE)),
+                hasProperty("source", sameInstance(generatorTemplate)))));
       }
     });
 
-    View view = template.generateView(MODEL, viewContext);
+    View view = generatorTemplate.generateView(MODEL, viewContext);
     Iterator<View.Event> events = view.iterator();
     assertThat(events.hasNext(), is(true));
     assertThat(events.next(), is(sameInstance(event)));
@@ -109,31 +143,58 @@ public class ConcreteViewTemplateTest {
     context.checking(viewContextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(listeners).beforeTraversing(
+            (ViewTraversalEvent) with(allOf(
+                hasProperty("mode", equalTo(ViewMode.GENERATE)),
+                hasProperty("source", sameInstance(generatorTemplate)))));
         oneOf(generator).generate(MODEL, scopedViewContext);
         will(throwException(new Exception()));
       }
     });
 
-    template.generateView(MODEL, viewContext);
+    generatorTemplate.generateView(MODEL, viewContext);
+  }
+
+  @Test
+  public void testCreateApplicator() throws Exception {
+    context.checking(viewContextExpectations());
+    context.checking(new Expectations() {
+      {
+        oneOf(listeners).beforeTraversing(
+            (ViewTraversalEvent) with(allOf(
+                hasProperty("mode", equalTo(ViewMode.APPLY)),
+                hasProperty("source", sameInstance(applicatorTemplate)))));
+        oneOf(viewApplicatorFactory).newApplicator(
+            with(Object.class), with(applicator), with(view),
+            with(scopedViewContext), with(DATA_KEY),
+            (ViewTraversalEvent) with(allOf(
+                hasProperty("mode", equalTo(ViewMode.APPLY)),
+                hasProperty("source", sameInstance(applicatorTemplate)))));
+        will(returnValue(viewApplicator));
+      }
+    });
+
+    assertThat(applicatorTemplate.createApplicator(view, viewContext, DATA_KEY),
+        is(sameInstance(viewApplicator)));
   }
 
   @Test
   public void testObjectSubView() throws Exception {
-    AbstractViewNode child = new MockViewNode();
-    root.addChild(child);
-    AbstractViewNode node = template.object(NAME, NAMESPACE);
+    AbstractViewNode child = new MockGeneratorViewNode();
+    generatorRoot.addChild(child);
+    AbstractViewNode node = generatorTemplate.object(NAME, NAMESPACE);
     assertThat(node, is(instanceOf(ConcreteObjectNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(((ConcreteContainerNode) node).getChildren(),
-    contains((ViewNode) child));
+        contains((ViewNode) child));
   }
 
   @Test
   public void testArrayOfObjectsSubView() throws Exception {
-    AbstractViewNode child = new MockViewNode();
-    root.addChild(child);
-    AbstractViewNode node = template.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE);
+    AbstractViewNode child = new MockGeneratorViewNode();
+    generatorRoot.addChild(child);
+    AbstractViewNode node = generatorTemplate.arrayOfObjects(NAME, ELEMENT_NAME, NAMESPACE);
     assertThat(node, is(instanceOf(ConcreteArrayOfObjectsNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(((ConcreteArrayOfObjectsNode) node).getElementName(),
@@ -148,20 +209,15 @@ public class ConcreteViewTemplateTest {
       {
         oneOf(viewContextFactory).newContext(viewContext);
         will(returnValue(scopedViewContext));
-        allowing(scopedViewContext).push(null, Object.class);
-        allowing(scopedViewContext).pop();
         allowing(scopedViewContext).getListeners();
         will(returnValue(listeners));
-        allowing(listeners).shouldVisitNode(with(any(ViewNodeEvent.class)));
-        will(returnValue(true));
-        allowing(listeners).nodeVisited(with(any(ViewNodeEvent.class)));
       }
     };
   }
 
-  class MockViewNode extends ConcreteContainerNode {
+  class MockGeneratorViewNode extends ConcreteContainerNode {
 
-    public MockViewNode() {
+    public MockGeneratorViewNode() {
       super(null, null, Object.class);
     }
 
@@ -171,5 +227,19 @@ public class ConcreteViewTemplateTest {
     }
 
   }
+
+  class MockApplicatorViewNode extends ConcreteContainerNode {
+
+    public MockApplicatorViewNode() {
+      super(null, null, Object.class);
+    }
+
+    @Override
+    public Object accept(ViewNodeVisitor visitor, Object state) {
+      return applicator;
+    }
+
+  }
+
 
 }

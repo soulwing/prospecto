@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -77,7 +77,7 @@ class OrderedToManyAssociationUpdateStrategy
         final Object newElement = manager.newAssociate(target, entity);
         entity.inject(newElement, context);
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            ViewNodeEvent.Mode.APPLY, node, target, newElement, context));
+            ViewMode.APPLY, node, target, newElement, context));
 
         manager.add(target, viewIndex, newElement);
       }
@@ -88,7 +88,7 @@ class OrderedToManyAssociationUpdateStrategy
     for (int i = 0; i < count; i++) {
       final Object element = manager.get(target, viewIndex);
       context.getListeners().entityDiscarded(
-          new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+          new ViewNodePropertyEvent(ViewMode.APPLY, node,
               target, element, context));
       manager.remove(target, viewIndex);
     }

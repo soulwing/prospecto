@@ -18,18 +18,23 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
+import java.util.List;
+
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.api.listener.ViewMode;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.runtime.applicator.ConcreteViewApplicatorFactory;
 import org.soulwing.prospecto.runtime.applicator.ViewApplicationVisitor;
 import org.soulwing.prospecto.runtime.applicator.ViewApplicatorFactory;
 import org.soulwing.prospecto.runtime.applicator.ViewEventApplicator;
 import org.soulwing.prospecto.runtime.context.ConcreteScopedViewContextFactory;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.context.ScopedViewContextFactory;
 import org.soulwing.prospecto.runtime.generator.ViewEventGenerator;
 import org.soulwing.prospecto.runtime.generator.ViewGeneratingVisitor;
@@ -52,7 +57,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
 
   ConcreteViewTemplate(AbstractViewNode root,
       ScopedViewContextFactory viewContextFactory) {
-    this(root, viewContextFactory, new ConcreteViewApplicatorFactory());
+    this(root, viewContextFactory, ConcreteViewApplicatorFactory.INSTANCE);
   }
 
   ConcreteViewTemplate(AbstractViewNode root,
@@ -82,10 +87,23 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   public View generateView(Object source, ViewContext context)
       throws ViewException {
     try {
+      final ScopedViewContext scopedContext =
+          viewContextFactory.newContext(context);
+
+      final ViewTraversalEvent event =
+          new ViewTraversalEvent(ViewMode.GENERATE, this, scopedContext);
+
+      scopedContext.getListeners().beforeTraversing(event);
+
       final ViewEventGenerator generator = (ViewEventGenerator)
           depthFirst().traverse(new ViewGeneratingVisitor(), null);
-      return new ConcreteView(generator.generate(source,
-          viewContextFactory.newContext(context)));
+
+      final List<View.Event> viewEvents =
+          generator.generate(source, scopedContext);
+
+      scopedContext.getListeners().afterTraversing(event);
+
+      return new ConcreteView(viewEvents);
     }
     catch (Exception ex) {
       throw new ViewException(ex);
@@ -101,10 +119,17 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   public ViewApplicator createApplicator(View source, ViewContext context,
       String dataKey) {
 
+    final ScopedViewContext scopedContext =
+        viewContextFactory.newContext(context);
+
+    final ViewTraversalEvent event =
+        new ViewTraversalEvent(ViewMode.APPLY, this, scopedContext);
+
+    scopedContext.getListeners().beforeTraversing(event);
     final ViewEventApplicator applicator = (ViewEventApplicator)
         depthFirst().traverse(new ViewApplicationVisitor(), null);
-    return viewApplicatorFactory.newEditor(root.getModelType(), applicator,
-        source, context, dataKey);
+    return viewApplicatorFactory.newApplicator(root.getModelType(), applicator,
+        source, scopedContext, dataKey, event);
   }
 
   @Override

@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import org.hamcrest.Matcher;
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.template.ViewNode;
 
@@ -58,7 +59,7 @@ public class ViewNodeEventMatchers {
     return hasProperty("context", sameInstance(context));
   }
 
-  public static Matcher<ViewNodeEvent> mode(ViewNodeEvent.Mode mode) {
+  public static Matcher<ViewNodeEvent> mode(ViewMode mode) {
     return hasProperty("mode", equalTo(mode));
   }
 

@@ -29,6 +29,9 @@ import org.soulwing.prospecto.api.listener.ViewNodeListener;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyInterceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
+import org.soulwing.prospecto.api.listener.ViewPostTraversalListener;
+import org.soulwing.prospecto.api.listener.ViewPreTraversalListener;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 
 /**
  * A {@link NotifiableViewListeners} implementation backed by a
@@ -114,6 +117,24 @@ public class LinkedListNotifiableViewListeners
     for (final ViewListener listener : listeners) {
       if (ViewNodeEntityListener.class.isAssignableFrom(listener.getClass())) {
         ((ViewNodeEntityListener) listener).entityDiscarded(event);
+      }
+    }
+  }
+
+  @Override
+  public void beforeTraversing(ViewTraversalEvent event) {
+    for (final ViewListener listener : listeners) {
+      if (ViewPreTraversalListener.class.isAssignableFrom((listener.getClass()))) {
+        ((ViewPreTraversalListener) listener).beforeTraversing(event);
+      }
+    }
+  }
+
+  @Override
+  public void afterTraversing(ViewTraversalEvent event) {
+    for (final ViewListener listener : listeners) {
+      if (ViewPostTraversalListener.class.isAssignableFrom((listener.getClass()))) {
+        ((ViewPostTraversalListener) listener).afterTraversing(event);
       }
     }
   }

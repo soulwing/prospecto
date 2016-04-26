@@ -20,7 +20,8 @@ package org.soulwing.prospecto.runtime.applicator;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
-import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * A factory that produces {@link ViewApplicator} objects.
@@ -32,14 +33,16 @@ public interface ViewApplicatorFactory {
   /**
    * Constructs a new instance.
    * @param modelType expected root model type
-   * @param applicator root applicator
+   * @param applicator root event applicator
    * @param source source view
    * @param context view context
    * @param dataKey envelope key that contains the editable view data
    *    or {@code null} if the view is not enveloped
+   * @param event post-traversal event to fire after the view is applied
    * @return model editor
    */
-  ViewApplicator newEditor(Class<?> modelType, ViewEventApplicator applicator,
-      View source, ViewContext context, String dataKey);
+  ViewApplicator newApplicator(Class<?> modelType,
+      ViewEventApplicator applicator, View source, ScopedViewContext context,
+      String dataKey, ViewTraversalEvent event);
 
 }

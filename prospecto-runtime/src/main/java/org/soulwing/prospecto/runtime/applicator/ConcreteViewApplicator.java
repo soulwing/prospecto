@@ -28,6 +28,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
@@ -47,6 +48,7 @@ class ConcreteViewApplicator implements ViewApplicator {
   private final View source;
   private final ScopedViewContext context;
   private final String dataKey;
+  private final ViewTraversalEvent event;
 
   /**
    * Constructs a new instance.
@@ -55,15 +57,19 @@ class ConcreteViewApplicator implements ViewApplicator {
    * @param source source view
    * @param context view context
    * @param dataKey envelope key that contains the editable view data
-*    or {@code null} if the view is not enveloped
+   *  or {@code null} if the view is not enveloped
+   * @param event event to send to post-traversal listeners when this editor
+   *
    */
-  ConcreteViewApplicator(Class<?> modelType, RootViewEventApplicator root, View source,
-      ScopedViewContext context, String dataKey) {
+  ConcreteViewApplicator(Class<?> modelType, RootViewEventApplicator root,
+      View source,
+      ScopedViewContext context, String dataKey, ViewTraversalEvent event) {
     this.modelType = modelType;
     this.root = root;
     this.source = source;
     this.context = context;
     this.dataKey = dataKey;
+    this.event = event;
   }
 
   @Override
@@ -74,6 +80,7 @@ class ConcreteViewApplicator implements ViewApplicator {
 
       final Object model = ((InjectableViewEntity) entity).getType().newInstance();
       root.apply(entity, model, context);
+      context.getListeners().afterTraversing(event);
       return model;
     }
     catch (ViewApplicatorException ex) {
@@ -92,6 +99,7 @@ class ConcreteViewApplicator implements ViewApplicator {
       if (entity != UndefinedValue.INSTANCE) {
         root.apply(entity, model, context);
       }
+      context.getListeners().afterTraversing(event);
     }
     catch (ViewApplicatorException ex) {
       throw ex;

@@ -20,7 +20,7 @@ package org.soulwing.prospecto.runtime.association;
 
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.ContainerNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -77,14 +77,14 @@ public class ConcreteToOneAssociationUpdater
     else {
       if (currentAssociate != null) {
         context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+            new ViewNodePropertyEvent(ViewMode.APPLY, node,
                 target, currentAssociate, context));
       }
       if (entity != null) {
         final Object newAssociate = manager.newAssociate(target, entity);
         entity.inject(newAssociate, context);
         context.getListeners().entityCreated(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+            new ViewNodePropertyEvent(ViewMode.APPLY, node,
                 target, newAssociate, context));
         manager.set(target, newAssociate);
       }

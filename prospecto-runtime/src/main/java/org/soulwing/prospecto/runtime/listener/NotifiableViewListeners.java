@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.listener;
 import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 
 /**
  * A notifiable collection of view listeners.
@@ -42,5 +43,9 @@ public interface NotifiableViewListeners extends ViewListeners {
   void entityCreated(ViewNodePropertyEvent event);
 
   void entityDiscarded(ViewNodePropertyEvent event);
+
+  void beforeTraversing(ViewTraversalEvent event);
+
+  void afterTraversing(ViewTraversalEvent event);
 
 }

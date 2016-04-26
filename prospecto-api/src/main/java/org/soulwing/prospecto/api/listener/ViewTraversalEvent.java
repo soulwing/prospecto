@@ -1,5 +1,5 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Apr 26, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -19,66 +19,54 @@
 package org.soulwing.prospecto.api.listener;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.template.ViewNode;
+import org.soulwing.prospecto.api.ViewTemplate;
 
 /**
- * An event about a view node.
+ * An event that describes a view traversal.
  *
  * @author Carl Harris
  */
-public class ViewNodeEvent implements ViewListener {
+public class ViewTraversalEvent {
 
   private final ViewMode mode;
-  private final ViewNode source;
-  private final Object model;
+  private final ViewTemplate source;
   private final ViewContext context;
 
   /**
    * Constructs a new instance.
-   * @param mode mode for which the source node is being considered
-   * @param source view node source of the event
-   * @param model model associated with {@code source}
+   * @param mode view processing mode
+   * @param source source view template
    * @param context view context
    */
-  public ViewNodeEvent(ViewMode mode, ViewNode source, Object model,
+  public ViewTraversalEvent(ViewMode mode, ViewTemplate source,
       ViewContext context) {
     this.mode = mode;
     this.source = source;
-    this.model = model;
     this.context = context;
   }
 
   /**
-   * Gets the mode for which the source node is being considered.
-   * @return property value
+   * Gets the view processing mode.
+   * @return view processing mode
    */
   public ViewMode getMode() {
     return mode;
   }
 
   /**
-   * Gets the event source.
-   * @return node that is the source of the event
+   * Gets the source template for the event.
+   * @return source template
    */
-  public ViewNode getSource() {
+  public ViewTemplate getSource() {
     return source;
   }
 
   /**
-   * Gets the model associated with the event source node.
-   * @return model
-   */
-  public Object getModel() {
-    return model;
-  }
-
-  /**
-   * Gets the view context.
+   * Gets the view context
    * @return view context
    */
   public ViewContext getContext() {
     return context;
   }
-
 
 }

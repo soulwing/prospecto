@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -69,7 +69,7 @@ class UnorderedToManyAssociationUpdateStrategy
         entity.inject(newElement, context);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
-            ViewNodeEvent.Mode.APPLY, node, target, newElement, context));
+            ViewMode.APPLY, node, target, newElement, context));
 
         manager.add(target, newElement);
         touched.put(newElement, newElement);
@@ -80,7 +80,7 @@ class UnorderedToManyAssociationUpdateStrategy
     for (final Object child : children) {
       if (!touched.containsKey(child)) {
         context.getListeners().entityDiscarded(
-            new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+            new ViewNodePropertyEvent(ViewMode.APPLY, node,
                 target, child, context));
         manager.remove(target, child);
       }

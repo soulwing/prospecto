@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -44,7 +45,7 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
   public final List<View.Event> generate(Object model, ScopedViewContext context)
       throws Exception {
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-        ViewNodeEvent.Mode.GENERATE, node, model, context);
+        ViewMode.GENERATE, node, model, context);
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
       push(model, context);
       final List<View.Event> viewEvents = onGenerate(model, context);

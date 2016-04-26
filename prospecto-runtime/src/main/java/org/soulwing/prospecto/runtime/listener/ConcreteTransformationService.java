@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.listener;
 
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.listener.ViewNodeEvent;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -41,14 +41,14 @@ public class ConcreteTransformationService implements TransformationService {
       ViewNode node, ScopedViewContext context) throws Exception {
 
     final Object extractedValue = context.getListeners().didExtractValue(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.GENERATE, node,
+        new ViewNodePropertyEvent(ViewMode.GENERATE, node,
             owner, modelValue, context));
 
     final Object viewValue = context.getValueTypeConverters().toViewValue(
         extractedValue, node, context);
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.GENERATE, node,
+        new ViewNodePropertyEvent(ViewMode.GENERATE, node,
             modelValue, viewValue, context));
 
     return viewValue;
@@ -63,11 +63,11 @@ public class ConcreteTransformationService implements TransformationService {
         .toModelValue(type, viewValue, node, context);
 
     final Object valueToInject = context.getListeners().willInjectValue(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+        new ViewNodePropertyEvent(ViewMode.APPLY, node,
             ownerEntity, convertedValue, context));
 
     context.getListeners().propertyVisited(
-        new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,
+        new ViewNodePropertyEvent(ViewMode.APPLY, node,
             ownerEntity, valueToInject, context));
 
     return valueToInject;

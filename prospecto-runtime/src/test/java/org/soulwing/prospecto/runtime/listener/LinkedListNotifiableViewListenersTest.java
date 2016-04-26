@@ -36,6 +36,9 @@ import org.soulwing.prospecto.api.listener.ViewNodeListener;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyInterceptor;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyListener;
+import org.soulwing.prospecto.api.listener.ViewPostTraversalListener;
+import org.soulwing.prospecto.api.listener.ViewPreTraversalListener;
+import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 
 /**
  * Unit tests for {@link LinkedListNotifiableViewListeners}.
@@ -232,5 +235,40 @@ public class LinkedListNotifiableViewListenersTest {
     listeners.append(listener);
     listeners.entityDiscarded(event);
   }
+
+  @Test
+  public void testFireBeforeTraversing() throws Exception {
+    final ViewPreTraversalListener listener =
+        context.mock(ViewPreTraversalListener.class);
+
+    final ViewTraversalEvent event = new ViewTraversalEvent(null, null, null);
+
+    context.checking(new Expectations() {
+      {
+        oneOf(listener).beforeTraversing(event);
+      }
+    });
+
+    listeners.append(listener);
+    listeners.beforeTraversing(event);
+  }
+
+  @Test
+  public void testFireAfterTraversing() throws Exception {
+    final ViewPostTraversalListener listener =
+        context.mock(ViewPostTraversalListener.class);
+
+    final ViewTraversalEvent event = new ViewTraversalEvent(null, null, null);
+
+    context.checking(new Expectations() {
+      {
+        oneOf(listener).afterTraversing(event);
+      }
+    });
+
+    listeners.append(listener);
+    listeners.afterTraversing(event);
+  }
+
 
 }

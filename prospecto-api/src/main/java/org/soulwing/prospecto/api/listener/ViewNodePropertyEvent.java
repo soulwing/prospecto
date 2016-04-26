@@ -48,7 +48,7 @@ public class ViewNodePropertyEvent extends ViewNodeEvent {
    * @param value property value associated with {@code model}
    * @param context view context
    */
-  public ViewNodePropertyEvent(Mode mode, ViewNode source, Object model,
+  public ViewNodePropertyEvent(ViewMode mode, ViewNode source, Object model,
       Object value, ViewContext context) {
     super(mode, source, model, context);
     this.value = value;

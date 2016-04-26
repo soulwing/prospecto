@@ -23,6 +23,7 @@ import java.util.Deque;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodeEvent;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -55,7 +56,7 @@ abstract class AbstractViewEventApplicator<N extends ViewNode>
     push(parentEntity, context);
 
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
-        ViewNodeEvent.Mode.APPLY, node, parentEntity, context);
+        ViewMode.APPLY, node, parentEntity, context);
 
     Object value = UndefinedValue.INSTANCE;
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
