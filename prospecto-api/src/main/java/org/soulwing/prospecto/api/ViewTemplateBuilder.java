@@ -718,7 +718,7 @@ public interface ViewTemplateBuilder {
    * @param converter converter class
    * @return this builder
    */
-  ViewTemplateBuilder converter(ValueTypeConverter<?> converter);
+  ViewTemplateBuilder converter(ValueTypeConverter converter);
 
   /**
    * Puts an attribute into the scope associated with the node at the cursor.

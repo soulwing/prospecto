@@ -103,7 +103,7 @@ class EnvelopeNodeViewTemplateBuilder extends ContainerNodeViewTemplateBuilder {
   }
 
   @Override
-  public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
+  public ViewTemplateBuilder converter(ValueTypeConverter converter) {
     return delegate.converter(converter);
   }
 

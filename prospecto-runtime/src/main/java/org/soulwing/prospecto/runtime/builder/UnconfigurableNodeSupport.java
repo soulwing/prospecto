@@ -109,7 +109,7 @@ class UnconfigurableNodeSupport {
   }
 
   @SuppressWarnings("unused")
-  public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
+  public ViewTemplateBuilder converter(ValueTypeConverter converter) {
     throw new ViewTemplateException("cannot set converter on " + nodeType);
   }
 

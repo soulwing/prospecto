@@ -20,6 +20,7 @@ package org.soulwing.prospecto.runtime.converter;
 
 import java.util.LinkedList;
 
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.Coerce;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.template.ViewNode;
@@ -31,46 +32,49 @@ import org.soulwing.prospecto.runtime.util.SimpleLinkedList;
  * @author Carl Harris
  */
 public class LinkedListValueTypeConverterService
-    extends SimpleLinkedList<ValueTypeConverter<?>>
+    extends SimpleLinkedList<ValueTypeConverter>
     implements ValueTypeConverterService {
 
   @Override
-  public Object toViewValue(Object model, ViewNode node) throws Exception {
+  public Object toViewValue(Object model, ViewNode node, ViewContext context)
+      throws Exception {
     if (model == null) return null;
 
-    final ValueTypeConverter<?> localConverter = node.get(ValueTypeConverter.class);
+    final ValueTypeConverter localConverter = node.get(ValueTypeConverter.class);
     if (localConverter != null) {
-      return localConverter.toValue(model);
+      return localConverter.toViewValue(model, context);
     }
 
-    final ValueTypeConverter<?> converter = findConverter(model.getClass());
+    final ValueTypeConverter converter = findConverter(model.getClass());
     if (converter != null) {
-      return converter.toValue(model);
+      return converter.toViewValue(model, context);
     }
 
     return model;
   }
 
   @Override
-  public Object toModelValue(Class<?> type, Object value, ViewNode node)
-      throws Exception {
+  public Object toModelValue(Class<?> type, Object value, ViewNode node,
+      ViewContext context) throws Exception {
     if (value == null) return null;
 
-    final ValueTypeConverter<?> localConverter = node.get(ValueTypeConverter.class);
+    final ValueTypeConverter localConverter = node.get(ValueTypeConverter.class);
     if (localConverter != null) {
-      return localConverter.toObject(Coerce.toValueOfType(localConverter.getViewType(), value));
+      return localConverter.toModelValue(
+          Coerce.toValueOfType(localConverter.getType(), value), context);
     }
 
-    final ValueTypeConverter<?> converter = findConverter(type);
+    final ValueTypeConverter converter = findConverter(type);
     if (converter != null) {
-      return converter.toObject(Coerce.toValueOfType(converter.getViewType(), value));
+      return converter.toModelValue(
+          Coerce.toValueOfType(converter.getType(), value), context);
     }
 
     return Coerce.toValueOfType(type, value);
   }
 
-  private ValueTypeConverter<?> findConverter(Class<?> type) {
-    for (final ValueTypeConverter<?> converter : toList()) {
+  private ValueTypeConverter findConverter(Class<?> type) {
+    for (final ValueTypeConverter converter : toList()) {
       if (converter.supports(type)) {
         return converter;
       }

@@ -18,13 +18,17 @@
  */
 package org.soulwing.prospecto.api.converter;
 
+import org.soulwing.prospecto.api.ViewContext;
+
 /**
  * A converter that transforms simple model objects into a suitable
  * representation for a view node of value type and vice-versa.
  * <p>
- * View nodes of value type have a limited range of supported data types
- * (String, Number, Boolean, Enum). A converter allows other model types to be
- * represented in value nodes.
+ * View nodes support values represented as strings, numbers, or booleans. The
+ * {@link Coerce} utility provided in the Prospecto API supports type coercion
+ * from many Java value types to one of these view representations. A converter
+ * that implements this interface allows other model types to be represented in
+ * value nodes.
  * <p>
  * Almost any model type that has a well-defined lexical representation can be
  * transformed using a converter so that it may be used in view node of value
@@ -32,6 +36,9 @@ package org.soulwing.prospecto.api.converter;
  * amount of money in a given currency. You could make a converter that
  * creates a string representation of the Money type; the string consists of
  * both the number representing the amount and the currency designator.
+ * <p>
+ * In many cases, you can <strong>avoid the need to create a custom
+ * converter</strong> by
  * <p>
  * A converter's {@link #supports(Class)} method is used to determine whether
  * a given model type can be converted. This method could be implemented using
@@ -66,7 +73,7 @@ package org.soulwing.prospecto.api.converter;
  *
  * @author Carl Harris
  */
-public interface ValueTypeConverter<V> {
+public interface ValueTypeConverter {
 
   /**
    * Tests whether this converter supports a given model type.
@@ -77,27 +84,30 @@ public interface ValueTypeConverter<V> {
   boolean supports(Class<?> type);
 
   /**
-   * Gets the view type produced by this converter
-   * @return view type; which must be one of String, Boolean, Number, or Date
+   * Gets the model type understood by this converter.
+   * @return view model type which must be one of the data types supported by
+   *   the {@link Coerce} utility.
    */
-  Class<?> getViewType();
+  Class<?> getType();
 
   /**
    * Converts a model object (generally of a simple type) to a suitable
    * representation for a view node of value type.
-   * @param model the subject model object (never {@code null})
-   * @return value node representation of {@code model}
+   * @param modelValue the subject model object (never {@code null})
+   * @param context view context
+   * @return view value
    * @throws Exception if conversion fails
    */
-  V toValue(Object model) throws Exception;
+  Object toViewValue(Object modelValue, ViewContext context) throws Exception;
 
   /**
    * Converts a value from a view into a model object.
-   * @param value value node representation (never {@code null})
-   * @return model object
+   * @param viewValue value node representation (never {@code null})
+   * @param context view context
+   * @return model value
    * @throws Exception if conversion fails
    */
-  Object toObject(Object value) throws Exception;
+  Object toModelValue(Object viewValue, ViewContext context) throws Exception;
 
 }
 

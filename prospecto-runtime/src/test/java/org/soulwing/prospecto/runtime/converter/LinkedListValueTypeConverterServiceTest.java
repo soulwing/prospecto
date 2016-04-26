@@ -27,6 +27,7 @@ import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.template.ViewNode;
 
@@ -45,10 +46,13 @@ public class LinkedListValueTypeConverterServiceTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
+  private ViewContext viewContext;
+
+  @Mock
   ViewNode node;
 
   @Mock
-  ValueTypeConverter<Object> converter;
+  ValueTypeConverter converter;
 
   private LinkedListValueTypeConverterService service =
       new LinkedListValueTypeConverterService();
@@ -59,12 +63,13 @@ public class LinkedListValueTypeConverterServiceTest {
       {
         oneOf(node).get(ValueTypeConverter.class);
         will(returnValue(converter));
-        oneOf(converter).toValue(MODEL_VALUE);
+        oneOf(converter).toViewValue(MODEL_VALUE, viewContext);
         will(returnValue(VIEW_VALUE));
       }
     });
 
-    assertThat(service.toViewValue(MODEL_VALUE, node), is(equalTo(VIEW_VALUE)));
+    assertThat(service.toViewValue(MODEL_VALUE, node, viewContext),
+        is(equalTo(VIEW_VALUE)));
   }
 
   @Test
@@ -75,13 +80,14 @@ public class LinkedListValueTypeConverterServiceTest {
         will(returnValue(null));
         oneOf(converter).supports(MODEL_VALUE.getClass());
         will(returnValue(true));
-        oneOf(converter).toValue(MODEL_VALUE);
+        oneOf(converter).toViewValue(MODEL_VALUE, viewContext);
         will(returnValue(VIEW_VALUE));
       }
     });
 
     service.append(converter);
-    assertThat(service.toViewValue(MODEL_VALUE, node), is(equalTo(VIEW_VALUE)));
+    assertThat(service.toViewValue(MODEL_VALUE, node, viewContext),
+        is(equalTo(VIEW_VALUE)));
   }
 
 }

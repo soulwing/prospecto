@@ -120,7 +120,7 @@ class RootNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
+  public ViewTemplateBuilder converter(ValueTypeConverter converter) {
     return delegate.converter(converter);
   }
 

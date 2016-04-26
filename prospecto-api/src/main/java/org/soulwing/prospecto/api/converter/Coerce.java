@@ -31,6 +31,56 @@ import javax.xml.bind.DatatypeConverter;
 
 /**
  * A type coercion utility.
+ * <p>
+ * When writing a view as a textual representation or reading a textual
+ * representation to create a view, Prospecto automatically coerces many value
+ * types automatically. <em>Coercion</em> is a bi-directional mapping between a
+ * Java type and either a string, number, or boolean representation in a view.
+ * <p>
+ * Prospecto can automatically coerce any of these Java types:
+ * <ul>
+ *   <li> String, Boolean </li>
+ *   <li>all JDK subtypes of Number (including BigDecimal and BigInteger)</li>
+ *   <li>all Java primitive types (int, long, boolean, etc)</li>
+ *   <li>all enum types</li>
+ *   <li>{@link java.util.Date} and its subtypes</li>
+ *   <li>{@link java.util.Calendar}</li>
+ *   <li>{@link java.util.UUID}</li>
+ * </ul>
+ * Most of these types have obvious view representations using a string, number,
+ * or boolean. When coercing values from a view representation, Prospecto allows
+ * a string to be used in place of number or boolean, where the string contains
+ * a legitimate number, or the value "true" or "false", respectively.
+ * <p>
+ * Values of a Java {@code enum} are represented using a string containing the
+ * value of {@link Enum#name()} for an instance in the enumeration.
+ * <p>
+ * In JSON, Date and Calendar values are represented using the epoch offset in
+ * milliseconds. In XML, these values are represented using the XML Schema
+ * <em>dateTime</em> type.  When coercing a view representation back to Date
+ * or Calendar, if the view type is a string, it is assumed to be the XML
+ * Schema <em>dateTime</em> representation. If the view type is a number, it is
+ * assumed to be milliseconds since the epoch.
+ * <p>
+ * In addition to the types above, Prospecto can treat as a value type almost
+ * any Java type that has a well-defined string representation produced by the
+ * {@code toString} method and a means of creating a new instance given a string
+ * representation; either a public constructor or a public static {@code valueOf}
+ * method.
+ * <p>
+ * If {@code MyValueType} has a public constructor that takes a string argument,
+ * given an instance <em>v</em> of {@code MyValueType}, the following must hold
+ * true:
+ * <pre>
+ *   v.equals(new MyValueType(v.toString()))
+ * </pre>
+ * <p>
+ * Similarly, if {@code MyValueType} has a public static {@code valueOf} method
+ * that takes a string argument, given an instance <em>v</em> of
+ * {@code MyValueType}, the following must hold true:
+ * <pre>
+ *   v.equals(MyValueType.valueOf(v.toString()))
+ * </pre>
  *
  * @author Carl Harris
  */

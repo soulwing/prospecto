@@ -77,7 +77,8 @@ public class ConcreteTransformationServiceTest {
       {
         oneOf(viewContext).getValueTypeConverters();
         will(returnValue(converters));
-        oneOf(converters).toModelValue(MockModelValue.class, VIEW_VALUE, node);
+        oneOf(converters).toModelValue(MockModelValue.class, VIEW_VALUE, node,
+            viewContext);
         will(returnValue(convertedValue));
         allowing(viewContext).getListeners();
         will(returnValue(listeners));

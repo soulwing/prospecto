@@ -28,6 +28,7 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 
 import org.soulwing.prospecto.api.UndefinedValue;
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplateException;
 
 /**
@@ -36,7 +37,7 @@ import org.soulwing.prospecto.api.ViewTemplateException;
  * <p>
  * This type converter deliberately excludes information from the
  * view representation that would be needed to reconstruct an instance of
- * the corresponding model object. Therefore, the {@link #toObject(Object)}
+ * the corresponding model object. Therefore, the {@link ValueTypeConverter#toModelValue(Object, ViewContext)}
  * method of this converter always returns
  * {@linkplain UndefinedValue#INSTANCE undefined value}; this means that a
  * view node that uses this converter will <em>never</em> be used to update the
@@ -45,18 +46,18 @@ import org.soulwing.prospecto.api.ViewTemplateException;
  * @author Carl Harris
  */
 public class PropertyExtractingValueTypeConverter
-    implements ValueTypeConverter<Object> {
+    implements ValueTypeConverter {
 
-  private Class<?> modelType;
+  private Class<?> modelClass;
   private boolean supportSubTypes = true;
   private String propertyName;
   private Method getter;
 
   @PostConstruct
   public void init() throws Exception {
-    assertNotNull(modelType, "modelType is required");
+    assertNotNull(modelClass, "modelClass is required");
     assertNotNull(propertyName, "propertyName is required");
-    getter = findGetter(modelType, propertyName);
+    getter = findGetter(modelClass, propertyName);
     assertValidValueType(propertyName, getter.getReturnType());
   }
 
@@ -93,38 +94,38 @@ public class PropertyExtractingValueTypeConverter
   @Override
   public boolean supports(Class<?> type) {
     return supportSubTypes ?
-        modelType.isAssignableFrom(type) : modelType.equals(type);
+        modelClass.isAssignableFrom(type) : modelClass.equals(type);
   }
 
   @Override
-  public Class<?> getViewType() {
+  public Class<?> getType() {
     return getter.getReturnType();
   }
 
   @Override
-  public Object toValue(Object model) throws Exception {
-    return getter.invoke(model);
+  public Object toViewValue(Object modelValue, ViewContext context) throws Exception {
+    return getter.invoke(modelValue);
   }
 
   @Override
-  public Object toObject(Object value) throws Exception {
+  public Object toModelValue(Object viewValue, ViewContext context) throws Exception {
     return UndefinedValue.INSTANCE;
   }
 
   /**
-   * Gets the {@code modelType} property.
+   * Gets the {@code modelClass} property.
    * @return property value
    */
-  public Class<?> getModelType() {
-    return modelType;
+  public Class<?> getModelClass() {
+    return modelClass;
   }
 
   /**
-   * Sets the {@code modelType} property.
-   * @param modelType the property value to set
+   * Sets the {@code modelClass} property.
+   * @param modelClass the property value to set
    */
-  public void setModelType(Class<?> modelType) {
-    this.modelType = modelType;
+  public void setModelClass(Class<?> modelClass) {
+    this.modelClass = modelClass;
   }
 
   /**
@@ -180,12 +181,12 @@ public class PropertyExtractingValueTypeConverter
     }
 
     /**
-     * Configures the {@code modelType} property.
+     * Configures the {@code modelClass} property.
      * @param modelType the property value to set
      * @return this builder
      */
     public Builder modelType(Class<?> modelType) {
-      converter.setModelType(modelType);
+      converter.setModelClass(modelType);
       return this;
     }
 

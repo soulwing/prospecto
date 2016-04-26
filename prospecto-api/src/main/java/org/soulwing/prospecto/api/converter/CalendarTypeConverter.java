@@ -21,13 +21,15 @@ package org.soulwing.prospecto.api.converter;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.soulwing.prospecto.api.ViewContext;
+
 /**
  * A {@link ValueTypeConverter} that converts {@link Calendar} objects to and
  * from a string representation.
  *
  * @author Carl Harris
  */
-public class CalendarTypeConverter implements ValueTypeConverter<String> {
+public class CalendarTypeConverter implements ValueTypeConverter {
 
   private final DateTypeConverter delegate = new DateTypeConverter();
 
@@ -61,20 +63,20 @@ public class CalendarTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
-  public Class<String> getViewType() {
-    return delegate.getViewType();
+  public Class<String> getType() {
+    return delegate.getType();
   }
 
   @Override
-  public String toValue(Object model) throws Exception {
-    assert model instanceof Calendar;
-    return delegate.toValue(((Calendar) model).getTime());
+  public Object toViewValue(Object modelValue, ViewContext context) throws Exception {
+    assert modelValue instanceof Calendar;
+    return delegate.toViewValue(((Calendar) modelValue).getTime(), context);
   }
 
   @Override
-  public Calendar toObject(Object value) throws Exception {
+  public Calendar toModelValue(Object viewValue, ViewContext context) throws Exception {
     final Calendar calendar = Calendar.getInstance();
-    calendar.setTime(delegate.toObject(value));
+    calendar.setTime(delegate.toModelValue(viewValue, context));
     return calendar;
   }
 

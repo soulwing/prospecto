@@ -25,7 +25,11 @@ import static org.hamcrest.Matchers.is;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ViewContext;
 
 /**
  * Unit tests for {@link CalendarTypeConverter}.
@@ -34,6 +38,12 @@ import org.junit.Test;
  */
 public class CalendarTypeConverterTest {
 
+  @Rule
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private ViewContext viewContext;
+
   private CalendarTypeConverter converter = new CalendarTypeConverter();
 
   @Test
@@ -41,9 +51,9 @@ public class CalendarTypeConverterTest {
     converter.setTimeZoneId("GMT");
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -51,9 +61,9 @@ public class CalendarTypeConverterTest {
     converter.setTimeZoneId("GMT");
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -62,9 +72,9 @@ public class CalendarTypeConverterTest {
     converter.setFormat(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE);
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00Z")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -73,9 +83,9 @@ public class CalendarTypeConverterTest {
     converter.setFormat(DateTypeConverter.Format.ISO8601_DATE);
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -84,9 +94,9 @@ public class CalendarTypeConverterTest {
     converter.setFormat(DateTypeConverter.Format.ISO8601_TIME);
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -95,9 +105,9 @@ public class CalendarTypeConverterTest {
     converter.setFormat(DateTypeConverter.Format.RFC1123);
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("Thu, 01 Jan 1970 00:00:00 GMT")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -107,9 +117,9 @@ public class CalendarTypeConverterTest {
     converter.setPattern("MM/dd/yyy HH:mm:ss");
     final Calendar date = Calendar.getInstance();
     date.setTime(new Date(0));
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("01/01/1970 00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
 }

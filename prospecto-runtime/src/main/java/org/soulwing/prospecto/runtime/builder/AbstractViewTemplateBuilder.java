@@ -524,7 +524,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   @Override
-  public ViewTemplateBuilder converter(ValueTypeConverter<?> converter) {
+  public ViewTemplateBuilder converter(ValueTypeConverter converter) {
     if (node.get(ValueTypeConverter.class) != null) {
       throw new ViewTemplateException("only one converter is allowed");
     }

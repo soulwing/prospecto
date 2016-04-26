@@ -45,7 +45,7 @@ public class ConcreteTransformationService implements TransformationService {
             owner, modelValue, context));
 
     final Object viewValue = context.getValueTypeConverters().toViewValue(
-        extractedValue, node);
+        extractedValue, node, context);
 
     context.getListeners().propertyVisited(
         new ViewNodePropertyEvent(ViewNodeEvent.Mode.GENERATE, node,
@@ -60,7 +60,7 @@ public class ConcreteTransformationService implements TransformationService {
       throws Exception {
 
     final Object convertedValue = context.getValueTypeConverters()
-        .toModelValue(type, viewValue, node);
+        .toModelValue(type, viewValue, node, context);
 
     final Object valueToInject = context.getListeners().willInjectValue(
         new ViewNodePropertyEvent(ViewNodeEvent.Mode.APPLY, node,

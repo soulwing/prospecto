@@ -24,7 +24,11 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Date;
 
+import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ViewContext;
 
 /**
  * Unit tests for {@link DateTypeConverter}.
@@ -33,24 +37,30 @@ import org.junit.Test;
  */
 public class DateTypeConverterTest {
 
+  @Rule
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private ViewContext viewContext;
+
   private DateTypeConverter converter = new DateTypeConverter();
 
   @Test
   public void testConvertUsingDefaults() throws Exception {
     converter.setTimeZoneId("GMT");
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
   public void testConvertUsingISO8601() throws Exception {
     converter.setTimeZoneId("GMT");
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -58,9 +68,9 @@ public class DateTypeConverterTest {
     converter.setTimeZoneId("GMT");
     converter.setFormat(DateTypeConverter.Format.ISO8601_WITH_TIME_ZONE);
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01T00:00:00Z")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -68,9 +78,9 @@ public class DateTypeConverterTest {
     converter.setTimeZoneId("GMT");
     converter.setFormat(DateTypeConverter.Format.ISO8601_DATE);
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("1970-01-01")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -78,9 +88,9 @@ public class DateTypeConverterTest {
     converter.setTimeZoneId("GMT");
     converter.setFormat(DateTypeConverter.Format.ISO8601_TIME);
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -88,9 +98,9 @@ public class DateTypeConverterTest {
     converter.setTimeZoneId("GMT");
     converter.setFormat(DateTypeConverter.Format.RFC1123);
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("Thu, 01 Jan 1970 00:00:00 GMT")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test
@@ -99,9 +109,9 @@ public class DateTypeConverterTest {
     converter.setFormat(DateTypeConverter.Format.CUSTOM);
     converter.setPattern("MM/dd/yyy HH:mm:ss");
     final Date date = new Date(0);
-    final String value = converter.toValue(date);
+    final String value = (String) converter.toViewValue(date, viewContext);
     assertThat(value, is(equalTo("01/01/1970 00:00:00")));
-    assertThat(converter.toObject(value), is(equalTo(date)));
+    assertThat(converter.toModelValue(value, viewContext), is(equalTo(date)));
   }
 
   @Test

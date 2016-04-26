@@ -27,6 +27,8 @@ import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.soulwing.prospecto.api.ViewContext;
+
 /**
  * A {@link ValueTypeConverter} that converts {@link Date} objects to and from
  * a string representation.
@@ -37,12 +39,19 @@ import javax.xml.bind.DatatypeConverter;
  * different conversions for different subtypes, create multiple instances
  * each configured for a different subtype, and set the {@code supportSubTypes}
  * property to {@code false}.
- *
- * {@link org.soulwing.prospecto.api.ViewContext}.
+ * <p>
+ * Use the {@link #setFormat(Format) format} property to use one of the common
+ * pre-defined date and/or time formats. To use a custom pattern, set the
+ * format to {@link Format#CUSTOM} and specify a {@link #setPattern(String)}
+ * using the syntax specified for {@link SimpleDateFormat}.
+ * <p>
+ * When using a format that includes time, the default time zone is the
+ * local time zone.  Use the {@link #setTimeZone(TimeZone) timeZone} or
+ * {@link #setTimeZoneId(String) timeZoneId} property to change the default.
  *
  * @author Carl Harris
  */
-public class DateTypeConverter implements ValueTypeConverter<String> {
+public class DateTypeConverter implements ValueTypeConverter {
 
   public enum Format {
     ISO8601,
@@ -98,48 +107,48 @@ public class DateTypeConverter implements ValueTypeConverter<String> {
   }
 
   @Override
-  public Class<String> getViewType() {
+  public Class<String> getType() {
     return String.class;
   }
 
   @Override
-  public String toValue(Object model) throws Exception {
-    assert model instanceof Date;
+  public Object toViewValue(Object modelValue, ViewContext context) throws Exception {
+    assert modelValue instanceof Date;
     switch (format) {
       default:
       case ISO8601:
-        return formatUsingPattern(ISO8601_PATTERN, (Date) model);
+        return formatUsingPattern(ISO8601_PATTERN, (Date) modelValue);
       case ISO8601_DATE:
-        return formatUsingPattern(ISO8601_DATE_PATTERN, (Date) model);
+        return formatUsingPattern(ISO8601_DATE_PATTERN, (Date) modelValue);
       case ISO8601_TIME:
-        return formatUsingPattern(ISO8601_TIME_PATTERN, (Date) model);
+        return formatUsingPattern(ISO8601_TIME_PATTERN, (Date) modelValue);
       case ISO8601_WITH_TIME_ZONE:
-        return formatUsing8601WithTimeZone((Date) model);
+        return formatUsing8601WithTimeZone((Date) modelValue);
       case RFC1123:
-        return formatUsingPattern(RFC1123_PATTERN, (Date) model);
+        return formatUsingPattern(RFC1123_PATTERN, (Date) modelValue);
       case CUSTOM:
         return formatUsingPattern(
-            pattern != null ? pattern : ISO8601_PATTERN, (Date) model);
+            pattern != null ? pattern : ISO8601_PATTERN, (Date) modelValue);
     }
   }
 
   @Override
-  public Date toObject(Object value) throws Exception {
+  public Date toModelValue(Object viewValue, ViewContext context) throws Exception {
     switch (format) {
       default:
       case ISO8601:
-        return parseUsingPattern(ISO8601_PATTERN, value.toString());
+        return parseUsingPattern(ISO8601_PATTERN, viewValue.toString());
       case ISO8601_DATE:
-        return parseUsingPattern(ISO8601_DATE_PATTERN, value.toString());
+        return parseUsingPattern(ISO8601_DATE_PATTERN, viewValue.toString());
       case ISO8601_TIME:
-        return parseUsingPattern(ISO8601_TIME_PATTERN, value.toString());
+        return parseUsingPattern(ISO8601_TIME_PATTERN, viewValue.toString());
       case ISO8601_WITH_TIME_ZONE:
-        return parseUsing8601WithTimeZone(value.toString());
+        return parseUsing8601WithTimeZone(viewValue.toString());
       case RFC1123:
-        return parseUsingPattern(RFC1123_PATTERN, value.toString());
+        return parseUsingPattern(RFC1123_PATTERN, viewValue.toString());
       case CUSTOM:
         return parseUsingPattern(
-            pattern != null ? pattern : ISO8601_PATTERN, value.toString());
+            pattern != null ? pattern : ISO8601_PATTERN, viewValue.toString());
     }
   }
 

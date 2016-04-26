@@ -31,14 +31,14 @@ public interface ValueTypeConverters {
    * Appends the given converter to the end of the collection.
    * @param converter the converter to append
    */
-  void append(ValueTypeConverter<?> converter);
+  void append(ValueTypeConverter converter);
 
   /**
    * Inserts the given converter such that it becomes the first converter in
    * the collection.
    * @param converter the converter to insert
    */
-  void prepend(ValueTypeConverter<?> converter);
+  void prepend(ValueTypeConverter converter);
 
   /**
    * Removes the given converter from the collection.
@@ -47,7 +47,7 @@ public interface ValueTypeConverters {
    * @param converter the converter to remove
    * @return {@code true} if a converter was removed
    */
-  boolean remove(ValueTypeConverter<?> converter);
+  boolean remove(ValueTypeConverter converter);
 
   /**
    * Coerces this collection into a list.
@@ -55,6 +55,6 @@ public interface ValueTypeConverters {
    * The returned list may be manipulated to update this collection of converters.
    * @return list of converters
    */
-  List<ValueTypeConverter<?>> toList();
+  List<ValueTypeConverter> toList();
 
 }

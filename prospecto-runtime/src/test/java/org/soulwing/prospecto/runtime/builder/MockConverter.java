@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 
 /**
@@ -25,7 +26,7 @@ import org.soulwing.prospecto.api.converter.ValueTypeConverter;
  *
  * @author Carl Harris
  */
-public class MockConverter implements ValueTypeConverter<Object> {
+public class MockConverter implements ValueTypeConverter {
 
   private String mockProperty;
 
@@ -43,17 +44,17 @@ public class MockConverter implements ValueTypeConverter<Object> {
   }
 
   @Override
-  public Class<?> getViewType() {
+  public Class<?> getType() {
     return null;
   }
 
   @Override
-  public Object toValue(Object model) throws Exception {
+  public Object toViewValue(Object modelValue, ViewContext context) throws Exception {
     return null;
   }
 
   @Override
-  public Object toObject(Object value) throws Exception {
+  public Object toModelValue(Object viewValue, ViewContext context) throws Exception {
     return null;
   }
 

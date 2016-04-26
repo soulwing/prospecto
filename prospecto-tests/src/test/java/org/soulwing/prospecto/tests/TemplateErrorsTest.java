@@ -39,7 +39,7 @@ public class TemplateErrorsTest {
   public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
-  private ValueTypeConverter<?> converter;
+  private ValueTypeConverter converter;
 
   private static final String SOURCE = "source";
   private static final AccessType ACCESS_TYPE = AccessType.PROPERTY;

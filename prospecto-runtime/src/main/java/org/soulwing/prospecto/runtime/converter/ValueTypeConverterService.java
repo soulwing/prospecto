@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.converter;
 
+import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.converter.ValueTypeConverters;
 import org.soulwing.prospecto.api.template.ViewNode;
 
@@ -32,20 +33,23 @@ public interface ValueTypeConverterService extends ValueTypeConverters {
    * Converts a model value to a view value for a node.
    * @param model model value
    * @param node the subject node
+   * @param context view context
    * @return view value
    * @throws Exception
    */
-  Object toViewValue(Object model, ViewNode node) throws Exception;
+  Object toViewValue(Object model, ViewNode node, ViewContext context)
+      throws Exception;
 
   /**
    * Converts a view value to a model value for a node.
    * @param type target model type
    * @param value view value
    * @param node the subject node
+   * @param context view context
    * @return model value
    * @throws Exception
    */
-  Object toModelValue(Class<?> type, Object value, ViewNode node)
-      throws Exception;
+  Object toModelValue(Class<?> type, Object value, ViewNode node,
+      ViewContext context) throws Exception;
 
 }
