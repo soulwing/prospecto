@@ -36,14 +36,14 @@ public class UrlResolvingMetadataHandler implements MetadataHandler {
   private UrlResolvingMetadataHandler() {}
 
   @Override
-  public Object produceValue(MetaNode node, ViewContext context)
-      throws Exception {
+  public java.lang.Object produceValue(MetaNode node, Object parentModel,
+      ViewContext context) throws Exception {
     return context.get(UrlResolver.class).resolve(node, context);
   }
 
   @Override
-  public void consumeValue(MetaNode node, Object value, ViewContext context)
-      throws Exception {
+  public void consumeValue(MetaNode node, Object parentModel, Object value,
+      ViewContext context) throws Exception {
   }
 
 }

@@ -34,14 +34,14 @@ public class LiteralMetadataHandler implements MetadataHandler {
   private LiteralMetadataHandler() {}
 
   @Override
-  public Object produceValue(MetaNode node, ViewContext context)
-      throws Exception {
+  public Object produceValue(MetaNode node, Object parentModel,
+      ViewContext context) throws Exception {
     return node.getValue();
   }
 
   @Override
-  public void consumeValue(MetaNode node, Object value, ViewContext context)
-      throws Exception {
+  public void consumeValue(MetaNode node, Object parentModel, Object value,
+      ViewContext context) throws Exception {
   }
 
 }

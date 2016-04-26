@@ -70,7 +70,8 @@ public abstract class AbstractMetaApplicatorTest<N extends MetaNode>
       {
         oneOf(node).getHandler();
         will(returnValue(handler));
-        oneOf(handler).consumeValue(node, TRANSFORMED_VALUE, viewContext);
+        oneOf(handler).consumeValue(node, parentEntity, TRANSFORMED_VALUE,
+          viewContext);
       }
     });
 

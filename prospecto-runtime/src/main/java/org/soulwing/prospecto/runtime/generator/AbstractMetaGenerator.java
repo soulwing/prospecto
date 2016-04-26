@@ -43,13 +43,14 @@ abstract class AbstractMetaGenerator<N extends MetaNode>
   }
 
   @Override
-  final List<View.Event> onGenerate(Object source, ScopedViewContext context)
+  final List<View.Event> onGenerate(Object owner, ScopedViewContext context)
       throws Exception {
 
-    final Object modelValue = node.getHandler().produceValue(node, context);
+    final Object modelValue = node.getHandler().produceValue(node, owner,
+        context);
 
     final Object transformedValue = transformationService.valueToExtract(
-        source, modelValue, node, context);
+        owner, modelValue, node, context);
 
     if (transformedValue == UndefinedValue.INSTANCE) {
       return Collections.emptyList();

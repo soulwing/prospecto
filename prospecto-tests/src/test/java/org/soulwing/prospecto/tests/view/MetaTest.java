@@ -216,15 +216,16 @@ public class MetaTest {
     }
 
     @Override
-    public Object produceValue(MetaNode node, ViewContext context) throws Exception {
+    public java.lang.Object produceValue(MetaNode node, Object parentModel,
+        ViewContext context) throws Exception {
       final Object value = getValue();
       setValue(node.getValue());
       return value;
     }
 
     @Override
-    public void consumeValue(MetaNode node, Object value, ViewContext context)
-        throws Exception {
+    public void consumeValue(MetaNode node, Object parentModel, Object value,
+        ViewContext context) throws Exception {
       setValue(value);
     }
 

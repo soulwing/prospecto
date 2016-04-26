@@ -56,7 +56,7 @@ public abstract class AbstractMetaGeneratorTest<N extends MetaNode>
       {
         oneOf(node).getHandler();
         will(returnValue(handler));
-        oneOf(handler).produceValue(node, viewContext);
+        oneOf(handler).produceValue(node, MODEL, viewContext);
         will(returnValue(MODEL_VALUE));
         oneOf(transformationService).valueToExtract(MODEL, MODEL_VALUE, node,
             viewContext);

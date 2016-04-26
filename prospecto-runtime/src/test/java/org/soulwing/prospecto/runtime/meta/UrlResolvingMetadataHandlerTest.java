@@ -38,6 +38,7 @@ import org.soulwing.prospecto.api.url.UrlResolver;
  */
 public class UrlResolvingMetadataHandlerTest {
 
+  private static final Object MODEL = new Object();
   private static final String URL = "url";
 
   @Rule
@@ -64,7 +65,7 @@ public class UrlResolvingMetadataHandlerTest {
     });
 
     assertThat((String) UrlResolvingMetadataHandler.INSTANCE.produceValue(
-        node, viewContext), is(equalTo(URL)));
+        node, MODEL, viewContext), is(equalTo(URL)));
   }
 
 }

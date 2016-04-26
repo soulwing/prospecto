@@ -42,12 +42,14 @@ public interface MetadataHandler {
    * metadata property will be excluded from the resulting view.
    *
    * @param node the subject node
+   * @param parentModel the model associated with the parent container node
    * @param context view context
    * @return value which may be {@code null} or {@link UndefinedValue#INSTANCE}
    *    as noted above
    * @throws Exception
    */
-  Object produceValue(MetaNode node, ViewContext context) throws Exception;
+  Object produceValue(MetaNode node, Object parentModel, ViewContext context)
+      throws Exception;
 
   /**
    * Consumes a value for the given node.
@@ -55,12 +57,13 @@ public interface MetadataHandler {
    * This method is invoked during view application to allow the handler to
    * use the value that was received in the input view in some manner.
    * @param node the subject node
+   * @param parentModel model associated with the parent container node
    * @param value input value (which may be {@code null} but will never be
    *    the {@link UndefinedValue#INSTANCE}
    * @param context view context
    * @throws Exception
    */
-  void consumeValue(MetaNode node, Object value, ViewContext context)
-      throws Exception;
+  void consumeValue(MetaNode node, Object parentModel, Object value,
+      ViewContext context) throws Exception;
 
 }

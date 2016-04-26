@@ -56,14 +56,14 @@ public class MetaTest extends EditorTestBase {
     private Object value;
 
     @Override
-    public Object produceValue(MetaNode node, ViewContext context)
-        throws Exception {
+    public java.lang.Object produceValue(MetaNode node, Object parentModel,
+        ViewContext context) throws Exception {
       return value;
     }
 
     @Override
-    public void consumeValue(MetaNode node, Object value, ViewContext context)
-        throws Exception {
+    public void consumeValue(MetaNode node, Object parentModel,
+        Object value, ViewContext context) throws Exception {
       this.value = value;
     }
 
