@@ -26,7 +26,6 @@ import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.demo.jaxrs.domain.AbstractEntity;
-import org.soulwing.prospecto.demo.jaxrs.domain.Contact;
 
 /**
  * A base for entity service implementations.
@@ -87,7 +86,7 @@ public class EntityServiceBase<T extends AbstractEntity>
       return detailView.generateView(entity, viewContext);
     }
     catch (OptimisticLockException ex) {
-      throw new UpdateConflictException(Contact.class, id, ex);
+      throw new UpdateConflictException(entityClass, id, ex);
     }
   }
 
