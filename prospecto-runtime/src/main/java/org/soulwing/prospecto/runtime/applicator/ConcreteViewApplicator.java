@@ -92,7 +92,7 @@ class ConcreteViewApplicator implements ViewApplicator {
   }
 
   @Override
-  public void update(Object model) throws ViewApplicatorException {
+  public Object update(Object model) throws ViewApplicatorException {
     try {
       assertHasRootModelType(model);
       final InjectableViewEntity entity = deriveInjector();
@@ -100,6 +100,7 @@ class ConcreteViewApplicator implements ViewApplicator {
         root.apply(entity, model, context);
       }
       context.getListeners().afterTraversing(event);
+      return model;
     }
     catch (ViewApplicatorException ex) {
       throw ex;

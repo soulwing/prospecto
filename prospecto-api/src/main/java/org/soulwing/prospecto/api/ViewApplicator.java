@@ -39,9 +39,11 @@ public interface ViewApplicator {
    * Updates the given model by injecting it with the properties represented
    * in the source view.
    * @param model model (which must be an instance of the type associated with
-   *    the root of the target view).
+   *    the root of the target view)
+   * @return resulting model; this is not necessarily the same instance that
+   *    was passed via the {@code model} parameter
    * @throws ViewApplicatorException
    */
-  void update(Object model) throws ViewApplicatorException;
+  Object update(Object model) throws ViewApplicatorException;
 
 }
