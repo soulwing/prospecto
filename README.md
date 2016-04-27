@@ -23,7 +23,7 @@ Documentation
 -------------
 
 The full documentation set for Prospecto is located in the [wiki] 
-(/soulwing/prospecto/wiki). 
+(https://github.com/soulwing/prospecto/wiki). 
 
 Demo
 ----
@@ -132,7 +132,7 @@ exceptions when the view is ultimately transformed into a textual
 representation.
 
 Ready to learn more? Check out the full documentation set in the [wiki] 
-(/soulwing/prospecto/wiki).
+(https://github.com/soulwing/prospecto/wiki).
 
 
 
