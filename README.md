@@ -22,7 +22,8 @@ model instances, as well as creating new model instances.
 Documentation
 -------------
 
-The full documentation set for Prospecto is located in the [wiki] (wiki). 
+The full documentation set for Prospecto is located in the [wiki] 
+(/soulwing/prospecto/wiki). 
 
 Demo
 ----
@@ -130,7 +131,8 @@ the context of JPA entity manager, avoiding any potential for lazy loading
 exceptions when the view is ultimately transformed into a textual 
 representation.
 
-Ready to learn more? Check out the full documentation set in the [wiki] (wiki).
+Ready to learn more? Check out the full documentation set in the [wiki] 
+(/soulwing/prospecto/wiki).
 
 
 
