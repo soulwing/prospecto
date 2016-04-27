@@ -3,14 +3,31 @@ Prospecto
 
 [![Build Status](https://travis-ci.org/soulwing/prospecto.svg?branch=master)](https://travis-ci.org/soulwing/prospecto)
 
-Prospecto is a toolkit for producing client views of a domain model in as
-Java application that provides a RESTful web API.
+Prospecto is a framework for producing textual representations of the 
+information in the domain model of a Java application, that can be exchanged
+with other systems via a RESTful web services API, or asynchronously using
+JMS or Websocket. 
+
+Using Prospecto, you write view templates in Java using a fluent builder API to 
+describe the model objects and properties to include in a view. You can then use 
+your templates to generate views which Prospecto can easily transform into JSON, 
+XML, and practically any other structured representation format. ASN.1 anyone?
+
+In addition to supporting the generation of views to produce a textual 
+representation of your domain model, Prospecto can also apply the information in 
+a textual representation of your model to create or update domain model instances. 
+In other words, you can use Prospecto to facilitate "editing" of your domain 
+model instances, as well as creating new model instances.
+
+Documentation
+-------------
+
+The full documentation set for Prospecto is located in the [wiki] (wiki). 
 
 Demo
 ----
 
-Until I can write a more reasonable README, the best way to learn what
-Prospecto can do is to look at a demo.
+An easy way to learn what Prospecto can do is to look at a demo.
 
 ### Setup
 
@@ -56,7 +73,6 @@ ask for XML instead of JSON as follows.
 ```
 rc -xml get /prospecto-demo/api/leagues
 ```
-
 
 ### Understanding the Demo
 
@@ -114,12 +130,8 @@ the context of JPA entity manager, avoiding any potential for lazy loading
 exceptions when the view is ultimately transformed into a textual 
 representation.
 
-N.B. still need to discuss how URLs are generated; i.e. the relationship between
-the `@ReferencedBy` and `@TemplateResolver` annotations and the view templates,
-and how the `UrlResolver` is set up.
+Ready to learn more? Check out the full documentation set in the [wiki] (wiki).
 
-
-  
 
 
 
