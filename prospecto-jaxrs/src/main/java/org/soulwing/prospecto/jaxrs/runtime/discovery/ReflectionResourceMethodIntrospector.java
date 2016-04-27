@@ -36,13 +36,13 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
+import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
-import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * A {@link ResourceMethodIntrospector} that utilizes reflection.
@@ -91,8 +91,8 @@ class ReflectionResourceMethodIntrospector
       return Collections.emptyList();
     }
 
-    ReferencedBy referencedBy = reflectionService.getAnnotation(method,
-        ReferencedBy.class);
+    ModelPathSpec modelPathSpec = reflectionService.getAnnotation(method,
+        ModelPathSpec.class);
 
     TemplateResolver methodTemplateResolver = reflectionService.getAnnotation(
         method, TemplateResolver.class);
@@ -100,13 +100,13 @@ class ReflectionResourceMethodIntrospector
     Class<?> returnType = reflectionService.getReturnType(method);
 
     if (resourceMethod) {
-      if (referencedBy == null) {
+      if (modelPathSpec == null) {
         logger.trace("ignoring method {}", methodToString(method));
         return Collections.emptyList();
       }
 
-      if (referencedBy.inherit()) {
-        modelPath = modelPath.concat(referencedBy);
+      if (modelPathSpec.inherit()) {
+        modelPath = modelPath.concat(modelPathSpec);
       }
 
       if (methodTemplateResolver != null) {
@@ -127,13 +127,13 @@ class ReflectionResourceMethodIntrospector
 
 
     if (reflectionService.isAbstractType(returnType)) {
-      if (referencedBy == null) return Collections.emptyList();
+      if (modelPathSpec == null) return Collections.emptyList();
 
-      returnType = findMatchingSubResourceType(modelPath.concat(referencedBy),
+      returnType = findMatchingSubResourceType(modelPath.concat(modelPathSpec),
           reflectionService, method);
     }
-    else if (referencedBy != null && referencedBy.inherit()) {
-      modelPath = modelPath.concat(referencedBy);
+    else if (modelPathSpec != null && modelPathSpec.inherit()) {
+      modelPath = modelPath.concat(modelPathSpec);
     }
 
     if (methodTemplateResolver == null) {
@@ -188,10 +188,10 @@ class ReflectionResourceMethodIntrospector
     final Class<?> returnType = reflectionService.getReturnType(method);
     final Class<?>[] methodReferences = modelPath.asArray();
     for (Class<?> type : reflectionService.getSubTypesOf(returnType)) {
-      ReferencedBy typeReferencedBy = reflectionService.getAnnotation(type,
-          ReferencedBy.class);
-      if (typeReferencedBy == null) continue;
-      final Class<?>[] typeReferences = typeReferencedBy.value();
+      ModelPathSpec typeModelPathSpec = reflectionService.getAnnotation(type,
+          ModelPathSpec.class);
+      if (typeModelPathSpec == null) continue;
+      final Class<?>[] typeReferences = typeModelPathSpec.value();
       if (!Arrays.equals(typeReferences, methodReferences)) continue;
       types.add(type);
     }
@@ -200,14 +200,14 @@ class ReflectionResourceMethodIntrospector
     if (numTypes == 0) {
       throw new ResourceConfigurationException("there is no subtype of "
           + returnType.getSimpleName() + " with a @"
-          + ReferencedBy.class.getSimpleName() + " that matches "
+          + ModelPathSpec.class.getSimpleName() + " that matches "
           + modelPath + " at " + methodToString(method));
     }
     else if (numTypes > 1) {
       throw new ResourceConfigurationException(
           "there is more than one subtype of "
           + returnType.getSimpleName() + " with a @"
-          + ReferencedBy.class.getSimpleName() + " that matches "
+          + ModelPathSpec.class.getSimpleName() + " that matches "
           + modelPath + " at " + method);
     }
 

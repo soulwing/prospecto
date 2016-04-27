@@ -22,8 +22,8 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 
 /**
@@ -47,21 +47,21 @@ public class AnnotationUtils {
   }
 
   /**
-   * Creates a new instance of {@link ReferencedBy}.
+   * Creates a new instance of {@link ModelPathSpec}.
    * @param value class array for value attribute
    * @return annotation instance
    */
-  public static ReferencedBy referencedByAnnotation(final Class<?>... value) {
+  public static ModelPathSpec referencedByAnnotation(final Class<?>... value) {
     return referencedByAnnotation(true, value);
   }
 
   /**
-   * Creates a new instance of {@link ReferencedBy}.
+   * Creates a new instance of {@link ModelPathSpec}.
    * @param descriptor descriptor flag value
    * @param value class array for value attribute
    * @return annotation instance
    */
-  public static ReferencedBy referencedByAnnotation(final boolean descriptor,
+  public static ModelPathSpec referencedByAnnotation(final boolean descriptor,
       final Class<?>... value) {
     return new ReferencedByLiteral() {
       @Override
@@ -109,7 +109,7 @@ public class AnnotationUtils {
   }
 
   public static abstract class ReferencedByLiteral
-      extends AnnotationLiteral<ReferencedBy> implements ReferencedBy {
+      extends AnnotationLiteral<ModelPathSpec> implements ModelPathSpec {
   }
 
   public static abstract class TemplateResolverLiteral

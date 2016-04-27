@@ -35,7 +35,7 @@ import org.soulwing.prospecto.demo.jaxrs.domain.Parent;
 import org.soulwing.prospecto.demo.jaxrs.service.ContactService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
@@ -55,7 +55,7 @@ public class ParentResource {
 
   @GET
   @Path("/{id}")
-  @ReferencedBy({ AnyModelSequence.class, Parent.class })
+  @ModelPathSpec({ AnyModelSequence.class, Parent.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getParent(@PathParam("id") Long id) {
     try {

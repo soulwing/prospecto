@@ -44,13 +44,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
+import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
-import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * Unit tests of {@link ReflectionResourceMethodIntrospector}.
@@ -174,7 +174,7 @@ public class ReflectionResourceMethodIntrospectorTest {
         oneOf(reflectionService).getSubTypesOf(MockResource.class);
         will(returnValue(Collections.singleton(MockSubResource.class)));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
-            ReferencedBy.class);
+            ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
             TemplateResolver.class);
@@ -232,10 +232,10 @@ public class ReflectionResourceMethodIntrospectorTest {
         oneOf(reflectionService).getSubTypesOf(MockResource.class);
         will(returnValue(subTypes));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
-            ReferencedBy.class);
+            ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(MockOtherSubResource.class,
-            ReferencedBy.class);
+            ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
       }
     });
@@ -313,7 +313,7 @@ public class ReflectionResourceMethodIntrospectorTest {
         will(returnValue(MockResource.class));
         oneOf(reflectionService).isAbstractType(MockResource.class);
         will(returnValue(hasAbstractReturnType));
-        oneOf(reflectionService).getAnnotation(method, ReferencedBy.class);
+        oneOf(reflectionService).getAnnotation(method, ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(method, TemplateResolver.class);
         will(returnValue(hasTemplateResolver ? methodTemplateResolver : null));
@@ -346,7 +346,7 @@ public class ReflectionResourceMethodIntrospectorTest {
         will(returnValue(MockSubResource.class));
         oneOf(reflectionService).isAbstractType(MockSubResource.class);
         will(returnValue(false));
-        oneOf(reflectionService).getAnnotation(method, ReferencedBy.class);
+        oneOf(reflectionService).getAnnotation(method, ModelPathSpec.class);
         will(returnValue(null));
         oneOf(reflectionService).getAnnotation(method, TemplateResolver.class);
         will(returnValue(hasTemplateResolver ? typeTemplateResolver : null));
@@ -385,7 +385,7 @@ public class ReflectionResourceMethodIntrospectorTest {
       {
         oneOf(reflectionService).getReturnType(method);
         will(returnValue(MockSubResource.class));
-        oneOf(reflectionService).getAnnotation(method, ReferencedBy.class);
+        oneOf(reflectionService).getAnnotation(method, ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(method, TemplateResolver.class);
         will(returnValue(hasTemplateResolver ? methodTemplateResolver : null));

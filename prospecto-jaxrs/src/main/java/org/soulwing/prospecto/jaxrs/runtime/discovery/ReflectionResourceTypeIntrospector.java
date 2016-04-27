@@ -22,13 +22,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
+import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
-import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * A {@link ResourceTypeIntrospector} that utilizes reflection.
@@ -63,16 +63,16 @@ class ReflectionResourceTypeIntrospector implements ResourceTypeIntrospector {
           "cannot describe abstract resource " + typeToString(type));
     }
 
-    final ReferencedBy referencedBy = reflectionService.getAnnotation(type,
-        ReferencedBy.class);
+    final ModelPathSpec modelPathSpec = reflectionService.getAnnotation(type,
+        ModelPathSpec.class);
 
     final Collection<ResourceDescriptor> descriptors = new ArrayList<>();
 
-    if (referencedBy != null) {
+    if (modelPathSpec != null) {
 
-      modelPath = modelPath.concat(referencedBy);
+      modelPath = modelPath.concat(modelPathSpec);
 
-      if (referencedBy.descriptor()) {
+      if (modelPathSpec.descriptor()) {
 
         if (templateResolver == null) {
           throw new ResourceConfigurationException(

@@ -42,7 +42,7 @@ import org.soulwing.prospecto.demo.jaxrs.service.ContactService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.demo.jaxrs.views.RootView;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
@@ -61,7 +61,7 @@ public class ContactResource {
   private ContactService contactService;
 
   @GET
-  @ReferencedBy({ RootView.Root.class, RootView.Contacts.class })
+  @ModelPathSpec({ RootView.Root.class, RootView.Contacts.class })
   @TemplateResolver(RootPathResolver.class)
   public View getContacts() {
     return contactService.findAllContacts();
@@ -77,7 +77,7 @@ public class ContactResource {
 
   @GET
   @Path("/{id}")
-  @ReferencedBy({ AnyModelSequence.class, Contact.class })
+  @ModelPathSpec({ AnyModelSequence.class, Contact.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getContact(@PathParam("id") Long id) {
     try {

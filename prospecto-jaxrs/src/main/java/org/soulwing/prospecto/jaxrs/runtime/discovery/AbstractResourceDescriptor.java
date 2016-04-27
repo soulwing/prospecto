@@ -18,12 +18,12 @@
  */
 package org.soulwing.prospecto.jaxrs.runtime.discovery;
 
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModel;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 import org.soulwing.prospecto.jaxrs.runtime.glob.GlobMatcher;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * An abstract base for {@link ResourceDescriptor} implementations
@@ -33,23 +33,23 @@ import org.soulwing.prospecto.jaxrs.runtime.glob.GlobMatcher;
 abstract class AbstractResourceDescriptor implements ResourceDescriptor {
 
   private final String path;
-  private final ModelPath referencedBy;
+  private final ModelPath modelPath;
   private final GlobMatcher<Class<?>> matcher;
   private final PathTemplateResolver templateResolver;
 
   /**
    * Constructs a new instance.
    * @param path resource path template
-   * @param referencedBy model path
+   * @param modelPath model path
    * @param templateResolver path template resolver
    */
-  public AbstractResourceDescriptor(String path, ModelPath referencedBy,
+  public AbstractResourceDescriptor(String path, ModelPath modelPath,
       PathTemplateResolver templateResolver) {
     this.path = path;
-    this.referencedBy = referencedBy;
+    this.modelPath = modelPath;
     this.templateResolver = templateResolver;
     this.matcher = GlobMatcher.with(AnyModel.class, AnyModelSequence.class,
-        referencedBy.asArray());
+        modelPath.asArray());
   }
 
   /**
@@ -64,8 +64,8 @@ abstract class AbstractResourceDescriptor implements ResourceDescriptor {
    * {@inheritDoc}
    */
   @Override
-  public ModelPath referencedBy() {
-    return referencedBy;
+  public ModelPath modelPath() {
+    return modelPath;
   }
 
   @Override
@@ -95,7 +95,7 @@ abstract class AbstractResourceDescriptor implements ResourceDescriptor {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(referencedBy);
+    sb.append(modelPath);
     sb.append(" => ");
     sb.append(path);
     sb.append(" [");

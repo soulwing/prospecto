@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
-public @interface ReferencedBy {
+public @interface ModelPathSpec {
 
   /**
    * Sequence of model classes that reference the annotated resource method.

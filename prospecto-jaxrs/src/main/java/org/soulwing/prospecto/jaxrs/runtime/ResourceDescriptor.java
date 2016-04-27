@@ -18,10 +18,10 @@
  */
 package org.soulwing.prospecto.jaxrs.runtime;
 
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 
 /**
@@ -39,11 +39,11 @@ public interface ResourceDescriptor {
   String path();
 
   /**
-   * Gets the model path identified in a {@link ReferencedBy} annotation on
+   * Gets the model path identified in a {@link ModelPathSpec} annotation on
    * the described resource.
    * @return model path
    */
-  ModelPath referencedBy();
+  ModelPath modelPath();
 
   /**
    * Tests whether the given model path matches this method descriptor.

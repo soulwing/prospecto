@@ -20,9 +20,9 @@ package org.soulwing.prospecto.jaxrs.runtime.discovery;
 
 import java.lang.reflect.Method;
 
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * A {@link ResourceDescriptor} for a JAX-RS resource method.
@@ -37,13 +37,13 @@ class ResourceMethodDescriptor extends AbstractResourceDescriptor {
    * Constructs a new instance.
    * @param method resource method
    * @param path resource path template
-   * @param referencedBy model path
+   * @param modelPath model path
    * @param templateResolver path template resolver
    */
   public ResourceMethodDescriptor(Method method,
-      String path, ModelPath referencedBy,
+      String path, ModelPath modelPath,
       PathTemplateResolver templateResolver) {
-    super(path, referencedBy, templateResolver);
+    super(path, modelPath, templateResolver);
     this.method = method;
   }
 

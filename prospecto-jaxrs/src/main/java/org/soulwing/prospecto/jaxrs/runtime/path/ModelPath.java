@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModel;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
@@ -90,14 +90,14 @@ public class ModelPath {
 
   /**
    * Creates a new model path from this path concatenated with the sequence
-   * of model types on the given {@link ReferencedBy} annotation.
+   * of model types on the given {@link ModelPathSpec} annotation.
    * sequence of model types.
-   * @param referencedBy a referenced by annotation (which may be {@code null})
+   * @param modelPathSpec a referenced by annotation (which may be {@code null})
    * @return model path
    */
-  public ModelPath concat(ReferencedBy referencedBy) {
-    if (referencedBy == null) return this;
-    return concat(referencedBy.value());
+  public ModelPath concat(ModelPathSpec modelPathSpec) {
+    if (modelPathSpec == null) return this;
+    return concat(modelPathSpec.value());
   }
 
   /**

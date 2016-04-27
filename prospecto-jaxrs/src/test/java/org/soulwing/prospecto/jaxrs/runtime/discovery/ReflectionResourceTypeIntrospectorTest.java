@@ -36,13 +36,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
+import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceConfigurationException;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
-import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * Unit tests for {@link ReflectionResourceTypeIntrospector}.
@@ -128,7 +128,7 @@ public class ReflectionResourceTypeIntrospectorTest {
         oneOf(reflectionService).isAbstractType(MockResource.class);
         will(returnValue(false));
         oneOf(reflectionService).getAnnotation(MockResource.class,
-            ReferencedBy.class);
+            ModelPathSpec.class);
         will(returnValue(AnnotationUtils.referencedByAnnotation(
             hasDescriptorFlag, Object.class)));
       }

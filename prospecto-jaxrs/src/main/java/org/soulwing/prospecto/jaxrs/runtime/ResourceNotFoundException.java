@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.jaxrs.runtime;
 
 import org.soulwing.prospecto.api.url.UnresolvedUrlException;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
@@ -36,7 +36,7 @@ public class ResourceNotFoundException extends UnresolvedUrlException {
     super("cannot resolve a resource referenced by model types "
         + modelPath
         + "; perhaps you need to apply the @"
-        + ReferencedBy.class.getSimpleName()
+        + ModelPathSpec.class.getSimpleName()
         + " annotation to desired resource"); 
   }
 

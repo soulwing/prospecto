@@ -43,7 +43,7 @@ import org.soulwing.prospecto.demo.jaxrs.service.LeagueService;
 import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
 import org.soulwing.prospecto.demo.jaxrs.views.RootView;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
@@ -60,7 +60,7 @@ public class LeagueResource {
   private LeagueService leagueService;
 
   @GET
-  @ReferencedBy(value = {RootView.Root.class, RootView.Leagues.class})
+  @ModelPathSpec(value = {RootView.Root.class, RootView.Leagues.class})
   @TemplateResolver(RootPathResolver.class)
   public View getLeagues() {
     return leagueService.findAllLeagues();
@@ -76,7 +76,7 @@ public class LeagueResource {
 
   @GET
   @Path("{id}")
-  @ReferencedBy({AnyModelSequence.class, League.class})
+  @ModelPathSpec({AnyModelSequence.class, League.class})
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getLeague(@PathParam("id") Long id) {
     try {

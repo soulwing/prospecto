@@ -86,7 +86,7 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
 
     Map<ModelPath, Set<ResourceDescriptor>> pathMap = new HashMap<>();
     for (ResourceDescriptor descriptor : descriptors) {
-      final ModelPath modelPath = descriptor.referencedBy();
+      final ModelPath modelPath = descriptor.modelPath();
       Set<ResourceDescriptor> descriptorSet = pathMap.get(modelPath);
       if (descriptorSet == null) {
         descriptorSet = new HashSet<>();
@@ -109,7 +109,7 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
   private List<ModelPath> createPathList() {
     List<ModelPath> paths = new LinkedList<>();
     for (ResourceDescriptor descriptor : descriptors) {
-      paths.add(descriptor.referencedBy());
+      paths.add(descriptor.modelPath());
     }
     return paths;
   }
@@ -148,7 +148,7 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
     }
 
     matches = findLongestMatches(modelPath, matches);
-    final int length = matches.get(0).referencedBy().length();
+    final int length = matches.get(0).modelPath().length();
     int step = 0;
     while (step < length && matches.size() > 1) {
       matches = findBestMatchesAtStep(step++, modelPath, matches);
@@ -169,7 +169,7 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
 
     List<ResourceDescriptor> matches = new ArrayList<>();
     for (ResourceDescriptor descriptor : allMatches) {
-      if (descriptor.referencedBy().equals(modelPath)) {
+      if (descriptor.modelPath().equals(modelPath)) {
         matches.add(descriptor);
       }
     }
@@ -191,7 +191,7 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
     ModelPath.MatchType matchType = bestMatchTypeAtStep(step, descriptors);
     List<ResourceDescriptor> matches = new ArrayList<>(descriptors.size());
     for (ResourceDescriptor descriptor : descriptors) {
-      if (descriptor.referencedBy().matchTypeAt(step) == matchType) {
+      if (descriptor.modelPath().matchTypeAt(step) == matchType) {
         if (logger.isTraceEnabled()) {
           logger.trace("at step {}: {} has best match {}", step, modelPath,
               descriptor);
@@ -206,10 +206,10 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
   private ModelPath.MatchType bestMatchTypeAtStep(int step,
       List<ResourceDescriptor> descriptors) {
     assert descriptors.size() >= 1;
-    ModelPath.MatchType bestMatchType = descriptors.get(0).referencedBy()
+    ModelPath.MatchType bestMatchType = descriptors.get(0).modelPath()
         .matchTypeAt(step);
     for (int i = 1, max = descriptors.size(); i < max; i++) {
-      ModelPath.MatchType matchType = descriptors.get(i).referencedBy()
+      ModelPath.MatchType matchType = descriptors.get(i).modelPath()
           .matchTypeAt(step);
       if (matchType.ordinal() < bestMatchType.ordinal()) {
         bestMatchType = matchType;
@@ -224,15 +224,15 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
     Collections.sort(allMatches, new Comparator<ResourceDescriptor>() {
       @Override
       public int compare(ResourceDescriptor a, ResourceDescriptor b) {
-        return b.referencedBy().length() - a.referencedBy().length();
+        return b.modelPath().length() - a.modelPath().length();
       }
     });
 
-    int longest = allMatches.get(0).referencedBy().length();
+    int longest = allMatches.get(0).modelPath().length();
     List<ResourceDescriptor> longestMatches = new ArrayList<>();
     int i = 0;
     while (i < allMatches.size()
-        && allMatches.get(i).referencedBy().length() == longest) {
+        && allMatches.get(i).modelPath().length() == longest) {
       final ResourceDescriptor descriptor = allMatches.get(i++);
       if (logger.isTraceEnabled()) {
         logger.trace("{} has longest match {}", modelPath, descriptor);

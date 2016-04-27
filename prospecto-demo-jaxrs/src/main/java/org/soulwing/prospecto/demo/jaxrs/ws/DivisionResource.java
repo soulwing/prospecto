@@ -43,7 +43,7 @@ import org.soulwing.prospecto.demo.jaxrs.service.NoSuchEntityException;
 import org.soulwing.prospecto.demo.jaxrs.service.PlayerService;
 import org.soulwing.prospecto.demo.jaxrs.service.TeamService;
 import org.soulwing.prospecto.demo.jaxrs.service.UpdateConflictException;
-import org.soulwing.prospecto.jaxrs.api.ReferencedBy;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
 
@@ -68,7 +68,7 @@ public class DivisionResource {
 
   @GET
   @Path("{id}")
-  @ReferencedBy({ AnyModelSequence.class, Division.class })
+  @ModelPathSpec({ AnyModelSequence.class, Division.class })
   @TemplateResolver(EntityPathTemplateResolver.class)
   public View getDivision(@PathParam("id") Long id) {
     try {

@@ -111,9 +111,9 @@ public class SimpleResourcePathResolverTest {
         will(returnValue(true));
         allowing(descriptor2).matches(modelPath);
         will(returnValue(true));
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(modelPath));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(modelPath));
       }
     });
@@ -139,9 +139,9 @@ public class SimpleResourcePathResolverTest {
         oneOf(viewContext).currentModelPath();
         will(returnValue(Arrays.asList(Object.class, Object.class)));
 
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(modelPath2));
 
         allowing(descriptor2).matches(ModelPath.with(Object.class, Object.class));
@@ -182,9 +182,9 @@ public class SimpleResourcePathResolverTest {
         oneOf(viewContext).currentModelPath();
         will(returnValue(Arrays.asList(Object.class)));
 
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(modelPath2));
 
         allowing(descriptor2).matches(ModelPath.with(Object.class));
@@ -224,9 +224,9 @@ public class SimpleResourcePathResolverTest {
         oneOf(viewContext).currentModelPath();
         will(returnValue(Arrays.asList(Object.class)));
 
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(modelPath2));
 
         allowing(descriptor2).matches(ModelPath.with(Object.class));
@@ -266,9 +266,9 @@ public class SimpleResourcePathResolverTest {
         oneOf(viewContext).currentModelPath();
         will(returnValue(Arrays.asList(Object.class)));
 
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(modelPath2));
 
         allowing(descriptor2).matches(ModelPath.with(Object.class));
@@ -313,9 +313,9 @@ public class SimpleResourcePathResolverTest {
 
     context.checking(new Expectations() {
       {
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(ModelPath.with(Object.class)));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(ModelPath.with(Object.class)));
       }
     });
@@ -334,9 +334,9 @@ public class SimpleResourcePathResolverTest {
 
     context.checking(new Expectations() {
       {
-        allowing(descriptor1).referencedBy();
+        allowing(descriptor1).modelPath();
         will(returnValue(ModelPath.with(Integer.class)));
-        allowing(descriptor2).referencedBy();
+        allowing(descriptor2).modelPath();
         will(returnValue(ModelPath.with(Long.class)));
       }
     });

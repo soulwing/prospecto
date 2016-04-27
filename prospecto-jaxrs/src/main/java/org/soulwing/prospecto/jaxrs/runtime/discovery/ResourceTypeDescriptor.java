@@ -18,9 +18,9 @@
  */
 package org.soulwing.prospecto.jaxrs.runtime.discovery;
 
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ResourceDescriptor;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * A {@link ResourceDescriptor} for a JAX-RS resource type.
@@ -35,13 +35,12 @@ class ResourceTypeDescriptor extends AbstractResourceDescriptor {
    * Constructs a new instance.
    * @param type resource type
    * @param path resource path template
-   * @param referencedBy model path
+   * @param modelPath model path
    * @param templateResolver path template resolver
    */
   public ResourceTypeDescriptor(Class<?> type,
-      String path, ModelPath referencedBy,
-      PathTemplateResolver templateResolver) {
-    super(path, referencedBy, templateResolver);
+      String path, ModelPath modelPath, PathTemplateResolver templateResolver) {
+    super(path, modelPath, templateResolver);
     this.type = type;
   }
 
