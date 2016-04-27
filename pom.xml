@@ -149,14 +149,14 @@
 
   <modules>
     <module>prospecto-api</module>
-    <module>prospecto-runtime</module>
-    <module>prospecto-tests</module>
-    <module>prospecto-jaxrs</module>
-    <module>prospecto-demo-jaxrs</module>
     <module>prospecto-matchers</module>
-    <module>prospecto-cdi-scope</module>
+    <module>prospecto-runtime</module>
+    <module>prospecto-jaxrs</module>
     <module>prospecto-jaxb</module>
     <module>prospecto-jackson</module>
+    <module>prospecto-cdi-scope</module>
+    <module>prospecto-tests</module>
+    <module>prospecto-demo-jaxrs</module>
   </modules>
 
 </project>
