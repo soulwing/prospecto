@@ -33,12 +33,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -47,8 +45,6 @@ import org.soulwing.prospecto.runtime.text.AbstractViewReader;
  * @author Carl Harris
  */
 class XmlViewReader extends AbstractViewReader {
-
-  public static final String DEFAULT_URL_NAME = ViewDefaults.URL_NAME;
 
   /**
    * A parser stack frame
@@ -113,7 +109,7 @@ class XmlViewReader extends AbstractViewReader {
           startElement(event.asStartElement());
           break;
         case XMLStreamConstants.END_ELEMENT:
-          endElement(event.asEndElement());
+          endElement();
           break;
         case XMLStreamConstants.CHARACTERS:
           characters(event.asCharacters());
@@ -150,7 +146,7 @@ class XmlViewReader extends AbstractViewReader {
     stack.push(new Frame(event.getName(), type, valueElement));
   }
 
-  private void endElement(EndElement event) throws XMLStreamException {
+  private void endElement() throws XMLStreamException {
     final Frame frame = stack.pop();
     if (!frame.isValueElement()) {
       end();
