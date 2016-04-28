@@ -19,14 +19,10 @@
 package org.soulwing.prospecto.runtime.accessor;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
 
 import org.soulwing.prospecto.api.AccessMode;
-import org.soulwing.prospecto.api.association.AbstractToManyIndexedAssociationManager;
+import org.soulwing.prospecto.api.association.AbstractArrayAssociationManager;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 
 /**
@@ -34,15 +30,14 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
  *
  * @author Carl Harris
  */
-public class ArrayAccessor
-    extends AbstractToManyIndexedAssociationManager<Object, Object>
+class ArrayAccessor
+    extends AbstractArrayAssociationManager<Object, Object>
     implements IndexedMultiValuedAccessor {
 
   private final Accessor delegate;
   private final Class<?> componentType;
-  private List<Object> buffer;
 
-  public ArrayAccessor(Accessor delegate, Class<?> componentType) {
+  ArrayAccessor(Accessor delegate, Class<?> componentType) {
     if (!delegate.getDataType().getComponentType()
         .isAssignableFrom(componentType)) {
       throw new IllegalArgumentException("component type "
@@ -71,108 +66,20 @@ public class ArrayAccessor
   }
 
   @Override
-  public Iterator<Object> iterator(Object source) throws Exception {
-    final Object[] array = (Object[]) delegate.get(source);
-    if (array == null) return null;
-    return Arrays.asList(array).iterator();
+  protected Object[] getAssociates(Object owner) throws Exception {
+    return (Object[]) delegate.get(owner);
   }
 
   @Override
-  public int size(Object source) throws Exception {
-    return getAsList(source, TransactionStatus.MANDATORY).size();
+  protected void setAssociates(Object owner, Object[] associates)
+      throws Exception {
+    delegate.set(owner, associates);
   }
 
   @Override
-  public Object get(Object source, int index) throws Exception {
-    return getAsList(source, TransactionStatus.OPTIONAL).get(index);
-  }
-
-  @Override
-  public void set(Object target, int index, Object associate) throws Exception {
-    getAsList(target, TransactionStatus.OPTIONAL).set(index, associate);
-  }
-
-  @Override
-  public boolean add(Object target, Object associate) throws Exception {
-    assertHasTransaction();
-    return getAsList(target, TransactionStatus.MANDATORY).add(associate);
-  }
-
-  @Override
-  public boolean remove(Object target, Object associate) throws Exception {
-    assertHasTransaction();
-    return getAsList(target, TransactionStatus.MANDATORY).remove(associate);
-  }
-
-  @Override
-  public void add(Object target, int index, Object associate) throws Exception {
-    assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).add(index, associate);
-  }
-
-  @Override
-  public void remove(Object target, int index) throws Exception {
-    assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).remove(index);
-  }
-
-  @Override
-  public void clear(Object target) throws Exception {
-    assertHasTransaction();
-    getAsList(target, TransactionStatus.MANDATORY).clear();
-  }
-
-  @Override
-  public void begin(Object target) throws Exception {
-    assertNoTransaction();
-    buffer = new ArrayList<>(Arrays.asList(getAsArray(target)));
-  }
-
-  @Override
-  public void end(Object target) throws Exception {
-    assertHasTransaction();
-    Object[] src = buffer.toArray();
-    Object[] dest = getAsArray(target);
-    if (dest.length != src.length) {
-      dest = (Object[]) Array.newInstance(
-          delegate.getDataType().getComponentType(), src.length);
-      delegate.set(target, dest);
-    }
-    System.arraycopy(src, 0, dest, 0, src.length);
-    buffer = null;
-  }
-
-  enum TransactionStatus {
-    MANDATORY, OPTIONAL
-  }
-
-  private List<Object> getAsList(Object target,
-      TransactionStatus transactionStatus) throws Exception {
-    if (transactionStatus == TransactionStatus.MANDATORY) {
-      assertHasTransaction();
-    }
-    if (buffer != null) {
-      return buffer;
-    }
-    return Arrays.asList(getAsArray(target));
-  }
-
-  private Object[] getAsArray(Object target) throws Exception {
-    Object[] array = (Object[]) delegate.get(target);
-    if (array == null) {
-      array = new Object[0];
-    }
-    return array;
-  }
-
-  private void assertNoTransaction() {
-    if (buffer == null) return;
-    throw new IllegalStateException("transaction already in progress");
-  }
-
-  private void assertHasTransaction() {
-    if (buffer != null) return;
-    throw new IllegalStateException("no transaction in progress");
+  protected Object[] newAssociates(int size) {
+    return (Object[]) Array.newInstance(
+        delegate.getDataType().getComponentType(), size);
   }
 
 }
