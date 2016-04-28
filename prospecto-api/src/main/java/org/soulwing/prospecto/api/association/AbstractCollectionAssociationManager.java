@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
- * An abstract base for a to-many association that is based on q
+ * An abstract base for a manager of a to-many association that is based on q
  * {@link Collection}.
  *
  * @author Carl Harris

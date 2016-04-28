@@ -24,7 +24,7 @@
  * JavaBeans accessors and the methods of the JDK Collections API to manage
  * associations.
  * <p>
- * If your domain model exposes is own API for managing associations between
+ * If your domain model exposes its own API for managing associations between
  * its model types, you can implement an association manager and register it
  * with a {@link org.soulwing.prospecto.api.ViewContext} when applying views
  * to update your model instances.

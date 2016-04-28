@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * An abstract base for an indexed to-many association that is based on a
- * {@link List}.
+ * An abstract base for a manager of an indexed to-many association that is
+ * based on a {@link List}.
  *
  * @author Carl Harris
  */
