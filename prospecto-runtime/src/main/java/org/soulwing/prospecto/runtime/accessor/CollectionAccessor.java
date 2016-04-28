@@ -30,14 +30,14 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
  *
  * @author Carl Harris
  */
-public class CollectionAccessor
+class CollectionAccessor
     extends AbstractCollectionAssociationManager<Object, Object>
     implements MultiValuedAccessor {
 
   private final Accessor delegate;
   private final Class<?> componentType;
 
-  public CollectionAccessor(Accessor delegate, Class<?> componentType) {
+  CollectionAccessor(Accessor delegate, Class<?> componentType) {
     this.delegate = delegate;
     this.componentType = componentType;
   }

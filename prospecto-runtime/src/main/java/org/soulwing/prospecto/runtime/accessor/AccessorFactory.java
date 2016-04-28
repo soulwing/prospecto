@@ -25,7 +25,7 @@ import org.soulwing.prospecto.api.AccessType;
  *
  * @author Carl Harris
  */
-public interface AccessorFactory {
+interface AccessorFactory {
 
   Accessor newAccessor(Class<?> declaringClass, String name,
       AccessType accessType) throws Exception;

@@ -32,10 +32,11 @@ import org.soulwing.prospecto.api.AccessMode;
  *
  * @author Carl Harris
  */
-public class ReflectionAccessorFactory {
+class ReflectionAccessorFactory {
 
 
-  static Accessor field(Class<?> ownerClass, String name) throws NoSuchFieldException {
+  static Accessor field(Class<?> ownerClass, String name)
+      throws NoSuchFieldException {
     return new FieldAccessor(ownerClass, name,
         findField(ownerClass, name));
   }

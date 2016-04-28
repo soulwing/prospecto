@@ -30,13 +30,13 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
  *
  * @author Carl Harris
  */
-public class ListAccessor extends AbstractListAssociationManager<Object, Object>
+class ListAccessor extends AbstractListAssociationManager<Object, Object>
     implements IndexedMultiValuedAccessor {
 
   private final Accessor delegate;
   private final Class<?> componentType;
 
-  public ListAccessor(Accessor delegate, Class<?> componentType) {
+  ListAccessor(Accessor delegate, Class<?> componentType) {
     this.delegate = delegate;
     this.componentType = componentType;
   }

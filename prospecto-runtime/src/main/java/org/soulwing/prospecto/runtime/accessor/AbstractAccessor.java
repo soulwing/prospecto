@@ -32,7 +32,7 @@ import org.soulwing.prospecto.api.association.AssociationDescriptor;
  *
  * @author Carl Harris
  */
-public abstract class AbstractAccessor
+abstract class AbstractAccessor
     extends AbstractToOneAssociationManager<Object, Object>
     implements Accessor {
 
