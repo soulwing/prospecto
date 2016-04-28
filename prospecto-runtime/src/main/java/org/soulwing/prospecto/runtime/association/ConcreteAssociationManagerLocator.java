@@ -21,6 +21,7 @@ package org.soulwing.prospecto.runtime.association;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.AssociationManager;
+import org.soulwing.prospecto.api.association.Stateful;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
@@ -44,6 +45,19 @@ class ConcreteAssociationManagerLocator
       AssociationDescriptor descriptor, UpdatableNode node,
       ScopedViewContext context) {
 
+    final M manager = doFindManager(managerClass, defaultManager, descriptor,
+        node, context);
+
+    if (manager instanceof Stateful) {
+      return (M) ((Stateful) manager).clone();
+    }
+
+    return manager;
+  }
+
+  private <M extends AssociationManager> M doFindManager(Class<M> managerClass,
+      M defaultManager, AssociationDescriptor descriptor, UpdatableNode node,
+      ScopedViewContext context) {
     AssociationManager manager = node.get(managerClass);
 
     if (manager != null) {
