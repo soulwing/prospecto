@@ -158,7 +158,7 @@ public class ArrayOfValuesApplicatorTest
       {
         oneOf(node).getDefaultManager();
         will(returnValue(defaultManager));
-        oneOf(associationUpdater).update(node, MODEL, MODEL_ARRAY,
+        oneOf(associationUpdater).findManagerAndUpdate(node, MODEL, MODEL_ARRAY,
             defaultManager, viewContext);
       }
     });

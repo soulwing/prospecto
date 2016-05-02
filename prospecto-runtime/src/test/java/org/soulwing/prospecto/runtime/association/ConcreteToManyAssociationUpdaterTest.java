@@ -104,7 +104,7 @@ public class ConcreteToManyAssociationUpdaterTest {
       }
     });
 
-    updater.update(node, owner, Collections.<InjectableViewEntity>emptyList(),
+    updater.findManagerAndUpdate(node, owner, Collections.<InjectableViewEntity>emptyList(),
         defaultManager, viewContext);
   }
 

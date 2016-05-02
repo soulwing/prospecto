@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -34,7 +34,7 @@ import org.soulwing.prospecto.api.ViewTemplate;
  *
  * @author Carl Harris
  */
-public class ValueTest extends EditorTestBase {
+public class ValueTest extends ViewApplicatorTestBase {
 
   @Test
   public void testWrapperTypesPropertyAccess() throws Exception {

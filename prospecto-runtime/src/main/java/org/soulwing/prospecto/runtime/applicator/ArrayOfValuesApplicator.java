@@ -92,7 +92,7 @@ class ArrayOfValuesApplicator
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
-    associationUpdater.update(node, target, (Iterable<?>) value,
+    associationUpdater.findManagerAndUpdate(node, target, (Iterable<?>) value,
         node.getDefaultManager(), context);
   }
 

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ import org.soulwing.prospecto.api.ViewTemplate;
  *
  * @author Carl Harris
  */
-public class ArrayOfValuesTest extends EditorTestBase {
+public class ArrayOfValuesTest extends ViewApplicatorTestBase {
 
   @Test
   public void testArrayModelPropertyAccess() throws Exception {

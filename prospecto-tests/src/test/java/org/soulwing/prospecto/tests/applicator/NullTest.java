@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import org.junit.Test;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
@@ -27,7 +27,7 @@ import org.soulwing.prospecto.api.ViewTemplate;
  *
  * @author Carl Harris
  */
-public class NullTest extends EditorTestBase {
+public class NullTest extends ViewApplicatorTestBase {
 
   @Test
   public void test() throws Exception {

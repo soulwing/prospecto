@@ -55,9 +55,10 @@ class ObjectApplicator extends AbstractObjectApplicator<ObjectNode>
   }
 
   @Override
-  public void apply(Object injector, Object target, ScopedViewContext context)
+  public Object apply(Object injector, Object target, ScopedViewContext context)
       throws Exception {
     ((InjectableViewEntity) injector).inject(target, context);
+    return target;
   }
 
 }

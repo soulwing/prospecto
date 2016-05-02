@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import org.junit.Test;
 import org.soulwing.prospecto.ViewTemplateBuilderProducer;
@@ -32,7 +32,7 @@ import org.soulwing.prospecto.api.url.UrlResolver;
  *
  * @author Carl Harris
  */
-public class MetaTest extends EditorTestBase {
+public class MetaTest extends ViewApplicatorTestBase {
 
   public static class MockModel {}
 

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
@@ -51,7 +51,7 @@ import org.soulwing.prospecto.runtime.view.ViewBuilder;
  *
  * @author Carl Harris
  */
-public class EditorTest {
+public class ViewApplicatorTest {
 
   private static final String TYPE = "type";
   private static final String CHILD = "child";
@@ -222,7 +222,7 @@ public class EditorTest {
         .begin()
         .type(BEGIN_OBJECT)
         .type(DISCRIMINATOR).name(TYPE).value(
-            EditorTest.class.getSimpleName() + "$" + MockSubType1.class.getSimpleName())
+            ViewApplicatorTest.class.getSimpleName() + "$" + MockSubType1.class.getSimpleName())
         .type(VALUE).name(STRING).value(UPDATED_STRING)
         .type(VALUE).name(SUBTYPE_STRING).value(UPDATED_SUBTYPE_STRING)
         .type(END_OBJECT)

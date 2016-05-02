@@ -207,7 +207,7 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
         will(returnValue(EnumSet.of(AccessMode.WRITE)));
         oneOf(node).getDefaultManager();
         will(returnValue(defaultManager));
-        oneOf(associationUpdater).update(node, MODEL, MODEL_ARRAY,
+        oneOf(associationUpdater).findManagerAndUpdate(node, MODEL, MODEL_ARRAY,
             defaultManager, viewContext);
       }
     });

@@ -58,8 +58,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public void update(UpdatableNode node, Object target,
+  public void findManagerAndUpdate(UpdatableNode node, Object target,
       Iterable<?> values, ToManyAssociationManager defaultManager,
       ScopedViewContext context) throws Exception {
 
@@ -70,6 +69,14 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
         managerLocator.findManager(ToManyAssociationManager.class,
             defaultManager, descriptor, node, context);
 
+    updateUsingManager(node, target, values, manager, context);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public void updateUsingManager(UpdatableNode node, Object target,
+      Iterable<?> values, ToManyAssociationManager manager,
+      ScopedViewContext context) throws Exception {
     manager.begin(target);
     findStrategy(manager).update(node, target, values, manager, context);
     manager.end(target);

@@ -18,15 +18,19 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.template.ArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.association.ReferenceCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
+import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
  * An applicator for an {@link ArrayOfReferencesNode}.
@@ -34,7 +38,8 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  * @author Carl Harris
  */
 class ArrayOfReferencesApplicator
-    extends AbstractArrayOfObjectsApplicator<ArrayOfReferencesNode> {
+    extends AbstractArrayOfObjectsApplicator<ArrayOfReferencesNode>
+    implements RootViewEventApplicator {
 
   ArrayOfReferencesApplicator(ArrayOfReferencesNode node,
       List<ViewEventApplicator> children) {
@@ -52,6 +57,24 @@ class ArrayOfReferencesApplicator
       ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
         associationUpdater, applicatorLocator);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object apply(Object injector, Object target, ScopedViewContext context)
+      throws Exception {
+    final List<InjectableViewEntity> entities =
+        (List<InjectableViewEntity>) injector;
+
+    final ReferenceResolverService resolvers = context.getReferenceResolvers();
+    final List<Object> references = new ArrayList<>();
+
+    for (final InjectableViewEntity entity : entities) {
+      references.add(entity != null ?
+          resolvers.resolve(entity.getType(), entity) : null);
+    }
+
+    return references;
   }
 
 }

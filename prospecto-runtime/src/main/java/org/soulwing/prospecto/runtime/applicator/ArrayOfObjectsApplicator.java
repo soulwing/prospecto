@@ -23,7 +23,9 @@ import java.util.List;
 import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
@@ -34,7 +36,8 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  * @author Carl Harris
  */
 class ArrayOfObjectsApplicator
-    extends AbstractArrayOfObjectsApplicator<ArrayOfObjectsNode> {
+    extends AbstractArrayOfObjectsApplicator<ArrayOfObjectsNode>
+    implements RootViewEventApplicator {
 
   ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
       List<ViewEventApplicator> children) {
@@ -53,6 +56,20 @@ class ArrayOfObjectsApplicator
       ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
         associationUpdater, applicatorLocator);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object apply(Object injector, Object targetAndManager,
+      ScopedViewContext context) throws Exception {
+
+    associationUpdater.updateUsingManager(node,
+        ((TargetAndManager) targetAndManager).getTarget(),
+        (List<InjectableViewEntity>) injector,
+        ((TargetAndManager) targetAndManager).getManager(),
+        context);
+
+    return null;
   }
 
 }

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.editor;
+package org.soulwing.prospecto.tests.applicator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -54,7 +54,7 @@ import org.soulwing.prospecto.api.scope.MutableScope;
  *
  * @author Carl Harris
  */
-public class EditorTestBase {
+public class ViewApplicatorTestBase {
 
   protected final ViewContext context = ViewContextProducer.newContext();
 
@@ -72,12 +72,22 @@ public class EditorTestBase {
 
   protected void validate(ViewTemplate template, Representation representation)
       throws IOException {
+    final Object model = validateCreate(template, representation);
+    validateUpdate(template, representation, model);
+  }
+
+  protected Object validateCreate(ViewTemplate template,
+      Representation representation) throws IOException {
     final View createView = readView("create", representation);
     Object model = template.createApplicator(createView, context).create();
     final View createResultView = regenerateView(
         template.generateView(model, context), "create", representation);
     assertThat(createResultView, is(sameView(createView)));
+    return model;
+  }
 
+  protected void validateUpdate(ViewTemplate template,
+      Representation representation, Object model) throws IOException {
     final View updateView = readView("update", representation);
     template.createApplicator(updateView, context).update(model);
     final View updateResultView = regenerateView(
@@ -101,7 +111,7 @@ public class EditorTestBase {
     }
   }
 
-  private View readView(String resourceName, Representation representation)
+  protected View readView(String resourceName, Representation representation)
       throws IOException {
     final String qualifiedResourceName =
         Introspector.decapitalize(getClass().getSimpleName())

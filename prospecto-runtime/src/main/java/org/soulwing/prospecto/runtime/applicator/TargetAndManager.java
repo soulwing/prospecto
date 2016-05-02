@@ -1,5 +1,5 @@
 /*
- * File created on Mar 31, 2016
+ * File created on Apr 28, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,26 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.association;
+package org.soulwing.prospecto.runtime.applicator;
 
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.template.UpdatableNode;
-import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
- * An updater for a to-many association between a target model object and
- * one of its properties.
+ * A object that holds a collection/array to be updated and the manager that
+ * will be used to perform the update.
  *
  * @author Carl Harris
  */
-public interface ToManyAssociationUpdater {
+class TargetAndManager {
 
-  void findManagerAndUpdate(UpdatableNode node, Object target,
-      Iterable<?> values, ToManyAssociationManager defaultManager,
-      ScopedViewContext context) throws Exception;
+  private final Object target;
+  private final ToManyAssociationManager<?, ?> manager;
 
-  void updateUsingManager(UpdatableNode node, Object target,
-      Iterable<?> values, ToManyAssociationManager manager,
-      ScopedViewContext context) throws Exception;
+  public TargetAndManager(Object target,
+      ToManyAssociationManager<?, ?> manager) {
+    this.target = target;
+    this.manager = manager;
+  }
+
+  public Object getTarget() {
+    return target;
+  }
+
+  public ToManyAssociationManager<?, ?> getManager() {
+    return manager;
+  }
 
 }

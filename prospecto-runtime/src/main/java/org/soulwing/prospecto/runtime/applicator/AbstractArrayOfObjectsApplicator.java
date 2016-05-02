@@ -114,7 +114,7 @@ abstract class AbstractArrayOfObjectsApplicator<N extends ArrayOfObjectsNode>
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
     if (node.getAllowedModes().contains(AccessMode.WRITE)) {
-      associationUpdater.update(node, target,
+      associationUpdater.findManagerAndUpdate(node, target,
           (List<InjectableViewEntity>) value, node.getDefaultManager(), context);
     }
   }

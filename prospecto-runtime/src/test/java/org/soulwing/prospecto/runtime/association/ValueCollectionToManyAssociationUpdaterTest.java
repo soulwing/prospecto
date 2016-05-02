@@ -83,7 +83,7 @@ public class ValueCollectionToManyAssociationUpdaterTest {
   public void testUpdate() throws Exception {
     context.checking(resolveExpectations());
     context.checking(managerExpectations(resolvedValue()));
-    updater.update(node, OWNER, Collections.singletonList(value()),
+    updater.findManagerAndUpdate(node, OWNER, Collections.singletonList(value()),
         defaultManager, viewContext);
   }
 

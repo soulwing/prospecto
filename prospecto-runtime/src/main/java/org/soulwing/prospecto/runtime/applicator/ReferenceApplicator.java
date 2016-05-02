@@ -23,7 +23,9 @@ import java.util.List;
 import org.soulwing.prospecto.api.template.ReferenceNode;
 import org.soulwing.prospecto.runtime.association.ReferenceToOneAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToOneAssociationUpdater;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
+import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
@@ -33,7 +35,8 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
  *
  * @author Carl Harris
  */
-class ReferenceApplicator extends AbstractObjectApplicator<ReferenceNode> {
+class ReferenceApplicator extends AbstractObjectApplicator<ReferenceNode>
+    implements RootViewEventApplicator {
 
   ReferenceApplicator(ReferenceNode node, List<ViewEventApplicator> children) {
     this(node, children, ConcreteViewEntityFactory.INSTANCE,
@@ -51,4 +54,12 @@ class ReferenceApplicator extends AbstractObjectApplicator<ReferenceNode> {
         associationUpdater, applicatorLocator);
   }
 
+  @Override
+  public Object apply(Object injector, Object target, ScopedViewContext context)
+      throws Exception {
+    final InjectableViewEntity entity = (InjectableViewEntity) injector;
+    return entity != null ?
+        context.getReferenceResolvers().resolve(entity.getType(), entity) : null;
+  }
+  
 }

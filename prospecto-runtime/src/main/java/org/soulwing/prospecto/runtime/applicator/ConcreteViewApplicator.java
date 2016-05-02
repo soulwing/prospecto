@@ -18,9 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import org.soulwing.prospecto.api.UndefinedValue;
@@ -28,6 +30,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
 import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
@@ -37,7 +41,6 @@ import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
  *
  * @author Carl Harris
  */
-@SuppressWarnings("ThrowableInstanceNeverThrown")
 class ConcreteViewApplicator implements ViewApplicator {
 
   private static final ViewInputException NOT_WELL_FORMED_EXCEPTION =
@@ -75,10 +78,10 @@ class ConcreteViewApplicator implements ViewApplicator {
   @Override
   public Object create() throws ViewApplicatorException {
     try {
-      final InjectableViewEntity entity = deriveInjector();
+      final InjectableViewEntity entity = (InjectableViewEntity) deriveInjector();
       if (entity == UndefinedValue.INSTANCE) return null;
 
-      final Object model = ((InjectableViewEntity) entity).getType().newInstance();
+      final Object model = entity.getType().newInstance();
       root.apply(entity, model, context);
       context.getListeners().afterTraversing(event);
       return model;
@@ -92,15 +95,11 @@ class ConcreteViewApplicator implements ViewApplicator {
   }
 
   @Override
-  public Object update(Object model) throws ViewApplicatorException {
+  public void update(Object model) throws ViewApplicatorException {
     try {
       assertHasRootModelType(model);
-      final InjectableViewEntity entity = deriveInjector();
-      if (entity != UndefinedValue.INSTANCE) {
-        root.apply(entity, model, context);
-      }
+      root.apply(deriveInjector(), model, context);
       context.getListeners().afterTraversing(event);
-      return model;
     }
     catch (ViewApplicatorException ex) {
       throw ex;
@@ -110,15 +109,88 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
   }
 
-  private InjectableViewEntity deriveInjector() throws ViewInputException {
-    final Deque<View.Event> events = eventDeque(source);
-    final View.Event triggerEvent = events.removeFirst();
-    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ViewApplicatorException("view must start with an object");
+  @Override
+  public void update(Collection<?> model,
+      ToManyAssociationManager<?, ?> associationManager)
+       throws ViewApplicatorException {
+    update(new TargetAndManager(model, associationManager));
+  }
+
+  @Override
+  public void update(Object[] model,
+      ToManyIndexedAssociationManager<?, ?> associationManager)
+      throws ViewApplicatorException {
+    update(new TargetAndManager(model, associationManager));
+  }
+
+  @Override
+  public void update(List<?> model,
+      ToManyIndexedAssociationManager<?, ?> associationManager)
+      throws ViewApplicatorException {
+    update(new TargetAndManager(model, associationManager));
+  }
+
+  private void update(TargetAndManager targetAndManager)
+      throws ViewApplicatorException {
+    if (!(root instanceof ArrayOfObjectsApplicator)) {
+      throw new ViewApplicatorException("root node type must be `arrayOfObjects`");
     }
     try {
-      return (InjectableViewEntity) root.toModelValue(null, triggerEvent,
-          events, context);
+      root.apply(deriveInjector(), targetAndManager, context);
+      context.getListeners().afterTraversing(event);
+    }
+    catch (ViewApplicatorException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ViewApplicatorException(ex);
+    }
+  }
+
+  @Override
+  public Object resolve() throws ViewApplicatorException {
+    if (!(root instanceof ReferenceApplicator)) {
+      throw new ViewApplicatorException("root node type must be `reference`");
+    }
+    try {
+      final Object reference = root.apply(deriveInjector(), null, context);
+      context.getListeners().afterTraversing(event);
+      return reference;
+    }
+    catch (ViewApplicatorException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ViewApplicatorException(ex);
+    }
+  }
+
+  @Override
+  public List<?> resolveAll() throws ViewApplicatorException {
+    if (!(root instanceof ArrayOfReferencesApplicator)) {
+      throw new ViewApplicatorException(
+          "root node type must be `arrayOfReferences`");
+    }
+    try {
+      final List<?> references =
+          (List<?>) root.apply(deriveInjector(), null, context);
+
+      context.getListeners().afterTraversing(event);
+      return references;
+    }
+    catch (ViewApplicatorException ex) {
+      throw ex;
+    }
+    catch (Exception ex) {
+      throw new ViewApplicatorException(ex);
+    }
+  }
+
+  private Object deriveInjector() throws ViewInputException {
+    final Deque<View.Event> events = eventDeque(source);
+    final View.Event triggerEvent = events.removeFirst();
+    try {
+      return root.toModelValue(null, triggerEvent, events, context);
     }
     catch (ViewInputException ex) {
       throw ex;
