@@ -58,25 +58,45 @@ class ReflectionAccessorFactory {
       IntrospectionException {
     final EnumSet<AccessMode> supportedModes = EnumSet.noneOf(AccessMode.class);
 
-    for (final PropertyDescriptor descriptor :
-        Introspector.getBeanInfo(declaringClass).getPropertyDescriptors()) {
+    final PropertyDescriptor descriptor = findDescriptor(declaringClass, name);
+    if (descriptor == null) {
+      throw new NoSuchMethodException(declaringClass.getName()
+          + " has no property named '" + name + "'");
+    }
+
+    final Method readMethod = descriptor.getReadMethod();
+    if (readMethod != null) {
+      supportedModes.add(AccessMode.READ);
+    }
+
+    final Method writeMethod = descriptor.getWriteMethod();
+    if (writeMethod != null) {
+      supportedModes.add(AccessMode.WRITE);
+    }
+
+    return new PropertyAccessor(declaringClass, name, readMethod,
+        writeMethod, supportedModes);
+  }
+
+  private static PropertyDescriptor findDescriptor(Class<?> type, String name)
+      throws IntrospectionException {
+    final PropertyDescriptor[] descriptors = Introspector.getBeanInfo(type)
+        .getPropertyDescriptors();
+    for (PropertyDescriptor descriptor : descriptors) {
       if (descriptor.getName().equals(name)) {
-        Method readMethod = descriptor.getReadMethod();
-        if (readMethod != null) {
-          supportedModes.add(AccessMode.READ);
-        }
-
-        Method writeMethod = descriptor.getWriteMethod();
-        if (writeMethod != null) {
-          supportedModes.add(AccessMode.WRITE);
-        }
-
-        return new PropertyAccessor(declaringClass, name, readMethod,
-            writeMethod, supportedModes);
+        return descriptor;
       }
     }
-    throw new NoSuchMethodException(declaringClass.getName()
-        + " has no property named '" + name + "'");
+
+    if (type.isInterface()) {
+      for (Class<?> intf : type.getInterfaces()) {
+        PropertyDescriptor descriptor = findDescriptor(intf, name);
+        if (descriptor != null) return descriptor;
+      }
+    }
+
+    return null;
   }
+
 
 }
