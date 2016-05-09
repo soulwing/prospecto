@@ -126,4 +126,61 @@ public class ReflectionAccessorBuilderTest {
 
   }
 
+  @Test
+  public void testPublicInterfaceMethod() throws Exception {
+    final ReflectionAccessorBuilder accessorBuilder =
+        new ReflectionAccessorBuilder(IMockModel.class);
+    final IMockModel model = new MockModelImpl();
+
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
+
+    assertThat(accessor.get(model), is(sameInstance(PUBLIC_METHOD_VALUE)));
+  }
+
+  @Test
+  public void testPublicExtendedInterfaceMethod() throws Exception {
+    final ReflectionAccessorBuilder accessorBuilder =
+        new ReflectionAccessorBuilder(IMockSubModel.class);
+    final IMockSubModel model = new MockSubModelImpl();
+
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
+
+    assertThat(accessor.get(model), is(sameInstance(PUBLIC_METHOD_VALUE)));
+  }
+
+
+
+  public interface IMockModel {
+    Object getPublicMethod();
+  }
+
+  public interface IMockSubModel extends IMockModel {
+  }
+
+  public class MockModelImpl implements IMockModel {
+
+    @Override
+    public Object getPublicMethod() {
+      return PUBLIC_METHOD_VALUE;
+    }
+
+  }
+
+  public class MockSubModelImpl implements IMockSubModel {
+
+    @Override
+    public Object getPublicMethod() {
+      return PUBLIC_METHOD_VALUE;
+    }
+
+  }
+
+
+
 }
