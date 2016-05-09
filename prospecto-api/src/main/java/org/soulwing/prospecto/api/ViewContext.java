@@ -254,4 +254,10 @@ public interface ViewContext extends MutableScope {
    */
   boolean remove(Object value);
 
+  /**
+   * Creates a (deep) copy of this view context;
+   * @return context copy
+   */
+  ViewContext copy();
+
 }

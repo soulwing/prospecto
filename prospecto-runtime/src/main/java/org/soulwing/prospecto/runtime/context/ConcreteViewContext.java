@@ -280,6 +280,10 @@ class ConcreteViewContext implements ScopedViewContext {
     return scopeStack.peek();
   }
 
+  @Override
+  public ViewContext copy() {
+    return new ConcreteViewContext(this);
+  }
 
 }
 
