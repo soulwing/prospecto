@@ -41,6 +41,7 @@ import org.soulwing.prospecto.runtime.beans.BeanFactory;
 import org.soulwing.prospecto.runtime.beans.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.meta.UrlResolvingMetadataHandler;
+import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.AbstractViewNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfObjectsNode;
@@ -53,6 +54,8 @@ import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.template.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
+import org.soulwing.prospecto.runtime.template.EnumNameNode;
+import org.soulwing.prospecto.runtime.template.ToStringValueNode;
 
 /**
  * An abstract base for {@link ViewTemplateBuilder} implementations.
@@ -94,6 +97,10 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     return parent;
   }
 
+  public AbstractViewNode getNode() {
+    return node;
+  }
+
   public ConcreteContainerNode getTarget() {
     return target;
   }
@@ -122,11 +129,51 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     return newTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteValueNode node);
+  @Override
+  public ViewTemplateBuilder name() {
+    return name(ViewDefaults.ENUM_NODE_NAME, null);
+  }
+
+  @Override
+  public ViewTemplateBuilder name(String name) {
+    return name(name, null);
+  }
+
+  @Override
+  public ViewTemplateBuilder name(String name, String namespace) {
+    final EnumNameNode node = new EnumNameNode(name, namespace);
+    if (!Enum.class.isAssignableFrom(target.getModelType())) {
+      throw new ViewTemplateException(
+          "`name` is allowed only when parent node's model type is an enum");
+    }
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder toStringValue() {
+    return toStringValue(ViewDefaults.TO_STRING_NODE_NAME, null);
+  }
+
+  @Override
+  public ViewTemplateBuilder toStringValue(String name) {
+    return toStringValue(name, null);
+  }
+
+  @Override
+  public ViewTemplateBuilder toStringValue(String name, String namespace) {
+    final ToStringValueNode node = new ToStringValueNode(name, namespace);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  protected abstract ViewTemplateBuilder newTemplateBuilder(
+      AbstractValueNode node);
+
 
   @Override
   public ViewTemplateBuilder url() {
-    return url(ViewDefaults.URL_NAME, null);
+    return url(ViewDefaults.URL_NODE_NAME, null);
   }
 
   @Override

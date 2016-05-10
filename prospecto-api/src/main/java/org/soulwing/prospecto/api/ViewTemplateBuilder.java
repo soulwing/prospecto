@@ -78,6 +78,56 @@ public interface ViewTemplateBuilder {
   ViewTemplateBuilder value(String name, String namespace);
 
   /**
+   * For a parent node whose type is an {@link Enum}, specifies that a value
+   * node should be included for the {@link Enum#name() name} of the instance.
+   * @return this builder
+   */
+  ViewTemplateBuilder name();
+
+  /**
+   * For a parent node whose type is an {@link Enum}, specifies that a value
+   * node should be included for the {@link Enum#name() name} of the instance.
+   * @param name name for the value node
+   * @return this builder
+   */
+  ViewTemplateBuilder name(String name);
+
+  /**
+   * For a parent node whose type is an {@link Enum}, specifies that a value
+   * node should be included for the {@link Enum#name() name} of the instance.
+   * @param name name for the value node
+   * @param namespace namespace for {@code name}; used in only some view
+   *    types (e.g. XML)
+   * @return this builder
+   */
+  ViewTemplateBuilder name(String name, String namespace);
+
+  /**
+   * Specifies that a value node should be included for the {@link Object#toString()}
+   * value of parent node.
+   * @return this builder
+   */
+  ViewTemplateBuilder toStringValue();
+
+  /**
+   * Specifies that a value node should be included for the {@link Object#toString()}
+   * value of parent node.
+   * @param name name for the value node
+   * @return this builder
+   */
+  ViewTemplateBuilder toStringValue(String name);
+
+  /**
+   * Specifies that a value node should be included for the {@link Object#toString()}
+   * value of parent node.
+   * @param name name for the value node
+   * @param namespace namespace for {@code name}; used in only some view
+   *    types (e.g. XML)
+   * @return this builder
+   */
+  ViewTemplateBuilder toStringValue(String name, String namespace);
+
+  /**
    * Adds a URL node at the cursor.
    * <p>
    * When generating a view from a template that includes a URL node, the

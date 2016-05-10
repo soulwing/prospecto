@@ -26,12 +26,12 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 
 /**
@@ -49,7 +49,7 @@ class RootNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(ConcreteValueNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(AbstractValueNode node) {
     return new ValueNodeViewTemplateBuilder(this, getTarget(), node);
   }
 

@@ -142,7 +142,7 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NAME,
+        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NODE_NAME,
         Constants.DISCRIMINATOR_VALUE)));
   }
 
@@ -154,7 +154,7 @@ public abstract class ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(expectedUrlEvent(ViewDefaults.URL_NAME)));
+        is(expectedUrlEvent(ViewDefaults.URL_NODE_NAME)));
   }
 
   @Test

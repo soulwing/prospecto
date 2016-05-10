@@ -183,7 +183,7 @@ public class ObjectTest {
     assertThat(template.generateView(model, context),
         hasEventSequence(
             eventOfType(BEGIN_OBJECT),
-            eventOfType(META, withName(ViewDefaults.URL_NAME),
+            eventOfType(META, withName(ViewDefaults.URL_NODE_NAME),
                 inDefaultNamespace(),
                 whereValue(is(equalTo(RESOLVED_URL)))),
             eventOfType(END_OBJECT)

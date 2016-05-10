@@ -1,5 +1,5 @@
 /*
- * File created on Apr 8, 2016
+ * File created on May 10, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,33 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.options;
+package org.soulwing.prospecto.api.template;
 
 /**
- * Default values for various view options.
+ * A {@link ValueNode} that can be used to update a property of a model.
  *
  * @author Carl Harris
  */
-public interface ViewDefaults {
+public interface UpdatableValueNode extends ValueNode, UpdatableNode {
 
   /**
-   * Default name for a URL node.
+   * Sets the value associated with this node in the given model.
+   * @param model model which will be injected with the subject value
+   * @param value value to inject
+   * @throws Exception
    */
-  String URL_NODE_NAME = "href";
-
-  /**
-   * Default name for a discriminator node.
-   */
-  String DISCRIMINATOR_NODE_NAME = "type";
-
-  /**
-   * Default name for an {@code enum} {@link Enum#name() name} value node.
-   */
-  String ENUM_NODE_NAME = "name";
-
-  /**
-   * Default name for a {@link Object#toString()} value node.
-   */
-  String TO_STRING_NODE_NAME = "displayString";
+  void setValue(Object model, Object value) throws Exception;
 
 }

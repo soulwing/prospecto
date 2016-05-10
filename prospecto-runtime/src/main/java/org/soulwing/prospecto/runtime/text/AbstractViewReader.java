@@ -155,7 +155,7 @@ public abstract class AbstractViewReader implements ViewReader {
       }
     }
     events.add(frame.index, newEvent(View.Event.Type.DISCRIMINATOR,
-        ViewDefaults.DISCRIMINATOR_NAME, null, value));
+        ViewDefaults.DISCRIMINATOR_NODE_NAME, null, value));
   }
 
   /**

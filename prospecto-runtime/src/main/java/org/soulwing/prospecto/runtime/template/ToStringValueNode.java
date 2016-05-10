@@ -1,5 +1,5 @@
 /*
- * File created on Apr 8, 2016
+ * File created on May 10, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -18,38 +18,38 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
-import org.soulwing.prospecto.api.template.UpdatableValueNode;
-import org.soulwing.prospecto.runtime.converter.Convertible;
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 
 /**
- * A view node that represents a value with a simple textual representation.
+ * A view node that represents the {@link Object#toString()} value of a model
+ * instance.
  *
  * @author Carl Harris
  */
-public class ConcreteValueNode extends AbstractValueNode
-    implements Convertible, UpdatableValueNode {
+public class ToStringValueNode extends AbstractValueNode {
 
   /**
    * Constructs a new instance.
    * @param name node name
    * @param namespace namespace for {@code name}
    */
-  public ConcreteValueNode(String name, String namespace) {
+  public ToStringValueNode(String name, String namespace) {
     super(name, namespace);
   }
 
   @Override
   public Class<?> getDataType() {
-    return getAccessor().getDataType();
+    return String.class;
   }
 
   @Override
   public Object getValue(Object model) throws Exception {
-    return getAccessor().get(model);
+    return model.toString();
   }
 
-  public void setValue(Object model, Object value) throws Exception {
-    getAccessor().forSubtype(model.getClass()).set(model, value);
+  @Override
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitValue(this, state);
   }
 
 }

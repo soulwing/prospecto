@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -68,7 +69,7 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
-        oneOf(node).getAllowedModes();
+        allowing((UpdatableValueNode) node).getAllowedModes();
         will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getValue(MODEL);
         will(returnValue(MODEL_VALUE));
@@ -92,7 +93,7 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
-        oneOf(node).getAllowedModes();
+        allowing((UpdatableValueNode) node).getAllowedModes();
         will(returnValue(EnumSet.of(AccessMode.READ)));
         oneOf(node).getValue(MODEL);
         will(returnValue(MODEL_VALUE));
@@ -111,7 +112,7 @@ public class ValueGeneratorTest extends AbstractViewEventGeneratorTest<ValueNode
     context.checking(contextScopeExpectations());
     context.checking(new Expectations() {
       {
-        oneOf(node).getAllowedModes();
+        allowing((UpdatableValueNode) node).getAllowedModes();
         will(returnValue(EnumSet.noneOf(AccessMode.class)));
       }
     });

@@ -197,7 +197,7 @@ public abstract class ViewWriterTestBase {
     final List<View.Event> events = new ArrayList<>();
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
     events.add(newEvent(View.Event.Type.DISCRIMINATOR,
-        ViewDefaults.DISCRIMINATOR_NAME,
+        ViewDefaults.DISCRIMINATOR_NODE_NAME,
         Constants.DISCRIMINATOR_VALUE));
     events.add(newEvent(View.Event.Type.END_OBJECT));
 
@@ -209,7 +209,7 @@ public abstract class ViewWriterTestBase {
     final List<View.Event> events = new ArrayList<>();
     events.add(newEvent(View.Event.Type.BEGIN_OBJECT));
     events.add(newEvent(View.Event.Type.META,
-        ViewDefaults.URL_NAME, Constants.URL_VALUE));
+        ViewDefaults.URL_NODE_NAME, Constants.URL_VALUE));
     events.add(newEvent(View.Event.Type.END_OBJECT));
 
     writeAndValidateView("defaultUrlView", events);

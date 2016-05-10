@@ -23,6 +23,7 @@ import java.util.Deque;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
@@ -43,7 +44,8 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
     this(node, ConcreteTransformationService.INSTANCE);
   }
 
-  ValueApplicator(ValueNode node, TransformationService transformationService) {
+  ValueApplicator(ValueNode node,
+      TransformationService transformationService) {
     super(node);
     this.transformationService = transformationService;
   }
@@ -58,8 +60,9 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
 
   @Override
   public void inject(Object target, Object value) throws Exception {
-    if (node.getAllowedModes().contains(AccessMode.WRITE)) {
-      node.setValue(target, value);
+    if (!(node instanceof UpdatableValueNode)) return;
+    if (((UpdatableValueNode) node).getAllowedModes().contains(AccessMode.WRITE)) {
+      ((UpdatableValueNode) node).setValue(target, value);
     }
   }
 

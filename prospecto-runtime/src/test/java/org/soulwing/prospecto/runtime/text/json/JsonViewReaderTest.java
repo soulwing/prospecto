@@ -67,7 +67,7 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
     assertThat(events.next(),
         is(eventWith(View.Event.Type.BEGIN_OBJECT)));
     assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NAME,
+        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NODE_NAME,
             Constants.DISCRIMINATOR_VALUE)));
   }
 

@@ -24,6 +24,7 @@ import java.util.List;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
@@ -52,7 +53,8 @@ class ValueGenerator extends AbstractViewEventGenerator<ValueNode> {
   List<View.Event> onGenerate(Object owner, ScopedViewContext context)
       throws Exception {
 
-    final Object model = node.getAllowedModes().contains(AccessMode.READ) ?
+    final Object model = !(node instanceof UpdatableValueNode)
+        || ((UpdatableValueNode) node).getAllowedModes().contains(AccessMode.READ) ?
         node.getValue(owner) : UndefinedValue.INSTANCE;
 
     final Object transformedValue = model != UndefinedValue.INSTANCE ?

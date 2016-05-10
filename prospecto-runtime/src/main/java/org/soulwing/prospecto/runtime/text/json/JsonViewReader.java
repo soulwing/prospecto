@@ -38,7 +38,7 @@ import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 class JsonViewReader extends AbstractViewReader {
 
   private static final String DEFAULT_DISCRIMINATOR_NAME =
-      ViewDefaults.DISCRIMINATOR_NAME;
+      ViewDefaults.DISCRIMINATOR_NODE_NAME;
 
   private static JsonParserFactory parserFactory = Json.createParserFactory(
       Collections.<String, Object>emptyMap());

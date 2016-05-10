@@ -150,7 +150,7 @@ public class AbstractViewReaderTest {
   public void testPromoteDiscriminator() throws Exception {
     context.checking(valueExpectations(NAME, STRING));
     context.checking(discriminatorExpectations(
-        ViewDefaults.DISCRIMINATOR_NAME, DISCRIMINATOR));
+        ViewDefaults.DISCRIMINATOR_NODE_NAME, DISCRIMINATOR));
     context.checking(new Expectations() {
       {
         oneOf(eventFactory).newEvent(View.Event.Type.BEGIN_OBJECT,
@@ -184,7 +184,7 @@ public class AbstractViewReaderTest {
             NAME, null, null);
         will(returnValue(beginEvent));
         oneOf(eventFactory).newEvent(View.Event.Type.DISCRIMINATOR,
-            ViewDefaults.DISCRIMINATOR_NAME, null, DISCRIMINATOR);
+            ViewDefaults.DISCRIMINATOR_NODE_NAME, null, DISCRIMINATOR);
         will(returnValue(discriminatorEvent));
         oneOf(eventFactory).newEvent(View.Event.Type.END_OBJECT,
             NAME, null, null);

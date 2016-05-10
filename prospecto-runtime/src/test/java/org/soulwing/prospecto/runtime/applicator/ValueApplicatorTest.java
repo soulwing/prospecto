@@ -28,6 +28,7 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.api.AccessMode;
+import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -89,10 +90,10 @@ public class ValueApplicatorTest
       throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getAllowedModes();
+        oneOf((UpdatableValueNode) node).getAllowedModes();
         will(returnValue(allowedModes));
         if (!allowedModes.isEmpty()) {
-          oneOf(node).setValue(MODEL, MODEL_VALUE);
+          oneOf((UpdatableValueNode) node).setValue(MODEL, MODEL_VALUE);
         }
       }
     });

@@ -23,7 +23,7 @@ package org.soulwing.prospecto.api.template;
  *
  * @author Carl Harris
  */
-public interface ValueNode extends UpdatableNode {
+public interface ValueNode extends ViewNode {
 
   /**
    * Gets the data type of the value associated with this node.
@@ -38,13 +38,5 @@ public interface ValueNode extends UpdatableNode {
    * @throws Exception
    */
   Object getValue(Object model) throws Exception;
-
-  /**
-   * Sets the value associated with this node in the given model.
-   * @param model model which will be injected with the subject value
-   * @param value value to inject
-   * @throws Exception
-   */
-  void setValue(Object model, Object value) throws Exception;
 
 }

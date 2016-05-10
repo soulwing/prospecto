@@ -69,7 +69,7 @@ public class ConcreteDiscriminatorEventService
         strategy.toDiscriminator(node.getModelType(), subtype);
 
     return new ConcreteViewEvent(View.Event.Type.DISCRIMINATOR,
-        ViewDefaults.DISCRIMINATOR_NAME, null, discriminator.getValue());
+        ViewDefaults.DISCRIMINATOR_NODE_NAME, null, discriminator.getValue());
   }
 
   @Override

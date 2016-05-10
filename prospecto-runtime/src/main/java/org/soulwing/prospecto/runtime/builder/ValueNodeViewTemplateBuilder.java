@@ -18,19 +18,24 @@
  */
 package org.soulwing.prospecto.runtime.builder;
 
+import java.util.EnumSet;
 import java.util.Map;
 
+import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
+import org.soulwing.prospecto.api.ViewTemplateException;
+import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.api.template.UpdatableValueNode;
+import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.AbstractViewNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
-import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 
 /**
  * A template builder for a value node.
@@ -48,7 +53,7 @@ class ValueNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(ConcreteValueNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(AbstractValueNode node) {
     return new ValueNodeViewTemplateBuilder(getParent(), getTarget(), node);
   }
 
@@ -108,9 +113,36 @@ class ValueNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
+  public ViewTemplateBuilder source(String name) {
+    assertNodeIsUpdatable("source");
+    return super.source(name);
+  }
+
+
+  @Override
   public ViewTemplateBuilder accessType(AccessType accessType) {
+    assertNodeIsUpdatable("accessType");
     getAccessorBuilder().accessType(accessType);
     return this;
+  }
+
+  @Override
+  public ViewTemplateBuilder allow(EnumSet<AccessMode> modes) {
+    assertNodeIsUpdatable("allow");
+    return super.allow(modes);
+  }
+
+  @Override
+  public ViewTemplateBuilder converter(ValueTypeConverter converter) {
+    assertNodeIsUpdatable("allow");
+    return super.converter(converter);
+  }
+
+  private void assertNodeIsUpdatable(String methodName) {
+    if (!(getNode() instanceof UpdatableValueNode)) {
+      throw new ViewTemplateException("cannot configure `" + methodName
+          + "` on current node");
+    }
   }
 
   @Override

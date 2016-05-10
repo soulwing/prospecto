@@ -1,5 +1,5 @@
 /*
- * File created on Apr 8, 2016
+ * File created on May 10, 2016
  *
  * Copyright (c) 2016 Carl Harris, Jr
  * and others as noted
@@ -16,33 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api.options;
+package org.soulwing.prospecto.runtime.builder;
 
 /**
- * Default values for various view options.
+ * A mock enumeration for use in testing the template builder.
  *
  * @author Carl Harris
  */
-public interface ViewDefaults {
+public enum MockEnum {
 
-  /**
-   * Default name for a URL node.
-   */
-  String URL_NODE_NAME = "href";
-
-  /**
-   * Default name for a discriminator node.
-   */
-  String DISCRIMINATOR_NODE_NAME = "type";
-
-  /**
-   * Default name for an {@code enum} {@link Enum#name() name} value node.
-   */
-  String ENUM_NODE_NAME = "name";
-
-  /**
-   * Default name for a {@link Object#toString()} value node.
-   */
-  String TO_STRING_NODE_NAME = "displayString";
+  MOCK
 
 }

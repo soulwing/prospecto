@@ -61,8 +61,10 @@ import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
+import org.soulwing.prospecto.runtime.template.EnumNameNode;
 import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.ToStringValueNode;
 
 /**
  * Unit tests for the template builder.
@@ -323,7 +325,119 @@ public class ViewTemplateBuilderTest {
     ));
 
   }
-  
+
+  @Test
+  public void testObjectName() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+            .name()
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(EnumNameNode.class,
+                    named(ViewDefaults.ENUM_NODE_NAME), inDefaultNamespace())
+                )
+            )
+        )
+    );
+
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectNameWhenNotEnum() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+        .name()
+        .build();
+  }
+
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectNameSource() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .name()
+            .source(MOCK_PROPERTY)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectNameAccessType() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .name()
+            .accessType(AccessType.FIELD)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectNameAllow() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .name()
+            .allow(AccessMode.READ)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectNameConverter() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .name()
+            .converter(MockConverter.class)
+        .build();
+  }
+
+  @Test
+  public void testObjectToStringValue() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .toStringValue()
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ToStringValueNode.class,
+                    named(ViewDefaults.TO_STRING_NODE_NAME), inDefaultNamespace())
+            )
+        )
+        )
+    );
+
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectToStringValueSource() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .toStringValue()
+            .source(MOCK_PROPERTY)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectToStringValueAccessType() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .toStringValue()
+            .accessType(AccessType.FIELD)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectToStringValueAllow() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .toStringValue()
+            .allow(AccessMode.READ)
+        .build();
+  }
+
+  @Test(expected = ViewTemplateException.class)
+  public void testObjectToStringValueConverter() throws Exception {
+    ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockEnum.class)
+        .toStringValue()
+            .converter(MockConverter.class)
+        .build();
+  }
+
   @Test
   public void testObjectValueEnd() throws Exception {
     ConcreteViewTemplate template = (ConcreteViewTemplate)
@@ -917,7 +1031,7 @@ public class ViewTemplateBuilderTest {
             named(VIEW_NAME), inNamespace(NAMESPACE),
             containing(
                 nodeOfType(ConcreteMetaNode.class,
-                    named(ViewDefaults.URL_NAME), inDefaultNamespace()
+                    named(ViewDefaults.URL_NODE_NAME), inDefaultNamespace()
                 )
             )
         )

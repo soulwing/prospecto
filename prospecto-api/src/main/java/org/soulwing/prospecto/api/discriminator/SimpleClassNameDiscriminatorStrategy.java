@@ -39,7 +39,7 @@ import org.soulwing.prospecto.api.options.ViewDefaults;
  */
 public class SimpleClassNameDiscriminatorStrategy implements DiscriminatorStrategy {
 
-  private String name = ViewDefaults.DISCRIMINATOR_NAME;
+  private String name = ViewDefaults.DISCRIMINATOR_NODE_NAME;
   private String prefix;
   private String suffix;
   private boolean decapitalize;
