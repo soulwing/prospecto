@@ -48,7 +48,7 @@ public class ValueApplicatorTest
 
   @Override
   ValueNode newNode() {
-    return context.mock(ValueNode.class);
+    return context.mock(UpdatableValueNode.class);
   }
 
   @Override
