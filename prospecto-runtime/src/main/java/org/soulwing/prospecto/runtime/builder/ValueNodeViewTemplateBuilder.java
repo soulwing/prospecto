@@ -28,7 +28,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
-import org.soulwing.prospecto.api.template.UpdatableValueNode;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.AbstractViewNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
@@ -139,7 +139,7 @@ class ValueNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   private void assertNodeIsUpdatable(String methodName) {
-    if (!(getNode() instanceof UpdatableValueNode)) {
+    if (!(getNode() instanceof UpdatableNode)) {
       throw new ViewTemplateException("cannot configure `" + methodName
           + "` on current node");
     }

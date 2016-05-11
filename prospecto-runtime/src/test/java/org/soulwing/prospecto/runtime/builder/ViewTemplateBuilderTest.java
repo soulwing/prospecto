@@ -901,6 +901,32 @@ public class ViewTemplateBuilderTest {
     ));
   }
 
+  @Test
+  public void testObjectArrayOfValuesSource() throws Exception {
+    ConcreteViewTemplate template = (ConcreteViewTemplate)
+        ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
+            .arrayOfValues(MOCK_ARRAY, ELEMENT_NAME, Object.class)
+                .source(MOCK_ARRAY)
+            .build();
+
+    assertThat(template.getRoot(), is(
+        nodeOfType(RootObjectNode.class,
+            named(VIEW_NAME), inNamespace(NAMESPACE),
+            containing(
+                nodeOfType(ConcreteArrayOfValuesNode.class,
+                    named(MOCK_ARRAY),
+                    elementsNamed(ELEMENT_NAME),
+                    inDefaultNamespace(),
+                    accessing(
+                        propertyNamed(MOCK_ARRAY),
+                        onModelType(MockModel.class)
+                    )
+                )
+            )
+        )
+    ));
+  }
+
   @Test(expected = ViewTemplateException.class)
   public void testObjectArrayOfValuesWithIncompatibleProperty() throws Exception {
     ViewTemplateBuilderProducer.object(VIEW_NAME, NAMESPACE, MockModel.class)
