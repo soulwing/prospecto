@@ -29,6 +29,8 @@ import java.util.UUID;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.soulwing.prospecto.api.ViewException;
+
 /**
  * A type coercion utility.
  * <p>
@@ -231,8 +233,10 @@ public class Coerce {
           return (T) valueOfMethod.invoke(type, value);
         }
       }
-      catch (IllegalAccessException
-          | InvocationTargetException
+      catch (IllegalAccessException ex) {
+        throw new ViewException(ex);
+      }
+      catch (InvocationTargetException
           | NoSuchMethodException ex) {
         assert true;
       }

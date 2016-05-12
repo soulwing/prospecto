@@ -235,7 +235,8 @@ public abstract class WriterReaderRoundTripTestBase {
         .type(VALUE).name("bigDecimalValue").value(BigDecimal.valueOf(-1.0))
         .type(VALUE).name("dateValue").value(new Date())
         .type(VALUE).name("calendarValue").value(Calendar.getInstance())
-        .type(VALUE).name("uuidValue").value(UUID.randomUUID());
+        .type(VALUE).name("uuidValue").value(UUID.randomUUID())
+        .type(VALUE).name("enumerationValue").value(Enumeration.ENUMERATION);
   }
 
   private ViewBuilder values() {
@@ -253,9 +254,18 @@ public abstract class WriterReaderRoundTripTestBase {
         .type(VALUE).value(BigDecimal.valueOf(-1.0))
         .type(VALUE).value(new Date())
         .type(VALUE).value(Calendar.getInstance())
-        .type(VALUE).value(UUID.randomUUID());
+        .type(VALUE).value(UUID.randomUUID())
+        .type(VALUE).value(Enumeration.ENUMERATION);
   }
 
+  public enum Enumeration {
+    ENUMERATION;
+
+    @Override
+    public String toString() {
+      return name().toLowerCase();
+    }
+  }
   private void writeView(View view) throws IOException {
     try (final OutputStream outputStream = new FileOutputStream(file)) {
       writerFactory.newWriter(view, outputStream).writeView();

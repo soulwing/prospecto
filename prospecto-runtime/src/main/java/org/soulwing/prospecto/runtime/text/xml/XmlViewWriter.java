@@ -267,6 +267,9 @@ class XmlViewWriter extends AbstractViewWriter {
     else if (value instanceof Calendar) {
       writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime((Calendar) value));
     }
+    else if (value instanceof Enum) {
+      writeString(name, namespace, XS_STRING, ((Enum) value).name());
+    }
     else if (value == null) {
       writeEmptyElement(name, namespace, XmlViewConstants.NULL_QNAME);
     }

@@ -226,6 +226,9 @@ class JsonViewWriter extends AbstractViewWriter {
     else if (value instanceof Calendar) {
       writeLong(name, ((Calendar) value).getTimeInMillis());
     }
+    else if (value instanceof Enum) {
+      writeString(name, ((Enum) value).name());
+    }
     else if (value == null) {
       writeNull(name);
     }
