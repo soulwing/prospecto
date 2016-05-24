@@ -47,11 +47,12 @@ import java.util.List;
  */
 public class GlobMatcher<T> {
 
-  private final InnerMatcher<T> matcher;
+  private final T anyInputToken;
+  private final T anyInputSequenceToken;
+  private final T[] pattern;
 
   /**
    * Constructs a new instance.
-   *
    * @param anyInputToken an instance of the {@code T} that will be
    *    interpreted as the symbol used to designate <em>match-any</em>
    * @param anyInputSequenceToken an instance of the {@code T} that will be
@@ -59,9 +60,10 @@ public class GlobMatcher<T> {
    * @param pattern a sequence of values of {@code T} that specify the pattern
    *    to match
    */
-  public GlobMatcher(T anyInputToken, T anyInputSequenceToken, T[] pattern) {
-    this.matcher = new InnerMatcher<>(anyInputToken, anyInputSequenceToken,
-        pattern);
+  private GlobMatcher(T anyInputToken, T anyInputSequenceToken, T[] pattern) {
+    this.anyInputToken = anyInputToken;
+    this.anyInputSequenceToken = anyInputSequenceToken;
+    this.pattern = pattern;
   }
 
   public static <T> GlobMatcher<T> with(T anyInputToken, T anyInputSequenceToken,
@@ -75,7 +77,7 @@ public class GlobMatcher<T> {
    * @return {@code true} if {@code input} matches this pattern
    */
   public boolean matches(T[] input) {
-    return matcher.matches(input);
+    return newMatcher().matches(input);
   }
 
   /**
@@ -85,7 +87,11 @@ public class GlobMatcher<T> {
    */
   @SuppressWarnings("unchecked")
   public boolean matches(List<T> input) {
-    return matcher.matches((T[]) (input.toArray()));
+    return newMatcher().matches((T[]) (input.toArray()));
+  }
+
+  private InnerMatcher<T> newMatcher() {
+    return new InnerMatcher<>(anyInputToken, anyInputSequenceToken, pattern);
   }
 
   /**
