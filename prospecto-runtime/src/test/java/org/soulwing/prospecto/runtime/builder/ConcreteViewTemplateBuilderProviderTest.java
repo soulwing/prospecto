@@ -34,6 +34,7 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
+import org.soulwing.prospecto.runtime.template.ConcreteReferenceNode;
 import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
@@ -77,6 +78,20 @@ public class ConcreteViewTemplateBuilderProviderTest {
     });
 
     assertThat(provider.object(NAME, NAMESPACE, MODEL_TYPE),
+        is(sameInstance(builder)));
+  }
+
+  @Test
+  public void testReference() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(builderFactory).newBuilder(with(
+            viewNode(ConcreteReferenceNode.class, NAME, NAMESPACE)));
+        will(returnValue(builder));
+      }
+    });
+
+    assertThat(provider.reference(NAME, NAMESPACE, MODEL_TYPE),
         is(sameInstance(builder)));
   }
 

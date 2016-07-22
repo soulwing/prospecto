@@ -43,6 +43,18 @@ public interface ViewTemplateBuilderProvider {
   ViewTemplateBuilder object(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException;
 
+
+  /**
+   * Creates a builder for a view whose root node is a reference node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param modelType model type to associate with the root view node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplateBuilder reference(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException;
+
   /**
    * Creates a builder for a view whose root node is an array-of-objects node.
    * @param name name for the object in the view (may be {@code null})

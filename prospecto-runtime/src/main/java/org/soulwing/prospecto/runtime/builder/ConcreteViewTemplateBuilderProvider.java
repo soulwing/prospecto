@@ -26,6 +26,7 @@ import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.template.RootArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
+import org.soulwing.prospecto.runtime.template.RootReferenceNode;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
 
 /**
@@ -53,6 +54,13 @@ public class ConcreteViewTemplateBuilderProvider
       Class<?> modelType) throws ViewTemplateException {
     return builderFactory.newBuilder(
         new RootObjectNode(name, namespace, modelType));
+  }
+
+  @Override
+  public ViewTemplateBuilder reference(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return builderFactory.newBuilder(
+        new RootReferenceNode(name, namespace, modelType));
   }
 
   @Override
