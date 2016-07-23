@@ -86,6 +86,46 @@ public class ViewTemplateBuilderProducer {
   }
 
   /**
+   * Creates a template builder whose root node type is of reference type.
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder reference(Class<?> modelType)
+      throws ViewTemplateException {
+    return reference(null, null, modelType);
+  }
+
+  /**
+   * Creates a template builder whose root node type is of reference type.
+   * @param name name for the root node; some textual representations
+   *   (e.g. JSON) will add an extra envelope object around a named root view
+   *   node
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder reference(String name, Class<?> modelType)
+      throws ViewTemplateException {
+    return reference(name, null, modelType);
+  }
+
+  /**
+   * Creates a template builder whose root node type is of reference type.
+   * @param name name for the root node; some view types (e.g. JSON) will add
+   *   an extra envelope object around a named root view node
+   * @param namespace namespace for {@code name}; this is used by only some
+   *   view types (e.g. XML)
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder reference(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return singleton.getInstance().provider.reference(name, namespace, modelType);
+  }
+
+  /**
    * Creates a template builder whose root node type is of array-of-objects type.
    * @param modelType model type to associate with the root node
    * @return template builder
