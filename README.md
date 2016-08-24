@@ -2,7 +2,7 @@ Prospecto
 =========
 
 [![Build Status](https://travis-ci.org/soulwing/prospecto.svg?branch=master)](https://travis-ci.org/soulwing/prospecto)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.soulwing.cas/prospecto/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.soulwing.cas%20a%3Aprospecto*)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.soulwing.prospecto/prospecto/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.soulwing.cas%20a%3Aprospecto*)
 
 Prospecto is a framework for producing textual representations of the 
 information in the domain model of a Java application, that can be exchanged
