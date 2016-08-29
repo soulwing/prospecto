@@ -96,11 +96,11 @@ public abstract class ViewWriterTestBase {
 
     final InputStream expected = getTestResource(viewName);
 
-    validateView(actual, expected);
+    validateView(actual, expected, options);
   }
 
   protected abstract void validateView(InputStream actual,
-      InputStream expected) throws Exception;
+      InputStream expected, Options options) throws Exception;
 
   protected InputStream getTestResource(String resourceName) {
     final InputStream inputStream = getClass().getResourceAsStream(
@@ -117,6 +117,12 @@ public abstract class ViewWriterTestBase {
     events.add(newEvent(View.Event.Type.END_OBJECT));
 
     writeAndValidateView("flatObjectView", events);
+  }
+
+  @Test
+  public void testFlatObjectViewUsingPrettyPrint() throws Exception {
+    options.put(WriterKeys.PRETTY_PRINT_OUTPUT, true);
+    testFlatObjectView();
   }
 
   @Test

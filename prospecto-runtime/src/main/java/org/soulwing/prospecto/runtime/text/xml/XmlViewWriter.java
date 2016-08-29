@@ -136,9 +136,11 @@ class XmlViewWriter extends AbstractViewWriter {
 
   @Override
   protected void beforeViewEvents(OutputStream outputStream) throws Exception {
-    writer = new IndentingXMLStreamWriter(
-          outputFactory.createXMLStreamWriter(
-              new BufferedOutputStream(outputStream)));
+    writer = outputFactory.createXMLStreamWriter(
+        new BufferedOutputStream(outputStream));
+
+    if (getOptions().isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT))
+      writer = new IndentingXMLStreamWriter(writer);
   }
 
   @Override
