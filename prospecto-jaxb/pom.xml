@@ -23,7 +23,7 @@
   <parent>
     <artifactId>prospecto</artifactId>
     <groupId>org.soulwing.prospecto</groupId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
   </parent>
 
   <artifactId>prospecto-jaxb</artifactId>
