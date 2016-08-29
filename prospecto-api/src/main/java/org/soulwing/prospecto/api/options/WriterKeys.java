@@ -54,4 +54,9 @@ public interface WriterKeys {
   String INCLUDE_XML_XSI_TYPE = ViewKeys.PREFIX
       + ".writer.includeXmlXsiType";
 
+  /**
+   * When set to {@code true} and is supported by the writer, output will be
+   * pretty printed.
+   */
+  String PRETTY_PRINT_OUTPUT = ViewKeys.PREFIX + ".writer.prettyPrintOutput";
 }

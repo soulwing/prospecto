@@ -29,9 +29,11 @@ import java.io.OutputStream;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import javax.xml.stream.EventFilter;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -39,6 +41,7 @@ import javax.xml.stream.events.XMLEvent;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.text.ViewWriterTestBase;
 
 /**
@@ -69,11 +72,17 @@ public class XmlViewWriterTest extends ViewWriterTestBase {
 
   @Override
   protected void validateView(InputStream actual,
-      InputStream expected) throws Exception {
-    final XMLEventReader expectedReader = inputFactory.createXMLEventReader(
+      InputStream expected, Options options) throws Exception {
+    XMLEventReader expectedReader = inputFactory.createXMLEventReader(
         expected);
-    final XMLEventReader actualReader = inputFactory.createXMLEventReader(
+    XMLEventReader actualReader = inputFactory.createXMLEventReader(
         actual);
+
+    if (!options.isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT)) {
+      WhitespaceFilter filter = new WhitespaceFilter();
+      expectedReader = inputFactory.createFilteredReader(expectedReader, filter);
+      actualReader = inputFactory.createFilteredReader(actualReader, filter);
+    }
 
     while (expectedReader.hasNext()) {
       assertThat(actualReader.hasNext(), is(true));
@@ -133,4 +142,10 @@ public class XmlViewWriterTest extends ViewWriterTestBase {
     assertThat(actual.getName(), is(equalTo(expected.getName())));
   }
 
+  private class WhitespaceFilter implements EventFilter {
+    @Override
+    public boolean accept(XMLEvent event) {
+      return !(event.isCharacters() && ((Characters) event).isWhiteSpace());
+    }
+  }
 }

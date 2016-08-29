@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -55,9 +56,7 @@ import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
  */
 class JsonViewWriter extends AbstractViewWriter {
 
-  private static final JsonGeneratorFactory generatorFactory =
-      Json.createGeneratorFactory(Collections.singletonMap(
-          JsonGenerator.PRETTY_PRINTING, true));
+  private final JsonGeneratorFactory generatorFactory;
 
   enum GeneratorContext {
     OBJECT, ARRAY
@@ -79,6 +78,12 @@ class JsonViewWriter extends AbstractViewWriter {
   public JsonViewWriter(View view,
       OutputStream outputStream, Options options) {
     super(view, outputStream, options);
+
+    Map<String, Object> config = new HashMap<>();
+    if (options.isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT))
+      config.put(JsonGenerator.PRETTY_PRINTING, true);
+
+    generatorFactory = Json.createGeneratorFactory(config);
   }
 
   @Override

@@ -56,7 +56,7 @@ public class JsonViewWriterTest extends ViewWriterTestBase {
 
   @Override
   protected void validateView(InputStream actual,
-      InputStream expected) throws Exception {
+      InputStream expected, Options options) throws Exception {
     JsonParser testParser = Json.createParser(expected);
     JsonParser viewParser = Json.createParser(actual);
     while (testParser.hasNext()) {
