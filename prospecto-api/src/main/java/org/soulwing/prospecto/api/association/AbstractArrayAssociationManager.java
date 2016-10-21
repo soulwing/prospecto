@@ -105,9 +105,9 @@ public abstract class AbstractArrayAssociationManager<T, E>
     E[] dest = getOrInitAssociates(owner);
     if (dest.length != src.length) {
       dest = newAssociates(src.length);
-      setAssociates(owner, dest);
     }
     System.arraycopy(src, 0, dest, 0, src.length);
+    setAssociates(owner, dest);
     delegate = new DefaultArrayAssociationManager();
     super.end(owner);
   }
