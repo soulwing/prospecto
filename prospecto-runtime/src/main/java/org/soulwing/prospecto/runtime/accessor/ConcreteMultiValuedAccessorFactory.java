@@ -49,7 +49,14 @@ public class ConcreteMultiValuedAccessorFactory
     if (dataType.isArray()) {
       return new ArrayAccessor(accessor, componentType);
     }
-    throw new ViewTemplateException("expected an array or a collection");
+    try {
+      return new ArrayAccessor(new CoercionAccessor(accessor, componentType),
+          componentType);
+    }
+    catch (NoSuchMethodException ex) {
+      throw new ViewTemplateException(
+          "expected an array, a collection, or a type with suitable coercion methods");
+    }
   }
 
 }
