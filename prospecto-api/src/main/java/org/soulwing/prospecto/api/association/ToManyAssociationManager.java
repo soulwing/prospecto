@@ -21,6 +21,7 @@ package org.soulwing.prospecto.api.association;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An object that during view application manages the association between an
@@ -58,10 +59,13 @@ public interface ToManyAssociationManager<T, E>
    * Finds the associate of {@code owner} that matches the given entity.
    * @param owner owner of the association
    * @param associateEntity entity that describes a possible associate
+   * @param objectFactory object factory to use to create an instance
+   *    of the associate if necessary
    * @return matching associate instance or {@code null} if no match found
    * @throws Exception
    */
-  E findAssociate(T owner, ViewEntity associateEntity) throws Exception;
+  E findAssociate(T owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception;
 
   /**
    * Adds an associate from the collection.

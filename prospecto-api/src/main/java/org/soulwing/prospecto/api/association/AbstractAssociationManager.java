@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An abstract base for {@link AssociationManager} implementations.
@@ -39,14 +40,18 @@ public abstract class AbstractAssociationManager<T, E>
    * @param owner owner object
    * @param associateEntity a view entity representing the state of the
    *    associate in the view
+   * @param objectFactory object factory that will be used to create the
+   *    new associate instance
    * @return instance of type {@code E} containing state of
    *    {@code associateEntity}
    * @throws Exception
    */
   @Override
   @SuppressWarnings("unchecked")
-  public E newAssociate(T owner, ViewEntity associateEntity) throws Exception {
-    final E associate = (E) associateEntity.getType().newInstance();
+  public E newAssociate(T owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception {
+    final E associate = (E) objectFactory.newInstance(
+        associateEntity.getType());
     associateEntity.inject(associate);
     return associate;
   }

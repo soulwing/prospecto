@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.association.AssociationManager;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewListener;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolver;
@@ -352,6 +353,8 @@ public class ConcreteViewContextTest {
         context.mock(ReferenceResolver.class);
     final AssociationManager associationManager =
         context.mock(AssociationManager.class);
+    final ObjectFactory objectFactory =
+        context.mock(ObjectFactory.class);
 
 
     viewContext.getScopes().append(scope);
@@ -359,6 +362,7 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().append(valueTypeConverter);
     viewContext.getReferenceResolvers().append(resolver);
     viewContext.getAssociationManagers().append(associationManager);
+    viewContext.getObjectFactories().append(objectFactory);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
@@ -366,6 +370,7 @@ public class ConcreteViewContextTest {
     viewContext.getValueTypeConverters().toList().clear();
     viewContext.getReferenceResolvers().toList().clear();
     viewContext.getAssociationManagers().toList().clear();
+    viewContext.getObjectFactories().toList().clear();
 
     assertThat(contextCopy.getScopes().toList(), contains(scope));
     assertThat(contextCopy.getListeners().toList(), contains(listener));
@@ -375,6 +380,8 @@ public class ConcreteViewContextTest {
         contains(resolver));
     assertThat(contextCopy.getAssociationManagers().toList(),
         contains(associationManager));
+    assertThat(contextCopy.getObjectFactories().toList(),
+        contains(objectFactory));
     assertThat(contextCopy.getOptions(), is(sameInstance(options)));
   }
 

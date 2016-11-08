@@ -81,7 +81,8 @@ class ConcreteViewApplicator implements ViewApplicator {
       final InjectableViewEntity entity = (InjectableViewEntity) deriveInjector();
       if (entity == UndefinedValue.INSTANCE) return null;
 
-      final Object model = entity.getType().newInstance();
+      final Object model = context.getObjectFactories().newInstance(
+          entity.getType());
       root.apply(entity, model, context);
       context.getListeners().afterTraversing(event);
       return model;

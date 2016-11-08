@@ -18,8 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
@@ -37,9 +40,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
+import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.view.ViewBuilder;
 
@@ -62,6 +67,9 @@ public class ConcreteViewApplicatorTest {
   private ScopedViewContext viewContext;
 
   @Mock
+  private ObjectFactoryService objectFactory;
+
+  @Mock
   private RootViewEventApplicator root;
 
   @Mock
@@ -74,6 +82,48 @@ public class ConcreteViewApplicatorTest {
   private NotifiableViewListeners listeners;
 
   private ConcreteViewApplicator editor;
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCreateWithUnenvelopedFlatView() throws Exception {
+
+    final View source = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(NAME)
+        .type(END_OBJECT)
+        .end();
+
+    final ConcreteViewApplicator editor = new ConcreteViewApplicator(MockModel.class,
+        root, source, viewContext, null, EVENT);
+
+    context.checking(new Expectations() {
+      {
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
+        allowing(entity).getType();
+        will(returnValue(MockModel.class));
+        oneOf(objectFactory).newInstance(MockModel.class);
+        will(returnValue(model));
+        oneOf(viewContext).getListeners();
+        will(returnValue(listeners));
+        oneOf(listeners).afterTraversing(EVENT);
+        oneOf(root).toModelValue(
+            with(nullValue(InjectableViewEntity.class)),
+            with(eventOfType(BEGIN_OBJECT)),
+            (Deque<View.Event>) with(contains(
+                eventOfType(VALUE, withName(NAME)),
+                eventOfType(END_OBJECT)
+                )
+            ),
+            with(viewContext));
+        will(returnValue(entity));
+        oneOf(root).apply(entity, model, viewContext);
+      }
+    });
+
+    assertThat(editor.create(), is(sameInstance((Object) model)));
+  }
 
   @Test
   @SuppressWarnings("unchecked")

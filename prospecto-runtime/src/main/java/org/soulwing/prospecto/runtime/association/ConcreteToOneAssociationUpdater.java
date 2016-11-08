@@ -69,7 +69,7 @@ public class ConcreteToOneAssociationUpdater
 
     final Object currentAssociate = manager.get(target);
 
-    if (manager.isSameAssociate(target, entity)) {
+    if (manager.isSameAssociate(target, entity, context.getObjectFactories())) {
       if (currentAssociate != null) {
         entity.inject(currentAssociate, context);
       }
@@ -81,7 +81,8 @@ public class ConcreteToOneAssociationUpdater
                 target, currentAssociate, context));
       }
       if (entity != null) {
-        final Object newAssociate = manager.newAssociate(target, entity);
+        final Object newAssociate = manager.newAssociate(target, entity,
+            context.getObjectFactories());
         entity.inject(newAssociate, context);
         context.getListeners().entityCreated(
             new ViewNodePropertyEvent(ViewMode.APPLY, node,

@@ -21,6 +21,7 @@ package org.soulwing.prospecto.api.association;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An abstract base for {@link ToManyAssociationManager} implementations.
@@ -36,21 +37,23 @@ public abstract class AbstractToManyAssociationManager<T, E>
    * to given view entity.
    * <p>
    * This implementation instantiates and populates an instance of type
-   * {@code E} using the implementation of {@link #newAssociate(Object, ViewEntity)}
+   * {@code E} using the implementation of {@link AssociationManager#newAssociate(Object, ViewEntity, ObjectFactory)}
    * on the supertype and compares it to each associate of {@code owner}
    * using {@link #equals(Object)} until a match is found.
    *
    * @param owner the subject owner
    * @param associateEntity a view entity representing the state of the
    *    associate in the view
+   * @param objectFactory
    * @return the associate of {@code code} that is logically equivalent to
    *    the given view entity or {@code null} if no such associate exists
    * @throws Exception
    */
   @Override
   @SuppressWarnings("unchecked")
-  public E findAssociate(T owner, ViewEntity associateEntity) throws Exception {
-    E associate = newAssociate(owner, associateEntity);
+  public E findAssociate(T owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception {
+    E associate = newAssociate(owner, associateEntity, objectFactory);
     final Iterator<E> i = iterator(owner);
     if (i != null) {
       while (i.hasNext()) {

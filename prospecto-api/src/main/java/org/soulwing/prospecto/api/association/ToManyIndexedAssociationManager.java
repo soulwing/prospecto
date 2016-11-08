@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An object that during view application manages the association between an
@@ -35,11 +36,13 @@ public interface ToManyIndexedAssociationManager<T, E>
    * @param owner the subject owner
    * @param associateEntity a view entity representing the state of the
    *    associate in the view
+   * @param objectFactory object factory to use to create an instance of
+   *    the associate if necessary
    * @return index of the associate of {@code code} that is logically equivalent
    *    to the given view entity or {@code -1} if no such associate exists
    * @throws Exception
    */
-  int indexOf(T owner, ViewEntity associateEntity) throws Exception;
+  int indexOf(T owner, ViewEntity associateEntity, ObjectFactory objectFactory) throws Exception;
 
   /**
    * Gets the associate of the given owner at a specified index.

@@ -34,6 +34,8 @@ import org.soulwing.prospecto.runtime.association.AssociationManagerService;
 import org.soulwing.prospecto.runtime.association.LinkedListAssociationManagerService;
 import org.soulwing.prospecto.runtime.converter.LinkedListValueTypeConverterService;
 import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
+import org.soulwing.prospecto.runtime.factory.LinkedListObjectFactoryService;
+import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.LinkedListNotifiableViewListeners;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverService;
@@ -63,6 +65,9 @@ class ConcreteViewContext implements ScopedViewContext {
 
   private final AssociationManagerService collectionManagers =
       new LinkedListAssociationManagerService();
+
+  private final ObjectFactoryService objectFactories =
+      new LinkedListObjectFactoryService();
 
   private final Options options;
 
@@ -99,6 +104,7 @@ class ConcreteViewContext implements ScopedViewContext {
     this.valueTypeConverters.toList().addAll(source.getValueTypeConverters().toList());
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
+    this.objectFactories.toList().addAll(source.getObjectFactories().toList());
   }
 
   @Override
@@ -143,6 +149,11 @@ class ConcreteViewContext implements ScopedViewContext {
   @Override
   public AssociationManagerService getAssociationManagers() {
     return collectionManagers;
+  }
+
+  @Override
+  public ObjectFactoryService getObjectFactories() {
+    return objectFactories;
   }
 
   @Override

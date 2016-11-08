@@ -31,6 +31,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * Unit tests for {@link ArrayAccessor}.
@@ -278,13 +279,13 @@ public class ArrayAccessorTest {
     }
 
     @Override
-    public boolean isSameAssociate(Object owner, ViewEntity associateEntity)
+    public boolean isSameAssociate(Object owner, ViewEntity associateEntity, ObjectFactory objectFactory)
         throws Exception {
       return false;
     }
 
     @Override
-    public MockObject newAssociate(Object owner, ViewEntity associateEntity)
+    public MockObject newAssociate(Object owner, ViewEntity associateEntity, ObjectFactory objectFactory)
         throws Exception {
       return null;
     }

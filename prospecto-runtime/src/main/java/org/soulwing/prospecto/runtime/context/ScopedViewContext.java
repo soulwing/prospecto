@@ -19,8 +19,10 @@
 package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.factory.ObjectFactories;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
 import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
+import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
@@ -52,6 +54,13 @@ public interface ScopedViewContext extends ViewContext {
    */
   @Override
   AssociationManagerService getAssociationManagers();
+
+  /**
+   * Gets the collection of object factory strategies
+   * @return factory strategies
+   */
+  @Override
+  ObjectFactoryService getObjectFactories();
 
   /**
    * Gets the collection of value type converters

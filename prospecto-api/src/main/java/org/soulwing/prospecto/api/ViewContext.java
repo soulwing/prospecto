@@ -24,6 +24,8 @@ import java.util.Map;
 import org.soulwing.prospecto.api.association.AssociationManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.converter.ValueTypeConverters;
+import org.soulwing.prospecto.api.factory.ObjectFactories;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
@@ -129,6 +131,17 @@ public interface ViewContext extends MutableScope {
    * @return association manager collection
    */
   AssociationManagers getAssociationManagers();
+
+  /**
+   * Gets the collection of object factories that will be used as strategies
+   * to instantiate model types as needed during view application.
+   * <p>
+   * The returned collection can be manipulated directly to add or remove
+   * factory strategies as needed. Manipulating the collection during view
+   * generation or view application has no effect.
+   * @return factories collection
+   */
+  ObjectFactories getObjectFactories();
 
   /**
    * Gets the configuration options associated with this context.

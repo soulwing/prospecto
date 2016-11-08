@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An object that during view application manages the association between an
@@ -34,11 +35,14 @@ public interface ToOneAssociationManager<T, E>
    * the same object as the owner's current associate.
    * @param owner the subject owner
    * @param associateEntity view entity representing the associate in the view
+   * @param objectFactory object factory that may be used to create a new
+   *    instance of the associate type if needed
    * @return {@code true} if {@code associateEntity} is logically the same
    *   associate as the current associate of {@code owner}
    * @throws Exception
    */
-  boolean isSameAssociate(T owner, ViewEntity associateEntity) throws Exception;
+  boolean isSameAssociate(T owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception;
 
   /**
    * Gets the current associate.

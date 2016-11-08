@@ -7,6 +7,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An accessor that invokes array coercion methods on the object returned
@@ -84,12 +85,14 @@ class CoercionAccessor implements Accessor {
   }
 
   @Override
-  public boolean isSameAssociate(Object owner, ViewEntity associateEntity) throws Exception {
-    return delegate.isSameAssociate(owner, associateEntity);
+  public boolean isSameAssociate(Object owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception {
+    return delegate.isSameAssociate(owner, associateEntity, objectFactory);
   }
 
   @Override
-  public Object newAssociate(Object owner, ViewEntity associateEntity) throws Exception {
-    return delegate.newAssociate(owner, associateEntity);
+  public Object newAssociate(Object owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception {
+    return delegate.newAssociate(owner, associateEntity, objectFactory);
   }
 }

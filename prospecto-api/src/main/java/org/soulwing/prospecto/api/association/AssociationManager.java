@@ -19,6 +19,7 @@
 package org.soulwing.prospecto.api.association;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * A marker interface for association managers.
@@ -41,10 +42,13 @@ public interface AssociationManager<T, E> {
    * @param owner owner object
    * @param associateEntity a view entity representing the state of the
    *    associate in the view
+   * @param objectFactory object factory that may be used to create the
+   *    new associate object
    * @return instance of type {@code E} containing state of
    *    {@code associateEntity}
    * @throws Exception
    */
-  E newAssociate(T owner, ViewEntity associateEntity) throws Exception;
+  E newAssociate(T owner, ViewEntity associateEntity,
+      ObjectFactory objectFactory) throws Exception;
 
 }

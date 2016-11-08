@@ -36,6 +36,7 @@ import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
+import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 
 /**
@@ -57,6 +58,9 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
 
   @Mock
   private NotifiableViewListeners listeners;
+
+  @Mock
+  private ObjectFactoryService objectFactory;
 
   @Mock
   private ToManyIndexedAssociationManager manager;
@@ -151,7 +155,9 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
       final Object element) throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).findAssociate(owner, entity);
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
+        oneOf(manager).findAssociate(owner, entity, objectFactory);
         will(returnValue(element));
       }
     };
@@ -161,7 +167,7 @@ public class UnorderedToManyAssociationUpdateStrategyTest {
       final Object element) throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).newAssociate(owner, entity);
+        oneOf(manager).newAssociate(owner, entity, objectFactory);
         will(returnValue(element));
         oneOf(entity).inject(element, viewContext);
 

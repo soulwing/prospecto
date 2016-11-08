@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 
 /**
  * An abstract base for a manager of an indexed to-many association that is
@@ -169,9 +170,9 @@ public abstract class AbstractArrayAssociationManager<T, E>
     }
 
     @Override
-    public E newAssociate(T owner, ViewEntity associateEntity) throws Exception {
+    public E newAssociate(T owner, ViewEntity associateEntity, ObjectFactory objectFactory) throws Exception {
       return AbstractArrayAssociationManager.this.newAssociate(owner,
-          associateEntity);
+          associateEntity, objectFactory);
     }
 
     @Override
@@ -189,15 +190,17 @@ public abstract class AbstractArrayAssociationManager<T, E>
     }
 
     @Override
-    public E findAssociate(T owner, ViewEntity associateEntity) throws Exception {
+    public E findAssociate(T owner, ViewEntity associateEntity,
+        ObjectFactory objectFactory) throws Exception {
       return AbstractArrayAssociationManager.this.findAssociate(owner,
-          associateEntity);
+          associateEntity, objectFactory);
     }
 
     @Override
-    public int indexOf(T owner, ViewEntity associateEntity) throws Exception {
+    public int indexOf(T owner, ViewEntity associateEntity,
+        ObjectFactory objectFactory) throws Exception {
       return AbstractArrayAssociationManager.this.indexOf(owner,
-          associateEntity);
+          associateEntity, objectFactory);
     }
 
     @Override

@@ -62,7 +62,8 @@ class OrderedToManyAssociationUpdateStrategy
     int viewIndex = 0;
     for (final Object value : values) {
       final InjectableViewEntity entity = (InjectableViewEntity) value;
-      final int modelIndex = manager.indexOf(target, entity);
+      final int modelIndex = manager.indexOf(target, entity,
+          context.getObjectFactories());
       if (modelIndex != -1) {
         final Object element = manager.get(target, modelIndex);
         if (modelIndex >= viewIndex) {
@@ -74,7 +75,8 @@ class OrderedToManyAssociationUpdateStrategy
         }
       }
       else {
-        final Object newElement = manager.newAssociate(target, entity);
+        final Object newElement = manager.newAssociate(target, entity,
+            context.getObjectFactories());
         entity.inject(newElement, context);
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
             ViewMode.APPLY, node, target, newElement, context));

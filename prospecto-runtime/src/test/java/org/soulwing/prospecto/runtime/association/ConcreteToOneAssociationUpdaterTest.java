@@ -32,9 +32,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
+import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
+import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
 import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
@@ -55,6 +57,9 @@ public class ConcreteToOneAssociationUpdaterTest {
 
   @Mock
   NotifiableViewListeners listeners;
+
+  @Mock
+  ObjectFactoryService objectFactory;
 
   @Mock
   ConcreteContainerNode node;
@@ -100,9 +105,11 @@ public class ConcreteToOneAssociationUpdaterTest {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
       {
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
         oneOf(manager).get(owner);
         will(returnValue(null));
-        oneOf(manager).isSameAssociate(owner, null);
+        oneOf(manager).isSameAssociate(owner, null, objectFactory);
         will(returnValue(true));
       }
     });
@@ -116,9 +123,11 @@ public class ConcreteToOneAssociationUpdaterTest {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
       {
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
         oneOf(manager).get(owner);
         will(returnValue(null));
-        oneOf(manager).isSameAssociate(owner, associateEntity);
+        oneOf(manager).isSameAssociate(owner, associateEntity, objectFactory);
         will(returnValue(false));
       }
     });
@@ -133,9 +142,11 @@ public class ConcreteToOneAssociationUpdaterTest {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
       {
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
         oneOf(manager).get(owner);
         will(returnValue(currentAssociate));
-        oneOf(manager).isSameAssociate(owner, associateEntity);
+        oneOf(manager).isSameAssociate(owner, associateEntity, objectFactory);
         will(returnValue(true));
         oneOf(associateEntity).inject(currentAssociate, viewContext);
       }
@@ -150,9 +161,11 @@ public class ConcreteToOneAssociationUpdaterTest {
     context.checking(findManagerExpectations());
     context.checking(new Expectations() {
       {
+        allowing(viewContext).getObjectFactories();
+        will(returnValue(objectFactory));
         oneOf(manager).get(owner);
         will(returnValue(currentAssociate));
-        oneOf(manager).isSameAssociate(owner, associateEntity);
+        oneOf(manager).isSameAssociate(owner, associateEntity, objectFactory);
         will(returnValue(false));
       }
     });
@@ -193,7 +206,7 @@ public class ConcreteToOneAssociationUpdaterTest {
       throws Exception {
     return new Expectations() {
       {
-        oneOf(manager).newAssociate(owner, associateEntity);
+        oneOf(manager).newAssociate(owner, associateEntity, objectFactory);
         will(returnValue(associate));
         oneOf(associateEntity).inject(associate, viewContext);
         oneOf(manager).set(owner, associate);

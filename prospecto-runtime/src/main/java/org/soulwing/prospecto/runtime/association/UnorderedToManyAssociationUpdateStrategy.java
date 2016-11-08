@@ -59,13 +59,15 @@ class UnorderedToManyAssociationUpdateStrategy
     final Map<Object, Object> touched = new IdentityHashMap<>();
     for (final Object value : values)  {
       final InjectableViewEntity entity = (InjectableViewEntity) value;
-      final Object element = manager.findAssociate(target, entity);
+      final Object element = manager.findAssociate(target, entity,
+          context.getObjectFactories());
       if (element != null) {
         touched.put(element, element);
         entity.inject(element, context);
       }
       else {
-        final Object newElement = manager.newAssociate(target, entity);
+        final Object newElement = manager.newAssociate(target, entity,
+            context.getObjectFactories());
         entity.inject(newElement, context);
 
         context.getListeners().entityCreated(new ViewNodePropertyEvent(
