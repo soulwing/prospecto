@@ -129,7 +129,7 @@ public class ReflectionResourceTypeIntrospectorTest {
         will(returnValue(false));
         oneOf(reflectionService).getAnnotation(MockResource.class,
             ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(
+        will(returnValue(AnnotationUtils.modelPathSpecAnnotation(
             hasDescriptorFlag, Object.class)));
       }
     };

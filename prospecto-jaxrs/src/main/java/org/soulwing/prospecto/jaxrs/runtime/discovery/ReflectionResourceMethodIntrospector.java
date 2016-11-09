@@ -37,6 +37,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpecs;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
@@ -91,40 +92,19 @@ class ReflectionResourceMethodIntrospector
       return Collections.emptyList();
     }
 
-    ModelPathSpec modelPathSpec = reflectionService.getAnnotation(method,
-        ModelPathSpec.class);
-
     TemplateResolver methodTemplateResolver = reflectionService.getAnnotation(
         method, TemplateResolver.class);
 
     Class<?> returnType = reflectionService.getReturnType(method);
 
     if (resourceMethod) {
-      if (modelPathSpec == null) {
-        logger.trace("ignoring method {}", methodToString(method));
-        return Collections.emptyList();
-      }
-
-      if (modelPathSpec.inherit()) {
-        modelPath = modelPath.concat(modelPathSpec);
-      }
-
-      if (methodTemplateResolver != null) {
-        templateResolver = methodTemplateResolver;
-      }
-
-      if (templateResolver == null) {
-        throw new ResourceConfigurationException(
-            "no template resolver for method " + methodToString(method));
-      }
-
-      final PathTemplateResolver pathTemplateResolver = TemplateResolverUtils
-          .newResolver(templateResolver.value());
-
-      return Collections.singletonList(descriptorFactory.newDescriptor(method,
-          resourcePath, modelPath, pathTemplateResolver));
+      return describeResourceMethod(method, resourcePath, modelPath,
+          templateResolver, reflectionService, methodTemplateResolver);
     }
 
+
+    ModelPathSpec modelPathSpec = reflectionService.getAnnotation(method,
+        ModelPathSpec.class);
 
     if (reflectionService.isAbstractType(returnType)) {
       if (modelPathSpec == null) return Collections.emptyList();
@@ -151,6 +131,67 @@ class ReflectionResourceMethodIntrospector
         templateResolver, reflectionService);
   }
 
+  private Collection<ResourceDescriptor> describeResourceMethod(Method method,
+      String resourcePath, ModelPath modelPath,
+      TemplateResolver templateResolver, ReflectionService reflectionService,
+      TemplateResolver methodTemplateResolver) {
+
+    if (methodTemplateResolver != null) {
+      templateResolver = methodTemplateResolver;
+    }
+
+    if (templateResolver == null) {
+      throw new ResourceConfigurationException(
+          "no template resolver for method " + methodToString(method));
+    }
+
+    final PathTemplateResolver pathTemplateResolver = TemplateResolverUtils
+        .newResolver(templateResolver.value());
+
+    ModelPathSpec[] specs = getModelPathSpecs(method, reflectionService);
+
+    if (specs.length == 0) {
+      logger.trace("ignoring method {}", methodToString(method));
+      return Collections.emptyList();
+    }
+
+    final List<ResourceDescriptor> descriptors = new ArrayList<>();
+    for (final ModelPathSpec spec : specs) {
+
+      if (spec.inherit()) {
+        modelPath = modelPath.concat(spec);
+      }
+
+      descriptors.add(descriptorFactory.newDescriptor(method,
+          resourcePath, modelPath, pathTemplateResolver));
+    }
+    return descriptors;
+  }
+
+  private ModelPathSpec[] getModelPathSpecs(Method method,
+      ReflectionService reflectionService) {
+
+    final ModelPathSpecs specs =
+        reflectionService.getAnnotation(method, ModelPathSpecs.class);
+
+    final ModelPathSpec spec = reflectionService.getAnnotation(method,
+        ModelPathSpec.class);
+
+    if (specs != null && spec == null) {
+      return specs.value();
+    }
+    if (specs == null && spec != null) {
+      return new ModelPathSpec[] { spec };
+    }
+    if (specs == null) {
+      return new ModelPathSpec[0];
+    }
+
+    throw new ResourceConfigurationException("cannot use both @"
+        + ModelPathSpecs.class.getSimpleName() + " and @"
+        + ModelPathSpec.class.getSimpleName() + " on the same method");
+  }
+
   /**
    * Determines whether the given method is annotated with an HTTP method
    * annotation.
@@ -161,13 +202,12 @@ class ReflectionResourceMethodIntrospector
    */
   private boolean isResourceMethod(Method method,
       ReflectionService reflector) {
-    if (reflector.getAnnotation(method, GET.class) != null) return true;
-    if (reflector.getAnnotation(method, POST.class) != null) return true;
-    if (reflector.getAnnotation(method, PUT.class) != null) return true;
-    if (reflector.getAnnotation(method, DELETE.class) != null) return true;
-    if (reflector.getAnnotation(method, HEAD.class) != null) return true;
-    if (reflector.getAnnotation(method, OPTIONS.class) != null) return true;
-    return false;
+    return reflector.getAnnotation(method, GET.class) != null
+        || reflector.getAnnotation(method, POST.class) != null
+        || reflector.getAnnotation(method, PUT.class) != null
+        || reflector.getAnnotation(method, DELETE.class) != null
+        || reflector.getAnnotation(method, HEAD.class) != null
+        || reflector.getAnnotation(method, OPTIONS.class) != null;
   }
 
   /**

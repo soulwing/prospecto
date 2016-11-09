@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
 import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpecs;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
@@ -175,7 +176,7 @@ public class ReflectionResourceMethodIntrospectorTest {
         will(returnValue(Collections.singleton(MockSubResource.class)));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
             ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
+        will(returnValue(AnnotationUtils.modelPathSpecAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
             TemplateResolver.class);
         will(returnValue(typeTemplateResolver));
@@ -233,10 +234,10 @@ public class ReflectionResourceMethodIntrospectorTest {
         will(returnValue(subTypes));
         oneOf(reflectionService).getAnnotation(MockSubResource.class,
             ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
+        will(returnValue(AnnotationUtils.modelPathSpecAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(MockOtherSubResource.class,
             ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
+        will(returnValue(AnnotationUtils.modelPathSpecAnnotation(Object.class)));
       }
     });
 
@@ -270,19 +271,55 @@ public class ReflectionResourceMethodIntrospectorTest {
   }
 
   @Test
-  public void testAnnotatedResourceMethod() throws Exception {
+  public void testAnnotatedResourceMethodWithSingleSpec() throws Exception {
     final Method method = MockResource.class.getMethod("resource");
     final boolean hasPath = true;
     final boolean hasHttpMethod = true;
     final boolean hasTemplateResolver = true;
+    final boolean hasModelPathSpecs = false;
+    final boolean hasModelPathSpec = true;
     context.checking(resourceAnnotationExpectations(method, hasPath,
         hasHttpMethod));
     context.checking(annotatedResourceMethodExpectations(method,
-        hasTemplateResolver));
+        hasTemplateResolver, hasModelPathSpecs, hasModelPathSpec));
     context.checking(methodDescriptorExpectations(method,
         hasTemplateResolver));
     assertThat(introspector.describe(method, PARENT_PATH, MODEL_PATH, null,
         reflectionService, typeIntrospector), contains(methodDescriptor));
+  }
+
+  @Test
+  public void testAnnotatedResourceMethodWithMultipleSpecs() throws Exception {
+    final Method method = MockResource.class.getMethod("resource");
+    final boolean hasPath = true;
+    final boolean hasHttpMethod = true;
+    final boolean hasTemplateResolver = true;
+    final boolean hasModelPathSpecs = true;
+    final boolean hasModelPathSpec = false;
+    context.checking(resourceAnnotationExpectations(method, hasPath,
+        hasHttpMethod));
+    context.checking(annotatedResourceMethodExpectations(method,
+        hasTemplateResolver, hasModelPathSpecs, hasModelPathSpec));
+    context.checking(methodDescriptorExpectations(method,
+        hasTemplateResolver));
+    assertThat(introspector.describe(method, PARENT_PATH, MODEL_PATH, null,
+        reflectionService, typeIntrospector), contains(methodDescriptor));
+  }
+
+  @Test(expected = ResourceConfigurationException.class)
+  public void testAnnotatedResourceMethodWithSpecsAndSpec() throws Exception {
+    final Method method = MockResource.class.getMethod("resource");
+    final boolean hasPath = true;
+    final boolean hasHttpMethod = true;
+    final boolean hasTemplateResolver = true;
+    final boolean hasModelPathSpecs = true;
+    final boolean hasModelPathSpec = true;
+    context.checking(resourceAnnotationExpectations(method, hasPath,
+        hasHttpMethod));
+    context.checking(annotatedResourceMethodExpectations(method,
+        hasTemplateResolver, hasModelPathSpecs, hasModelPathSpec));
+    assertThat(introspector.describe(method, PARENT_PATH, MODEL_PATH, null,
+        reflectionService, typeIntrospector), is(empty()));
   }
 
   @Test
@@ -292,10 +329,12 @@ public class ReflectionResourceMethodIntrospectorTest {
     final boolean hasPath = true;
     final boolean hasHttpMethod = true;
     final boolean hasTemplateResolver = false;
+    final boolean hasModelPathSpecs = false;
+    final boolean hasModelPathSpec = true;
     context.checking(resourceAnnotationExpectations(method, hasPath,
         hasHttpMethod));
     context.checking(annotatedResourceMethodExpectations(method,
-        hasTemplateResolver));
+        hasTemplateResolver, hasModelPathSpecs, hasModelPathSpec));
     context.checking(methodDescriptorExpectations(method,
         hasTemplateResolver));
     assertThat(introspector.describe(method, PARENT_PATH, MODEL_PATH,
@@ -314,7 +353,7 @@ public class ReflectionResourceMethodIntrospectorTest {
         oneOf(reflectionService).isAbstractType(MockResource.class);
         will(returnValue(hasAbstractReturnType));
         oneOf(reflectionService).getAnnotation(method, ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
+        will(returnValue(AnnotationUtils.modelPathSpecAnnotation(Object.class)));
         oneOf(reflectionService).getAnnotation(method, TemplateResolver.class);
         will(returnValue(hasTemplateResolver ? methodTemplateResolver : null));
       }
@@ -380,13 +419,20 @@ public class ReflectionResourceMethodIntrospectorTest {
   }
 
   private Expectations annotatedResourceMethodExpectations(
-      final Method method, final boolean hasTemplateResolver) throws Exception {
+      final Method method, final boolean hasTemplateResolver,
+      final boolean hasModelPathSpecs, final boolean hasModelPathSpec)
+      throws Exception {
     return new Expectations() {
       {
         oneOf(reflectionService).getReturnType(method);
         will(returnValue(MockSubResource.class));
+        oneOf(reflectionService).getAnnotation(method, ModelPathSpecs.class);
+        will(returnValue(hasModelPathSpecs ?
+            AnnotationUtils.modelPathSpecsAnnotation(
+                AnnotationUtils.modelPathSpecAnnotation(Object.class)) : null));
         oneOf(reflectionService).getAnnotation(method, ModelPathSpec.class);
-        will(returnValue(AnnotationUtils.referencedByAnnotation(Object.class)));
+        will(returnValue(hasModelPathSpec ?
+            AnnotationUtils.modelPathSpecAnnotation(Object.class) : null));
         oneOf(reflectionService).getAnnotation(method, TemplateResolver.class);
         will(returnValue(hasTemplateResolver ? methodTemplateResolver : null));
       }

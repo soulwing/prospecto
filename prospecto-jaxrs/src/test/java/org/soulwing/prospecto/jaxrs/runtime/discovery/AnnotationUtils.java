@@ -23,6 +23,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import org.soulwing.prospecto.jaxrs.api.ModelPathSpec;
+import org.soulwing.prospecto.jaxrs.api.ModelPathSpecs;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.api.TemplateResolver;
 
@@ -51,8 +52,8 @@ public class AnnotationUtils {
    * @param value class array for value attribute
    * @return annotation instance
    */
-  public static ModelPathSpec referencedByAnnotation(final Class<?>... value) {
-    return referencedByAnnotation(true, value);
+  public static ModelPathSpec modelPathSpecAnnotation(final Class<?>... value) {
+    return modelPathSpecAnnotation(true, value);
   }
 
   /**
@@ -61,9 +62,9 @@ public class AnnotationUtils {
    * @param value class array for value attribute
    * @return annotation instance
    */
-  public static ModelPathSpec referencedByAnnotation(final boolean descriptor,
+  public static ModelPathSpec modelPathSpecAnnotation(final boolean descriptor,
       final Class<?>... value) {
-    return new ReferencedByLiteral() {
+    return new ModelPathSpecLiteral() {
       @Override
       public Class<?>[] value() {
         return value;
@@ -77,6 +78,21 @@ public class AnnotationUtils {
       @Override
       public boolean inherit() {
         return true;
+      }
+    };
+  }
+
+  /**
+   * Creates a new instance of {@link ModelPathSpecs}.
+   * @param value class array for value attribute
+   * @return annotation instance
+   */
+  public static ModelPathSpecs modelPathSpecsAnnotation(
+      final ModelPathSpec... value) {
+    return new ModelPathSpecsLiteral() {
+      @Override
+      public ModelPathSpec[] value() {
+        return value;
       }
     };
   }
@@ -108,7 +124,11 @@ public class AnnotationUtils {
       implements Path {
   }
 
-  public static abstract class ReferencedByLiteral
+  public static abstract class ModelPathSpecsLiteral
+      extends AnnotationLiteral<ModelPathSpecs> implements ModelPathSpecs {
+  }
+
+  public static abstract class ModelPathSpecLiteral
       extends AnnotationLiteral<ModelPathSpec> implements ModelPathSpec {
   }
 
