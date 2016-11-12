@@ -89,6 +89,3 @@ BEGIN_OBJECT "random"
 END_OBJECT "random"
 END_OBJECT "channels"
 ```
-
-## Value type conversion
-
