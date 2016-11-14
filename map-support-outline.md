@@ -95,5 +95,15 @@ END_OBJECT "channels"
 
 ## Applicator Support for Maps
 
-Should be similar to the existing support for to-many associations when applying view content to a model at a `mapOfObjects` node.
-Probably want some sort of `KeyedToManyAssociationManager` that is similar to the `IndexedToManyAssociationManager`
+### mapOfValues
+
+When applying view content to a model at a `mapOfValues` node, it should be a matter of implementing a `MapOfValuesApplicator` (in
+the runtime `applicator` package) that is very similar to the `ArrayOfValuesApplicator`. Instead of building a `List` in the `onToModelValue` method, it will instead build a `Map`.
+
+The body of `ArrayOfValuesApplicator.onToModelValue` can probably be factored out into a common class that can be shared by both the `ArrayOfValuesApplicator` and `MapOfValuesApplicator`, since much of the necessary behavior will be identical. This will also provide the single place to implement the recursive evaluation of `BEGIN_OBJECT` and `BEGIN_ARRAY` events that appear in the stream for an array or a map.
+
+
+### mapOfObjects
+
+When applying view content to a model at a `mapOfObjects` node, the necessary support should be similar to the existing support for to-many associations. Probably want some sort of `KeyedToManyAssociationManager` that is similar to the `IndexedToManyAssociationManager`. Howver, instead of finding associates via an `indexOf` position, it provides methods to get and set map entries by key. Reconciling the differences between the map contents received in the view and the map contents of the target model should mostly be a straightforward matter of adding new entries, replacing existing entries, and removing those entries in the model that do not appear in the view.
+
