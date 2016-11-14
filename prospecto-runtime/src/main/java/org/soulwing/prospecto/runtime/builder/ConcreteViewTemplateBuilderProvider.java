@@ -25,6 +25,7 @@ import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
 import org.soulwing.prospecto.runtime.template.RootArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.RootMapOfValuesNode;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
 import org.soulwing.prospecto.runtime.template.RootReferenceNode;
 import org.soulwing.prospecto.spi.ViewTemplateBuilderProvider;
@@ -90,6 +91,25 @@ public class ConcreteViewTemplateBuilderProvider
       String namespace) throws ViewTemplateException {
     return new ConcreteViewTemplate(
         new RootArrayOfValuesNode(name, elementName, namespace));
+  }
+
+  @Override
+  public ViewTemplate mapOfObjects(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return null;
+  }
+
+  @Override
+  public ViewTemplate mapOfObjects(String name, String namespace,
+      ViewTemplate template) throws ViewTemplateException {
+    return null;
+  }
+
+  @Override
+  public ViewTemplate mapOfValues(String name, String namespace)
+      throws ViewTemplateException {
+    return new ConcreteViewTemplate(
+        new RootMapOfValuesNode(name, namespace));
   }
 
 }
