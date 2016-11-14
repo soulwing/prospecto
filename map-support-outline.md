@@ -3,7 +3,7 @@
 ### `mapOfValues`
 In the template, this works like `arrayOfValues`, except that the corresponding model type is a Map instead of an array or other Collection type. The template builder should allow a `ValueTypeConverter` to be specified to convert the keys of the map to simple value types. Additionally, key conversion could be handled using by-type conversion by a converter registered on the view context.
 
-It doesn't support children, and the resulting view is structure containing the key-value pairs from the map. Maps and arrays uses as map values are recursively evaluated; other objects are converted to simple value types. Registered `ValueTypeConverter` objects should be used to convert value types in a map, just as they are currently used to convert value types in an array.
+The `mapOfValues` method doesn't have descendant view nodes, and the resulting view is structure containing the key-value pairs from the map. Maps and arrays uses as map values are recursively evaluated; other objects are converted to simple value types. Registered `ValueTypeConverter` objects should be used to convert value types in a map, just as they are currently used to convert value types in an array.
 
 > The current implementation of `arrayOfValues` should also modified such that maps and arrays are recursively evaluated in the same manner.
 
