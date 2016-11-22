@@ -19,11 +19,12 @@
 package org.soulwing.prospecto.runtime.applicator;
 
 import java.util.List;
+import java.util.Map;
 
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
-import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
+import org.soulwing.prospecto.api.association.ToManyMappedAssociationManager;
+import org.soulwing.prospecto.api.template.MapOfObjectsNode;
+import org.soulwing.prospecto.runtime.association.ObjectMapManyMappedAssociationUpdater;
+import org.soulwing.prospecto.runtime.association.ToManyMappedAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
@@ -32,28 +33,28 @@ import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * An applicator for an array-of-objects node.
+ * An applicator for a map-of-objects node.
  *
  * @author Carl Harris
  */
-class ArrayOfObjectsApplicator
-    extends AbstractArrayOfObjectsApplicator<ArrayOfObjectsNode>
+class MapOfObjectsApplicator
+    extends AbstractMapOfObjectsApplicator<MapOfObjectsNode>
     implements RootViewEventApplicator {
 
-  ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
+  MapOfObjectsApplicator(MapOfObjectsNode node,
       List<ViewEventApplicator> children) {
     this(node, children,
         ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ConcreteToManyAssociationUpdater.INSTANCE,
+        ObjectMapManyMappedAssociationUpdater.INSTANCE,
         HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
-  ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
+  MapOfObjectsApplicator(MapOfObjectsNode node,
       List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToManyAssociationUpdater associationUpdater,
+      ToManyMappedAssociationUpdater associationUpdater,
       ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
         associationUpdater, applicatorLocator);
@@ -66,8 +67,9 @@ class ArrayOfObjectsApplicator
 
     associationUpdater.updateUsingManager(node,
         ((TargetAndManager) targetAndManager).getTarget(),
-        (List<InjectableViewEntity>) injector,
-        (ToManyAssociationManager) ((TargetAndManager) targetAndManager).getManager(),
+        (Map<?, InjectableViewEntity>) injector,
+        (ToManyMappedAssociationManager)
+            ((TargetAndManager) targetAndManager).getManager(),
         context);
 
     return null;

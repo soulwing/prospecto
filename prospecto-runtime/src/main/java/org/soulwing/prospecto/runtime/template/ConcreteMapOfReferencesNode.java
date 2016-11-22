@@ -18,30 +18,31 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
-import java.util.Iterator;
+import org.soulwing.prospecto.api.template.MapOfReferencesNode;
+import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 
 /**
- * A root view node that represents an array of objects.
+ * A view node that represents an array of references.
  *
  * @author Carl Harris
  */
-public class RootArrayOfObjectNode extends ConcreteArrayOfObjectsNode {
+public class ConcreteMapOfReferencesNode extends ConcreteMapOfObjectsNode
+    implements MapOfReferencesNode {
 
   /**
    * Constructs a new instance.
-   * @param name name of the array node
-   * @param elementName name for the elements in the array node
-   * @param namespace namespace for {@code name} and {@code elementName}
-   * @param modelType element model type
+   * @param name node name
+   * @param namespace namespace for {@code name}
+   * @param modelType model type of the array elements
    */
-  public RootArrayOfObjectNode(String name, String elementName,
+  public ConcreteMapOfReferencesNode(String name,
       String namespace, Class<?> modelType) {
-    super(name, elementName, namespace, modelType);
+    super(name,namespace, modelType);
   }
 
   @Override
-  protected Iterator<Object> getModelIterator(Object source) throws Exception {
-    return IteratorUtil.iterator(source);
+  public Object accept(ViewNodeVisitor visitor, Object state) {
+    return visitor.visitMapOfReferences(this, state);
   }
 
 }

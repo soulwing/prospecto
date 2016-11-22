@@ -69,6 +69,19 @@ public interface ViewTemplateBuilderProvider {
       throws ViewTemplateException;
 
   /**
+   * Creates a builder for a view whose root node is an array-of-references node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param modelType model type to associate with the root view node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplateBuilder arrayOfReferences(String name,
+      String elementName, String namespace, Class<?> modelType)
+      throws ViewTemplateException;
+
+  /**
    * Creates a view template whose root node is an array-of-objects node
    * using the children of the root node of the given object template.
    * @param name name for the object in the view (may be {@code null})
@@ -116,19 +129,44 @@ public interface ViewTemplateBuilderProvider {
    * @return template builder
    * @throws ViewTemplateException
    */
-  ViewTemplate mapOfObjects(String name, String namespace, Class<?> modelType)
-      throws ViewTemplateException;
+  ViewTemplateBuilder mapOfObjects(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException;
+
+  /**
+   * Creates a template for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template
+   * @throws ViewTemplateException
+   */
+  ViewTemplate mapOfObjects(String name, String namespace,
+      ViewTemplate template) throws ViewTemplateException;
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
-   * @param template source template (which must have a root node of type object)
+   * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
-  ViewTemplate mapOfObjects(String name, String namespace,
+  ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> modelType)
+      throws ViewTemplateException;
+
+  /**
+   * Creates a template for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template
+   * @throws ViewTemplateException
+   */
+  ViewTemplate mapOfReferences(String name, String namespace,
       ViewTemplate template) throws ViewTemplateException;
 
   /**

@@ -14,8 +14,9 @@ public abstract class AbstractMapAssociationManager<T, K, E>
     implements ToManyMappedAssociationManager<T, K, E> {
 
   @Override
-  public Iterator<Map.Entry<K,E>> iterator(T owner) throws Exception {
-    final Map<K, E> associates = getAssociates(owner);
+  @SuppressWarnings("unchecked")
+  public Iterator<Map.Entry> iterator(T owner) throws Exception {
+    final Map associates = getAssociates(owner);
     if (associates == null) return null;
     return associates.entrySet().iterator();
   }

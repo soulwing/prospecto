@@ -237,11 +237,78 @@ public class ViewTemplateBuilderProducer {
   }
 
   /**
+   * Creates a view template builder whose root node is an array-of-references
+   * node.
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfReferences(Class<?> modelType) {
+    return arrayOfReferences(null, null, null, modelType);
+  }
+
+  /**
+   * Creates a view template builder whose root node is an array-of-references
+   * node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param name
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfReferences(String name,
+      Class<?> modelType) {
+    return arrayOfReferences(name, null, null, modelType);
+  }
+
+  /**
+   * Creates a view template builder whose root node is an array-of-references
+   * node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfReferences(String name,
+      String elementName, Class<?> modelType) {
+    return arrayOfReferences(name, elementName, null, modelType);
+  }
+
+  /**
+   * Creates a view template builder whose root node is an array-of-references
+   * node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} and {@code elementName}
+   *    (may by {@code null})
+   * @param modelType model type to associate with the root node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder arrayOfReferences(String name,
+      String elementName, String namespace, Class<?> modelType) {
+    return singleton.getInstance().provider.arrayOfReferences(
+        name, elementName, namespace, modelType);
+  }
+
+  /**
+   * Creates a view template whose root node is an array-of-references node
+   * using the children of the root node of the given object template.
+   * @param template source template (which must have a root node of type object)
+   * @return template
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate arrayOfReferences(ViewTemplate template) {
+    return arrayOfReferences(null, null, null, template);
+  }
+
+  /**
    * Creates a view template whose root node is an array-of-references node
    * using the children of the root node of the given object template.
    * @param name name for the object in the view (may be {@code null})
    * @param template source template (which must have a root node of type object)
-   * @return template builder
+   * @return template
    * @throws ViewTemplateException
    */
   public static ViewTemplate arrayOfReferences(String name,
@@ -255,7 +322,7 @@ public class ViewTemplateBuilderProducer {
    * @param name name for the object in the view (may be {@code null})
    * @param elementName name for the elements in the array (may be {@code null})
    * @param template source template (which must have a root node of type object)
-   * @return template builder
+   * @return template
    * @throws ViewTemplateException
    */
   public static ViewTemplate arrayOfReferences(String name, String elementName,
@@ -270,7 +337,7 @@ public class ViewTemplateBuilderProducer {
    * @param elementName name for the elements in the array (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
    * @param template source template (which must have a root node of type object)
-   * @return template builder
+   * @return template
    * @throws ViewTemplateException
    */
   public static ViewTemplate arrayOfReferences(String name, String elementName,
@@ -324,7 +391,7 @@ public class ViewTemplateBuilderProducer {
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfObjects(Class<?> modelType)
+  public static ViewTemplateBuilder mapOfObjects(Class<?> modelType)
       throws ViewTemplateException {
     return mapOfObjects(null, null, modelType);
   }
@@ -337,7 +404,7 @@ public class ViewTemplateBuilderProducer {
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfObjects(String name, Class<?> modelType)
+  public static ViewTemplateBuilder mapOfObjects(String name, Class<?> modelType)
       throws ViewTemplateException {
     return mapOfObjects(name, null, modelType);
   }
@@ -351,7 +418,7 @@ public class ViewTemplateBuilderProducer {
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfObjects(String name, String namespace,
+  public static ViewTemplateBuilder mapOfObjects(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfObjects(name, namespace,
         modelType);
@@ -394,6 +461,86 @@ public class ViewTemplateBuilderProducer {
   public static ViewTemplate mapOfObjects(String name, String namespace,
       ViewTemplate template) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfObjects(name, namespace,
+        template);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param modelType model type of the values in the map
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder mapOfReferences(Class<?> modelType)
+      throws ViewTemplateException {
+    return mapOfReferences(null, null, modelType);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param modelType model type of the values in the map
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder mapOfReferences(String name, Class<?> modelType)
+      throws ViewTemplateException {
+    return mapOfReferences(name, null, modelType);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param modelType model type of the values in the map
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return singleton.getInstance().provider.mapOfReferences(name, namespace,
+        modelType);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate mapOfReferences(ViewTemplate template)
+      throws ViewTemplateException {
+    return mapOfReferences(null, null, template);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate mapOfReferences(String name,
+      ViewTemplate template) throws ViewTemplateException {
+    return mapOfReferences(name, null, template);
+  }
+
+  /**
+   * Creates a builder for a view whose root node is an object whose keys
+   * and values are obtained from a model of {@link java.util.Map} type.
+   * @param name name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param template source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  public static ViewTemplate mapOfReferences(String name, String namespace,
+      ViewTemplate template) throws ViewTemplateException {
+    return singleton.getInstance().provider.mapOfReferences(name, namespace,
         template);
   }
 

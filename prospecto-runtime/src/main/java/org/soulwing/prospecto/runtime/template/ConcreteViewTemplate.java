@@ -174,7 +174,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   public ViewTemplate arrayOfObjectsTemplate(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
-    RootArrayOfObjectNode root = new RootArrayOfObjectNode(name, elementName,
+    RootArrayOfObjectsNode root = new RootArrayOfObjectsNode(name, elementName,
         namespace, getRoot().getModelType());
     copyInto(root);
     return new ConcreteViewTemplate(root);
@@ -186,6 +186,24 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
     assertRootIsContainerViewNode(name);
     RootArrayOfReferencesNode root = new RootArrayOfReferencesNode(name,
         elementName, namespace, getRoot().getModelType());
+    copyInto(root);
+    return new ConcreteViewTemplate(root);
+  }
+
+  @Override
+  public ViewTemplate mapOfObjectsTemplate(String name, String namespace) {
+    assertRootIsContainerViewNode(name);
+    RootMapOfObjectsNode root = new RootMapOfObjectsNode(name,
+        namespace, getRoot().getModelType());
+    copyInto(root);
+    return new ConcreteViewTemplate(root);
+  }
+
+  @Override
+  public ViewTemplate mapOfReferencesTemplate(String name, String namespace) {
+    assertRootIsContainerViewNode(name);
+    RootMapOfReferencesNode root = new RootMapOfReferencesNode(name,
+        namespace, getRoot().getModelType());
     copyInto(root);
     return new ConcreteViewTemplate(root);
   }

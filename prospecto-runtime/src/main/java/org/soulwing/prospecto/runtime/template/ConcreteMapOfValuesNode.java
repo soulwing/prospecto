@@ -24,9 +24,8 @@ public class ConcreteMapOfValuesNode extends AbstractViewNode
 
   private MapAccessor mapAccessor;
 
-  public ConcreteMapOfValuesNode(String name, String namespace,
-      Class<?> componentType) {
-    this(name, namespace, componentType,
+  public ConcreteMapOfValuesNode(String name, String namespace) {
+    this(name, namespace, Object.class,
         ConcreteMapAccessorFactory.INSTANCE);
   }
 
@@ -36,7 +35,6 @@ public class ConcreteMapOfValuesNode extends AbstractViewNode
     this.mapAccessorFactory = mapAccessorFactory;
   }
 
-
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
@@ -45,23 +43,22 @@ public class ConcreteMapOfValuesNode extends AbstractViewNode
 
   @Override
   public Class<?> getComponentType() {
-    return null;
+    return Object.class;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public Iterator<Map.Entry<?, ?>> iterator(Object model) throws Exception {
-    return null;
+  public Iterator<Map.Entry> iterator(Object model) throws Exception {
+    return mapAccessor.iterator(model);
   }
 
   @Override
   public ToManyMappedAssociationManager<?, ?, ?> getDefaultManager() {
-    return null;
+    return mapAccessor;
   }
 
   @Override
   public Object accept(ViewNodeVisitor visitor, Object state) {
-    return null;
+    return visitor.visitMapOfValues(this, state);
   }
 
 }

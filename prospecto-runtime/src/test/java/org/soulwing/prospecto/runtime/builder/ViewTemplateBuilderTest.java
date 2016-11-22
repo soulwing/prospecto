@@ -62,7 +62,7 @@ import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
 import org.soulwing.prospecto.runtime.template.EnumNameNode;
-import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.template.RootArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
 import org.soulwing.prospecto.runtime.template.ToStringValueNode;
 
@@ -120,7 +120,7 @@ public class ViewTemplateBuilderTest {
             .build();
 
     assertThat(template.getRoot(), is(
-        nodeOfType(RootArrayOfObjectNode.class,
+        nodeOfType(RootArrayOfObjectsNode.class,
             named(VIEW_NAME),
             inNamespace(NAMESPACE),
             elementsNamed(ELEMENT_NAME),

@@ -18,30 +18,30 @@
  */
 package org.soulwing.prospecto.runtime.template;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
- * A static utility method for getting an iterator for a source model.
+ * A root view node that represents an array of objects.
  *
  * @author Carl Harris
  */
-class IteratorUtil {
+public class RootArrayOfObjectsNode extends ConcreteArrayOfObjectsNode {
 
-  @SuppressWarnings("unchecked")
-  public static Iterator<Object> iterator(Object source) throws Exception {
-    if (source instanceof Iterator) {
-      return (Iterator<Object>) source;
-    }
-    if (source instanceof Iterable) {
-      return ((Iterable<Object>) source).iterator();
-    }
-    if (source instanceof Object[]) {
-      return Arrays.asList((Object[]) source).iterator();
-    }
-    throw new IllegalArgumentException(
-        "source must be an iterator, iterable, or array");
+  /**
+   * Constructs a new instance.
+   * @param name name of the array node
+   * @param elementName name for the elements in the array node
+   * @param namespace namespace for {@code name} and {@code elementName}
+   * @param modelType element model type
+   */
+  public RootArrayOfObjectsNode(String name, String elementName,
+      String namespace, Class<?> modelType) {
+    super(name, elementName, namespace, modelType);
+  }
+
+  @Override
+  protected Iterator<Object> getModelIterator(Object source) throws Exception {
+    return IteratorUtil.iterator(source);
   }
 
 }

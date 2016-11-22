@@ -6,7 +6,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.association.ToManyMappedAssociationManager;
 
 /**
- * TODO: DESCRIBE THE TYPE HERE
+ * An accessor for a {@link java.util.Map}.
  *
  * @author Carl Harris
  */

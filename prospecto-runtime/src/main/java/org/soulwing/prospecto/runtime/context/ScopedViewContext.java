@@ -83,6 +83,12 @@ public interface ScopedViewContext extends ViewContext {
   void push(int index);
 
   /**
+   * Pushes a new frame onto the context stack for a keyed frame
+   * @param key key to associate with the frame
+   */
+  void push(String key);
+
+  /**
    * Pops the top frame from the context stack
    */
   void pop();

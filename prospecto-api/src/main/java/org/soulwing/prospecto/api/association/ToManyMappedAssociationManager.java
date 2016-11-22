@@ -39,7 +39,7 @@ public interface ToManyMappedAssociationManager<T, K, E>
    * @return map entry iterator
    * @throws Exception
    */
-  Iterator<Map.Entry<K, E>> iterator(T owner) throws Exception;
+  Iterator<Map.Entry> iterator(T owner) throws Exception;
 
   /**
    * Gets the size of the associated collection.

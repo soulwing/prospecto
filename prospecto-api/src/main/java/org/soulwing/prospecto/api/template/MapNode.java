@@ -26,7 +26,7 @@ public interface MapNode extends UpdatableNode {
    * @return iterator for the subject entries
    * @throws Exception
    */
-  Iterator<Map.Entry<?, ?>> iterator(Object model) throws Exception;
+  Iterator<Map.Entry> iterator(Object model) throws Exception;
 
   /**
    * Gets this node's default association manager.

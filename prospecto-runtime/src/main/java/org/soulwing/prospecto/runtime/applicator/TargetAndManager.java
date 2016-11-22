@@ -18,7 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.association.AssociationManager;
 
 /**
  * A object that holds a collection/array to be updated and the manager that
@@ -29,10 +29,10 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 class TargetAndManager {
 
   private final Object target;
-  private final ToManyAssociationManager<?, ?> manager;
+  private final AssociationManager<?, ?> manager;
 
   public TargetAndManager(Object target,
-      ToManyAssociationManager<?, ?> manager) {
+      AssociationManager<?, ?> manager) {
     this.target = target;
     this.manager = manager;
   }
@@ -41,7 +41,7 @@ class TargetAndManager {
     return target;
   }
 
-  public ToManyAssociationManager<?, ?> getManager() {
+  public AssociationManager<?, ?> getManager() {
     return manager;
   }
 

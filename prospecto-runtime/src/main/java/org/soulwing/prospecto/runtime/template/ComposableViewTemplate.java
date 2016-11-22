@@ -112,4 +112,28 @@ public interface ComposableViewTemplate extends ViewTemplate {
   ViewTemplate arrayOfReferencesTemplate(String name, String elementName,
       String namespace);
 
+  /**
+   * Extracts a view template of map-of-objects type from the root of this
+   * template.
+   * @param name name for the root (as it will appear in the calling template)
+   * @param namespace namespace for {@code name} and {@code elementName}; used
+   *    in only some view types (e.g. XML)
+   * @return new view template containing the children of the root node of this
+   *    template
+   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfObjects(String, String, ViewTemplate)
+   */
+  ViewTemplate mapOfObjectsTemplate(String name, String namespace);
+
+  /**
+   * Extracts a view template of map-of-references type from the root of this
+   * template.
+   * @param name name for the root (as it will appear in the calling template)
+   * @param namespace namespace for {@code name} and {@code elementName}; used
+   *    in only some view types (e.g. XML)
+   * @return new view template containing the children of the root node of this
+   *    template
+   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfReferences(String, String, ViewTemplate)
+   */
+  ViewTemplate mapOfReferencesTemplate(String name, String namespace);
+
 }

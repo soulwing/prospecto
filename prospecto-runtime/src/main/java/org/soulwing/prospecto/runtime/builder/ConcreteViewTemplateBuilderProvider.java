@@ -23,8 +23,11 @@ import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 import org.soulwing.prospecto.runtime.template.ConcreteViewTemplate;
-import org.soulwing.prospecto.runtime.template.RootArrayOfObjectNode;
+import org.soulwing.prospecto.runtime.template.RootArrayOfObjectsNode;
+import org.soulwing.prospecto.runtime.template.RootArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.template.RootArrayOfValuesNode;
+import org.soulwing.prospecto.runtime.template.RootMapOfObjectsNode;
+import org.soulwing.prospecto.runtime.template.RootMapOfReferencesNode;
 import org.soulwing.prospecto.runtime.template.RootMapOfValuesNode;
 import org.soulwing.prospecto.runtime.template.RootObjectNode;
 import org.soulwing.prospecto.runtime.template.RootReferenceNode;
@@ -68,7 +71,7 @@ public class ConcreteViewTemplateBuilderProvider
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, Class<?> modelType) throws ViewTemplateException {
     return builderFactory.newBuilder(
-        new RootArrayOfObjectNode(name, elementName, namespace,
+        new RootArrayOfObjectsNode(name, elementName, namespace,
             modelType));
   }
 
@@ -77,6 +80,14 @@ public class ConcreteViewTemplateBuilderProvider
       String namespace, ViewTemplate template) throws ViewTemplateException {
     return ((ComposableViewTemplate) template)
         .arrayOfObjectsTemplate(name, elementName, namespace);
+  }
+
+  @Override
+  public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
+      String namespace, Class<?> modelType) throws ViewTemplateException {
+    return builderFactory.newBuilder(
+        new RootArrayOfReferencesNode(name, elementName, namespace,
+            modelType));
   }
 
   @Override
@@ -94,15 +105,31 @@ public class ConcreteViewTemplateBuilderProvider
   }
 
   @Override
-  public ViewTemplate mapOfObjects(String name, String namespace,
+  public ViewTemplateBuilder mapOfObjects(String name, String namespace,
       Class<?> modelType) throws ViewTemplateException {
-    return null;
+    return builderFactory.newBuilder(
+        new RootMapOfObjectsNode(name, namespace, modelType));
   }
 
   @Override
   public ViewTemplate mapOfObjects(String name, String namespace,
       ViewTemplate template) throws ViewTemplateException {
-    return null;
+    return ((ComposableViewTemplate) template)
+        .mapOfObjectsTemplate(name, namespace);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> modelType) throws ViewTemplateException {
+    return builderFactory.newBuilder(
+        new RootMapOfReferencesNode(name, namespace, modelType));
+  }
+
+  @Override
+  public ViewTemplate mapOfReferences(String name, String namespace,
+      ViewTemplate template) throws ViewTemplateException {
+    return ((ComposableViewTemplate) template)
+        .mapOfReferencesTemplate(name, namespace);
   }
 
   @Override

@@ -18,42 +18,44 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
-import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
-import org.soulwing.prospecto.runtime.association.ConcreteToManyAssociationUpdater;
-import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
+import org.soulwing.prospecto.api.template.MapOfReferencesNode;
+import org.soulwing.prospecto.runtime.association.ReferenceMapToManyMappedAssociationUpdater;
+import org.soulwing.prospecto.runtime.association.ToManyMappedAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.ConcreteViewEntityFactory;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
+import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 
 /**
- * An applicator for an array-of-objects node.
+ * An applicator for a map-of-references node.
  *
  * @author Carl Harris
  */
-class ArrayOfObjectsApplicator
-    extends AbstractArrayOfObjectsApplicator<ArrayOfObjectsNode>
+class MapOfReferencesApplicator
+    extends AbstractMapOfObjectsApplicator<MapOfReferencesNode>
     implements RootViewEventApplicator {
 
-  ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
+  MapOfReferencesApplicator(MapOfReferencesNode node,
       List<ViewEventApplicator> children) {
     this(node, children,
         ConcreteViewEntityFactory.INSTANCE,
         ConcreteTransformationService.INSTANCE,
-        ConcreteToManyAssociationUpdater.INSTANCE,
+        ReferenceMapToManyMappedAssociationUpdater.INSTANCE,
         HierarchicalContainerApplicatorLocator.INSTANCE);
   }
 
-  ArrayOfObjectsApplicator(ArrayOfObjectsNode node,
+  MapOfReferencesApplicator(MapOfReferencesNode node,
       List<ViewEventApplicator> children,
       ViewEntityFactory entityFactory,
       TransformationService transformationService,
-      ToManyAssociationUpdater associationUpdater,
+      ToManyMappedAssociationUpdater associationUpdater,
       ContainerApplicatorLocator applicatorLocator) {
     super(node, children, entityFactory, transformationService,
         associationUpdater, applicatorLocator);
@@ -61,16 +63,22 @@ class ArrayOfObjectsApplicator
 
   @Override
   @SuppressWarnings("unchecked")
-  public Object apply(Object injector, Object targetAndManager,
-      ScopedViewContext context) throws Exception {
+  public Object apply(Object injector, Object target, ScopedViewContext context)
+      throws Exception {
+    final Map<?, InjectableViewEntity> entities =
+        (Map<?, InjectableViewEntity>) injector;
 
-    associationUpdater.updateUsingManager(node,
-        ((TargetAndManager) targetAndManager).getTarget(),
-        (List<InjectableViewEntity>) injector,
-        (ToManyAssociationManager) ((TargetAndManager) targetAndManager).getManager(),
-        context);
+    final ReferenceResolverService resolvers = context.getReferenceResolvers();
+    final Map<Object, Object> references = new HashMap<>();
 
-    return null;
+    for (final Map.Entry<?, InjectableViewEntity> entry : entities.entrySet()) {
+      final InjectableViewEntity entity = entry.getValue();
+      references.put(entry.getKey(),
+          entity != null ? resolvers.resolve(entity.getType(), entity) : null);
+    }
+
+    return references;
   }
+
 
 }

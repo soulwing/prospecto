@@ -25,6 +25,9 @@ import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.api.template.ArrayOfReferencesNode;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.api.template.EnvelopeNode;
+import org.soulwing.prospecto.api.template.MapOfObjectsNode;
+import org.soulwing.prospecto.api.template.MapOfReferencesNode;
+import org.soulwing.prospecto.api.template.MapOfValuesNode;
 import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.api.template.ReferenceNode;
@@ -89,6 +92,26 @@ public class ViewApplicationVisitor extends AbstractViewNodeVisitor {
   @SuppressWarnings("unchecked")
   public Object visitArrayOfReferences(ArrayOfReferencesNode node, Object state) {
     return new ArrayOfReferencesApplicator(node,
+        (List<ViewEventApplicator>) state);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object visitMapOfValues(MapOfValuesNode node, Object state) {
+    return new MapOfValuesApplicator(node);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object visitMapOfObjects(MapOfObjectsNode node, Object state) {
+    return new MapOfObjectsApplicator(node,
+        (List<ViewEventApplicator>) state);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object visitMapOfReferences(MapOfReferencesNode node, Object state) {
+    return new MapOfReferencesApplicator(node,
         (List<ViewEventApplicator>) state);
   }
 
