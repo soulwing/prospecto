@@ -191,19 +191,41 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ViewTemplate mapOfObjectsTemplate(String name, String namespace) {
+  public ConcreteContainerNode mapOfObjects(String name, String namespace,
+      Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    final ConcreteMapOfObjectsNode node = new ConcreteMapOfObjectsNode(name,
+        namespace, keyType, root.getModelType());
+    copyInto(node);
+    return node;
+  }
+
+  @Override
+  public ConcreteContainerNode mapOfReferences(String name, String namespace,
+      Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    ConcreteMapOfReferencesNode node = new ConcreteMapOfReferencesNode(name,
+        namespace, keyType, root.getModelType());
+    copyInto(node);
+    return node;
+  }
+
+  @Override
+  public ViewTemplate mapOfObjectsTemplate(String name, String namespace,
+      Class<?> keyType) {
     assertRootIsContainerViewNode(name);
     RootMapOfObjectsNode root = new RootMapOfObjectsNode(name,
-        namespace, getRoot().getModelType());
+        namespace, keyType, getRoot().getModelType());
     copyInto(root);
     return new ConcreteViewTemplate(root);
   }
 
   @Override
-  public ViewTemplate mapOfReferencesTemplate(String name, String namespace) {
+  public ViewTemplate mapOfReferencesTemplate(String name, String namespace,
+      Class<?> keyType) {
     assertRootIsContainerViewNode(name);
     RootMapOfReferencesNode root = new RootMapOfReferencesNode(name,
-        namespace, getRoot().getModelType());
+        namespace, keyType, getRoot().getModelType());
     copyInto(root);
     return new ConcreteViewTemplate(root);
   }
@@ -217,7 +239,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   private void assertRootIsContainerViewNode(String name) {
     if (!(root instanceof ConcreteContainerNode)) {
       throw new ViewTemplateException("referenced view template for node '"
-          + name + "' must have a root node of object or array-of-object type");
+          + name + "' must have a root node of object or array-of-objects or map-of-objects type");
     }
   }
 

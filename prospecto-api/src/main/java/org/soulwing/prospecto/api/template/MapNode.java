@@ -3,7 +3,6 @@ package org.soulwing.prospecto.api.template;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyMappedAssociationManager;
 
 /**
@@ -12,6 +11,12 @@ import org.soulwing.prospecto.api.association.ToManyMappedAssociationManager;
  * @author Carl Harris
  */
 public interface MapNode extends UpdatableNode {
+
+  /**
+   * Gets the data type of the keys of this node.
+   * @return key data type
+   */
+  Class<?> getKeyType();
 
   /**
    * Gets the data type of the elements of this node.

@@ -387,26 +387,29 @@ public class ViewTemplateBuilderProducer {
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
+   *
+   * @param keyType
    * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplateBuilder mapOfObjects(Class<?> modelType)
-      throws ViewTemplateException {
-    return mapOfObjects(null, null, modelType);
+  public static ViewTemplateBuilder mapOfObjects(Class<?> keyType,
+      Class<?> modelType) throws ViewTemplateException {
+    return mapOfObjects(null, null, keyType, modelType);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
+   * @param keyType key type
    * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplateBuilder mapOfObjects(String name, Class<?> modelType)
-      throws ViewTemplateException {
-    return mapOfObjects(name, null, modelType);
+  public static ViewTemplateBuilder mapOfObjects(String name, Class<?> keyType,
+      Class<?> modelType) throws ViewTemplateException {
+    return mapOfObjects(name, null, keyType, modelType);
   }
 
   /**
@@ -414,39 +417,42 @@ public class ViewTemplateBuilderProducer {
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type
    * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplateBuilder mapOfObjects(String name, String namespace,
-      Class<?> modelType) throws ViewTemplateException {
+      Class<?> keyType, Class<?> modelType) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfObjects(name, namespace,
-        modelType);
+        keyType, modelType);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfObjects(ViewTemplate template)
+  public static ViewTemplate mapOfObjects(Class<?> keyType, ViewTemplate template)
       throws ViewTemplateException {
-    return mapOfObjects(null, null, template);
+    return mapOfObjects(null, null, keyType, template);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplate mapOfObjects(String name,
-      ViewTemplate template) throws ViewTemplateException {
-    return mapOfObjects(name, null, template);
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
+    return mapOfObjects(name, null, keyType, template);
   }
 
   /**
@@ -454,14 +460,15 @@ public class ViewTemplateBuilderProducer {
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplate mapOfObjects(String name, String namespace,
-      ViewTemplate template) throws ViewTemplateException {
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfObjects(name, namespace,
-        template);
+        keyType, template);
   }
 
   /**
@@ -471,22 +478,23 @@ public class ViewTemplateBuilderProducer {
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplateBuilder mapOfReferences(Class<?> modelType)
-      throws ViewTemplateException {
-    return mapOfReferences(null, null, modelType);
+  public static ViewTemplateBuilder mapOfReferences(Class<?> keyType,
+      Class<?> modelType) throws ViewTemplateException {
+    return mapOfReferences(null, null, keyType, modelType);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
+   * @param keyType key type
    * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplateBuilder mapOfReferences(String name, Class<?> modelType)
-      throws ViewTemplateException {
-    return mapOfReferences(name, null, modelType);
+  public static ViewTemplateBuilder mapOfReferences(String name,
+      Class<?> keyType, Class<?> modelType) throws ViewTemplateException {
+    return mapOfReferences(name, null, keyType, modelType);
   }
 
   /**
@@ -494,39 +502,42 @@ public class ViewTemplateBuilderProducer {
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type
    * @param modelType model type of the values in the map
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplateBuilder mapOfReferences(String name, String namespace,
-      Class<?> modelType) throws ViewTemplateException {
+      Class<?> keyType, Class<?> modelType) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfReferences(name, namespace,
-        modelType);
+        keyType, modelType);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfReferences(ViewTemplate template)
-      throws ViewTemplateException {
-    return mapOfReferences(null, null, template);
+  public static ViewTemplate mapOfReferences(Class<?> keyType,
+      ViewTemplate template) throws ViewTemplateException {
+    return mapOfReferences(null, null, keyType, template);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplate mapOfReferences(String name,
-      ViewTemplate template) throws ViewTemplateException {
-    return mapOfReferences(name, null, template);
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
+    return mapOfReferences(name, null, keyType, template);
   }
 
   /**
@@ -534,26 +545,28 @@ public class ViewTemplateBuilderProducer {
    * and values are obtained from a model of {@link java.util.Map} type.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type
    * @param template source template (which must have a root node of type object)
    * @return template builder
    * @throws ViewTemplateException
    */
   public static ViewTemplate mapOfReferences(String name, String namespace,
-      ViewTemplate template) throws ViewTemplateException {
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
     return singleton.getInstance().provider.mapOfReferences(name, namespace,
-        template);
+        keyType, template);
   }
 
   /**
    * Creates a builder for a view whose root node is an object whose keys
    * and values are obtained from a map of values that can be converted to
    * simple types, arrays, and maps.
+   * @param keyType
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfValues()
+  public static ViewTemplate mapOfValues(Class<?> keyType)
       throws ViewTemplateException {
-    return mapOfValues(null, null);
+    return mapOfValues(null, null, keyType);
   }
 
   /**
@@ -561,12 +574,13 @@ public class ViewTemplateBuilderProducer {
    * and values are obtained from a map of values that can be converted to
    * simple types, arrays, and maps.
    * @param name name for the object in the view (may be {@code null})
+   * @param keyType key type
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfValues(String name)
+  public static ViewTemplate mapOfValues(String name, Class<?> keyType)
       throws ViewTemplateException {
-    return mapOfValues(name, null);
+    return mapOfValues(name, null, keyType);
   }
 
   /**
@@ -575,12 +589,13 @@ public class ViewTemplateBuilderProducer {
    * simple types, arrays, and maps.
    * @param name name for the object in the view (may be {@code null})
    * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type
    * @return template builder
    * @throws ViewTemplateException
    */
-  public static ViewTemplate mapOfValues(String name, String namespace)
-      throws ViewTemplateException {
-    return singleton.getInstance().provider.mapOfValues(name, namespace);
+  public static ViewTemplate mapOfValues(String name, String namespace,
+      Class<?> keyType) throws ViewTemplateException {
+    return singleton.getInstance().provider.mapOfValues(name, namespace, keyType);
   }
 
 }

@@ -21,24 +21,32 @@ public class ConcreteMapOfValuesNode extends AbstractViewNode
     implements Convertible, MapOfValuesNode {
 
   private final MapAccessorFactory mapAccessorFactory;
+  private final Class<?> keyType;
 
   private MapAccessor mapAccessor;
 
-  public ConcreteMapOfValuesNode(String name, String namespace) {
-    this(name, namespace, Object.class,
+  public ConcreteMapOfValuesNode(String name, String namespace,
+      Class<?> keyType) {
+    this(name, namespace, keyType,
         ConcreteMapAccessorFactory.INSTANCE);
   }
 
   ConcreteMapOfValuesNode(String name, String namespace,
-      Class<?> componentType, MapAccessorFactory mapAccessorFactory) {
-    super(name, namespace, componentType);
+      Class<?> keyType, MapAccessorFactory mapAccessorFactory) {
+    super(name, namespace, Map.class);
     this.mapAccessorFactory = mapAccessorFactory;
+    this.keyType = keyType;
   }
 
   @Override
   public void setAccessor(Accessor accessor) {
     super.setAccessor(accessor);
     this.mapAccessor = mapAccessorFactory.newAccessor(accessor);
+  }
+
+  @Override
+  public Class<?> getKeyType() {
+    return keyType;
   }
 
   @Override

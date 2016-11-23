@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +28,9 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.api.template.MapOfObjectsNode;
-import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyMappedAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.entity.ViewEntityFactory;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -86,6 +82,9 @@ abstract class AbstractMapOfObjectsApplicator<N extends MapOfObjectsNode>
 
       context.push(event.getName(), Object.class);
 
+      final Object modelKey = transformationService.keyToInject(parentEntity,
+          node.getKeyType(), event.getName(), node, context);
+
       Object entity = null;
 
       if (lastEvent == View.Event.Type.BEGIN_OBJECT) {
@@ -99,7 +98,7 @@ abstract class AbstractMapOfObjectsApplicator<N extends MapOfObjectsNode>
       context.pop();
 
       if (entity != UndefinedValue.INSTANCE) {
-        entities.put(event.getName(), entity);
+        entities.put(modelKey, entity);
       }
 
     }

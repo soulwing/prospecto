@@ -7,8 +7,8 @@ package org.soulwing.prospecto.runtime.template;
  */
 public class RootMapOfValuesNode extends ConcreteMapOfValuesNode {
 
-  public RootMapOfValuesNode(String name, String namespace) {
-    super(name, namespace);
+  public RootMapOfValuesNode(String name, String namespace, Class<?> keyType) {
+    super(name, namespace, keyType);
   }
 
 }

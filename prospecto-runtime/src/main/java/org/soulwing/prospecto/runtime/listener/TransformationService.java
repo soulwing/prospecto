@@ -65,4 +65,38 @@ public interface TransformationService {
   Object valueToInject(ViewEntity ownerEntity, Class<?> type, Object viewValue,
       ViewNode node, ScopedViewContext context) throws Exception;
 
+  /**
+   * Derives the key to extract for an entry in a map associated with a
+   * <em>map-of</em> node.
+   * <p>
+   * A value type converter (if available) is used to convert the transformed
+   * model key to its view representation.
+   *
+   * @param owner owner of the property in the model
+   * @param modelKey value of the key in model representation
+   * @param node associated view node
+   * @param context view context
+   * @return derived view key value
+   * @throws Exception
+   */
+  String keyToExtract(Object owner, Object modelKey, ViewNode node,
+      ScopedViewContext context) throws Exception;
+
+  /**
+   * Derives the value to inject for a model property.
+   * <p>
+   * The view key is converted to an instance of the model key type using
+   * a value type converter.
+   *
+   * @param ownerEntity view entity representing the owner of the map
+   * @param type key type in the model
+   * @param viewKey value of the key in view representation
+   * @param node associated view node
+   * @param context view context
+   * @return derived model key value
+   * @throws Exception
+   */
+  Object keyToInject(ViewEntity ownerEntity, Class<?> type, String viewKey,
+      ViewNode node, ScopedViewContext context) throws Exception;
+
 }

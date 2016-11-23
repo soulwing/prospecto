@@ -18,20 +18,15 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.api.template.MapOfValuesNode;
-import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ToManyMappedAssociationUpdater;
-import org.soulwing.prospecto.runtime.association.ValueCollectionToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ValueMapToManyMappedAssociationUpdater;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
@@ -77,14 +72,14 @@ class MapOfValuesApplicator
       }
 
       context.push(event.getName());
+      final Object keyToInject = transformationService.keyToInject(
+          parentEntity, node.getKeyType(), event.getName(), node, context);
       final Object valueToInject = transformationService.valueToInject(
           parentEntity, node.getComponentType(),
           event.getValue(), node, context);
       context.pop();
 
-      final String key = event.getName();  // TODO -- allow conversion
-
-      map.put(key, valueToInject);
+      map.put(keyToInject, valueToInject);
     }
 
     if (lastType != triggerEvent.getType().complement()) {

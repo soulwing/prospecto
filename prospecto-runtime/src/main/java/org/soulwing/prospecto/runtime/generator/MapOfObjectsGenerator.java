@@ -29,12 +29,13 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
-import org.soulwing.prospecto.api.template.ArrayOfObjectsNode;
 import org.soulwing.prospecto.api.template.MapOfObjectsNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.discriminator.ConcreteDiscriminatorEventService;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
+import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
+import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
  * A generator for the events associated with a map-of-objects node.
@@ -46,18 +47,22 @@ class MapOfObjectsGenerator
 
   private final List<ViewEventGenerator> children;
   private final DiscriminatorEventService discriminatorEventService;
+  private final TransformationService transformationService;
 
   MapOfObjectsGenerator(MapOfObjectsNode node,
       List<ViewEventGenerator> children) {
-    this(node, children, ConcreteDiscriminatorEventService.INSTANCE);
+    this(node, children, ConcreteDiscriminatorEventService.INSTANCE,
+        ConcreteTransformationService.INSTANCE);
   }
 
   MapOfObjectsGenerator(MapOfObjectsNode node,
       List<ViewEventGenerator> children,
-      DiscriminatorEventService discriminatorEventService) {
+      DiscriminatorEventService discriminatorEventService,
+      TransformationService transformationService) {
     super(node);
     this.children = children;
     this.discriminatorEventService = discriminatorEventService;
+    this.transformationService = transformationService;
   }
 
   @Override
@@ -81,8 +86,9 @@ class MapOfObjectsGenerator
     while (i.hasNext()) {
 
       final Map.Entry entry = i.next();
-      final String key = entry.getKey().toString();  // TODO -- allow conversion
       final Object elementModel = entry.getValue();
+      final String key = transformationService.keyToExtract(model,
+          entry.getKey(), node, context);
 
       context.push(key);
       context.put(elementModel);

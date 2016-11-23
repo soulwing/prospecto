@@ -32,11 +32,12 @@ public class RootMapOfObjectsNode extends ConcreteMapOfObjectsNode {
    * Constructs a new instance.
    * @param name name of the array node
    * @param namespace namespace for {@code name}
+   * @param keyType key type
    * @param modelType element model type
    */
   public RootMapOfObjectsNode(String name,
-      String namespace, Class<?> modelType) {
-    super(name, namespace, modelType);
+      String namespace, Class<?> keyType, Class<?> modelType) {
+    super(name, namespace, keyType, modelType);
   }
 
   @Override

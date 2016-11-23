@@ -73,4 +73,29 @@ public class ConcreteTransformationService implements TransformationService {
     return valueToInject;
   }
 
+  @Override
+  public String keyToExtract(Object owner, Object modelKey, ViewNode node,
+      ScopedViewContext context) throws Exception {
+
+    // TODO -- consider whether there should be listener events for keys
+
+    final Object viewKey = context.getValueTypeConverters().toViewValue(
+        modelKey, node, context);
+    if (viewKey == null) {
+      throw new NullPointerException("key cannot be null");
+    }
+
+    return viewKey.toString();
+  }
+
+  @Override
+  public Object keyToInject(ViewEntity ownerEntity, Class<?> type,
+      String viewKey, ViewNode node, ScopedViewContext context) throws Exception {
+
+    // TODO -- consider whether there should be listener events for keys
+
+    return context.getValueTypeConverters()
+        .toModelValue(type, viewKey, node, context);
+  }
+
 }

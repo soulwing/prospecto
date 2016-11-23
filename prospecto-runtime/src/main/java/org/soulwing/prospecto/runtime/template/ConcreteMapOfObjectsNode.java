@@ -40,6 +40,7 @@ public class ConcreteMapOfObjectsNode extends ConcreteContainerNode
     implements MapOfObjectsNode {
 
   private final MapAccessorFactory accessorFactory;
+  private final Class<?> keyType;
 
   private MapAccessor mapAccessor;
 
@@ -47,20 +48,22 @@ public class ConcreteMapOfObjectsNode extends ConcreteContainerNode
    * Constructs a new instance.
    * @param name node name
    * @param namespace namespace for {@code name} and {@code elementName}
-   * @param modelType model type of the array elements
+   * @param keyType model type of the map keys
+   * @param modelType model type of the map elements
    */
   public ConcreteMapOfObjectsNode(String name,
-      String namespace, Class<?> modelType) {
-    this(name, namespace, modelType,
+      String namespace, Class<?> keyType, Class<?> modelType) {
+    this(name, namespace, keyType, modelType,
         ConcreteMapAccessorFactory.INSTANCE
     );
   }
 
   ConcreteMapOfObjectsNode(String name,
-      String namespace, Class<?> modelType,
+      String namespace, Class<?> keyType, Class<?> modelType,
       MapAccessorFactory accessorFactory) {
     super(name, namespace, modelType);
     this.accessorFactory = accessorFactory;
+    this.keyType = keyType;
   }
 
   @Override
@@ -76,7 +79,12 @@ public class ConcreteMapOfObjectsNode extends ConcreteContainerNode
 
   @Override
   public Class<?> getComponentType() {
-    return Object.class;
+    return getModelType();
+  }
+
+  @Override
+  public Class<?> getKeyType() {
+    return keyType;
   }
 
   @Override

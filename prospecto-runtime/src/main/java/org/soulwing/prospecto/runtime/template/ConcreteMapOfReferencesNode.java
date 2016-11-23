@@ -33,11 +33,12 @@ public class ConcreteMapOfReferencesNode extends ConcreteMapOfObjectsNode
    * Constructs a new instance.
    * @param name node name
    * @param namespace namespace for {@code name}
-   * @param modelType model type of the array elements
+   * @param keyType type of the map keys
+   * @param modelType model type of the map elements
    */
   public ConcreteMapOfReferencesNode(String name,
-      String namespace, Class<?> modelType) {
-    super(name,namespace, modelType);
+      String namespace, Class<?> keyType, Class<?> modelType) {
+    super(name, namespace, keyType, modelType);
   }
 
   @Override

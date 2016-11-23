@@ -113,16 +113,46 @@ public interface ComposableViewTemplate extends ViewTemplate {
       String namespace);
 
   /**
+   * Extracts a view node of map-of-objects type from the root of this
+   * template for use as a subview in another template.
+   * @param name name for the node (as it will appear in the calling template)
+   * @param namespace namespace for {@code name}; used in only some view types
+   *    (e.g. XML)
+   * @param keyType key type
+   * @return new view node containing the children of the root node of this
+   *    template
+   * @see ViewTemplateBuilder#mapOfObjects(String, String, Class, ViewTemplate)
+   */
+  ConcreteContainerNode mapOfObjects(String name, String namespace,
+      Class<?> keyType);
+
+  /**
+   * Extracts a view node of map-of-references type from the root of this
+   * template for use as a subview in another template.
+   * @param name name for the node (as it will appear in the calling template)
+   * @param namespace namespace for {@code name}; used in only some view types
+   *    (e.g. XML)
+   * @param keyType key type
+   * @return new view node containing the children of the root node of this
+   *    template
+   * @see ViewTemplateBuilder#mapOfReferences(String, String, Class, ViewTemplate)
+   */
+  ConcreteContainerNode mapOfReferences(String name, String namespace,
+      Class<?> keyType);
+
+  /**
    * Extracts a view template of map-of-objects type from the root of this
    * template.
    * @param name name for the root (as it will appear in the calling template)
    * @param namespace namespace for {@code name} and {@code elementName}; used
    *    in only some view types (e.g. XML)
+   * @param keyType key type
    * @return new view template containing the children of the root node of this
    *    template
-   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfObjects(String, String, ViewTemplate)
+   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfObjects(String, String, Class, ViewTemplate)
    */
-  ViewTemplate mapOfObjectsTemplate(String name, String namespace);
+  ViewTemplate mapOfObjectsTemplate(String name, String namespace,
+      Class<?> keyType);
 
   /**
    * Extracts a view template of map-of-references type from the root of this
@@ -130,10 +160,12 @@ public interface ComposableViewTemplate extends ViewTemplate {
    * @param name name for the root (as it will appear in the calling template)
    * @param namespace namespace for {@code name} and {@code elementName}; used
    *    in only some view types (e.g. XML)
+   * @param keyType key type
    * @return new view template containing the children of the root node of this
    *    template
-   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfReferences(String, String, ViewTemplate)
+   * @see org.soulwing.prospecto.ViewTemplateBuilderProducer#mapOfReferences(String, String, Class, ViewTemplate)
    */
-  ViewTemplate mapOfReferencesTemplate(String name, String namespace);
+  ViewTemplate mapOfReferencesTemplate(String name, String namespace,
+      Class<?> keyType);
 
 }

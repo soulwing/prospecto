@@ -49,6 +49,9 @@ import org.soulwing.prospecto.runtime.template.ConcreteArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
+import org.soulwing.prospecto.runtime.template.ConcreteMapOfObjectsNode;
+import org.soulwing.prospecto.runtime.template.ConcreteMapOfReferencesNode;
+import org.soulwing.prospecto.runtime.template.ConcreteMapOfValuesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.template.ConcreteReferenceNode;
@@ -289,6 +292,22 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteArrayOfValuesNode node);
 
   @Override
+  public ViewTemplateBuilder mapOfValues(String name, Class<?> keyType) {
+    return mapOfValues(name, null, keyType);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfValues(String name, String namespace,
+      Class<?> keyType) {
+    final ConcreteMapOfValuesNode node = new ConcreteMapOfValuesNode(name,
+        namespace, keyType);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteMapOfValuesNode node);
+
+  @Override
   public ViewTemplateBuilder object(String name, Class<?> modelType) {
     return object(name, null, modelType);
   }
@@ -424,6 +443,68 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     assert template instanceof ComposableViewTemplate;
     final ConcreteContainerNode node = ((ComposableViewTemplate) template)
         .arrayOfReferences(name, elementName, namespace);
+    addChildToTarget(node);
+    return newValueNodeTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfObjects(String name, Class<?> keyType,
+      Class<?> modelType) {
+    return mapOfObjects(name, null, keyType, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfObjects(String name, String namespace,
+      Class<?> keyType, Class<?> modelType) {
+    final ConcreteMapOfObjectsNode node = new ConcreteMapOfObjectsNode(name,
+        namespace, keyType, modelType);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfObjects(String name, Class<?> keyType,
+      ViewTemplate template) {
+    return mapOfObjects(name, null, keyType, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfObjects(String name, String namespace,
+      Class<?> keyType, ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
+    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+        .mapOfObjects(name, namespace, keyType);
+    addChildToTarget(node);
+    return newValueNodeTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfReferences(String name, Class<?> keyType,
+      Class<?> modelType) {
+    return mapOfReferences(name, null, keyType, modelType);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> keyType, Class<?> modelType) {
+    final ConcreteMapOfReferencesNode node = new ConcreteMapOfReferencesNode(
+        name, namespace, keyType, modelType);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfReferences(String name, Class<?> keyType,
+      ViewTemplate template) {
+    return mapOfReferences(name, null, keyType, template);
+  }
+
+  @Override
+  public ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> keyType, ViewTemplate template) {
+    assert template instanceof ComposableViewTemplate;
+    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+        .mapOfReferences(name, namespace, keyType);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
   }

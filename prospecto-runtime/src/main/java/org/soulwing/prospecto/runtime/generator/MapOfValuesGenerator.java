@@ -27,7 +27,6 @@ import java.util.Map;
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.api.template.MapOfValuesNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
@@ -70,7 +69,8 @@ class MapOfValuesGenerator
 
     while (i.hasNext()) {
       final Map.Entry entry = i.next();
-      final String key = entry.getKey().toString();  // TODO -- allow conversion here
+      final String key = transformationService.keyToExtract(owner,
+          entry.getKey(), node, context);
 
       context.push(key);
       final Object transformedValue = transformationService.valueToExtract(

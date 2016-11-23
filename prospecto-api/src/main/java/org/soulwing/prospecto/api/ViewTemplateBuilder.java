@@ -335,6 +335,25 @@ public interface ViewTemplateBuilder {
       String namespace, Class<?> componentType);
 
   /**
+   * Adds a map-of-values node at the cursor.
+   * @param name name for the map in the view
+   * @param keyType key type
+   * @return this builder
+   */
+  ViewTemplateBuilder mapOfValues(String name, Class<?> keyType);
+
+  /**
+   * Adds an map-of-values at the cursor.
+   * @param name name for the array in the view
+   * @param namespace namespace for {@code name}; used in only some view types
+   *    (e.g. XML)
+   * @param keyType key type
+   * @return this builder
+   */
+  ViewTemplateBuilder mapOfValues(String name, String namespace,
+      Class<?> keyType);
+
+  /**
    * Adds an object node at the cursor.
    * @param name name for the object in the view
    * @param modelType the data type for the corresponding model
@@ -596,6 +615,117 @@ public interface ViewTemplateBuilder {
    */
   ViewTemplateBuilder arrayOfReferences(String name, String elementName,
       String namespace, ViewTemplate template);
+
+  /**
+   * Adds a map-of-objects node at the cursor.
+   * @param name name for the array in the view
+   * @param keyType key type
+   * @param modelType the data type for the elements of the array
+   * @return template builder for new array-of-objects node
+   */
+  ViewTemplateBuilder mapOfObjects(String name, Class<?> keyType,
+      Class<?> modelType);
+
+  /**
+   * Adds a map-of-objects node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param keyType key type
+   * @param template source template  @return this builder
+   */
+  ViewTemplateBuilder mapOfObjects(String name, Class<?> keyType,
+      ViewTemplate template);
+
+  /**
+   * Adds a map-of-objects node at the cursor.
+   * @param name name for the array in the view
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param keyType key type
+   * @param modelType the data type for the elements of the array
+   * @return template builder for new array-of-objects node
+   */
+  ViewTemplateBuilder mapOfObjects(String name, String namespace,
+      Class<?> keyType, Class<?> modelType);
+
+  /**
+   * Adds a map-of-objects node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param keyType key type
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder mapOfObjects(String name, String namespace,
+      Class<?> keyType, ViewTemplate template);
+
+  /**
+   * Adds a map-of-references node at the cursor.
+   * @param name name for the array in the view
+   * @param keyType key type
+   * @param modelType the data type for the elements of the array
+   * @return template builder for new array-of-objects node
+   */
+  ViewTemplateBuilder mapOfReferences(String name, Class<?> keyType,
+      Class<?> modelType);
+
+  /**
+   * Adds a map-of-references node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param keyType key type
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder mapOfReferences(String name, Class<?> keyType,
+      ViewTemplate template);
+
+  /**
+   * Adds a map-of-references node at the cursor.
+   * @param name name for the array in the view
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param keyType key type
+   * @param modelType the data type for the elements of the array
+   * @return template builder for new array-of-objects node
+   */
+  ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> keyType, Class<?> modelType);
+
+  /**
+   * Adds a map-of-references node at the cursor using the root node of the
+   * given template.
+   * <p>
+   * <strong>NOTE</strong>: this method returns the same builder instance,
+   * rather than a sub-builder; the template provides the full structure of
+   * the object node.
+   *
+   * @param name name for the array in the view
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param keyType key type
+   * @param template source template
+   * @return this builder
+   */
+  ViewTemplateBuilder mapOfReferences(String name, String namespace,
+      Class<?> keyType, ViewTemplate template);
 
   /**
    * Adds an envelope node at the cursor.

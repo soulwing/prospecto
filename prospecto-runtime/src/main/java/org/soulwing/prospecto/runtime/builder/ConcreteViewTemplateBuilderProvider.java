@@ -106,37 +106,37 @@ public class ConcreteViewTemplateBuilderProvider
 
   @Override
   public ViewTemplateBuilder mapOfObjects(String name, String namespace,
-      Class<?> modelType) throws ViewTemplateException {
+      Class<?> keyType, Class<?> modelType) throws ViewTemplateException {
     return builderFactory.newBuilder(
-        new RootMapOfObjectsNode(name, namespace, modelType));
+        new RootMapOfObjectsNode(name, namespace, keyType, modelType));
   }
 
   @Override
   public ViewTemplate mapOfObjects(String name, String namespace,
-      ViewTemplate template) throws ViewTemplateException {
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
     return ((ComposableViewTemplate) template)
-        .mapOfObjectsTemplate(name, namespace);
+        .mapOfObjectsTemplate(name, namespace, keyType);
   }
 
   @Override
   public ViewTemplateBuilder mapOfReferences(String name, String namespace,
-      Class<?> modelType) throws ViewTemplateException {
+      Class<?> keyType, Class<?> modelType) throws ViewTemplateException {
     return builderFactory.newBuilder(
-        new RootMapOfReferencesNode(name, namespace, modelType));
+        new RootMapOfReferencesNode(name, namespace, keyType, modelType));
   }
 
   @Override
   public ViewTemplate mapOfReferences(String name, String namespace,
-      ViewTemplate template) throws ViewTemplateException {
+      Class<?> keyType, ViewTemplate template) throws ViewTemplateException {
     return ((ComposableViewTemplate) template)
-        .mapOfReferencesTemplate(name, namespace);
+        .mapOfReferencesTemplate(name, namespace, keyType);
   }
 
   @Override
-  public ViewTemplate mapOfValues(String name, String namespace)
+  public ViewTemplate mapOfValues(String name, String namespace, Class<?> keyType)
       throws ViewTemplateException {
     return new ConcreteViewTemplate(
-        new RootMapOfValuesNode(name, namespace));
+        new RootMapOfValuesNode(name, namespace, keyType));
   }
 
 }
