@@ -22,6 +22,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 
@@ -32,11 +34,20 @@ import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
  */
 public abstract class MapPathTemplateResolver implements PathTemplateResolver {
 
+  private static final Logger logger =
+      LoggerFactory.getLogger(MapPathTemplateResolver.class);
+
   @Override
   public final String resolve(String template, ViewContext context) {
-    return UriBuilder.fromPath(template)
-        .buildFromMap(templateMap(context))
-        .toString();
+    Map<String, Object> templateMap = templateMap(context);
+    try {
+      return UriBuilder.fromPath(template)
+          .buildFromMap(templateMap)
+          .toString();
+    } catch (IllegalArgumentException e) {
+      logger.warn("Error resolving path for template {}", template);
+      throw e;
+    }
   }
 
   /**
