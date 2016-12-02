@@ -140,6 +140,13 @@ class ReflectionResourceMethodIntrospector
       templateResolver = methodTemplateResolver;
     }
 
+    ModelPathSpec[] specs = getModelPathSpecs(method, reflectionService);
+
+    if (specs.length == 0) {
+      logger.trace("ignoring method {}", methodToString(method));
+      return Collections.emptyList();
+    }
+
     if (templateResolver == null) {
       throw new ResourceConfigurationException(
           "no template resolver for method " + methodToString(method));
@@ -147,13 +154,6 @@ class ReflectionResourceMethodIntrospector
 
     final PathTemplateResolver pathTemplateResolver = TemplateResolverUtils
         .newResolver(templateResolver.value());
-
-    ModelPathSpec[] specs = getModelPathSpecs(method, reflectionService);
-
-    if (specs.length == 0) {
-      logger.trace("ignoring method {}", methodToString(method));
-      return Collections.emptyList();
-    }
 
     final List<ResourceDescriptor> descriptors = new ArrayList<>();
     for (final ModelPathSpec spec : specs) {
