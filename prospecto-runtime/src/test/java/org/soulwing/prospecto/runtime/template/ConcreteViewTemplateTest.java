@@ -42,6 +42,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewException;
 import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewTraversalEvent;
+import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.template.ViewNodeVisitor;
 import org.soulwing.prospecto.runtime.applicator.ViewApplicatorFactory;
@@ -93,6 +94,9 @@ public class ConcreteViewTemplateTest {
   private ViewApplicator viewApplicator;
 
   @Mock
+  private MutableScope mutableScope;
+
+  @Mock
   private View view;
 
   @Mock
@@ -119,6 +123,9 @@ public class ConcreteViewTemplateTest {
     context.checking(viewContextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(scopedViewContext).appendScope();
+        will(returnValue(mutableScope));
+        oneOf(mutableScope).put(MODEL);
         oneOf(listeners).beforeTraversing(
             (ViewTraversalEvent) with(allOf(
                 hasProperty("mode", equalTo(ViewMode.GENERATE)),
@@ -143,6 +150,9 @@ public class ConcreteViewTemplateTest {
     context.checking(viewContextExpectations());
     context.checking(new Expectations() {
       {
+        oneOf(scopedViewContext).appendScope();
+        will(returnValue(mutableScope));
+        oneOf(mutableScope).put(MODEL);
         oneOf(listeners).beforeTraversing(
             (ViewTraversalEvent) with(allOf(
                 hasProperty("mode", equalTo(ViewMode.GENERATE)),

@@ -90,6 +90,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
       final ScopedViewContext scopedContext =
           viewContextFactory.newContext(context);
 
+      scopedContext.appendScope().put(source);
       final ViewTraversalEvent event =
           new ViewTraversalEvent(ViewMode.GENERATE, this, scopedContext);
 
