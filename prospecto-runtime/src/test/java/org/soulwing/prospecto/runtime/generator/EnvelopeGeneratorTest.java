@@ -80,5 +80,5 @@ public class EnvelopeGeneratorTest
     assertThat(events.get(2).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(2).getValue(), is(nullValue()));
   }
-k
+
 }
