@@ -60,7 +60,7 @@ public class EnvelopeGeneratorTest
   @Test
   public void testGenerate() throws Exception {
     context.checking(baseExpectations());
-    context.checking(contextScopeExpectations(NAME, MODEL, null));
+    context.checking(contextScopeExpectations(NAME, null, null));
     context.checking(new Expectations() {
       {
         oneOf(child).generate(MODEL, viewContext);
@@ -80,5 +80,5 @@ public class EnvelopeGeneratorTest
     assertThat(events.get(2).getNamespace(), is(equalTo(NAMESPACE)));
     assertThat(events.get(2).getValue(), is(nullValue()));
   }
-
+k
 }

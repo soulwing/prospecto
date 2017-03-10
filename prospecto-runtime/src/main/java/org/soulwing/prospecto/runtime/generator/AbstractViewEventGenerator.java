@@ -46,10 +46,6 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
       throws Exception {
     final ViewNodeEvent nodeEvent = new ViewNodeEvent(
         ViewMode.GENERATE, node, model, context);
-
-    if (model != null) {
-      context.put(model);
-    }
     if (context.getListeners().shouldVisitNode(nodeEvent)) {
       push(model, context);
       final List<View.Event> viewEvents = onGenerate(model, context);
@@ -64,6 +60,7 @@ abstract class AbstractViewEventGenerator<N extends ViewNode>
 
   void push(Object model, ScopedViewContext context) {
     context.push(node.getName(), node.getModelType());
+    context.put(model);
   }
 
   void pop(ScopedViewContext context) {

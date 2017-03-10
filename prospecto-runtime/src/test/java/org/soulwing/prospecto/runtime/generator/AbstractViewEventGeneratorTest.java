@@ -80,13 +80,11 @@ public abstract class AbstractViewEventGeneratorTest<N extends ViewNode> {
 
   @Test
   public void testGenerateWhenShouldNotVisit() throws Exception {
-
     context.checking(new Expectations() {
       {
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
 
-        oneOf(viewContext).put(MODEL);
         oneOf(listeners).shouldVisitNode(with(
             eventDescribing(sourceNode(node),
                 forModel(MODEL), inContext(viewContext))));
