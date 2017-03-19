@@ -29,6 +29,7 @@ import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicator;
 import org.soulwing.prospecto.api.ViewApplicatorException;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.api.association.ToManyIndexedAssociationManager;
@@ -73,6 +74,11 @@ class ConcreteViewApplicator implements ViewApplicator {
     this.context = context;
     this.dataKey = dataKey;
     this.event = event;
+  }
+
+  @Override
+  public ViewEntity toViewEntity() throws ViewApplicatorException {
+    return (ViewEntity) deriveInjector();
   }
 
   @Override

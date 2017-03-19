@@ -108,4 +108,11 @@ public interface ViewApplicator {
    */
   List<?> resolveAll() throws ViewApplicatorException;
 
+  /**
+   * Produces an view entity representation for this applicator.
+   * @return view entity
+   * @throws ViewApplicatorException
+   */
+  ViewEntity toViewEntity() throws ViewApplicatorException;
+
 }
