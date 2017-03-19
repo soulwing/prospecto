@@ -23,8 +23,7 @@ model instances, as well as creating new model instances.
 Documentation
 -------------
 
-The full documentation set for Prospecto is located in the [wiki] 
-(https://github.com/soulwing/prospecto/wiki). 
+The full documentation set for Prospecto is located in the [wiki](https://github.com/soulwing/prospecto/wiki). 
 
 Demo
 ----
@@ -34,9 +33,8 @@ An easy way to learn what Prospecto can do is to look at a demo.
 ### Setup
 
 1. Clone this repository into some convenient location.
-2. Install the stupidly simple RESTful client [rc] 
-   (https://github.com/soulwing/rc) which you'll use to interact with the
-   web service in the demo.
+2. Install the stupidly simple RESTful client [rc](https://github.com/soulwing/rc) 
+   which you'll use to interact with the web service in the demo.
 
 ### Running the Demo
 
@@ -132,17 +130,4 @@ the context of JPA entity manager, avoiding any potential for lazy loading
 exceptions when the view is ultimately transformed into a textual 
 representation.
 
-Ready to learn more? Check out the full documentation set in the [wiki] 
-(https://github.com/soulwing/prospecto/wiki).
-
-
-
-
-
-
-
-
-
-
-
-
+Ready to learn more? Check out the full documentation set in the [wiki](https://github.com/soulwing/prospecto/wiki).
