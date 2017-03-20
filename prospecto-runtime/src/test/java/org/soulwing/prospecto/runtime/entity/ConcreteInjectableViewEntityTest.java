@@ -18,12 +18,17 @@
  */
 package org.soulwing.prospecto.runtime.entity;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -60,6 +65,56 @@ public class ConcreteInjectableViewEntityTest {
   public void setUp() throws Exception {
     entity.put("child", childEntity, childInjector);
     entity.put("value", VALUE, valueInjector);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNavigateToNullPath() throws Exception {
+    entity.navigateTo(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNavigateToEmptyPath() throws Exception {
+    entity.navigateTo("");
+  }
+
+  @Test
+  public void testNavigateToChild() throws Exception {
+    assertThat(entity.navigateTo("child"),
+        is(sameInstance((Object) childEntity)));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNavigateToValue() throws Exception {
+    entity.navigateTo("value");
+  }
+
+
+  @Test
+  public void testNavigateToGrandchild() throws Exception {
+    final ViewEntity grandchild = context.mock(ViewEntity.class, "grandchild");
+    context.checking(new Expectations() {
+      {
+        oneOf(childEntity).get("grandchild");
+        will(returnValue(grandchild));
+      }
+    });
+
+    assertThat(entity.navigateTo("child.grandchild"),
+        is(sameInstance((Object) grandchild)));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNavigateToNestedValue() throws Exception {
+    final InjectableViewEntity.ValueInjector grandchild = context.mock(
+        InjectableViewEntity.ValueInjector.class, "grandchild");
+    context.checking(new Expectations() {
+      {
+        oneOf(childEntity).get("grandchild");
+        will(returnValue(grandchild));
+      }
+    });
+
+    entity.navigateTo("child.grandchild");
   }
 
   @Test

@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.soulwing.prospecto.api.ViewApplicatorException;
+import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
@@ -59,6 +60,49 @@ public class ConcreteInjectableViewEntity implements InjectableViewEntity {
   @Override
   public Set<String> nameSet() {
     return map.keySet();
+  }
+
+  @Override
+  public ViewEntity navigateTo(String path) {
+    if (path == null || path.isEmpty()) {
+      throw new IllegalArgumentException("path must be non-empty");
+    }
+
+    return doNavigateTo("", path, this);
+  }
+
+  private ViewEntity doNavigateTo(String head, String tail,
+      ViewEntity viewEntity) {
+    if (tail.isEmpty()) return viewEntity;
+
+    final int index = tail.indexOf('.');
+    final String node = node(tail, index);
+    final Object obj = viewEntity.get(node);
+
+    if (obj == null) {
+      throw new IllegalArgumentException("'" + head + "' not found");
+    }
+
+    if (!(obj instanceof ViewEntity)) {
+      throw new IllegalArgumentException("'" + head + "' not a view entity");
+    }
+
+    return doNavigateTo(head(head, node), tail(tail, index), (ViewEntity) obj);
+  }
+
+  private String node(String path, int index) {
+    if (index == -1) return path;
+    return path.substring(0, index);
+  }
+
+  private String head(String head, String node) {
+    if (head.isEmpty()) return node;
+    return head + "." + node;
+  }
+
+  private String tail(String path, int index) {
+    if (index == -1) return "";
+    return path.substring(index + 1);
   }
 
   @Override

@@ -44,6 +44,15 @@ public interface ViewEntity {
   Set<String> nameSet();
 
   /**
+   * Navigates this view entity, following the given path, to obtain
+   * a reference to a nested view entity.
+   * @param path the navigation path, specified as a dot-delimited sequence
+   *    of property names
+   * @return view entity or {@code null} if not found
+   */
+  ViewEntity navigateTo(String path);
+
+  /**
    * Gets a property of the entity.
    * @param name name of the property
    * @return property value or {@code null} if the property has not been set
