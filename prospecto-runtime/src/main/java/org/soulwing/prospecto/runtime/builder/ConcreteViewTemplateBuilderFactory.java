@@ -19,7 +19,7 @@
 package org.soulwing.prospecto.runtime.builder;
 
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 
 /**
  * A {@link ViewTemplateBuilderFactory} that produces
@@ -30,7 +30,7 @@ import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 class ConcreteViewTemplateBuilderFactory implements ViewTemplateBuilderFactory {
 
   @Override
-  public ViewTemplateBuilder newBuilder(ConcreteContainerNode target) {
+  public ViewTemplateBuilder newBuilder(AbstractContainerNode target) {
     return new RootNodeViewTemplateBuilder(target);
   }
 

@@ -36,7 +36,7 @@ import org.soulwing.prospecto.runtime.accessor.MultiValuedAccessorFactory;
  *
  * @author Carl Harris
  */
-public class ConcreteArrayOfObjectsNode extends ConcreteContainerNode
+public class ConcreteArrayOfObjectsNode extends AbstractContainerNode
     implements ArrayOfObjectsNode {
 
   private final MultiValuedAccessorFactory accessorFactory;

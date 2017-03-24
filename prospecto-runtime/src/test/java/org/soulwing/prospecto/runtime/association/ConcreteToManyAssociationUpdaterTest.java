@@ -31,7 +31,7 @@ import org.soulwing.prospecto.api.association.ToManyAssociationManager;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
@@ -52,7 +52,7 @@ public class ConcreteToManyAssociationUpdaterTest {
   NotifiableViewListeners listeners;
 
   @Mock
-  ConcreteContainerNode node;
+  AbstractContainerNode node;
 
   @Mock
   AssociationDescriptorFactory descriptorFactory;

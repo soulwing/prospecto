@@ -32,7 +32,7 @@ import org.soulwing.prospecto.api.template.ViewNodeVisitor;
  *
  * @author Carl Harris
  */
-public class ConcreteSubtypeNode extends ConcreteContainerNode
+public class ConcreteSubtypeNode extends AbstractContainerNode
     implements SubtypeNode {
 
   /**

@@ -41,13 +41,13 @@ import org.soulwing.prospecto.runtime.beans.BeanFactory;
 import org.soulwing.prospecto.runtime.beans.JdkBeanFactory;
 import org.soulwing.prospecto.runtime.discriminator.DiscriminatorEventService;
 import org.soulwing.prospecto.runtime.meta.UrlResolvingMetadataHandler;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.AbstractViewNode;
 import org.soulwing.prospecto.runtime.template.ComposableViewTemplate;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfObjectsNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfReferencesNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
@@ -67,14 +67,14 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   private final BeanFactory beanFactory = new JdkBeanFactory();
 
   private final AbstractViewTemplateBuilder parent;
-  private final ConcreteContainerNode target;
+  private final AbstractContainerNode target;
   private final AbstractViewNode node;
   private final AccessorBuilder accessorBuilder;
 
   private AccessType accessType = AccessType.PROPERTY;
 
   AbstractViewTemplateBuilder(AbstractViewTemplateBuilder parent,
-      ConcreteContainerNode target, AbstractViewNode node) {
+      AbstractContainerNode target, AbstractViewNode node) {
     this.parent = parent;
     this.target = target;
     this.node = node;
@@ -101,7 +101,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
     return node;
   }
 
-  public ConcreteContainerNode getTarget() {
+  public AbstractContainerNode getTarget() {
     return target;
   }
 
@@ -310,7 +310,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder object(String name, String namespace,
       ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+    final AbstractContainerNode node = ((ComposableViewTemplate) template)
         .object(name, namespace);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
@@ -338,7 +338,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder reference(String name, String namespace,
       ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+    final AbstractContainerNode node = ((ComposableViewTemplate) template)
         .reference(name, namespace);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
@@ -379,7 +379,7 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder arrayOfObjects(String name, String elementName,
       String namespace, ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+    final AbstractContainerNode node = ((ComposableViewTemplate) template)
         .arrayOfObjects(name, elementName, namespace);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
@@ -422,15 +422,15 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   public ViewTemplateBuilder arrayOfReferences(String name, String elementName,
       String namespace, ViewTemplate template) {
     assert template instanceof ComposableViewTemplate;
-    final ConcreteContainerNode node = ((ComposableViewTemplate) template)
+    final AbstractContainerNode node = ((ComposableViewTemplate) template)
         .arrayOfReferences(name, elementName, namespace);
     addChildToTarget(node);
     return newValueNodeTemplateBuilder(node);
   }
 
-  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteContainerNode node);
+  protected abstract ViewTemplateBuilder newTemplateBuilder(AbstractContainerNode node);
 
-  protected abstract ViewTemplateBuilder newValueNodeTemplateBuilder(ConcreteContainerNode node);
+  protected abstract ViewTemplateBuilder newValueNodeTemplateBuilder(AbstractContainerNode node);
 
   @Override
   public ViewTemplateBuilder envelope(String name) {

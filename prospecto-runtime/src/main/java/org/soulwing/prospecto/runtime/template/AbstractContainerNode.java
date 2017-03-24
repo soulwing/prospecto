@@ -30,7 +30,7 @@ import org.soulwing.prospecto.api.template.ViewNode;
  *
  * @author Carl Harris
  */
-public abstract class ConcreteContainerNode extends AbstractViewNode
+public abstract class AbstractContainerNode extends AbstractViewNode
     implements ContainerNode {
 
   private final List<ViewNode> children = new LinkedList<>();
@@ -41,7 +41,7 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
    * @param namespace namespace for {@code name}
    * @param modelType element model type
    */
-  protected ConcreteContainerNode(String name, String namespace,
+  protected AbstractContainerNode(String name, String namespace,
       Class<?> modelType) {
     super(name, namespace, modelType);
   }
@@ -60,7 +60,7 @@ public abstract class ConcreteContainerNode extends AbstractViewNode
     ((AbstractViewNode) child).setParent(this);
   }
 
-  public void addChildren(ConcreteContainerNode source) {
+  public void addChildren(AbstractContainerNode source) {
     for (ViewNode child : source.children) {
       addChild(child);
     }

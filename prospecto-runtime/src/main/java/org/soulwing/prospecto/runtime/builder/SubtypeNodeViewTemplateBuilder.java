@@ -25,8 +25,8 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 import org.soulwing.prospecto.runtime.template.AbstractViewNode;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 
 /**
  * A template builder for a subtype node.
@@ -38,7 +38,7 @@ class SubtypeNodeViewTemplateBuilder extends ContainerNodeViewTemplateBuilder {
   private final UnconfigurableNodeSupport delegate;
 
   SubtypeNodeViewTemplateBuilder(AbstractViewTemplateBuilder parent,
-      ConcreteContainerNode target, AbstractViewNode node) {
+      AbstractContainerNode target, AbstractViewNode node) {
     super(parent, target, node);
     delegate = new UnconfigurableNodeSupport(node);
   }

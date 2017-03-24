@@ -134,7 +134,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ConcreteContainerNode object(String name, String namespace) {
+  public AbstractContainerNode object(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteObjectNode node = new ConcreteObjectNode(name, namespace,
         root.getModelType());
@@ -143,7 +143,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ConcreteContainerNode reference(String name, String namespace) {
+  public AbstractContainerNode reference(String name, String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteReferenceNode node = new ConcreteReferenceNode(name, namespace,
         root.getModelType());
@@ -152,7 +152,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ConcreteContainerNode arrayOfObjects(String name, String elementName,
+  public AbstractContainerNode arrayOfObjects(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
     final ConcreteArrayOfObjectsNode node = new ConcreteArrayOfObjectsNode(name, elementName,
@@ -162,7 +162,7 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
   }
 
   @Override
-  public ConcreteContainerNode arrayOfReferences(String name, String elementName,
+  public AbstractContainerNode arrayOfReferences(String name, String elementName,
       String namespace) {
     assertRootIsContainerViewNode(name);
     ConcreteArrayOfReferencesNode node = new ConcreteArrayOfReferencesNode(name, elementName,
@@ -191,14 +191,14 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
     return new ConcreteViewTemplate(root);
   }
 
-  private void copyInto(ConcreteContainerNode node) {
+  private void copyInto(AbstractContainerNode node) {
     assert root instanceof ContainerNode;
-    node.addChildren((ConcreteContainerNode) root);
+    node.addChildren((AbstractContainerNode) root);
     node.putAll(root);
   }
 
   private void assertRootIsContainerViewNode(String name) {
-    if (!(root instanceof ConcreteContainerNode)) {
+    if (!(root instanceof AbstractContainerNode)) {
       throw new ViewTemplateException("referenced view template for node '"
           + name + "' must have a root node of object or array-of-object type");
     }

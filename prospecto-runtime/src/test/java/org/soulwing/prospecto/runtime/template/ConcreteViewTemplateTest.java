@@ -196,7 +196,7 @@ public class ConcreteViewTemplateTest {
     assertThat(node, is(instanceOf(ConcreteObjectNode.class)));
     assertThat(node.getName(), is(equalTo(NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ConcreteContainerNode) node).getChildren(),
+    assertThat(((AbstractContainerNode) node).getChildren(),
         contains((ViewNode) child));
   }
 
@@ -210,7 +210,7 @@ public class ConcreteViewTemplateTest {
     assertThat(((ConcreteArrayOfObjectsNode) node).getElementName(),
         is(equalTo(ELEMENT_NAME)));
     assertThat(node.getNamespace(), is(equalTo(NAMESPACE)));
-    assertThat(((ConcreteContainerNode) node).getChildren(),
+    assertThat(((AbstractContainerNode) node).getChildren(),
         contains((ViewNode) child));
   }
 
@@ -225,7 +225,7 @@ public class ConcreteViewTemplateTest {
     };
   }
 
-  class MockGeneratorViewNode extends ConcreteContainerNode {
+  class MockGeneratorViewNode extends AbstractContainerNode {
 
     public MockGeneratorViewNode() {
       super(null, null, Object.class);
@@ -238,7 +238,7 @@ public class ConcreteViewTemplateTest {
 
   }
 
-  class MockApplicatorViewNode extends ConcreteContainerNode {
+  class MockApplicatorViewNode extends AbstractContainerNode {
 
     public MockApplicatorViewNode() {
       super(null, null, Object.class);

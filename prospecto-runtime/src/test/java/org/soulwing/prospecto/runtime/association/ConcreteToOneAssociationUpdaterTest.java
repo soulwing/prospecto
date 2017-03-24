@@ -32,13 +32,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToOneAssociationManager;
-import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
@@ -62,7 +61,7 @@ public class ConcreteToOneAssociationUpdaterTest {
   ObjectFactoryService objectFactory;
 
   @Mock
-  ConcreteContainerNode node;
+  AbstractContainerNode node;
 
   @Mock
   AssociationDescriptorFactory descriptorFactory;

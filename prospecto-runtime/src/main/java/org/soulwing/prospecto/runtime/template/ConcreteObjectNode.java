@@ -29,7 +29,7 @@ import org.soulwing.prospecto.api.template.ViewNodeVisitor;
  *
  * @author Carl Harris
  */
-public class ConcreteObjectNode extends ConcreteContainerNode
+public class ConcreteObjectNode extends AbstractContainerNode
     implements ObjectNode {
 
   /**

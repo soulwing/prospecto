@@ -38,7 +38,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#object(String, String, ViewTemplate)
    */
-  ConcreteContainerNode object(String name, String namespace);
+  AbstractContainerNode object(String name, String namespace);
 
   /**
    * Extracts a view node of reference type from the root of this template for
@@ -50,7 +50,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#reference(String, String, ViewTemplate)
    */
-  ConcreteContainerNode reference(String name, String namespace);
+  AbstractContainerNode reference(String name, String namespace);
 
   /**
    * Extracts a view node of array-of-objects type from the root of this
@@ -64,7 +64,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#arrayOfObjects(String, String, String, ViewTemplate)
    */
-  ConcreteContainerNode arrayOfObjects(String name, String elementName,
+  AbstractContainerNode arrayOfObjects(String name, String elementName,
       String namespace);
 
   /**
@@ -79,7 +79,7 @@ public interface ComposableViewTemplate extends ViewTemplate {
    *    template
    * @see ViewTemplateBuilder#arrayOfReferences(String, String, String, ViewTemplate)
    */
-  ConcreteContainerNode arrayOfReferences(String name, String elementName,
+  AbstractContainerNode arrayOfReferences(String name, String elementName,
       String namespace);
 
   /**

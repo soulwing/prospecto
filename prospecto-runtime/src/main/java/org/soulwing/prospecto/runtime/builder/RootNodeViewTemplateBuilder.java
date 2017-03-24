@@ -26,9 +26,9 @@ import org.soulwing.prospecto.api.AccessType;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewTemplateBuilder;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
+import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 import org.soulwing.prospecto.runtime.template.AbstractValueNode;
 import org.soulwing.prospecto.runtime.template.ConcreteArrayOfValuesNode;
-import org.soulwing.prospecto.runtime.template.ConcreteContainerNode;
 import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
@@ -43,7 +43,7 @@ class RootNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
 
   private final UnconfigurableNodeSupport delegate;
 
-  RootNodeViewTemplateBuilder(ConcreteContainerNode node) {
+  RootNodeViewTemplateBuilder(AbstractContainerNode node) {
     super(null, node, node);
     this.delegate = new UnconfigurableNodeSupport(node);
   }
@@ -64,13 +64,13 @@ class RootNodeViewTemplateBuilder extends AbstractViewTemplateBuilder {
   }
 
   @Override
-  protected ViewTemplateBuilder newTemplateBuilder(ConcreteContainerNode node) {
+  protected ViewTemplateBuilder newTemplateBuilder(AbstractContainerNode node) {
     return new ContainerNodeViewTemplateBuilder(this, node, node);
   }
 
   @Override
   protected ViewTemplateBuilder newValueNodeTemplateBuilder(
-      ConcreteContainerNode node) {
+      AbstractContainerNode node) {
     return new ValueNodeViewTemplateBuilder(this, getTarget(), node);
   }
 
