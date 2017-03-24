@@ -50,6 +50,11 @@ public abstract class AbstractViewNodeVisitor implements ViewNodeVisitor {
   }
 
   @Override
+  public Object visitSplice(SpliceNode node, Object state) {
+    return state;
+  }
+
+  @Override
   public Object visitEnvelope(EnvelopeNode node, Object state) {
     return state;
   }

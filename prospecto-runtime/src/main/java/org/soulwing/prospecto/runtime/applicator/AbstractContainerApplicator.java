@@ -27,9 +27,8 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.options.ViewKeys;
+import org.soulwing.prospecto.api.template.AppliableNode;
 import org.soulwing.prospecto.api.template.ContainerNode;
-import org.soulwing.prospecto.api.template.MetaNode;
-import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
@@ -103,7 +102,7 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
       }
 
       final ViewNode node = applicator.getNode();
-      if (!(node instanceof UpdatableNode) && !(node instanceof MetaNode)) {
+      if (!(node instanceof AppliableNode)) {
         continue;
       }
 

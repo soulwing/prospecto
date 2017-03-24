@@ -27,7 +27,7 @@ import org.soulwing.prospecto.api.AccessMode;
  *
  * @author Carl Harris
  */
-public interface UpdatableNode extends ViewNode {
+public interface UpdatableNode extends AppliableNode {
 
   /**
    * Gets the set of access modes that are allowed by the configuration of

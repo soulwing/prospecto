@@ -42,6 +42,14 @@ public interface ViewNodeVisitor {
   Object visitMeta(MetaNode node, Object state);
 
   /**
+   * Visits a splice node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitSplice(SpliceNode node, Object state);
+
+  /**
    * Visits an object node.
    * @param node the subject node
    * @param state visitor state

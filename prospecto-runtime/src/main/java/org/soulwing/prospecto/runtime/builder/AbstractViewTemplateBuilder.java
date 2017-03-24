@@ -32,6 +32,7 @@ import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.meta.LiteralMetadataHandler;
 import org.soulwing.prospecto.api.meta.MetadataHandler;
 import org.soulwing.prospecto.api.options.ViewDefaults;
+import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.runtime.accessor.AccessorBuilder;
@@ -52,6 +53,7 @@ import org.soulwing.prospecto.runtime.template.ConcreteEnvelopeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteMetaNode;
 import org.soulwing.prospecto.runtime.template.ConcreteObjectNode;
 import org.soulwing.prospecto.runtime.template.ConcreteReferenceNode;
+import org.soulwing.prospecto.runtime.template.ConcreteSpliceNode;
 import org.soulwing.prospecto.runtime.template.ConcreteSubtypeNode;
 import org.soulwing.prospecto.runtime.template.ConcreteValueNode;
 import org.soulwing.prospecto.runtime.template.EnumNameNode;
@@ -265,6 +267,60 @@ abstract class AbstractViewTemplateBuilder implements ViewTemplateBuilder {
   }
 
   protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteMetaNode node);
+
+  @Override
+  public ViewTemplateBuilder splice(String name,
+      Class<? extends SpliceHandler> handlerClass, Object... configuration) {
+    return splice(name, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder splice(String name, String namespace,
+      Class<? extends SpliceHandler> handlerClass,
+      Object... configuration) {
+    try {
+      return splice(name, namespace,
+          beanFactory.construct(handlerClass, configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder splice(String name,
+      Class<? extends SpliceHandler> handlerClass, Map configuration) {
+    return splice(name, null, handlerClass, configuration);
+  }
+
+  @Override
+  public ViewTemplateBuilder splice(String name, String namespace,
+      Class<? extends SpliceHandler> handlerClass,
+      Map configuration) {
+    try {
+      return splice(name, namespace,
+          beanFactory.construct(handlerClass, configuration));
+    }
+    catch (Exception ex) {
+      throw new ViewTemplateException(ex);
+    }
+  }
+
+  @Override
+  public ViewTemplateBuilder splice(String name, SpliceHandler handler) {
+    return splice(name, null, handler);
+  }
+
+  @Override
+  public ViewTemplateBuilder splice(String name, String namespace,
+      SpliceHandler handler) {
+    final ConcreteSpliceNode node = new ConcreteSpliceNode(name, namespace,
+        handler);
+    addChildToTarget(node);
+    return newTemplateBuilder(node);
+  }
+
+  protected abstract ViewTemplateBuilder newTemplateBuilder(ConcreteSpliceNode node);
 
   @Override
   public ViewTemplateBuilder arrayOfValues(String name, Class<?> componentType) {

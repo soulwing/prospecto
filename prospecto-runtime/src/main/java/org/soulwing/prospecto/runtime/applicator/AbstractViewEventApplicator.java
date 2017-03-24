@@ -73,7 +73,6 @@ abstract class AbstractViewEventApplicator<N extends ViewNode>
       View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context) throws Exception;
 
-
   void push(ViewEntity entity, ScopedViewContext context) {
     final String name = node != null ? node.getName() : null;
     final Class<?> type = entity != null ? entity.getType() : null;

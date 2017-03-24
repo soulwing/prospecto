@@ -28,6 +28,7 @@ import org.soulwing.prospecto.api.template.EnvelopeNode;
 import org.soulwing.prospecto.api.template.MetaNode;
 import org.soulwing.prospecto.api.template.ObjectNode;
 import org.soulwing.prospecto.api.template.ReferenceNode;
+import org.soulwing.prospecto.api.template.SpliceNode;
 import org.soulwing.prospecto.api.template.SubtypeNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 
@@ -47,6 +48,11 @@ public class ViewGeneratingVisitor extends AbstractViewNodeVisitor {
   @Override
   public Object visitMeta(MetaNode node, Object state) {
     return new MetaGenerator(node);
+  }
+
+  @Override
+  public Object visitSplice(SpliceNode node, Object state) {
+    return new SpliceGenerator(node);
   }
 
   @Override

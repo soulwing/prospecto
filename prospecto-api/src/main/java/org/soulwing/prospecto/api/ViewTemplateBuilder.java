@@ -24,6 +24,7 @@ import java.util.Map;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.discriminator.DiscriminatorStrategy;
 import org.soulwing.prospecto.api.meta.MetadataHandler;
+import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.url.UrlResolver;
 
 /**
@@ -295,6 +296,73 @@ public interface ViewTemplateBuilder {
    */
   ViewTemplateBuilder meta(String name, String namespace, Object value,
       MetadataHandler handler);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param handlerClass splice handler class
+   * @param configuration splice handler configuration
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name,
+      Class<? extends SpliceHandler> handlerClass,
+      Object... configuration);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param handlerClass splice handler class
+   * @param configuration splice handler configuration
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name, String namespace,
+      Class<? extends SpliceHandler> handlerClass,
+      Object... configuration);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param handlerClass splice handler class
+   * @param configuration splice handler configuration
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name,
+      Class<? extends SpliceHandler> handlerClass,
+      Map configuration);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param handlerClass splice handler class
+   * @param configuration splice handler configuration
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name, String namespace,
+      Class<? extends SpliceHandler> handlerClass,
+      Map configuration);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param handler splice handler
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name, SpliceHandler handler);
+
+  /**
+   * Adds a splice node at the cursor.
+   * @param name name for the node in the view produced by this builder
+   * @param namespace namespace for {@code name} and {@code elementName};
+   *    used in only some view types (e.g. XML)
+   * @param handler splice handler
+   * @return this builder
+   */
+  ViewTemplateBuilder splice(String name, String namespace,
+      SpliceHandler handler);
 
   /**
    * Adds an array-of-values node at the cursor.

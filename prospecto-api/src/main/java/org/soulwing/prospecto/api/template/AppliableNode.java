@@ -1,7 +1,7 @@
 /*
- * File created on Apr 8, 2016
+ * File created on Mar 24, 2017
  *
- * Copyright (c) 2016 Carl Harris, Jr
+ * Copyright (c) 2017 Carl Harris, Jr
  * and others as noted
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +18,11 @@
  */
 package org.soulwing.prospecto.api.template;
 
-import org.soulwing.prospecto.api.meta.MetadataHandler;
-
 /**
- * A {@link ViewNode} that represents a metadata value.
+ * A marker interface that identifies view nodes that participate in an apply
+ * operation.
  *
  * @author Carl Harris
  */
-public interface MetaNode extends AppliableNode {
-
-  /**
-   * Gets the metadata handler associated with this node.
-   * @return handler instance (never {@code null})
-   */
-  MetadataHandler getHandler();
-
-  /**
-   * Gets the (constant) value associated with this node.
-   * @return value (which may be {@code null})
-   */
-  Object getValue();
-
+public interface AppliableNode extends ViewNode {
 }
