@@ -78,13 +78,14 @@ class ConcreteViewApplicator implements ViewApplicator {
 
   @Override
   public ViewEntity toViewEntity() throws ViewApplicatorException {
-    return (ViewEntity) deriveInjector();
+    return (ViewEntity) deriveInjector(View.Event.Type.BEGIN_OBJECT);
   }
 
   @Override
   public Object create() throws ViewApplicatorException {
     try {
-      final InjectableViewEntity entity = (InjectableViewEntity) deriveInjector();
+      final InjectableViewEntity entity = (InjectableViewEntity)
+          deriveInjector(View.Event.Type.BEGIN_OBJECT);
       if (entity == UndefinedValue.INSTANCE) return null;
 
       final Object model = context.getObjectFactories().newInstance(
@@ -105,7 +106,7 @@ class ConcreteViewApplicator implements ViewApplicator {
   public void update(Object model) throws ViewApplicatorException {
     try {
       assertHasRootModelType(model);
-      root.apply(deriveInjector(), model, context);
+      root.apply(deriveInjector(View.Event.Type.BEGIN_OBJECT), model, context);
       context.getListeners().afterTraversing(event);
     }
     catch (ViewApplicatorException ex) {
@@ -143,7 +144,8 @@ class ConcreteViewApplicator implements ViewApplicator {
       throw new ViewApplicatorException("root node type must be `arrayOfObjects`");
     }
     try {
-      root.apply(deriveInjector(), targetAndManager, context);
+      root.apply(deriveInjector(View.Event.Type.BEGIN_ARRAY),
+          targetAndManager, context);
       context.getListeners().afterTraversing(event);
     }
     catch (ViewApplicatorException ex) {
@@ -160,7 +162,8 @@ class ConcreteViewApplicator implements ViewApplicator {
       throw new ViewApplicatorException("root node type must be `reference`");
     }
     try {
-      final Object reference = root.apply(deriveInjector(), null, context);
+      final Object reference = root.apply(
+          deriveInjector(View.Event.Type.BEGIN_ARRAY), null, context);
       context.getListeners().afterTraversing(event);
       return reference;
     }
@@ -180,7 +183,8 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
     try {
       final List<?> references =
-          (List<?>) root.apply(deriveInjector(), null, context);
+          (List<?>) root.apply(
+              deriveInjector(View.Event.Type.BEGIN_ARRAY), null, context);
 
       context.getListeners().afterTraversing(event);
       return references;
@@ -193,8 +197,9 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
   }
 
-  private Object deriveInjector() throws ViewInputException {
-    final Deque<View.Event> events = eventDeque(source);
+  private Object deriveInjector(View.Event.Type firstEventType)
+      throws ViewInputException {
+    final Deque<View.Event> events = eventDeque(source, firstEventType);
     final View.Event triggerEvent = events.removeFirst();
     try {
       return root.toModelValue(null, triggerEvent, events, context);
@@ -214,7 +219,9 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
   }
 
-  private Deque<View.Event> eventDeque(View view) throws ViewInputException {
+  private Deque<View.Event> eventDeque(View view,
+      View.Event.Type firstEventType)
+      throws ViewInputException {
     final Deque<View.Event> deque = new LinkedList<>();
     final Iterator<View.Event> events = view.iterator();
     if (!events.hasNext()) {
@@ -222,8 +229,9 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
 
     final View.Event firstEvent = events.next();
-    if (firstEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ViewInputException("root view type must be an object");
+    if (firstEvent.getType() != firstEventType) {
+      throw new ViewInputException(
+          "expected first event of type " + firstEventType);
     }
 
     View.Event triggerEvent = firstEvent;
@@ -287,7 +295,6 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
     throw NOT_WELL_FORMED_EXCEPTION;
   }
-
 
   private void skipToEnd(View.Event triggerEvent, Iterator<View.Event> events)
       throws ViewApplicatorException {
