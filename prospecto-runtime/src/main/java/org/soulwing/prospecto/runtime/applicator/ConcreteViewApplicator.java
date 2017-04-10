@@ -163,7 +163,7 @@ class ConcreteViewApplicator implements ViewApplicator {
     }
     try {
       final Object reference = root.apply(
-          deriveInjector(View.Event.Type.BEGIN_ARRAY), null, context);
+          deriveInjector(View.Event.Type.BEGIN_OBJECT), null, context);
       context.getListeners().afterTraversing(event);
       return reference;
     }
