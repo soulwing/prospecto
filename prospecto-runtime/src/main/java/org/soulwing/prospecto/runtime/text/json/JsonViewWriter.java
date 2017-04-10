@@ -23,13 +23,11 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
@@ -234,7 +232,7 @@ class JsonViewWriter extends AbstractViewWriter {
     else if (value instanceof Enum) {
       writeString(name, ((Enum) value).name());
     }
-    else if (value == null) {
+    else if (value == null || value.toString() == null) {
       writeNull(name);
     }
     else {

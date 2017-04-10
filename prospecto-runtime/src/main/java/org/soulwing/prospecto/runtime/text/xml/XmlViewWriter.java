@@ -29,7 +29,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -272,7 +271,7 @@ class XmlViewWriter extends AbstractViewWriter {
     else if (value instanceof Enum) {
       writeString(name, namespace, XS_STRING, ((Enum) value).name());
     }
-    else if (value == null) {
+    else if (value == null || value.toString() == null) {
       writeEmptyElement(name, namespace, XmlViewConstants.NULL_QNAME);
     }
     else {
