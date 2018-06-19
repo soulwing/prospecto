@@ -25,10 +25,10 @@ import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
-import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModel;
 import org.soulwing.prospecto.jaxrs.runtime.glob.AnyModelSequence;
+import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
 
 /**
  * Unit tests for {@link ResourceMethodDescriptor}.
@@ -84,6 +84,13 @@ public class ResourceMethodDescriptorTest {
           Model2.class, AnyModelSequence.class, Model3.class)
         .matches(Model1.class, Model2.class, Model3.class), is(true));
   }
+
+  @Test
+  public void testMatchesWildcardWithRepeatedModelType() throws Exception {
+    assertThat(descriptorWith(AnyModelSequence.class, Model3.class)
+        .matches(Model3.class, Model3.class), is(true));
+  }
+
 
   private ResourceMethodDescriptor descriptorWith(
       Class<?>... modelPath) throws Exception {
