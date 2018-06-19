@@ -47,7 +47,7 @@ import org.soulwing.prospecto.jaxrs.runtime.path.ModelPath;
  *
  * @author Carl Harris
  */
-public class SimpleResourcePathResolverTest {
+public class ResourceDescriptorUrlResolverTest {
   
   private static final String APP_PATH = "/appPath";
   
