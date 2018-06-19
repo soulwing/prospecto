@@ -103,13 +103,17 @@ public class GlobMatcher<T> {
     /**
      * Moves the matcher to the next input token and corresponding matcher
      * state.
+     * @return next input token or {@code null} if the end of the input has been
+     *   reached
      */
-    void next();
+    T next();
 
     /**
      * Skips to the next input token, without changing the matcher state.
+     * @return next input token or {@code null} if the end of the input has
+     *    been reached
      */
-    void skip();
+    T skip();
 
     /**
      * Terminates the pattern match, with the specified result.
@@ -196,7 +200,12 @@ public class GlobMatcher<T> {
     @Override
     public void matchToken(T token, Matcher<T> matcher) {
       if (nextExpectedToken.equals(token)) {
-        matcher.next();
+        T nextToken = matcher.next();
+        // while in the same state, swallow any repeating sequence of the
+        // next expected token; this allows "*T" to match a sequence such as "TT"
+        while (nextExpectedToken.equals(nextToken)) {
+          nextToken = matcher.skip();
+        }
       }
       else {
         matcher.skip();
@@ -263,20 +272,23 @@ public class GlobMatcher<T> {
     }
 
     @Override
-    public void next() {
-      skip();
+    public T next() {
+      T nextToken = skip();
       stateIndex++;
       if (stateIndex == states.size()) {
         done = true;
       }
+      return nextToken;
     }
 
     @Override
-    public void skip() {
+    public T skip() {
       inputIndex++;
       if (inputIndex == input.length) {
         done = true;
+        return null;
       }
+      return input[inputIndex];
     }
 
     @Override

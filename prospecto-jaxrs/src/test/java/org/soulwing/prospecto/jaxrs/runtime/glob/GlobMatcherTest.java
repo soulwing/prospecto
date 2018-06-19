@@ -79,6 +79,12 @@ public class GlobMatcherTest {
     assertThat(matcher("a**d?").matches(stringToArray("abcde")), is(true));
   }
 
+  @Test
+  public void testAnyInputSequenceIsEager() throws Exception {
+    assertThat(matcher("*d").matches(stringToArray("dd")), is(true));
+    assertThat(matcher("*d").matches(stringToArray("dddd")), is(true));
+  }
+
   private GlobMatcher<Character> matcher(String pattern) {
     return GlobMatcher.<Character>with('?', '*', stringToArray(pattern));
   }
