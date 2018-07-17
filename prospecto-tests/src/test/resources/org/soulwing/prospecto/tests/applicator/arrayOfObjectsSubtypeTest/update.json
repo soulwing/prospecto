@@ -1,7 +1,7 @@
 {
   "vehicles":[
     {
-      "type":"ObjectSubtypeTest$Plane",
+      "objectType":"ObjectSubtypeTest$Plane",
       "passengerCapacity":375,
       "wingspan":200,
       "range":6000,
