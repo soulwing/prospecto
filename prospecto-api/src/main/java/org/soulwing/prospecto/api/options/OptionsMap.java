@@ -50,6 +50,11 @@ public class OptionsMap implements Options {
   }
 
   @Override
+  public Object remove(String name) {
+    return map.remove(name);
+  }
+
+  @Override
   public boolean isEnabled(String name) {
     Object value = map.get(name);
     if (value == null) return false;

@@ -20,14 +20,14 @@ package org.soulwing.prospecto.runtime.text.json;
 
 import java.io.InputStream;
 import java.util.Collections;
-
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParserFactory;
 
+import org.soulwing.prospecto.ViewOptionsRegistry;
 import org.soulwing.prospecto.api.options.Options;
-import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.api.options.ViewDefaults;
+import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -36,9 +36,6 @@ import org.soulwing.prospecto.runtime.text.AbstractViewReader;
  * @author Carl Harris
  */
 class JsonViewReader extends AbstractViewReader {
-
-  private static final String DEFAULT_DISCRIMINATOR_NAME =
-      ViewDefaults.DISCRIMINATOR_NODE_NAME;
 
   private static JsonParserFactory parserFactory = Json.createParserFactory(
       Collections.<String, Object>emptyMap());
@@ -95,8 +92,10 @@ class JsonViewReader extends AbstractViewReader {
   }
 
   private boolean isDiscriminator() {
-    return name != null && name.equals(getOptions().get(
-        ReaderKeys.DISCRIMINATOR_NAME, DEFAULT_DISCRIMINATOR_NAME).toString());
+    return name != null && name.equals(
+        ViewOptionsRegistry.getOptions().get(
+            ViewKeys.DISCRIMINATOR_NAME, ViewDefaults.DISCRIMINATOR_NODE_NAME)
+            .toString());
   }
 
   private String getName() {

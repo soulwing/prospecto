@@ -38,4 +38,10 @@ public interface ViewKeys {
   String IGNORE_UNKNOWN_PROPERTIES = PREFIX
       + ".applicator.ignoreUnknownProperties";
 
+  /**
+   * Subtype discriminator property name.
+   */
+  String DISCRIMINATOR_NAME = ViewKeys.PREFIX
+      + ".view.discriminatorName";
+
 }

@@ -50,6 +50,13 @@ public interface Options {
   void put(String name, Object value);
 
   /**
+   * Removes the value of the named options.
+   * @param name option name
+   * @return value of option that was removed
+   */
+  Object remove(String name);
+
+  /**
    * Tests whether a two-state (boolean) option is set to {@code true}.
    * @param name option name
    * @return {@code true} if the named option is set to {@code true}

@@ -32,8 +32,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.junit.After;
 import org.junit.Before;
 import org.soulwing.prospecto.ViewContextProducer;
+import org.soulwing.prospecto.ViewOptionsRegistry;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
@@ -46,6 +48,7 @@ import org.soulwing.prospecto.api.ViewWriterFactory;
 import org.soulwing.prospecto.api.discriminator.UnqualifiedClassNameDiscriminatorStrategy;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.scope.MutableScope;
 
@@ -62,8 +65,15 @@ public class ViewApplicatorTestBase {
   public void setUp() throws Exception {
     final MutableScope scope = context.appendScope();
     scope.put(new UnqualifiedClassNameDiscriminatorStrategy());
+    ViewOptionsRegistry.getOptions().put(ViewKeys.DISCRIMINATOR_NAME,
+        "objectType");
   }
 
+  @After
+  public void tearDown() throws Exception {
+    ViewOptionsRegistry.getOptions().remove(ViewKeys.DISCRIMINATOR_NAME);
+  }
+  
   protected void validate(ViewTemplate template)
       throws IOException {
     validate(template, Representation.JSON);

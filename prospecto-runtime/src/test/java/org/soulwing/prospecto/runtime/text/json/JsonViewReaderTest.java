@@ -26,12 +26,13 @@ import java.util.Iterator;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;
+import org.soulwing.prospecto.ViewOptionsRegistry;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReader;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
-import org.soulwing.prospecto.api.options.ReaderKeys;
 import org.soulwing.prospecto.api.options.ViewDefaults;
+import org.soulwing.prospecto.api.options.ViewKeys;
 import org.soulwing.prospecto.runtime.text.Constants;
 import org.soulwing.prospecto.runtime.text.ViewReaderTestBase;
 
@@ -59,16 +60,22 @@ public class JsonViewReaderTest extends ViewReaderTestBase {
 
   @Test
   public void testCustomDiscriminatorView() throws Exception {
-    final Options options = new OptionsMap();
-    options.put(ReaderKeys.DISCRIMINATOR_NAME, Constants.CUSTOM_NAME);
-    final JsonViewReader reader = new JsonViewReader(
-        getTestResource("customDiscriminatorView"), options);
-    final Iterator<View.Event> events = reader.readView().iterator();
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.BEGIN_OBJECT)));
-    assertThat(events.next(),
-        is(eventWith(View.Event.Type.DISCRIMINATOR, ViewDefaults.DISCRIMINATOR_NODE_NAME,
-            Constants.DISCRIMINATOR_VALUE)));
+    ViewOptionsRegistry.getOptions().put(ViewKeys.DISCRIMINATOR_NAME,
+        Constants.CUSTOM_NAME);
+    try {
+      final JsonViewReader reader = new JsonViewReader(
+          getTestResource("customDiscriminatorView"), new OptionsMap());
+      final Iterator<View.Event> events = reader.readView().iterator();
+      assertThat(events.next(),
+          is(eventWith(View.Event.Type.BEGIN_OBJECT)));
+      assertThat(events.next(),
+          is(eventWith(View.Event.Type.DISCRIMINATOR,
+              ViewDefaults.DISCRIMINATOR_NODE_NAME,
+              Constants.DISCRIMINATOR_VALUE)));
+    }
+    finally {
+      ViewOptionsRegistry.getOptions().remove(ViewKeys.DISCRIMINATOR_NAME);
+    }
   }
 
 }

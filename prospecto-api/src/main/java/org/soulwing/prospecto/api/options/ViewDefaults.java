@@ -33,7 +33,7 @@ public interface ViewDefaults {
   /**
    * Default name for a discriminator node.
    */
-  String DISCRIMINATOR_NODE_NAME = "objectType";
+  String DISCRIMINATOR_NODE_NAME = "type";
 
   /**
    * Default name for an {@code enum} {@link Enum#name() name} value node.

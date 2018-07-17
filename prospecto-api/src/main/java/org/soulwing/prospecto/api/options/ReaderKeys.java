@@ -27,12 +27,6 @@ package org.soulwing.prospecto.api.options;
 public interface ReaderKeys {
 
   /**
-   * Subtype discriminator property name.
-   */
-  String DISCRIMINATOR_NAME = ViewKeys.PREFIX
-      + ".reader.discriminatorName";
-
-  /**
    * URL property name.
    */
   String URL_NAME = ViewKeys.PREFIX
