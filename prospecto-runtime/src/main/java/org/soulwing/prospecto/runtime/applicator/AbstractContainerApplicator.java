@@ -95,7 +95,12 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
 
       if (applicator == null) {
         if (context.getOptions().isEnabled(
-            ViewKeys.IGNORE_UNKNOWN_PROPERTIES)) continue;
+            ViewKeys.IGNORE_UNKNOWN_PROPERTIES)) {
+          if (!event.getType().equals(event.getType().complement())) {
+            EventUtil.consumeSubtree(event, events);
+          }
+          continue;
+        }
 
         throw new ViewApplicatorException("found no child named '" + name + "'"
             + " in node '" + node.getName() + "'");
@@ -133,5 +138,6 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
 
     return entity;
   }
+
 
 }

@@ -44,9 +44,6 @@ import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
  */
 class ConcreteViewApplicator implements ViewApplicator {
 
-  private static final ViewInputException NOT_WELL_FORMED_EXCEPTION =
-      new ViewInputException("view is not well-formed");
-
   private final Class<?> modelType;
   private final RootViewEventApplicator root;
   private final View source;
@@ -225,7 +222,7 @@ class ConcreteViewApplicator implements ViewApplicator {
     final Deque<View.Event> deque = new LinkedList<>();
     final Iterator<View.Event> events = view.iterator();
     if (!events.hasNext()) {
-      throw NOT_WELL_FORMED_EXCEPTION;
+      throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
     }
 
     final View.Event firstEvent = events.next();
@@ -242,10 +239,10 @@ class ConcreteViewApplicator implements ViewApplicator {
     updateDeque(triggerEvent, events, deque);
 
     if (dataKey != null) {
-      skipToEnd(firstEvent, events);
+      EventUtil.skipSubtree(firstEvent, events);
     }
     if (events.hasNext()) {
-      throw NOT_WELL_FORMED_EXCEPTION;
+      throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
     }
     return deque;
   }
@@ -259,14 +256,14 @@ class ConcreteViewApplicator implements ViewApplicator {
       if (event.getType() == triggerEvent.getType().complement()) {
         if (!Objects.equals(triggerEvent.getNamespace(), event.getNamespace())
             || !Objects.equals(triggerEvent.getName(), event.getName())) {
-          throw NOT_WELL_FORMED_EXCEPTION;
+          throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
         }
         deque.addLast(event);
         return;
       }
       if (event.getType() != event.getType().complement()) {
         if (!event.getType().isBegin()) {
-          throw NOT_WELL_FORMED_EXCEPTION;
+          throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
         }
         updateDeque(event, events, deque);
       }
@@ -274,7 +271,7 @@ class ConcreteViewApplicator implements ViewApplicator {
         deque.addLast(event);
       }
     }
-    throw NOT_WELL_FORMED_EXCEPTION;
+    throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
   }
 
   private View.Event dataEvent(Iterator<View.Event> events)
@@ -293,21 +290,7 @@ class ConcreteViewApplicator implements ViewApplicator {
         throw new ViewInputException("unexpected structure in view envelope");
       }
     }
-    throw NOT_WELL_FORMED_EXCEPTION;
-  }
-
-  private void skipToEnd(View.Event triggerEvent, Iterator<View.Event> events)
-      throws ViewApplicatorException {
-    while (events.hasNext()) {
-      final View.Event event = events.next();
-      if (event.getType() == triggerEvent.getType().complement()) break;
-      if (event.getType() != event.getType().complement()) {
-        if (!event.getType().isBegin()) {
-          throw NOT_WELL_FORMED_EXCEPTION;
-        }
-        skipToEnd(triggerEvent, events);
-      }
-    }
+    throw EventUtil.NOT_WELL_FORMED_EXCEPTION;
   }
 
 }
