@@ -28,7 +28,7 @@
 
   <groupId>org.soulwing.prospecto</groupId>
   <artifactId>prospecto</artifactId>
-  <version>1.4.6</version>
+  <version>1.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Prospecto</name>
@@ -63,7 +63,7 @@
     <connection>scm:git:git@github.com:soulwing/${project.artifactId}.git</connection>
     <developerConnection>${project.scm.connection}</developerConnection>
     <url>git@github.com:soulwing/${project.artifactId}.git</url>
-    <tag>1.4.6</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
