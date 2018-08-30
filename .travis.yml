@@ -1,4 +1,5 @@
 script: mvn install
+sudo: required
 branches:
   expect:
   - travis
