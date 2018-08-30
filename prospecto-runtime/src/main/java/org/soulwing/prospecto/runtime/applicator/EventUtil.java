@@ -68,10 +68,9 @@ class EventUtil {
       final View.Event event = events.removeFirst();
       if (event.getType() == triggerEvent.getType().complement()) break;
       if (event.getType() != event.getType().complement()) {
-        if (!event.getType().isBegin()) {
-          throw NOT_WELL_FORMED_EXCEPTION;
+        if (event.getType().isBegin()) {
+          consumeSubtree(event, events);
         }
-        consumeSubtree(triggerEvent, events);
       }
     }
   }
