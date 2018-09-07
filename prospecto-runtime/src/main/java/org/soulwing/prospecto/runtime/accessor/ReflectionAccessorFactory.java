@@ -90,7 +90,7 @@ class ReflectionAccessorFactory {
 
     if (type.isInterface()) {
       for (Class<?> intf : type.getInterfaces()) {
-        PropertyDescriptor descriptor = findDescriptor(intf, name);
+        PropertyDescriptor descriptor = findDescriptorOnInterface(intf, name);
         if (descriptor != null) return descriptor;
       }
     }
@@ -98,5 +98,14 @@ class ReflectionAccessorFactory {
     return null;
   }
 
+  private static PropertyDescriptor findDescriptorOnInterface(Class<?> intf,
+      String name) throws IntrospectionException {
+    PropertyDescriptor descriptor = findDescriptor(intf, name);
+    while (descriptor == null && intf.getSuperclass() != null) {
+      intf = intf.getSuperclass();
+      descriptor = findDescriptor(intf, name);
+    }
+    return descriptor;
+  }
 
 }
