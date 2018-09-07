@@ -54,43 +54,52 @@ class ReflectionAccessorFactory {
     }
   }
 
-  static Accessor property(Class<?> declaringClass, String name) throws NoSuchMethodException,
-      IntrospectionException {
+  static Accessor property(Class<?> declaringClass, String name)
+      throws NoSuchMethodException, IntrospectionException {
     final EnumSet<AccessMode> supportedModes = EnumSet.noneOf(AccessMode.class);
 
-    final PropertyDescriptor descriptor = findDescriptor(declaringClass, name);
-    if (descriptor == null) {
-      throw new NoSuchMethodException(declaringClass.getName()
-          + " has no property named '" + name + "'");
-    }
+    final PropertyDescriptor readDescriptor =
+        findDescriptor(declaringClass, name, AccessMode.READ);
 
-    final Method readMethod = descriptor.getReadMethod();
-    if (readMethod != null) {
+    Method readMethod = null;
+    if (readDescriptor != null) {
+      readMethod = readDescriptor.getReadMethod();
       supportedModes.add(AccessMode.READ);
     }
 
-    final Method writeMethod = descriptor.getWriteMethod();
-    if (writeMethod != null) {
+    final PropertyDescriptor writeDescriptor =
+        findDescriptor(declaringClass, name, AccessMode.WRITE);
+
+    Method writeMethod = null;
+    if (writeDescriptor != null) {
+      writeMethod = writeDescriptor.getWriteMethod();
       supportedModes.add(AccessMode.WRITE);
+    }
+
+    if (readMethod == null && writeMethod == null) {
+      throw new NoSuchMethodException(declaringClass.getName()
+          + " has no property named '" + name + "'");
     }
 
     return new PropertyAccessor(declaringClass, name, readMethod,
         writeMethod, supportedModes);
   }
 
-  private static PropertyDescriptor findDescriptor(Class<?> type, String name)
+  private static PropertyDescriptor findDescriptor(Class<?> type, String name,
+      AccessMode accessMode)
       throws IntrospectionException {
     final PropertyDescriptor[] descriptors = Introspector.getBeanInfo(type)
         .getPropertyDescriptors();
-    for (PropertyDescriptor descriptor : descriptors) {
-      if (descriptor.getName().equals(name)) {
+    for (final PropertyDescriptor descriptor : descriptors) {
+      if (descriptor.getName().equals(name)
+          && satisfiesAccessMode(descriptor, accessMode)) {
         return descriptor;
       }
     }
 
     if (type.isInterface()) {
-      for (Class<?> intf : type.getInterfaces()) {
-        PropertyDescriptor descriptor = findDescriptorOnInterface(intf, name);
+      for (final Class<?> intf : type.getInterfaces()) {
+        PropertyDescriptor descriptor = findDescriptor(intf, name, AccessMode.READ);
         if (descriptor != null) return descriptor;
       }
     }
@@ -98,14 +107,17 @@ class ReflectionAccessorFactory {
     return null;
   }
 
-  private static PropertyDescriptor findDescriptorOnInterface(Class<?> intf,
-      String name) throws IntrospectionException {
-    PropertyDescriptor descriptor = findDescriptor(intf, name);
-    while (descriptor == null && intf.getSuperclass() != null) {
-      intf = intf.getSuperclass();
-      descriptor = findDescriptor(intf, name);
+  private static boolean satisfiesAccessMode(PropertyDescriptor descriptor,
+      AccessMode accessMode) {
+    switch (accessMode) {
+      case READ:
+        return descriptor.getReadMethod() != null;
+      case WRITE:
+        return descriptor.getWriteMethod() != null;
+      default:
+        throw new AssertionError("unrecognized AccessMode");
     }
-    return descriptor;
   }
+
 
 }
