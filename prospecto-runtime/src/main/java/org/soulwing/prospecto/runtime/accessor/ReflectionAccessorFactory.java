@@ -58,27 +58,34 @@ class ReflectionAccessorFactory {
       throws NoSuchMethodException, IntrospectionException {
     final EnumSet<AccessMode> supportedModes = EnumSet.noneOf(AccessMode.class);
 
-    final PropertyDescriptor readDescriptor =
+    Method readMethod = null;
+    Method writeMethod = null;
+
+    final PropertyDescriptor descriptor =
         findDescriptor(declaringClass, name, AccessMode.READ);
 
-    Method readMethod = null;
-    if (readDescriptor != null) {
-      readMethod = readDescriptor.getReadMethod();
-      supportedModes.add(AccessMode.READ);
+    if (descriptor != null) {
+      readMethod = descriptor.getReadMethod();
+      writeMethod = descriptor.getWriteMethod();
     }
 
-    final PropertyDescriptor writeDescriptor =
-        findDescriptor(declaringClass, name, AccessMode.WRITE);
-
-    Method writeMethod = null;
-    if (writeDescriptor != null) {
-      writeMethod = writeDescriptor.getWriteMethod();
-      supportedModes.add(AccessMode.WRITE);
+    if (writeMethod == null) {
+      final PropertyDescriptor writeDescriptor =
+          findDescriptor(declaringClass, name, AccessMode.WRITE);
+      if (writeDescriptor != null) {
+        writeMethod = writeDescriptor.getWriteMethod();
+      }
     }
 
     if (readMethod == null && writeMethod == null) {
       throw new NoSuchMethodException(declaringClass.getName()
           + " has no property named '" + name + "'");
+    }
+    if (readMethod != null) {
+      supportedModes.add(AccessMode.READ);
+    }
+    if (writeMethod != null) {
+      supportedModes.add(AccessMode.WRITE);
     }
 
     return new PropertyAccessor(declaringClass, name, readMethod,
@@ -115,7 +122,7 @@ class ReflectionAccessorFactory {
       case WRITE:
         return descriptor.getWriteMethod() != null;
       default:
-        throw new AssertionError("unrecognized AccessMode");
+        throw new AssertionError("unrecognized " + AccessMode.class.getSimpleName());
     }
   }
 

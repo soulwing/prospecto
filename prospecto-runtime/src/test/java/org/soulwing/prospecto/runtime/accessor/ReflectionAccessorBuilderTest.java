@@ -152,6 +152,10 @@ public class ReflectionAccessorBuilderTest {
         .build();
 
     assertThat(accessor.get(model), is(sameInstance(PUBLIC_METHOD_VALUE)));
+
+    final Object other = new Object();
+    accessor.set(model, other);
+    assertThat(accessor.get(model), is(sameInstance(other)));
   }
 
 
@@ -161,9 +165,11 @@ public class ReflectionAccessorBuilderTest {
   }
 
   public interface IMockSubModel extends IMockModel {
+    void setPublicMethod(Object value);
   }
 
   public class MockModelImpl implements IMockModel {
+
 
     @Override
     public Object getPublicMethod() {
@@ -174,9 +180,16 @@ public class ReflectionAccessorBuilderTest {
 
   public class MockSubModelImpl implements IMockSubModel {
 
+    private Object value = PUBLIC_METHOD_VALUE;
+
     @Override
     public Object getPublicMethod() {
-      return PUBLIC_METHOD_VALUE;
+      return value;
+    }
+
+    @Override
+    public void setPublicMethod(Object value) {
+      this.value = value;
     }
 
   }
