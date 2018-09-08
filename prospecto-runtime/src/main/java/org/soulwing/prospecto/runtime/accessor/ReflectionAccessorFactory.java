@@ -105,8 +105,9 @@ class ReflectionAccessorFactory {
     }
 
     if (type.isInterface()) {
-      for (final Class<?> intf : type.getInterfaces()) {
-        PropertyDescriptor descriptor = findDescriptor(intf, name, AccessMode.READ);
+      for (final Class<?> interfaceType : type.getInterfaces()) {
+        PropertyDescriptor descriptor =
+            findDescriptor(interfaceType, name, AccessMode.READ);
         if (descriptor != null) return descriptor;
       }
     }
