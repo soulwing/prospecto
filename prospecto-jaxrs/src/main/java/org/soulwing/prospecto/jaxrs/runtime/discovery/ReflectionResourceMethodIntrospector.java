@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
@@ -157,13 +156,10 @@ class ReflectionResourceMethodIntrospector
 
     final List<ResourceDescriptor> descriptors = new ArrayList<>();
     for (final ModelPathSpec spec : specs) {
-
-      if (spec.inherit()) {
-        modelPath = modelPath.concat(spec);
-      }
+      final ModelPath path = spec.inherit() ? modelPath.concat(spec) : modelPath;
 
       descriptors.add(descriptorFactory.newDescriptor(method,
-          resourcePath, modelPath, pathTemplateResolver));
+          resourcePath, path, pathTemplateResolver));
     }
     return descriptors;
   }
