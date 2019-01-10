@@ -94,7 +94,7 @@ public class ConcreteDiscriminatorEventService
     final View.Event.Type complementType = event.getType().complement();
     while (events.hasNext() && event.getType() != complementType) {
       event = events.next();
-      if (event.getType() != event.getType().complement()) {
+      if (event.getType() != complementType) {
         skipEvent(event, events);
       }
     }
