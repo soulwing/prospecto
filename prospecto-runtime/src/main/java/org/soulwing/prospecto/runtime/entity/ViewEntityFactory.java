@@ -32,12 +32,13 @@ public interface ViewEntityFactory {
   /**
    * Creates a new view entity.
    * @param node the subject node
+   * @param triggerEvent
    * @param events events associated with the nodes
    * @param context view context
    * @return view entity
    * @throws Exception
    */
-  InjectableViewEntity newEntity(ViewNode node, Iterable<View.Event> events,
+  InjectableViewEntity newEntity(ViewNode node, View.Event triggerEvent, Iterable<View.Event> events,
       ScopedViewContext context) throws Exception;
 
 }

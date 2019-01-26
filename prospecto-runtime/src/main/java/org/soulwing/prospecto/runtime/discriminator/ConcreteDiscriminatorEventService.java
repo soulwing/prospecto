@@ -77,10 +77,12 @@ public class ConcreteDiscriminatorEventService
   }
 
   @Override
-  public View.Event findDiscriminatorEvent(Iterator<View.Event> events) {
+  public View.Event findDiscriminatorEvent(View.Event triggerEvent,
+      Iterator<View.Event> events) {
     View.Event event = null;
     while (events.hasNext()) {
       event = events.next();
+      if (event.getType() == triggerEvent.getType().complement()) break;
       if (View.Event.Type.DISCRIMINATOR == event.getType()) break;
       skipEvent(event, events);
     }

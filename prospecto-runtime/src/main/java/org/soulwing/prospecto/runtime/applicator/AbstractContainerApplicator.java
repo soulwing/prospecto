@@ -73,7 +73,7 @@ abstract class AbstractContainerApplicator<N extends ViewNode>
   @Override
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
-    final InjectableViewEntity entity = entityFactory.newEntity(node, events, context);
+    final InjectableViewEntity entity = entityFactory.newEntity(node, triggerEvent, events, context);
     View.Event.Type eventType = triggerEvent.getType();
     while (!events.isEmpty()) {
       View.Event event = events.removeFirst();

@@ -49,9 +49,11 @@ public class ConcreteViewEntityFactory implements ViewEntityFactory {
 
   @Override
   public InjectableViewEntity newEntity(ViewNode node,
-      Iterable<View.Event> events, ScopedViewContext context) throws Exception {
+      View.Event triggerEvent, Iterable<View.Event> events,
+      ScopedViewContext context) throws Exception {
+
     View.Event event = discriminatorEventService.findDiscriminatorEvent(
-        events.iterator());
+        triggerEvent, events.iterator());
 
     if (event == null) {
       return new ConcreteInjectableViewEntity(node.getModelType());

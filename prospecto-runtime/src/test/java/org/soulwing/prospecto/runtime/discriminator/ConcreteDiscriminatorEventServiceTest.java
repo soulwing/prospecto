@@ -136,40 +136,44 @@ public class ConcreteDiscriminatorEventServiceTest {
 
   @Test
   public void testFindDiscriminatorAtStart() throws Exception {
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
     final Iterator<View.Event> events = Arrays.asList(
         eventOfType(View.Event.Type.DISCRIMINATOR)).iterator();
 
-    final View.Event event = service.findDiscriminatorEvent(events);
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
     assertThat(event, is(not(nullValue())));
     assertThat(event.getType(), is(equalTo(View.Event.Type.DISCRIMINATOR)));
   }
 
   @Test
   public void testFindDiscriminatorInSimpleObject() throws Exception {
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
     final Iterator<View.Event> events = Arrays.asList(
         eventOfType(View.Event.Type.VALUE),
         eventOfType(View.Event.Type.DISCRIMINATOR)).iterator();
 
-    final View.Event event = service.findDiscriminatorEvent(events);
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
     assertThat(event, is(not(nullValue())));
     assertThat(event.getType(), is(equalTo(View.Event.Type.DISCRIMINATOR)));
   }
 
   @Test
   public void testFindDiscriminatorAfterNestedObject() throws Exception {
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
     final Iterator<View.Event> events = Arrays.asList(
         eventOfType(View.Event.Type.BEGIN_OBJECT),
         eventOfType(View.Event.Type.VALUE),
         eventOfType(View.Event.Type.END_OBJECT),
         eventOfType(View.Event.Type.DISCRIMINATOR)).iterator();
 
-    final View.Event event = service.findDiscriminatorEvent(events);
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
     assertThat(event, is(not(nullValue())));
     assertThat(event.getType(), is(equalTo(View.Event.Type.DISCRIMINATOR)));
   }
 
   @Test
   public void testFindDiscriminatorAfterDeeplyNestedObject() throws Exception {
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
     final Iterator<View.Event> events = Arrays.asList(
         eventOfType(View.Event.Type.BEGIN_OBJECT),
         eventOfType(View.Event.Type.BEGIN_OBJECT),
@@ -178,7 +182,7 @@ public class ConcreteDiscriminatorEventServiceTest {
         eventOfType(View.Event.Type.END_OBJECT),
         eventOfType(View.Event.Type.DISCRIMINATOR)).iterator();
 
-    final View.Event event = service.findDiscriminatorEvent(events);
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
     assertThat(event, is(not(nullValue())));
     assertThat(event.getType(), is(equalTo(View.Event.Type.DISCRIMINATOR)));
   }
@@ -187,6 +191,7 @@ public class ConcreteDiscriminatorEventServiceTest {
   public void testFindDiscriminatorAfterDiscriminatorsInNestedObjects()
       throws Exception {
 
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
     final View.Event discriminator = eventOfType(View.Event.Type.DISCRIMINATOR, "one");
 
     final Iterator<View.Event> events = Arrays.asList(
@@ -199,10 +204,30 @@ public class ConcreteDiscriminatorEventServiceTest {
         eventOfType(View.Event.Type.END_OBJECT),
         discriminator).iterator();
 
-    final View.Event event = service.findDiscriminatorEvent(events);
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
     assertThat(event, is(not(nullValue())));
     assertThat(event.getType(), is(equalTo(View.Event.Type.DISCRIMINATOR)));
     assertThat(event.getValue(), is(equalTo((Object) "one")));
+  }
+
+  @Test
+  public void testFindDiscriminatorWhenNotFound() throws Exception {
+    final View.Event triggerEvent = eventOfType(View.Event.Type.BEGIN_OBJECT);
+    final Iterator<View.Event> events = Arrays.asList(
+        eventOfType(View.Event.Type.VALUE),
+        eventOfType(View.Event.Type.BEGIN_OBJECT),
+        eventOfType(View.Event.Type.DISCRIMINATOR),  // this isn't the right one
+        eventOfType(View.Event.Type.END_OBJECT),
+        eventOfType(View.Event.Type.END_OBJECT),
+        eventOfType(View.Event.Type.VALUE, "next"),
+        eventOfType(View.Event.Type.BEGIN_OBJECT),
+        eventOfType(View.Event.Type.DISCRIMINATOR), // this isn't the right one
+        eventOfType(View.Event.Type.END_OBJECT)).iterator();
+
+    final View.Event event = service.findDiscriminatorEvent(triggerEvent, events);
+    assertThat(event, is(nullValue()));
+    assertThat(events.hasNext(), is(true));
+    assertThat(events.next().getValue(), is(equalTo((Object) "next")));
   }
 
 

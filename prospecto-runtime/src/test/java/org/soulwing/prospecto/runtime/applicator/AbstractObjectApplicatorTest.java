@@ -273,7 +273,7 @@ public abstract class AbstractObjectApplicatorTest<N extends ObjectNode>
   private Expectations entityFactoryExpectations() throws Exception {
     return new Expectations() {
       {
-        oneOf(entityFactory).newEntity(node, events, viewContext);
+        oneOf(entityFactory).newEntity(node, TRIGGER_EVENT, events, viewContext);
         will(returnValue(entity));
       }
     };

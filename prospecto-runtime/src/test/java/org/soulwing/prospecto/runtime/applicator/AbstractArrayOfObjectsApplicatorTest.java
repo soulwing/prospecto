@@ -107,7 +107,7 @@ public abstract class AbstractArrayOfObjectsApplicatorTest
   public void testOnToModelValue() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(entityFactory).newEntity(node, events, viewContext);
+        oneOf(entityFactory).newEntity(node, BEGIN_OBJECT_EVENT, events, viewContext);
         will(returnValue(entity));
         oneOf(entity).getType();
         will(returnValue(MockModel.class));

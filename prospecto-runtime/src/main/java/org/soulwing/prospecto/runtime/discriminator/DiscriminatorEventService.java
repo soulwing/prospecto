@@ -55,10 +55,12 @@ public interface DiscriminatorEventService {
   /**
    * Finds the first discriminator event in the given event stream, skipping
    * any structures encountered while searching.
+   *
+   * @param triggerEvent
    * @param events stream of events to search
    * @return discriminator or {@code null} if not found
    */
-  View.Event findDiscriminatorEvent(Iterator<View.Event> events);
+  View.Event findDiscriminatorEvent(View.Event triggerEvent, Iterator<View.Event> events);
 
   /**
    * Finds the appropriate discriminator strategy for the subject container node.
