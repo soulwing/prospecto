@@ -89,12 +89,13 @@ public class ConcreteDiscriminatorEventService
     return event;
   }
 
-  private static void skipEvent(View.Event event,
+  static void skipEvent(View.Event event,
       Iterator<View.Event> events) {
     final View.Event.Type complementType = event.getType().complement();
     while (events.hasNext() && event.getType() != complementType) {
       event = events.next();
-      if (event.getType() != complementType) {
+      if (event.getType() != complementType
+          && event.getType() != event.getType().complement()) {
         skipEvent(event, events);
       }
     }
