@@ -22,7 +22,7 @@
   <parent>
     <artifactId>prospecto</artifactId>
     <groupId>org.soulwing.prospecto</groupId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.4.12</version>
   </parent>
 
   <artifactId>prospecto-jaxrs</artifactId>
