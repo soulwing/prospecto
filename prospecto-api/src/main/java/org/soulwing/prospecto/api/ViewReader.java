@@ -29,6 +29,9 @@ package org.soulwing.prospecto.api;
  */
 public interface ViewReader {
 
+  interface Source {
+  }
+
   View readView() throws ViewException;
 
 }

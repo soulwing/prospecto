@@ -28,10 +28,19 @@ import java.io.InputStream;
 public interface ViewReaderFactory {
 
   /**
-   * Constructs a new reader.
-   * @param inputStream input stream to read
+   * Constructs a new reader that will read an input stream as its source.
+   * @param inputStream source input stream
    * @return reader
    */
   ViewReader newReader(InputStream inputStream);
+
+
+  /**
+   * Constructs a new reader that will read an arbitrary source.
+   * @param source the input source
+   * @return reader
+   */
+  ViewReader newReader(ViewReader.Source source);
+
 
 }

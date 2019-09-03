@@ -16,5 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+org.soulwing.prospecto.runtime.json.JsonPViewWriterFactoryProvider
 org.soulwing.prospecto.runtime.text.json.JsonViewWriterFactoryProvider
 org.soulwing.prospecto.runtime.text.xml.XmlViewWriterFactoryProvider

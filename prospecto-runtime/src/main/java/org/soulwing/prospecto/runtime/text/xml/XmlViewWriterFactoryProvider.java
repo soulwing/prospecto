@@ -55,6 +55,11 @@ public class XmlViewWriterFactoryProvider
     }
 
     @Override
+    public ViewWriter newWriter(View view) {
+      return new XmlViewWriter(view, options);
+    }
+
+    @Override
     public ViewWriter newWriter(View view, OutputStream outputStream) {
       return new XmlViewWriter(view, outputStream, options);
     }

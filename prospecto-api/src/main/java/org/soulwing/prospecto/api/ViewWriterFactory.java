@@ -28,6 +28,14 @@ import java.io.OutputStream;
 public interface ViewWriterFactory {
 
   /**
+   * Creates a writer that will produce a representation of a view for a target
+   * to be specified later.
+   * @param view the source view
+   * @return view writer
+   */
+  ViewWriter newWriter(View view);
+
+  /**
    * Creates a writer that will produce a textual representation of a view
    * on the given output stream.
    * @param view the source view

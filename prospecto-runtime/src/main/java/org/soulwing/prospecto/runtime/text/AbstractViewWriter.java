@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.text;
 
-import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.soulwing.prospecto.api.View;
@@ -28,8 +27,7 @@ import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
- * An object that produces a textual representation of a {@link View} on
- * an {@link OutputStream}.
+ * An object that produces a representation of a view on a specified target.
  * <p>
  * This class is designed to allow a callback-driven interpretation of a
  * view's event stream.
@@ -41,7 +39,6 @@ import org.soulwing.prospecto.api.options.WriterKeys;
 public abstract class AbstractViewWriter implements ViewWriter {
 
   private final View view;
-  private final OutputStream outputStream;
   private final Options options;
 
   /**
@@ -50,10 +47,9 @@ public abstract class AbstractViewWriter implements ViewWriter {
    * @param options configuration options
    *
    */
-  protected AbstractViewWriter(View view, OutputStream outputStream,
+  protected AbstractViewWriter(View view,
       Options options) {
     this.view = view;
-    this.outputStream = outputStream;
     this.options = options;
   }
 
@@ -72,7 +68,7 @@ public abstract class AbstractViewWriter implements ViewWriter {
   @Override
   public final void writeView() throws ViewException {
     try {
-      beforeViewEvents(outputStream);
+      beforeViewEvents();
       final Iterator<View.Event> events = view.iterator();
       while (events.hasNext()) {
         final View.Event event = events.next();
@@ -122,10 +118,8 @@ public abstract class AbstractViewWriter implements ViewWriter {
 
   /**
    * Notifies the recipient that the view's event stream will start.
-   * @param outputStream target output stream for the view's textual
-   *    representation
    */
-  protected void beforeViewEvents(OutputStream outputStream) throws Exception {
+  protected void beforeViewEvents() throws Exception {
   }
 
   /**

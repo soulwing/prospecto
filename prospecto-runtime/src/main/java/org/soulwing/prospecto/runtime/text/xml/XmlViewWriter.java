@@ -40,6 +40,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.WriterKeys;
+import org.soulwing.prospecto.api.text.OutputStreamTarget;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -103,7 +104,8 @@ class XmlViewWriter extends AbstractViewWriter {
 
   private final Deque<String> namespaceStack = new LinkedList<>();
 
-  private final String encoding;
+  private OutputStream outputStream;
+  private String encoding;
 
   private XMLStreamWriter writer;
 
@@ -115,9 +117,9 @@ class XmlViewWriter extends AbstractViewWriter {
    * @param outputStream target output stream for the textual representation
    * @param options configuration options
    */
-  public XmlViewWriter(View view,
+  XmlViewWriter(View view,
       OutputStream outputStream, Options options) {
-    this(view, outputStream, options, DEFAULT_ENCODING);
+    this(view, outputStream, options, null);
   }
 
   /**
@@ -127,16 +129,39 @@ class XmlViewWriter extends AbstractViewWriter {
    * @param options configuration options
    * @param encoding character encoding for the XML
    */
-  XmlViewWriter(View view, OutputStream outputStream, Options options,
-      String encoding) {
-    super(view, outputStream, options);
+  XmlViewWriter(View view,
+      OutputStream outputStream, Options options, String encoding) {
+    this(view, options);
+    this.outputStream = outputStream;
     this.encoding = encoding;
   }
 
+  /**
+   * Constructs a new instance.
+   * @param view source view
+   * @param options configuration options
+   */
+  XmlViewWriter(View view, Options options) {
+    super(view, options);
+  }
+
   @Override
-  protected void beforeViewEvents(OutputStream outputStream) throws Exception {
+  public void writeView(Target target) {
+    if (!(target instanceof OutputStreamTarget)) {
+      throw new IllegalArgumentException("this writer supports only the "
+          + OutputStreamTarget.class.getSimpleName() + " target");
+    }
+    this.outputStream = ((OutputStreamTarget) target).getOutputStream();
+    this.encoding = ((OutputStreamTarget) target).getEncoding();
+    writeView();
+  }
+
+
+  @Override
+  protected void beforeViewEvents() throws Exception {
     writer = outputFactory.createXMLStreamWriter(
-        new BufferedOutputStream(outputStream));
+        new BufferedOutputStream(outputStream),
+            encoding == null ? DEFAULT_ENCODING : encoding);
 
     if (getOptions().isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT))
       writer = new IndentingXMLStreamWriter(writer);
@@ -291,8 +316,14 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeMeta(View.Event event) throws XMLStreamException {
-    writeAttributeString(event.getName(),
-        XmlViewConstants.META_NAMESPACE, event.getValue().toString());
+    if (event.getValue() == null) {
+      writeEmptyElement(event.getName(),
+          XmlViewConstants.META_NAMESPACE, XmlViewConstants.NULL_QNAME);
+    }
+    else {
+      writeAttributeString(event.getName(),
+          XmlViewConstants.META_NAMESPACE, event.getValue().toString());
+    }
   }
 
   private void writeDiscriminator(View.Event event) throws XMLStreamException {

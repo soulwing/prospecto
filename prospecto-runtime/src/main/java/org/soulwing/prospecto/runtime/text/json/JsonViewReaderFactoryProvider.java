@@ -58,6 +58,11 @@ public class JsonViewReaderFactoryProvider
       return new JsonViewReader(inputStream, options);
     }
 
+    @Override
+    public ViewReader newReader(ViewReader.Source source) {
+      return new JsonViewReader(source, options);
+    }
+
   }
 
 }

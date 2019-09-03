@@ -18,7 +18,6 @@
  */
 package org.soulwing.prospecto.runtime.text.json;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,6 +35,7 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.WriterKeys;
+import org.soulwing.prospecto.api.text.OutputStreamTarget;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
@@ -62,6 +62,7 @@ class JsonViewWriter extends AbstractViewWriter {
 
   private final Deque<GeneratorContext> contextStack = new LinkedList<>();
 
+  private OutputStream outputStream;
   private JsonGenerator generator;
   private String viewName;
   private boolean enveloped;
@@ -70,13 +71,10 @@ class JsonViewWriter extends AbstractViewWriter {
   /**
    * Constructs a new instance.
    * @param view source view
-   * @param outputStream target output stream for the textual representation
    * @param options
    */
-  public JsonViewWriter(View view,
-      OutputStream outputStream, Options options) {
-    super(view, outputStream, options);
-
+  JsonViewWriter(View view, Options options) {
+    super(view, options);
     Map<String, Object> config = new HashMap<>();
     if (options.isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT))
       config.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -84,8 +82,30 @@ class JsonViewWriter extends AbstractViewWriter {
     generatorFactory = Json.createGeneratorFactory(config);
   }
 
+  /**
+   * Constructs a new instance.
+   * @param view source view
+   * @param outputStream target output stream for the textual representation
+   * @param options
+   */
+   JsonViewWriter(View view,
+      OutputStream outputStream, Options options) {
+    this(view, options);
+    this.outputStream = outputStream;
+  }
+
   @Override
-  protected void beforeViewEvents(OutputStream outputStream) throws IOException {
+  public void writeView(Target target) {
+    if (!(target instanceof OutputStreamTarget)) {
+      throw new IllegalArgumentException("this writer supports only the "
+          + OutputStreamTarget.class.getSimpleName() + " target");
+    }
+    this.outputStream = ((OutputStreamTarget) target).getOutputStream();
+    writeView();
+  }
+
+  @Override
+  protected void beforeViewEvents() {
     generator = generatorFactory.createGenerator(outputStream);
   }
 

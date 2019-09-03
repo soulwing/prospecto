@@ -28,6 +28,7 @@ import org.soulwing.prospecto.ViewOptionsRegistry;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.ViewDefaults;
 import org.soulwing.prospecto.api.options.ViewKeys;
+import org.soulwing.prospecto.api.text.InputStreamSource;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -40,18 +41,27 @@ class JsonViewReader extends AbstractViewReader {
   private static JsonParserFactory parserFactory = Json.createParserFactory(
       Collections.<String, Object>emptyMap());
 
-  private final InputStream inputStream;
+  private final Source source;
 
   private String name;
 
   JsonViewReader(InputStream inputStream, Options options) {
+    this(new InputStreamSource(inputStream), options);
+  }
+
+  JsonViewReader(Source source, Options options) {
     super(options);
-    this.inputStream = inputStream;
+    if (!(source instanceof InputStreamSource)) {
+      throw new IllegalArgumentException("only the "
+          + InputStreamSource.class.getSimpleName() + " source type is supported");
+    }
+    this.source = source;
   }
 
   @Override
   protected void onReadView() throws Exception {
-    final JsonParser parser = parserFactory.createParser(inputStream);
+    final JsonParser parser = parserFactory.createParser(
+        ((InputStreamSource) source).getInputStream());
     while (parser.hasNext()) {
       final JsonParser.Event event = parser.next();
       switch (event) {

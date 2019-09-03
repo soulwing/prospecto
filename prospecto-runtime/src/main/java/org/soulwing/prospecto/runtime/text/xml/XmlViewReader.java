@@ -24,7 +24,6 @@ import java.math.BigInteger;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -37,6 +36,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.text.InputStreamSource;
 import org.soulwing.prospecto.runtime.text.AbstractViewReader;
 
 /**
@@ -92,16 +92,25 @@ class XmlViewReader extends AbstractViewReader {
 
   private final Deque<Frame> stack = new LinkedList<>();
 
-  private final InputStream inputStream;
+  private final Source source;
 
   XmlViewReader(InputStream inputStream, Options options) {
+    this(new InputStreamSource(inputStream), options);
+  }
+
+  XmlViewReader(Source source, Options options) {
     super(options);
-    this.inputStream = inputStream;
+    if (!(source instanceof InputStreamSource)) {
+      throw new IllegalArgumentException("only the "
+          + InputStreamSource.class.getSimpleName() + " source type is supported");
+    }
+    this.source = source;
   }
 
   @Override
   protected void onReadView() throws Exception {
-    final XMLEventReader reader = inputFactory.createXMLEventReader(inputStream);
+    final XMLEventReader reader = inputFactory.createXMLEventReader(
+        ((InputStreamSource) source).getInputStream());
     while (reader.hasNext()) {
       final XMLEvent event = reader.nextEvent();
       switch (event.getEventType()) {

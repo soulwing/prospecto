@@ -1,7 +1,7 @@
 /*
- * File created on Mar 9, 2016
+ * File created on Aug 28, 2019
  *
- * Copyright (c) 2016 Carl Harris, Jr
+ * Copyright (c) 2019 Carl Harris, Jr
  * and others as noted
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.api;
+package org.soulwing.prospecto.api.json;
+
+import javax.json.JsonStructure;
+
+import org.soulwing.prospecto.api.ViewWriter;
 
 /**
- * A writer for a view.
+ * A target for a {@link ViewWriter} that holds a JSON-P structure.
  *
  * @author Carl Harris
  */
-public interface ViewWriter {
+public class JsonPTarget implements ViewWriter.Target {
 
-  interface Target {
+  private JsonStructure json;
+
+  public void store(JsonStructure json) {
+    this.json = json;
   }
 
-  void writeView(ViewWriter.Target target);
-
-  void writeView() throws ViewException;
+  public JsonStructure toJson() {
+    return json;
+  }
 
 }

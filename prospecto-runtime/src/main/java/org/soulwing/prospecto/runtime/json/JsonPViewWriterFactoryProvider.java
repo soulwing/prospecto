@@ -1,7 +1,7 @@
 /*
- * File created on Mar 19, 2016
+ * File created on Aug 29, 2019
  *
- * Copyright (c) 2016 Carl Harris, Jr
+ * Copyright (c) 2019 Carl Harris, Jr
  * and others as noted
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.runtime.text.json;
+package org.soulwing.prospecto.runtime.json;
 
 import java.io.OutputStream;
 
@@ -27,14 +27,14 @@ import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.spi.ViewWriterFactoryProvider;
 
 /**
- * A {@link ViewWriterFactoryProvider} for writers that produce JSON.
+ * A {@link ViewWriterFactoryProvider} for writers that produce JSON-P.
  *
  * @author Carl Harris
  */
-public class JsonViewWriterFactoryProvider
+public class JsonPViewWriterFactoryProvider
     implements ViewWriterFactoryProvider {
 
-  public static final String NAME = "JSON";
+  public static final String NAME = "JSON-P";
 
   @Override
   public String getName() {
@@ -56,12 +56,12 @@ public class JsonViewWriterFactoryProvider
 
     @Override
     public ViewWriter newWriter(View view) {
-      return new JsonViewWriter(view, options);
+      return new JsonPViewWriter(view, options);
     }
 
     @Override
     public ViewWriter newWriter(View view, OutputStream outputStream) {
-      return new JsonViewWriter(view, outputStream, options);
+      throw new UnsupportedOperationException();
     }
 
   }
