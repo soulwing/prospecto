@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.soulwing</groupId>
     <artifactId>soulwing-parent</artifactId>
-    <version>18</version>
+    <version>19</version>
   </parent>
 
   <groupId>org.soulwing.prospecto</groupId>
@@ -63,7 +63,7 @@
     <connection>scm:git:git@github.com:soulwing/${project.artifactId}.git</connection>
     <developerConnection>${project.scm.connection}</developerConnection>
     <url>git@github.com:soulwing/${project.artifactId}.git</url>
-    <tag>HEAD</tag>
+    <tag>1.5.0</tag>
   </scm>
 
   <build>
