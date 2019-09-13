@@ -70,7 +70,8 @@ abstract class AbstractStructureGenerator<T extends JsonStructure> {
       generateNull(name);
     }
     else {
-      generateString(name, (String) value);
+      assert value != null;
+      generateString(name, value.toString());
     }
   }
 
