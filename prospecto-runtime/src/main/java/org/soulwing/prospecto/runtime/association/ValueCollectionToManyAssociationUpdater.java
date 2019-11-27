@@ -37,7 +37,7 @@ public class ValueCollectionToManyAssociationUpdater
   private final AssociationDescriptorFactory descriptorFactory;
   private final AssociationManagerLocator managerLocator;
 
-  ValueCollectionToManyAssociationUpdater() {
+  private ValueCollectionToManyAssociationUpdater() {
     this(ConcreteAssociationDescriptorFactory.INSTANCE,
         ConcreteAssociationManagerLocator.INSTANCE);
   }
@@ -79,14 +79,9 @@ public class ValueCollectionToManyAssociationUpdater
     manager.begin(target);
     manager.clear(target);
     for (final Object value : values) {
-      manager.add(target, resolve(value, context));
+      manager.add(target, value);
     }
     manager.end(target);
-  }
-
-  @SuppressWarnings("unused")
-  protected Object resolve(Object value, ScopedViewContext context) {
-    return value;
   }
 
 }

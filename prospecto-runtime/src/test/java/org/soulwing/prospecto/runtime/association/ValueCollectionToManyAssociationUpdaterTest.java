@@ -28,9 +28,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.association.AssociationDescriptor;
 import org.soulwing.prospecto.api.association.ToManyAssociationManager;
+import org.soulwing.prospecto.api.template.UpdatableNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ValueCollectionToManyAssociationUpdater}.
@@ -43,14 +42,13 @@ public class ValueCollectionToManyAssociationUpdaterTest {
   private static final Object VALUE = new Object();
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   ScopedViewContext viewContext;
 
   @Mock
-  AbstractContainerNode node;
+  UpdatableNode node;
 
   @Mock
   AssociationDescriptorFactory descriptorFactory;
