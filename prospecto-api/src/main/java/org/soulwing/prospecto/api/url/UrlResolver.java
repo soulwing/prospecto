@@ -22,7 +22,7 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.template.ViewNode;
 
 /**
- * A service that resolvers the actual URL string for a value node of type
+ * A service that resolve the actual URL string for a value node of type
  * <em>url</em>.
  * <p>
  * An implementation <em>must</em> be thread safe as it may be used to resolve
