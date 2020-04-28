@@ -449,13 +449,24 @@ public class JsonPViewWriterTest {
       private final Map<String, Object> properties = new LinkedHashMap<>();
 
       @Override
-      public void putProperty(String name, Object value) {
+      public Envelope putProperty(String name, Object value) {
         properties.put(name, value);
+        return this;
       }
 
       @Override
       public Iterator<Map.Entry<String, Object>> iterator() {
         return properties.entrySet().iterator();
+      }
+
+      @Override
+      public View seal(String name) {
+        return seal(name, null);
+      }
+
+      @Override
+      public View seal(String name, String namespace) {
+        throw new UnsupportedOperationException();
       }
     }
 
@@ -477,6 +488,11 @@ public class JsonPViewWriterTest {
 
     @Override
     public Envelope getEnvelope() {
+      return envelope;
+    }
+
+    @Override
+    public Envelope envelope() {
       return envelope;
     }
 

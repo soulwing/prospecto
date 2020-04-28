@@ -159,7 +159,7 @@ class JsonViewWriter extends AbstractViewWriter {
     enveloped = isEnveloped(event);
     if (!enveloped) return;
     generator.writeStartObject();
-    for (final Map.Entry<String, Object> property : getView().getEnvelope()) {
+    for (final Map.Entry<String, Object> property : getView().envelope()) {
       writeValue(property.getKey(), property.getValue());
     }
     contextStack.push(GeneratorContext.OBJECT);

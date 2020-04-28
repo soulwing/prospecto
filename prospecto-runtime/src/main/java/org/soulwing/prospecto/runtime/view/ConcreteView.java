@@ -18,12 +18,14 @@
  */
 package org.soulwing.prospecto.runtime.view;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.soulwing.prospecto.api.View;
+import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 
 /**
  * A {@link View} implementation.
@@ -42,6 +44,11 @@ public class ConcreteView implements View {
 
   @Override
   public Envelope getEnvelope() {
+    return envelope();
+  }
+
+  @Override
+  public Envelope envelope() {
     return envelope;
   }
 
@@ -50,12 +57,35 @@ public class ConcreteView implements View {
     return events.iterator();
   }
 
-  static class ConcreteEnvelope implements Envelope {
+  class ConcreteEnvelope implements Envelope {
     private final Map<String, Object> properties = new LinkedHashMap<>();
 
     @Override
-    public void putProperty(String name, Object value) {
+    public Envelope putProperty(String name, Object value) {
       properties.put(name, value);
+      return this;
+    }
+
+    @Override
+    public View seal(String name) {
+      return seal(name, null);
+    }
+
+    @Override
+    public View seal(String name, String namespace) {
+      final List<Event> wrapper = new ArrayList<>();
+      wrapper.add(new ConcreteViewEvent(Event.Type.BEGIN_OBJECT, null, null));
+      for (final String key : properties.keySet()) {
+        wrapper.add(new ConcreteViewEvent(Event.Type.VALUE, key, null,
+            properties.get(key)));
+      }
+      wrapper.add(new ConcreteViewEvent(events.get(0).getType(),
+          name, namespace, null));
+      wrapper.addAll(events.subList(1, events.size() - 1));
+      wrapper.add(new ConcreteViewEvent(events.get(events.size() - 1).getType(),
+          name, namespace, null));
+      wrapper.add(new ConcreteViewEvent(Event.Type.END_OBJECT, null, null));
+      return new ConcreteView(wrapper);
     }
 
     @Override

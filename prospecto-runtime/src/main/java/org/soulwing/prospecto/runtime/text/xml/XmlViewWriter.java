@@ -241,7 +241,7 @@ class XmlViewWriter extends AbstractViewWriter {
     writer.writeNamespace(XSI_PREFIX, XmlViewConstants.XSI_NAMESPACE);
     writer.writeNamespace(XS_PREFIX, XmlViewConstants.XS_NAMESPACE);
     writeElementType(event);
-    for (Map.Entry<String, Object> entry : getView().getEnvelope()) {
+    for (Map.Entry<String, Object> entry : getView().envelope()) {
       writer.writeAttribute(writer.getNamespaceContext().getNamespaceURI(VIEW_PREFIX),
           entry.getKey(), entry.getValue().toString());
     }

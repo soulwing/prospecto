@@ -150,15 +150,54 @@ public interface View extends Iterable<View.Event> {
      * The given value replaces any existing value associated with {@code name}.
      * @param name name of the property
      * @param value value to associate with {@code name}
+     * @return this envelope
      */
-    void putProperty(String name, Object value);
+    Envelope putProperty(String name, Object value);
+
+    /**
+     * Encapsulates the view associated with this envelope in another view.
+     * <p>
+     * Envelope properties will be reflected as top-level properties of the
+     * returned view.
+     *
+     * @param name name for the view node that will contain the subtree
+     *    represented by the view associated with this envelope in the
+     *    resulting view
+     * @return resulting view
+     */
+    View seal(String name);
+
+    /**
+     * Encapsulates the view associated with this envelope in another view.
+     * <p>
+     * Envelope properties will be reflected as top-level properties of the
+     * returned view.
+     *
+     * @param name name for the view node that will contain the subtree
+     *    represented by the view associated with this envelope in the
+     *    resulting view
+     * @param namespace namespace for {@code name} or {@code null} to
+     *    specify no namespace
+     * @return resulting view
+     */
+    View seal(String name, String namespace);
 
   }
 
   /**
    * Gets the envelope for this view.
+   * <p>
+   * Deprecated: Use {@link #envelope()} instead.
+   *
    * @return envelope (never {@code null})
    */
+  @Deprecated
   Envelope getEnvelope();
+
+  /**
+   * Gets the envelope for this view.
+   * @return envelope (never {@code null})
+   */
+  Envelope envelope();
 
 }
