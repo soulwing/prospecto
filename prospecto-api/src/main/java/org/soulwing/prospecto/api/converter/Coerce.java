@@ -26,7 +26,6 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-
 import javax.xml.bind.DatatypeConverter;
 
 import org.soulwing.prospecto.api.ViewException;
@@ -105,6 +104,13 @@ public class Coerce {
       return (T) value.toString();
     }
 
+    // for all target types other than string, an empty string is the same
+    // as null
+    if (value instanceof String
+        && ((String) value).trim().isEmpty()) {
+      return null;
+    }
+
     if (boolean.class.isAssignableFrom(type)) {
       if (value instanceof Boolean) {
         return (T) value;
@@ -173,6 +179,12 @@ public class Coerce {
     }
     if (BigDecimal.class.equals(type) && value instanceof Number) {
       return (T) BigDecimal.valueOf(((Number) value).longValue());
+    }
+    if (BigDecimal.class.equals(type)
+        && value instanceof String) {
+      if (((String) value).isEmpty()) {
+
+      }
     }
     if (Date.class.isAssignableFrom(type)) {
       if (value instanceof Number) {

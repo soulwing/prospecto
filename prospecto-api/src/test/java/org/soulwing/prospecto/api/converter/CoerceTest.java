@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,7 +30,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
@@ -40,6 +40,19 @@ import org.junit.Test;
  * @author Carl Harris
  */
 public class CoerceTest {
+
+  @Test
+  public void testCoerceEmptyStringToString() throws Exception {
+    coerceAndValidate(String.class, "", "");
+  }
+
+  @Test
+  public void testCoerceEmptyStringToNull() throws Exception {
+    assertThat(Coerce.toValueOfType(Boolean.class, ""), is(nullValue()));
+    assertThat(Coerce.toValueOfType(Integer.class, ""), is(nullValue()));
+    assertThat(Coerce.toValueOfType(BigDecimal.class, ""), is(nullValue()));
+    assertThat(Coerce.toValueOfType(Date.class, ""), is(nullValue()));
+  }
 
   @Test
   public void testCoerceToSameType() throws Exception {
