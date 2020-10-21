@@ -19,6 +19,8 @@
 package org.soulwing.prospecto.runtime.text.xml;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,6 +31,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import javax.json.Json;
+import javax.json.JsonNumber;
+import javax.json.JsonString;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
+import javax.json.stream.JsonParser;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -101,6 +109,9 @@ class XmlViewWriter extends AbstractViewWriter {
 
   private static final String XS_STRING = pname(XS_PREFIX,
       XmlViewConstants.XS_STRING);
+
+  private static final boolean OPTIONAL_XSI_TYPE = false;
+  private static final boolean MANDATORY_XSI_TYPE = true;
 
   private final Deque<String> namespaceStack = new LinkedList<>();
 
@@ -214,11 +225,16 @@ class XmlViewWriter extends AbstractViewWriter {
       firstEvent = false;
     }
     else {
-      writeStartElement(event.getName(), event.getNamespace(),
-          event.getType() == View.Event.Type.BEGIN_OBJECT ?
-              XmlViewConstants.OBJECT_QNAME : XmlViewConstants.ARRAY_QNAME);
-      writeElementType(event);
+      writeStartElement(event.getName(), event.getNamespace(), event.getType());
     }
+  }
+
+  private void writeStartElement(String name, String namespace,
+      View.Event.Type type) throws XMLStreamException {
+    writeStartElement(name, namespace,
+        type == View.Event.Type.BEGIN_OBJECT ?
+            XmlViewConstants.OBJECT_QNAME : XmlViewConstants.ARRAY_QNAME);
+    writeElementType(type);
   }
 
   private void writeRootElement(View.Event event)
@@ -248,9 +264,13 @@ class XmlViewWriter extends AbstractViewWriter {
   }
 
   private void writeElementType(View.Event event) throws XMLStreamException {
+    writeElementType(event.getType());
+  }
+
+  private void writeElementType(View.Event.Type eventType) throws XMLStreamException {
     writer.writeAttribute(XmlViewConstants.VIEW_NAMESPACE,
         XmlViewConstants.TYPE_NAME,
-        event.getType() == View.Event.Type.BEGIN_OBJECT ?
+        eventType == View.Event.Type.BEGIN_OBJECT ?
             XmlViewConstants.OBJECT_NAME : XmlViewConstants.ARRAY_NAME);
   }
 
@@ -258,56 +278,128 @@ class XmlViewWriter extends AbstractViewWriter {
     final String name = event.getName();
     final String namespace = event.getNamespace();
     final Object value = event.getValue();
+    writeValue(name, namespace, value, OPTIONAL_XSI_TYPE);
+  }
+
+  private void writeValue(String name, String namespace, Object value,
+      boolean includeXsiType) throws XMLStreamException {
     if (value instanceof Boolean) {
-      writeString(name, namespace, XS_BOOLEAN, DatatypeConverter.printBoolean((Boolean) value));
+      writeString(name, namespace, XS_BOOLEAN, DatatypeConverter.printBoolean((Boolean) value), includeXsiType);
     }
     else if (value instanceof Integer) {
-      writeString(name, namespace, XS_INT, DatatypeConverter.printInt((Integer) value));
+      writeString(name, namespace, XS_INT, DatatypeConverter.printInt((Integer) value), includeXsiType);
     }
     else if (value instanceof Long) {
-      writeString(name, namespace, XS_LONG, DatatypeConverter.printLong((Long) value));
+      writeString(name, namespace, XS_LONG, DatatypeConverter.printLong((Long) value), includeXsiType);
     }
     else if (value instanceof Double) {
-      writeString(name, namespace, XS_DOUBLE, DatatypeConverter.printDouble((Double) value));
+      writeString(name, namespace, XS_DOUBLE, DatatypeConverter.printDouble((Double) value), includeXsiType);
     }
     else if (value instanceof Float) {
-      writeString(name, namespace, XS_FLOAT, DatatypeConverter.printFloat((Float) value));
+      writeString(name, namespace, XS_FLOAT, DatatypeConverter.printFloat((Float) value), includeXsiType);
     }
     else if (value instanceof Byte) {
-      writeString(name, namespace, XS_BYTE, DatatypeConverter.printByte((Byte) value));
+      writeString(name, namespace, XS_BYTE, DatatypeConverter.printByte((Byte) value), includeXsiType);
     }
     else if (value instanceof Short) {
-      writeString(name, namespace, XS_SHORT, DatatypeConverter.printShort((Short) value));
+      writeString(name, namespace, XS_SHORT, DatatypeConverter.printShort((Short) value), includeXsiType);
     }
     else if (value instanceof BigInteger) {
-      writeString(name, namespace, XS_INTEGER, DatatypeConverter.printInteger((BigInteger) value));
+      writeString(name, namespace, XS_INTEGER, DatatypeConverter.printInteger((BigInteger) value), includeXsiType);
     }
     else if (value instanceof BigDecimal) {
-      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDecimal((BigDecimal) value));
+      writeString(name, namespace, XS_DECIMAL, DatatypeConverter.printDecimal((BigDecimal) value), includeXsiType);
     }
     else if (value instanceof Date) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime((Date) value);
-      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime(calendar));
+      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime(calendar), includeXsiType);
     }
     else if (value instanceof Calendar) {
-      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime((Calendar) value));
+      writeString(name, namespace, XS_DATE_TIME, DatatypeConverter.printDateTime((Calendar) value), includeXsiType);
     }
     else if (value instanceof Enum) {
-      writeString(name, namespace, XS_STRING, ((Enum) value).name());
+      writeString(name, namespace, XS_STRING, ((Enum) value).name(), includeXsiType);
+    }
+    else if (value instanceof JsonStructure) {
+      writeJsonStructure(name, namespace, (JsonStructure) value);
     }
     else if (value == null || value.toString() == null) {
       writeEmptyElement(name, namespace, XmlViewConstants.NULL_QNAME);
     }
     else {
-      writeString(name, namespace, XS_STRING, value.toString());
+      writeString(name, namespace, XS_STRING, value.toString(), includeXsiType);
     }
   }
 
+  private void writeJsonStructure(String name, String namespace,
+      JsonStructure value) throws XMLStreamException {
+    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    Json.createWriter(outputStream).write(value);
+    final JsonParser parser =
+        Json.createParser(new ByteArrayInputStream(outputStream.toByteArray()));
+
+    while (parser.hasNext()) {
+      final JsonParser.Event event = parser.next();
+      switch (event) {
+        case KEY_NAME:
+          name = parser.getString();
+          break;
+        case START_OBJECT:
+          writeStartElement(name, namespace, View.Event.Type.BEGIN_OBJECT);
+          break;
+        case START_ARRAY:
+          writeStartElement(name, namespace, View.Event.Type.BEGIN_ARRAY);
+          break;
+        case END_OBJECT:
+        case END_ARRAY:
+          writeEndElement();
+          break;
+        case VALUE_NULL:
+        case VALUE_FALSE:
+        case VALUE_TRUE:
+        case VALUE_NUMBER:
+        case VALUE_STRING:
+          writeValue(name, namespace, jsonValue(parser.getValue()),
+              MANDATORY_XSI_TYPE);
+          break;
+        default:
+          throw new IllegalStateException("unrecognized parser event");
+      }
+    }
+
+  }
+
+  private Object jsonValue(JsonValue value) {
+    if (value == JsonValue.NULL) {
+      return null;
+    }
+    if (value == JsonValue.TRUE) {
+      return true;
+    }
+    if (value == JsonValue.FALSE) {
+      return false;
+    }
+    if (value instanceof JsonString) {
+      return ((JsonString) value).getString();
+    }
+    if (value instanceof JsonNumber) {
+      final JsonNumber number = (JsonNumber) value;
+      if (number.isIntegral()) {
+        return number.bigIntegerValue();
+      }
+      else {
+        return number.bigDecimalValue();
+      }
+    }
+    throw new IllegalStateException("unrecognized JSON data type");
+  }
+
   private void writeString(String name, String namespace, String type,
-      String value) throws XMLStreamException {
+      String value, boolean includeXsiType) throws XMLStreamException {
     writeStartElement(name, namespace, XmlViewConstants.VALUE_QNAME);
-    if (getOptions().isEnabled(WriterKeys.INCLUDE_XML_XSI_TYPE)) {
+    if (includeXsiType
+        || getOptions().isEnabled(WriterKeys.INCLUDE_XML_XSI_TYPE)) {
       writer.writeAttribute(XmlViewConstants.XSI_NAMESPACE,
           XmlViewConstants.XSI_TYPE_NAME, type);
     }

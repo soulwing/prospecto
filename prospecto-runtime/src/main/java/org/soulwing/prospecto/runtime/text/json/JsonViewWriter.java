@@ -18,6 +18,8 @@
  */
 package org.soulwing.prospecto.runtime.text.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,8 +30,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.json.Json;
+import javax.json.JsonStructure;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
+import javax.json.stream.JsonParser;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
@@ -255,6 +259,9 @@ class JsonViewWriter extends AbstractViewWriter {
     else if (value == null || value.toString() == null) {
       writeNull(name);
     }
+    else if (value instanceof JsonStructure) {
+      writeJsonStructure(name, (JsonStructure) value);
+    }
     else {
       writeString(name, value.toString());
     }
@@ -323,4 +330,48 @@ class JsonViewWriter extends AbstractViewWriter {
     }
   }
 
+  private void writeJsonStructure(String name, JsonStructure value) {
+    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    Json.createWriter(outputStream).write(value);
+    final JsonParser parser =
+        Json.createParser(new ByteArrayInputStream(outputStream.toByteArray()));
+    if (name != null && contextStack.peek() != GeneratorContext.ARRAY) {
+      generator.writeKey(name);
+    }
+
+    while (parser.hasNext()) {
+      final JsonParser.Event event = parser.next();
+      switch (event) {
+        case KEY_NAME:
+          generator.writeKey(parser.getString());
+          break;
+        case START_OBJECT:
+          generator.writeStartObject();
+          break;
+        case START_ARRAY:
+          generator.writeStartArray();
+          break;
+        case END_OBJECT:
+        case END_ARRAY:
+          generator.writeEnd();
+          break;
+        case VALUE_NULL:
+          generator.writeNull();
+          break;
+        case VALUE_FALSE:
+          generator.write(false);
+          break;
+        case VALUE_TRUE:
+          generator.write(true);
+          break;
+        case VALUE_NUMBER:
+        case VALUE_STRING:
+          generator.write(parser.getValue());
+          break;
+        default:
+          throw new IllegalStateException("unrecognized parser event");
+      }
+    }
+
+  }
 }
