@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Carl Harris
  */
-abstract class Singleton<T> {
+public abstract class Singleton<T> {
 
   private final Lock lock = new ReentrantLock();
 
