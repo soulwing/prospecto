@@ -1,0 +1,17 @@
+org.soulwing.prospecto
+org.soulwing.prospecto.api
+org.soulwing.prospecto.api.association
+org.soulwing.prospecto.api.converter
+org.soulwing.prospecto.api.discriminator
+org.soulwing.prospecto.api.factory
+org.soulwing.prospecto.api.json
+org.soulwing.prospecto.api.listener
+org.soulwing.prospecto.api.meta
+org.soulwing.prospecto.api.options
+org.soulwing.prospecto.api.reference
+org.soulwing.prospecto.api.scope
+org.soulwing.prospecto.api.splice
+org.soulwing.prospecto.api.template
+org.soulwing.prospecto.api.text
+org.soulwing.prospecto.api.url
+org.soulwing.prospecto.spi
