@@ -24,7 +24,7 @@ import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.template.SpliceNode;
 
 /**
- * An handler for a view splice.
+ * A handler for a view splice.
  *
  * @author Carl Harris
  */
