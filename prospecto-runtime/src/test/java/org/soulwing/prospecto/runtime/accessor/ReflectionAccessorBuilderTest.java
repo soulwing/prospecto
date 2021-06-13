@@ -20,7 +20,10 @@ package org.soulwing.prospecto.runtime.accessor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
+
+import java.util.Optional;
 
 import org.junit.Test;
 import org.soulwing.prospecto.api.AccessType;
@@ -37,6 +40,8 @@ public class ReflectionAccessorBuilderTest {
   private static final Object PUBLIC_FIELD_VALUE = new Object();
   private static final Object PUBLIC_METHOD_VALUE = new Object();
   private static final Object PRIVATE_METHOD_VALUE = new Object();
+
+  private static final String OPTIONAL_VALUE = "optionalValue";
 
   private ReflectionAccessorBuilder accessorBuilder =
       new ReflectionAccessorBuilder(MockModel.class);
@@ -158,8 +163,6 @@ public class ReflectionAccessorBuilderTest {
     assertThat(accessor.get(model), is(sameInstance(other)));
   }
 
-
-
   public interface IMockModel {
     Object getPublicMethod();
   }
@@ -194,6 +197,58 @@ public class ReflectionAccessorBuilderTest {
 
   }
 
+  @Test
+  public void testPublicExtendedInterfaceMethodWithOptional() throws Exception {
+    final ReflectionAccessorBuilder accessorBuilder =
+        new ReflectionAccessorBuilder(IMockModelWithOptional.class);
+    final IMockModelWithOptional model = new MockModelWithOptional();
 
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
+
+    assertThat(accessor.get(model), is(sameInstance(OPTIONAL_VALUE)));
+  }
+
+  @Test
+  public void testPublicSubInterfacemethodWithOptional() throws Exception {
+    final ReflectionAccessorBuilder accessorBuilder =
+        new ReflectionAccessorBuilder(IMockSubModelWithOptional.class);
+    final IMockSubModelWithOptional model = new MockModelWithOptional();
+
+    final Accessor accessor = accessorBuilder
+        .propertyName("publicMethod")
+        .accessType(AccessType.PROPERTY)
+        .build();
+
+    assertThat(accessor.get(model), is(sameInstance(OPTIONAL_VALUE)));
+    accessor.set(model, "other");
+    assertThat(accessor.get(model), is(sameInstance("other")));
+    accessor.set(model, null);
+    assertThat(accessor.get(model), is(nullValue()));
+  }
+
+  public interface IMockModelWithOptional {
+    Optional<String> getPublicMethod();
+  }
+
+  public interface IMockSubModelWithOptional extends IMockModelWithOptional {
+    void setPublicMethod(String value);
+  }
+
+  public class MockModelWithOptional implements IMockSubModelWithOptional {
+
+    private String publicValue = OPTIONAL_VALUE;
+
+    @Override
+    public Optional<String> getPublicMethod() {
+      return Optional.ofNullable(publicValue);
+    }
+
+    public void setPublicMethod(String value) {
+      this.publicValue = value;
+    }
+  }
 
 }

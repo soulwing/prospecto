@@ -23,7 +23,9 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.EnumSet;
+import java.util.Optional;
 
 import org.soulwing.prospecto.api.AccessMode;
 
@@ -33,7 +35,6 @@ import org.soulwing.prospecto.api.AccessMode;
  * @author Carl Harris
  */
 class ReflectionAccessorFactory {
-
 
   static Accessor field(Class<?> ownerClass, String name)
       throws NoSuchFieldException {
@@ -81,15 +82,31 @@ class ReflectionAccessorFactory {
       throw new NoSuchMethodException(declaringClass.getName()
           + " has no property named '" + name + "'");
     }
+
+    boolean optionalProperty = false;
     if (readMethod != null) {
       supportedModes.add(AccessMode.READ);
+      optionalProperty =
+          Optional.class.isAssignableFrom(readMethod.getReturnType());
+      if (optionalProperty) {
+        final Class<?> returnType = (Class<?>)
+            ((ParameterizedType) readMethod.getGenericReturnType())
+                .getActualTypeArguments()[0];
+        if (writeMethod == null) {
+          writeMethod = findSetter(declaringClass, name, returnType);
+        }
+      }
     }
+
     if (writeMethod != null) {
       supportedModes.add(AccessMode.WRITE);
     }
 
-    return new PropertyAccessor(declaringClass, name, readMethod,
-        writeMethod, supportedModes);
+    return optionalProperty ?
+        new OptionalPropertyAccessor(declaringClass, name, readMethod,
+            writeMethod, supportedModes)
+        : new PropertyAccessor(declaringClass, name, readMethod,
+              writeMethod, supportedModes);
   }
 
   private static PropertyDescriptor findDescriptor(Class<?> type, String name,
@@ -113,6 +130,23 @@ class ReflectionAccessorFactory {
     }
 
     return null;
+  }
+
+  private static Method findSetter(Class<?> type, String name,
+      Class<?> parameterType) {
+    name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+    try {
+      return type.getMethod(name, parameterType);
+    }
+    catch (NoSuchMethodException ex) {
+      if (type.isInterface()) {
+        for (final Class<?> interfaceType : type.getInterfaces()) {
+          final Method setter = findSetter(interfaceType, name, parameterType);
+          if (setter != null) return setter;
+        }
+      }
+      return null;
+    }
   }
 
   private static boolean satisfiesAccessMode(PropertyDescriptor descriptor,
