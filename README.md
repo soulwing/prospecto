@@ -20,6 +20,9 @@ a textual representation of your model to create or update domain model instance
 In other words, you can use Prospecto to facilitate "editing" of your domain 
 model instances, as well as creating new model instances.
 
+As of Propsecto version 2, the library requires a Java 11+ compiler and runtime
+environment.
+
 Documentation
 -------------
 
