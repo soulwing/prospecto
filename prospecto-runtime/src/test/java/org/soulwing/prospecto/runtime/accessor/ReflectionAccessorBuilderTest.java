@@ -212,7 +212,7 @@ public class ReflectionAccessorBuilderTest {
   }
 
   @Test
-  public void testPublicSubInterfacemethodWithOptional() throws Exception {
+  public void testPublicSubInterfaceMethodWithOptional() throws Exception {
     final ReflectionAccessorBuilder accessorBuilder =
         new ReflectionAccessorBuilder(IMockSubModelWithOptional.class);
     final IMockSubModelWithOptional model = new MockModelWithOptional();
