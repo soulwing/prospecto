@@ -22,12 +22,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
 
+import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -140,7 +140,7 @@ public class ReflectionResourceTypeIntrospectorTest {
       {
         oneOf(descriptorFactory).newDescriptor(with(MockResource.class),
             with(PATH), with(MODEL_PATH.concat(Object.class)),
-            (PathTemplateResolver) with(instanceOf(MockTemplateResolver.class)));
+            with(Matchers.<PathTemplateResolver>instanceOf(MockTemplateResolver.class)));
         will(returnValue(typeDescriptor));
       }
     };

@@ -20,10 +20,10 @@ package org.soulwing.prospecto.runtime.listener;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
+import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -139,11 +139,11 @@ public class LinkedListNotifiableViewListenersTest {
 
     context.checking(new Expectations() {
       {
-        oneOf(listener0).didExtractValue((ViewNodePropertyEvent)
-            with(hasProperty("value", sameInstance(value0))));
+        oneOf(listener0).didExtractValue(
+            with(Matchers.<ViewNodePropertyEvent>hasProperty("value", sameInstance(value0))));
         will(returnValue(value1));
-        oneOf(listener1).didExtractValue((ViewNodePropertyEvent)
-            with(hasProperty("value", sameInstance(value1))));
+        oneOf(listener1).didExtractValue(
+            with(Matchers.<ViewNodePropertyEvent>hasProperty("value", sameInstance(value1))));
         will(returnValue(value2));
       }
     });
@@ -168,11 +168,11 @@ public class LinkedListNotifiableViewListenersTest {
 
     context.checking(new Expectations() {
       {
-        oneOf(listener0).willInjectValue((ViewNodePropertyEvent)
-            with(hasProperty("value", sameInstance(value0))));
+        oneOf(listener0).willInjectValue(
+            with(Matchers.<ViewNodePropertyEvent>hasProperty("value", sameInstance(value0))));
         will(returnValue(value1));
-        oneOf(listener1).willInjectValue((ViewNodePropertyEvent)
-            with(hasProperty("value", sameInstance(value1))));
+        oneOf(listener1).willInjectValue(
+            with(Matchers.<ViewNodePropertyEvent>hasProperty("value", sameInstance(value1))));
         will(returnValue(value2));
       }
     });

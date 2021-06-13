@@ -19,7 +19,6 @@
 package org.soulwing.prospecto.runtime.template;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
@@ -30,6 +29,7 @@ import static org.hamcrest.Matchers.sameInstance;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -127,13 +127,13 @@ public class ConcreteViewTemplateTest {
         will(returnValue(mutableScope));
         oneOf(mutableScope).put(MODEL);
         oneOf(listeners).beforeTraversing(
-            (ViewTraversalEvent) with(allOf(
+            with(Matchers.<ViewTraversalEvent>allOf(
                 hasProperty("mode", equalTo(ViewMode.GENERATE)),
                 hasProperty("source", sameInstance(generatorTemplate)))));
         oneOf(generator).generate(MODEL, scopedViewContext);
         will(returnValue(Collections.singletonList(event)));
         oneOf(listeners).afterTraversing(
-            (ViewTraversalEvent) with(allOf(
+            with(Matchers.<ViewTraversalEvent>allOf(
                 hasProperty("mode", equalTo(ViewMode.GENERATE)),
                 hasProperty("source", sameInstance(generatorTemplate)))));
       }
@@ -154,7 +154,7 @@ public class ConcreteViewTemplateTest {
         will(returnValue(mutableScope));
         oneOf(mutableScope).put(MODEL);
         oneOf(listeners).beforeTraversing(
-            (ViewTraversalEvent) with(allOf(
+            with(Matchers.<ViewTraversalEvent>allOf(
                 hasProperty("mode", equalTo(ViewMode.GENERATE)),
                 hasProperty("source", sameInstance(generatorTemplate)))));
         oneOf(generator).generate(MODEL, scopedViewContext);
@@ -171,13 +171,13 @@ public class ConcreteViewTemplateTest {
     context.checking(new Expectations() {
       {
         oneOf(listeners).beforeTraversing(
-            (ViewTraversalEvent) with(allOf(
+            with(Matchers.<ViewTraversalEvent>allOf(
                 hasProperty("mode", equalTo(ViewMode.APPLY)),
                 hasProperty("source", sameInstance(applicatorTemplate)))));
         oneOf(viewApplicatorFactory).newApplicator(
             with(Object.class), with(applicator), with(view),
             with(scopedViewContext), with(DATA_KEY),
-            (ViewTraversalEvent) with(allOf(
+            with(Matchers.<ViewTraversalEvent>allOf(
                 hasProperty("mode", equalTo(ViewMode.APPLY)),
                 hasProperty("source", sameInstance(applicatorTemplate)))));
         will(returnValue(viewApplicator));
