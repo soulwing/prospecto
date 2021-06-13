@@ -20,20 +20,17 @@ package org.soulwing.prospecto.jackson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriterFactory;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
- * A Jackson {@link com.fasterxml.jackson.databind.JsonSerializer} for a
- * Prospecto {@link View}.
+ * A Jackson serializer for a Prospecto {@link View}.
  *
  * @author Carl Harris
  */
@@ -48,7 +45,7 @@ public class ViewSerializer extends StdSerializer<View> {
 
   @Override
   public void serialize(View view, JsonGenerator jsonGenerator,
-      SerializerProvider serializerProvider) throws IOException {
+      SerializerProvider serializerProvider) {
 
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     writerFactory.newWriter(view, outputStream).writeView();

@@ -20,22 +20,18 @@ package org.soulwing.prospecto.jackson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewReaderFactory;
-
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 /**
- * A Jackson {@link com.fasterxml.jackson.databind.JsonDeserializer} for a
- * Prospecto {@link View}.
+ * A Jackson deserializer for a Prospecto {@link View}.
  *
  * @author Carl Harris
  */
@@ -50,8 +46,7 @@ public class ViewDeserializer extends StdDeserializer<View> {
 
   @Override
   public View deserialize(JsonParser jsonParser,
-      DeserializationContext deserializationContext)
-      throws IOException, JsonProcessingException {
+      DeserializationContext deserializationContext) {
 
     final JsonNode tree = jsonParser.readValueAsTree();
     final ObjectMapper mapper = new ObjectMapper();
