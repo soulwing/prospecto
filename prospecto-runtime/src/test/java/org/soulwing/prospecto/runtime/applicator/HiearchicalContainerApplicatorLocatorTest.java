@@ -33,8 +33,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.template.SubtypeNode;
 import org.soulwing.prospecto.api.template.ViewNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link HierarchicalContainerApplicatorLocator}.
@@ -51,8 +51,7 @@ public class HiearchicalContainerApplicatorLocatorTest {
       HierarchicalContainerApplicatorLocator.INSTANCE;
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   private ContainerApplicator container;
@@ -70,10 +69,9 @@ public class HiearchicalContainerApplicatorLocatorTest {
   private ViewNode grandchildNode;
 
   @Mock
-  private SubtypeApplicator subtypeContainer;
+  private SubtypeNode subtypeNode;
 
-  @Mock
-  private ViewNode subtypeNode;
+  private MockSubtypeApplicator subtypeApplicator;
 
   private List<ViewEventApplicator> children = new LinkedList<>();
 
@@ -81,7 +79,8 @@ public class HiearchicalContainerApplicatorLocatorTest {
 
   @Before
   public void setUp() throws Exception {
-    children.addAll(Arrays.asList(subtypeContainer, child));
+    subtypeApplicator = new MockSubtypeApplicator(subtypeNode, grandchildren);
+    children.addAll(Arrays.asList(subtypeApplicator, child));
     grandchildren.add(grandchild);
   }
 
@@ -134,10 +133,6 @@ public class HiearchicalContainerApplicatorLocatorTest {
   private Expectations subtypeContainerExpectations() {
     return new Expectations() {
       {
-        allowing(subtypeContainer).getChildren();
-        will(returnValue(grandchildren));
-        allowing(subtypeContainer).getNode();
-        will(returnValue(subtypeNode));
         allowing(subtypeNode).getModelType();
         will(returnValue(A.class));
         allowing(grandchild).getNode();
@@ -150,10 +145,30 @@ public class HiearchicalContainerApplicatorLocatorTest {
     };
   }
 
-  private interface Base {}
+  private interface Base {
+  }
 
-  private interface A extends Base {}
+  private interface A extends Base {
+  }
 
-  private interface B extends Base {}
+  private interface B extends Base {
+  }
 
+  private static class MockSubtypeApplicator extends SubtypeApplicator {
+
+    public MockSubtypeApplicator(SubtypeNode node,
+        List<ViewEventApplicator> children) {
+      super(node, children);
+    }
+
+    @Override
+    public List<ViewEventApplicator> getChildren() {
+      return super.getChildren();
+    }
+
+    @Override
+    public SubtypeNode getNode() {
+      return super.getNode();
+    }
+  }
 }

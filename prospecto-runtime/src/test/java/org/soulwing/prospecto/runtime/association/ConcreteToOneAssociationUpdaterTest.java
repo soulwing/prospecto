@@ -37,8 +37,6 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
-import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
-import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery;
 
 /**
  * Unit tests for {@link ConcreteToOneAssociationUpdater}.
@@ -48,8 +46,7 @@ import org.soulwing.prospecto.runtime.testing.JUnitRuleClassImposterizingMockery
 public class ConcreteToOneAssociationUpdaterTest {
 
   @Rule
-  public final JUnitRuleMockery context =
-      new JUnitRuleClassImposterizingMockery();
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock
   ScopedViewContext viewContext;
@@ -59,9 +56,6 @@ public class ConcreteToOneAssociationUpdaterTest {
 
   @Mock
   ObjectFactoryService objectFactory;
-
-  @Mock
-  AbstractContainerNode node;
 
   @Mock
   AssociationDescriptorFactory descriptorFactory;
@@ -89,6 +83,8 @@ public class ConcreteToOneAssociationUpdaterTest {
 
   @Mock
   InjectableViewEntity associateEntity;
+
+  MockContainerNode node = new MockContainerNode();
 
   ConcreteToOneAssociationUpdater updater;
 
