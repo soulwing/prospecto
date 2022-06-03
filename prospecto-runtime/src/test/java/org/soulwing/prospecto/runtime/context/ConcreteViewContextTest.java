@@ -384,6 +384,8 @@ public class ConcreteViewContextTest {
     viewContext.getReferenceResolvers().append(resolver);
     viewContext.getAssociationManagers().append(associationManager);
     viewContext.getObjectFactories().append(objectFactory);
+    final MockScope0Type model = new MockScope0Type() {};
+    viewContext.pushFrame(MockScope0Type.class, model);
 
     ViewContext contextCopy = new ConcreteViewContext(viewContext);
     viewContext.getScopes().toList().clear();
@@ -404,6 +406,7 @@ public class ConcreteViewContextTest {
     assertThat(contextCopy.getObjectFactories().toList(),
         contains(objectFactory));
     assertThat(contextCopy.getOptions(), is(sameInstance(options)));
+    assertThat(contextCopy.currentModelPath(), contains(MockScope0Type.class));
   }
 
 }

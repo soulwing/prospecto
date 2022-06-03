@@ -105,6 +105,7 @@ class ConcreteViewContext implements ScopedViewContext {
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
     this.objectFactories.toList().addAll(source.getObjectFactories().toList());
+    this.scopeStack.addAll(((ConcreteViewContext) source).scopeStack);
   }
 
   @Override
