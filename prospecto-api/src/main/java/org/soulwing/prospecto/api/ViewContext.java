@@ -25,7 +25,6 @@ import org.soulwing.prospecto.api.association.AssociationManagers;
 import org.soulwing.prospecto.api.converter.ValueTypeConverter;
 import org.soulwing.prospecto.api.converter.ValueTypeConverters;
 import org.soulwing.prospecto.api.factory.ObjectFactories;
-import org.soulwing.prospecto.api.factory.ObjectFactory;
 import org.soulwing.prospecto.api.listener.ViewListeners;
 import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
@@ -175,10 +174,24 @@ public interface ViewContext extends MutableScope {
    * Gets the sequence of model types encountered on view nodes of type
    * object and array-of-object that form the model path to the current view
    * node as a template is being evaluated to produce a view.
-   * @return sequence of model types which is empty before visiting the root
-   *   view node
+   * @return sequence of model types which is typically empty before visiting
+   *   the root view node
    */
   List<Class<?>> currentModelPath();
+
+  /**
+   * Pushes a frame onto the context stack.
+   * <p>
+   * The intended use is to create a base sequence of model types and place
+   * the corresponding model objects into scope before evaluating the root
+   * node of a view. This can be helpful for use cases such as constructing
+   * parameterized URL paths that include contextual elements that are not
+   * part of the root object for a view.
+   * @param modelType class for the model type to associate with the stack frame
+   * @param model the corresponding model object to place in scope via the frame
+   * @param <T> the model type
+   */
+  <T> void pushFrame(Class<? super T> modelType, T model);
 
   /**
    * Gets a singleton object of the given type.

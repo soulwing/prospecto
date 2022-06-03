@@ -193,6 +193,12 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
+  public <T> void pushFrame(Class<? super T> modelType, T model) {
+    push(null, modelType);
+    put(model);
+  }
+
+  @Override
   public void push(String name, Class<?> modelType) {
     scopeStack.push(new ScopeFrame(name, modelType));
   }

@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
@@ -339,6 +340,26 @@ public class ConcreteViewContextTest {
 
     viewContext.pop();
     assertThat(viewContext.currentModelPath(), is(empty()));
+  }
+
+  @Test
+  public void testPushFrame() throws Exception {
+    final MockScope0Type model = new MockScope0Type() {};
+
+    viewContext.pushFrame(MockScope0Type.class, model);
+    assertThat(viewContext.currentModelPath(), is(not(empty())));
+
+    viewContext.push(null, MockScope1Type.class);
+    assertThat(viewContext.currentModelPath(),
+        is(equalTo(Arrays.asList(MockScope0Type.class,
+            MockScope1Type.class))));
+
+    assertThat(viewContext.get(MockScope0Type.class), is(sameInstance(model)));
+
+    viewContext.pop();
+    assertThat(viewContext.currentModelPath(),
+        is(equalTo(Arrays.<Class<?>>asList(MockScope0Type.class))));
+
   }
 
   @Test
