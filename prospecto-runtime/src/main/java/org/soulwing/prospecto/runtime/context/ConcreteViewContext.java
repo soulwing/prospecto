@@ -105,7 +105,7 @@ class ConcreteViewContext implements ScopedViewContext {
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
     this.objectFactories.toList().addAll(source.getObjectFactories().toList());
-    this.scopeStack.addAll(((ConcreteViewContext) source).scopeStack);
+    this.scopeStack.addAll(source.getStackFrames());
   }
 
   @Override
@@ -191,6 +191,12 @@ class ConcreteViewContext implements ScopedViewContext {
       }
     }
     return nodes;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T> List<T> getStackFrames() {
+    return (List<T>) scopeStack;
   }
 
   @Override

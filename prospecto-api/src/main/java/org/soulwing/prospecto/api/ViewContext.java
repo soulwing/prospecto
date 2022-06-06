@@ -180,6 +180,16 @@ public interface ViewContext extends MutableScope {
   List<Class<?>> currentModelPath();
 
   /**
+   * Gets the list of stack frames on the evaluation stack.
+   * <p>
+   * The intended use is by implementations of this interface. Users of the
+   * Prospecto API should not consider this as part of the view context API.
+   * @return list of stack frames
+   * @param <T> stack frame type
+   */
+  <T> List<T> getStackFrames();
+
+  /**
    * Pushes a frame onto the context stack.
    * <p>
    * The intended use is to create a base sequence of model types and place
