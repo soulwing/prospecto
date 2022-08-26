@@ -21,6 +21,8 @@ package org.soulwing.prospecto.runtime.url;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.url.UrlDecorator;
 import org.soulwing.prospecto.api.url.UrlDecorators;
 
@@ -54,10 +56,10 @@ public class LinkedListUrlDecorators implements UrlDecorators {
   }
 
   @Override
-  public String decorate(String url) {
+  public String decorate(String url, ViewNode node, ViewContext context) {
     String result = url;
     for (final UrlDecorator decorator : delegate) {
-      result = decorator.decorate(result);
+      result = decorator.decorate(result, node, context);
     }
     return result;
   }

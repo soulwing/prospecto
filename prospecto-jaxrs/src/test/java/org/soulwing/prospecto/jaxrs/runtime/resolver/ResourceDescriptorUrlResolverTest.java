@@ -86,14 +86,14 @@ public class ResourceDescriptorUrlResolverTest {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).currentModelPath();
-        will(returnValue(Arrays.asList(Object.class)));
+        will(returnValue(Collections.singletonList(Object.class)));
         oneOf(descriptor).matches(ModelPath.with(Object.class));
         will(returnValue(true));
         oneOf(descriptor).path();
         will(returnValue(PATH));
         oneOf(viewContext).getUrlDecorators();
         will(returnValue(decorators));
-        oneOf(decorators).decorate(PATH);
+        oneOf(decorators).decorate(PATH, viewNode, viewContext);
         will(returnValue(DECORATED_PATH));
         oneOf(descriptor).templateResolver();
         will(returnValue(templateResolver));
@@ -169,7 +169,7 @@ public class ResourceDescriptorUrlResolverTest {
 
         oneOf(viewContext).getUrlDecorators();
         will(returnValue(decorators));
-        oneOf(decorators).decorate(PATH);
+        oneOf(decorators).decorate(PATH, viewNode, viewContext);
         will(returnValue(DECORATED_PATH));
 
         oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
@@ -197,7 +197,7 @@ public class ResourceDescriptorUrlResolverTest {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).currentModelPath();
-        will(returnValue(Arrays.asList(Object.class)));
+        will(returnValue(Collections.singletonList(Object.class)));
 
         allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
@@ -217,7 +217,7 @@ public class ResourceDescriptorUrlResolverTest {
 
         oneOf(viewContext).getUrlDecorators();
         will(returnValue(decorators));
-        oneOf(decorators).decorate(PATH);
+        oneOf(decorators).decorate(PATH, viewNode, viewContext);
         will(returnValue(DECORATED_PATH));
 
 
@@ -245,7 +245,7 @@ public class ResourceDescriptorUrlResolverTest {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).currentModelPath();
-        will(returnValue(Arrays.asList(Object.class)));
+        will(returnValue(Collections.singletonList(Object.class)));
 
         allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
@@ -265,7 +265,7 @@ public class ResourceDescriptorUrlResolverTest {
 
         oneOf(viewContext).getUrlDecorators();
         will(returnValue(decorators));
-        oneOf(decorators).decorate(PATH);
+        oneOf(decorators).decorate(PATH, viewNode, viewContext);
         will(returnValue(DECORATED_PATH));
 
         oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
@@ -292,7 +292,7 @@ public class ResourceDescriptorUrlResolverTest {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).currentModelPath();
-        will(returnValue(Arrays.asList(Object.class)));
+        will(returnValue(Collections.singletonList(Object.class)));
 
         allowing(descriptor1).modelPath();
         will(returnValue(modelPath1));
@@ -312,7 +312,7 @@ public class ResourceDescriptorUrlResolverTest {
 
         oneOf(viewContext).getUrlDecorators();
         will(returnValue(decorators));
-        oneOf(decorators).decorate(PATH);
+        oneOf(decorators).decorate(PATH, viewNode, viewContext);
         will(returnValue(DECORATED_PATH));
 
         oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);

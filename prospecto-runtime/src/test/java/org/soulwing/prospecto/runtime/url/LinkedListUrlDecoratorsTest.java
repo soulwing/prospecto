@@ -28,6 +28,8 @@ import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.ViewNode;
 import org.soulwing.prospecto.api.url.UrlDecorator;
 
 /**
@@ -46,6 +48,12 @@ public class LinkedListUrlDecoratorsTest {
   @Mock
   private UrlDecorator decorator0, decorator1;
 
+  @Mock
+  private ViewNode viewNode;
+
+  @Mock
+  private ViewContext viewContext;
+
   private LinkedListUrlDecorators decorators = new LinkedListUrlDecorators();
 
   @Test
@@ -62,17 +70,19 @@ public class LinkedListUrlDecoratorsTest {
 
   @Test
   public void testDecorate() throws Exception {
-    assertThat(decorators.decorate(URL_BEFORE), is(URL_BEFORE));
+    assertThat(decorators.decorate(URL_BEFORE, viewNode, viewContext),
+        is(URL_BEFORE));
 
     decorators.append(decorator0);
     context.checking(new Expectations() {
       {
-        oneOf(decorator0).decorate(URL_BEFORE);
+        oneOf(decorator0).decorate(URL_BEFORE, viewNode, viewContext);
         will(returnValue(URL_AFTER));
       }
     });
 
-    assertThat(decorators.decorate(URL_BEFORE), is(URL_AFTER));
+    assertThat(decorators.decorate(URL_BEFORE, viewNode, viewContext),
+        is(URL_AFTER));
   }
 
 }

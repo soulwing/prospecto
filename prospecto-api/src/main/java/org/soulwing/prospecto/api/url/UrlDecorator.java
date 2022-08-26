@@ -18,6 +18,9 @@
  */
 package org.soulwing.prospecto.api.url;
 
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.ViewNode;
+
 /**
  * A decorator for a URL template string.
  * <p>
@@ -35,8 +38,10 @@ public interface UrlDecorator {
    * An implementation may modify the input URL or completely replace it
    * as desired.
    * @param url source URL
+   * @param node the URL view node that is being resolved
+   * @param context view context
    * @return resulting URL (must not be {@code null})
    */
-  String decorate(String url);
+  String decorate(String url, ViewNode node, ViewContext context);
 
 }

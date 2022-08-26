@@ -20,6 +20,9 @@ package org.soulwing.prospecto.api.url;
 
 import java.util.List;
 
+import org.soulwing.prospecto.api.ViewContext;
+import org.soulwing.prospecto.api.template.ViewNode;
+
 /**
  * An ordered set of {@link UrlDecorator} instances.
  * <p>
@@ -62,10 +65,12 @@ public interface UrlDecorators {
   /**
    * Decorates the given URL template string by invoking each of the registered
    * decorators in order.
-   * @param url the subject URL template
+   * @param url source URL
+   * @param node the URL view node that is being resolved
+   * @param context view context
    * @return the result of composing the decorators in order to produce
    *    a final result
    */
-  String decorate(String url);
+  String decorate(String url, ViewNode node, ViewContext context);
 
 }
