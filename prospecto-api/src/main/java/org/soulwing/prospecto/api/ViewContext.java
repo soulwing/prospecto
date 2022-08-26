@@ -30,6 +30,7 @@ import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.reference.ReferenceResolvers;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scopes;
+import org.soulwing.prospecto.api.url.UrlDecorators;
 
 /**
  * A context used when evaluating view template with a model to produce a view.
@@ -141,6 +142,13 @@ public interface ViewContext extends MutableScope {
    * @return factories collection
    */
   ObjectFactories getObjectFactories();
+
+  /**
+   * Gets the collection of URL decorators that will be used to manipulate
+   * the URL template string during URL resolution.
+   * @return
+   */
+  UrlDecorators getUrlDecorators();
 
   /**
    * Gets the configuration options associated with this context.

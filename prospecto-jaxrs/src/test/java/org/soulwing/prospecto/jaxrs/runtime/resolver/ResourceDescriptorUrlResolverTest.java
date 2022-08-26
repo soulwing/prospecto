@@ -32,6 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.template.ViewNode;
+import org.soulwing.prospecto.api.url.UrlDecorators;
 import org.soulwing.prospecto.jaxrs.api.AmbiguousPathResolutionException;
 import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 import org.soulwing.prospecto.jaxrs.runtime.ReflectionService;
@@ -53,6 +54,10 @@ public class ResourceDescriptorUrlResolverTest {
   
   private static final String PATH = "pathTemplate";
 
+  private static final String DECORATED_PATH = "decoratedPathTemplate";
+
+  private static final String RESOLVED_PATH = "resolvedPath";
+
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
   
@@ -71,6 +76,9 @@ public class ResourceDescriptorUrlResolverTest {
   @Mock
   private ReflectionService reflectionService;
 
+  @Mock
+  private UrlDecorators decorators;
+
   private ResourceDescriptorUrlResolver resolver = new ResourceDescriptorUrlResolver();
 
   @Test
@@ -83,16 +91,20 @@ public class ResourceDescriptorUrlResolverTest {
         will(returnValue(true));
         oneOf(descriptor).path();
         will(returnValue(PATH));
+        oneOf(viewContext).getUrlDecorators();
+        will(returnValue(decorators));
+        oneOf(decorators).decorate(PATH);
+        will(returnValue(DECORATED_PATH));
         oneOf(descriptor).templateResolver();
         will(returnValue(templateResolver));
-        oneOf(templateResolver).resolve(PATH, viewContext);
-        will(returnValue(PATH));
+        oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
+        will(returnValue(RESOLVED_PATH));
       }
     });
 
     resolver.addDescriptor(descriptor);
     assertThat(resolver.resolve(viewNode, viewContext),
-        is(equalTo(PATH)));
+        is(equalTo(RESOLVED_PATH)));
   }
 
   @Test(expected = AmbiguousPathResolutionException.class)
@@ -155,15 +167,20 @@ public class ResourceDescriptorUrlResolverTest {
         oneOf(descriptor1).path();
         will(returnValue(PATH));
 
-        oneOf(templateResolver).resolve(PATH, viewContext);
-        will(returnValue(PATH));
+        oneOf(viewContext).getUrlDecorators();
+        will(returnValue(decorators));
+        oneOf(decorators).decorate(PATH);
+        will(returnValue(DECORATED_PATH));
+
+        oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
+        will(returnValue(RESOLVED_PATH));
       }
     });
 
     resolver.addDescriptor(descriptor1);
     resolver.addDescriptor(descriptor2);
     assertThat(resolver.resolve(viewNode, viewContext),
-        is(equalTo(PATH)));
+        is(equalTo(RESOLVED_PATH)));
   }
 
   @Test
@@ -198,15 +215,21 @@ public class ResourceDescriptorUrlResolverTest {
         oneOf(descriptor1).path();
         will(returnValue(PATH));
 
-        oneOf(templateResolver).resolve(PATH, viewContext);
-        will(returnValue(PATH));
+        oneOf(viewContext).getUrlDecorators();
+        will(returnValue(decorators));
+        oneOf(decorators).decorate(PATH);
+        will(returnValue(DECORATED_PATH));
+
+
+        oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
+        will(returnValue(RESOLVED_PATH));
       }
     });
 
     resolver.addDescriptor(descriptor1);
     resolver.addDescriptor(descriptor2);
     assertThat(resolver.resolve(viewNode, viewContext),
-        is(equalTo(PATH)));
+        is(equalTo(RESOLVED_PATH)));
   }
 
   @Test
@@ -240,15 +263,20 @@ public class ResourceDescriptorUrlResolverTest {
         oneOf(descriptor1).path();
         will(returnValue(PATH));
 
-        oneOf(templateResolver).resolve(PATH, viewContext);
-        will(returnValue(PATH));
+        oneOf(viewContext).getUrlDecorators();
+        will(returnValue(decorators));
+        oneOf(decorators).decorate(PATH);
+        will(returnValue(DECORATED_PATH));
+
+        oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
+        will(returnValue(RESOLVED_PATH));
       }
     });
 
     resolver.addDescriptor(descriptor1);
     resolver.addDescriptor(descriptor2);
     assertThat(resolver.resolve(viewNode, viewContext),
-        is(equalTo(PATH)));
+        is(equalTo(RESOLVED_PATH)));
   }
 
   @Test
@@ -282,15 +310,20 @@ public class ResourceDescriptorUrlResolverTest {
         oneOf(descriptor1).path();
         will(returnValue(PATH));
 
-        oneOf(templateResolver).resolve(PATH, viewContext);
-        will(returnValue(PATH));
+        oneOf(viewContext).getUrlDecorators();
+        will(returnValue(decorators));
+        oneOf(decorators).decorate(PATH);
+        will(returnValue(DECORATED_PATH));
+
+        oneOf(templateResolver).resolve(DECORATED_PATH, viewContext);
+        will(returnValue(RESOLVED_PATH));
       }
     });
 
     resolver.addDescriptor(descriptor1);
     resolver.addDescriptor(descriptor2);
     assertThat(resolver.resolve(viewNode, viewContext),
-        is(equalTo(PATH)));
+        is(equalTo(RESOLVED_PATH)));
   }
 
   @Test(expected = ResourceNotFoundException.class)

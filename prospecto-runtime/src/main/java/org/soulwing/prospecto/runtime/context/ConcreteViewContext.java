@@ -30,6 +30,7 @@ import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.scope.MutableScope;
 import org.soulwing.prospecto.api.scope.Scope;
 import org.soulwing.prospecto.api.scope.Scopes;
+import org.soulwing.prospecto.api.url.UrlDecorators;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
 import org.soulwing.prospecto.runtime.association.LinkedListAssociationManagerService;
 import org.soulwing.prospecto.runtime.converter.LinkedListValueTypeConverterService;
@@ -42,6 +43,7 @@ import org.soulwing.prospecto.runtime.reference.LinkedListReferenceResolverServi
 import org.soulwing.prospecto.runtime.reference.ReferenceResolverService;
 import org.soulwing.prospecto.runtime.scope.ConcreteMutableScope;
 import org.soulwing.prospecto.runtime.scope.LinkedListScopes;
+import org.soulwing.prospecto.runtime.url.LinkedListUrlDecorators;
 import org.soulwing.prospecto.runtime.util.StringUtil;
 
 /**
@@ -68,6 +70,9 @@ class ConcreteViewContext implements ScopedViewContext {
 
   private final ObjectFactoryService objectFactories =
       new LinkedListObjectFactoryService();
+
+  private final UrlDecorators urlDecorators =
+      new LinkedListUrlDecorators();
 
   private final Options options;
 
@@ -105,6 +110,7 @@ class ConcreteViewContext implements ScopedViewContext {
     this.referenceResolvers.toList().addAll(source.getReferenceResolvers().toList());
     this.collectionManagers.toList().addAll(source.getAssociationManagers().toList());
     this.objectFactories.toList().addAll(source.getObjectFactories().toList());
+    this.urlDecorators.toList().addAll(source.getUrlDecorators().toList());
     this.scopeStack.addAll(source.getStackFrames());
   }
 
@@ -155,6 +161,11 @@ class ConcreteViewContext implements ScopedViewContext {
   @Override
   public ObjectFactoryService getObjectFactories() {
     return objectFactories;
+  }
+
+  @Override
+  public UrlDecorators getUrlDecorators() {
+    return urlDecorators;
   }
 
   @Override

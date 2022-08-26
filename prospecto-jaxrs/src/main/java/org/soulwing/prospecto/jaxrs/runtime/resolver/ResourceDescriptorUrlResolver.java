@@ -121,7 +121,9 @@ public class ResourceDescriptorUrlResolver implements ConfigurableUrlResolver {
   public String resolve(ViewNode node, ViewContext context) {
     final ResourceDescriptor descriptor = findBestMatch(
         ModelPath.with(context.currentModelPath()));
-    return descriptor.templateResolver().resolve(descriptor.path(), context);
+    final String urlTemplate =
+        context.getUrlDecorators().decorate(descriptor.path());
+    return descriptor.templateResolver().resolve(urlTemplate, context);
   }
 
   private ResourceDescriptor findBestMatch(ModelPath modelPath) {
