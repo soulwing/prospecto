@@ -19,13 +19,11 @@
 package org.soulwing.prospecto.jaxrs.api;
 
 import java.util.Map;
-
 import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.jaxrs.api.PathTemplateResolver;
 
 /**
  * A template resolver that builds a URI from map of parameters.
@@ -41,7 +39,7 @@ public abstract class MapPathTemplateResolver implements PathTemplateResolver {
   public final String resolve(String template, ViewContext context) {
     Map<String, Object> templateMap = templateMap(context);
     try {
-      return UriBuilder.fromPath(template)
+      return UriBuilder.fromUri(template)
           .buildFromMap(templateMap)
           .toString();
     } catch (IllegalArgumentException e) {
