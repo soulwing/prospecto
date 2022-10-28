@@ -64,7 +64,7 @@ public class JsonSpliceHandler implements SpliceHandler {
    * A consumer interface for a JSON splice node.
    */
   public interface Consumer {
-    void apply(JsonStructure structure, SpliceNode node, ViewContext context);
+    Object apply(JsonStructure structure, SpliceNode node, ViewContext context);
   }
 
   private final ViewReaderFactory readerFactory;
@@ -103,7 +103,7 @@ public class JsonSpliceHandler implements SpliceHandler {
   }
 
   @Override
-  public void apply(SpliceNode node, View view, ViewContext context)
+  public Object apply(SpliceNode node, View view, ViewContext context)
       throws ViewInputException {
     final Consumer consumer = node.get(Consumer.class);
     if (consumer == null) {
@@ -112,7 +112,7 @@ public class JsonSpliceHandler implements SpliceHandler {
     }
     final JsonPTarget target = new JsonPTarget();
     writerFactory.newWriter(view).writeView(target);
-    consumer.apply(target.toJson(), node, context);
+    return consumer.apply(target.toJson(), node, context);
   }
 
 }

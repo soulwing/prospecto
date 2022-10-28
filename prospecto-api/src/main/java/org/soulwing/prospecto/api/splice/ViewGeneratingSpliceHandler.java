@@ -64,8 +64,9 @@ public abstract class ViewGeneratingSpliceHandler implements SpliceHandler {
    * @throws ViewInputException
    */
   @Override
-  public void apply(SpliceNode node, View view, ViewContext context)
+  public Object apply(SpliceNode node, View view, ViewContext context)
       throws ViewInputException {
+    return null;
   }
 
   /**

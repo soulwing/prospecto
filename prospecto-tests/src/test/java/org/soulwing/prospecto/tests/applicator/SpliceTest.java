@@ -44,10 +44,11 @@ public class SpliceTest extends ViewApplicatorTestBase {
     }
 
     @Override
-    public void apply(SpliceNode node, View view, ViewContext context)
+    public Object apply(SpliceNode node, View view, ViewContext context)
         throws ViewInputException {
       node.get(ViewTemplate.class).createApplicator(view, context)
           .update(context.get(OtherModel.class));
+      return null;
     }
   };
 

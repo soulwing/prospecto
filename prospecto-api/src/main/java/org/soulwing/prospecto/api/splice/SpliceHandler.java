@@ -30,6 +30,10 @@ import org.soulwing.prospecto.api.template.SpliceNode;
  */
 public interface SpliceHandler {
 
+  interface Injector {
+    void inject(Object target, Object value);
+  }
+
   /**
    * Generates the subview for a splice.
    * @param node splice node
@@ -44,10 +48,11 @@ public interface SpliceHandler {
    * @param node splice node
    * @param view view derived for the splice
    * @param context view context
+   * @return a value that will be passed to the injector, if configured on the node
    * @throws ViewInputException to indicate that there was a problem in
    *    applying the view
    */
-  void apply(SpliceNode node, View view, ViewContext context)
+  Object apply(SpliceNode node, View view, ViewContext context)
       throws ViewInputException;
 
 }

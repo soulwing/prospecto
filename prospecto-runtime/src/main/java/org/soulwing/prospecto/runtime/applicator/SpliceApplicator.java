@@ -26,6 +26,7 @@ import java.util.Objects;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.template.SpliceNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.view.ConcreteView;
@@ -41,17 +42,21 @@ class SpliceApplicator extends AbstractViewEventApplicator<SpliceNode> {
     super(node);
   }
 
+
   @Override
   Object onToModelValue(ViewEntity parentEntity,
       View.Event triggerEvent, Deque<View.Event> events,
       ScopedViewContext context) throws Exception {
-    node.getHandler().apply(node, slurpSplicedView(triggerEvent, events), context);
-    return null;
+    return node.getHandler().apply(node, slurpSplicedView(triggerEvent, events), context);
   }
 
   @Override
   public void inject(Object target, Object value, ScopedViewContext context)
       throws Exception {
+    final SpliceHandler.Injector injector = node.get(SpliceHandler.Injector.class);
+    if (injector != null) {
+      injector.inject(target, value);
+    }
   }
 
   private View slurpSplicedView(View.Event triggerEvent,

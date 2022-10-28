@@ -19,10 +19,10 @@
 package org.soulwing.prospecto.api.json;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,6 +39,7 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.template.SpliceNode;
 
 /**
@@ -47,6 +48,10 @@ import org.soulwing.prospecto.api.template.SpliceNode;
  * @author Carl Harris
  */
 public class JsonSpliceHandlerTest {
+
+  public static class MockObject {}
+
+  public static final Object INJECTED_VALUE = new Object();
 
   private final JsonObject object = Json.createObjectBuilder()
       .add("string", "string")
@@ -65,67 +70,80 @@ public class JsonSpliceHandlerTest {
       .build();
 
 
-  private JsonObject actualObject;
-  private JsonArray actualArray;
+  private Object injectedTarget;
+  private Object injectedValue;
 
   private JsonSpliceHandler.Producer objectProducer = new JsonSpliceHandler.Producer() {
     @Override
     public JsonStructure apply(SpliceNode node, ViewContext context) {
+      context.get(MockObject.class);
       return object;
     }
   };
 
   private JsonSpliceHandler.Consumer objectConsumer = new JsonSpliceHandler.Consumer() {
     @Override
-    public void apply(JsonStructure structure, SpliceNode node, ViewContext context) {
-      actualObject = (JsonObject) structure;
+    public Object apply(JsonStructure structure, SpliceNode node, ViewContext context) {
+      return INJECTED_VALUE;
     }
   };
 
   private JsonSpliceHandler.Producer arrayProducer = new JsonSpliceHandler.Producer() {
     @Override
     public JsonStructure apply(SpliceNode node, ViewContext context) {
+      context.get(MockObject.class);
       return array;
     }
   };
 
   private JsonSpliceHandler.Consumer arrayConsumer = new JsonSpliceHandler.Consumer() {
     @Override
-    public void apply(JsonStructure structure, SpliceNode node, ViewContext context) {
-      actualArray = (JsonArray) structure;
+    public Object apply(JsonStructure structure, SpliceNode node, ViewContext context) {
+      return INJECTED_VALUE;
     }
   };
 
+  private SpliceHandler.Injector injector = new SpliceHandler.Injector() {
+    @Override
+    public void inject(Object target, Object value) {
+      injectedTarget = target;
+      injectedValue = value;
+    }
+  };
   private ViewTemplate objectTemplate = ViewTemplateBuilderProducer
-      .object(Object.class)
+      .object(MockObject.class)
           .splice("json", JsonSpliceHandler.getInstance())
               .attribute(objectProducer)
               .attribute(objectConsumer)
+              .attribute(injector)
           .end()
       .build();
 
   private ViewTemplate arrayTemplate = ViewTemplateBuilderProducer
-      .object(Object.class)
+      .object(MockObject.class)
           .splice("json", JsonSpliceHandler.getInstance())
               .attribute(arrayProducer)
               .attribute(arrayConsumer)
+              .attribute(injector)
           .end()
       .build();
 
   private ViewTemplate bothTemplate = ViewTemplateBuilderProducer
-      .object(Object.class)
+      .object(MockObject.class)
           .splice("object", JsonSpliceHandler.getInstance())
               .attribute(objectProducer)
               .attribute(objectConsumer)
+              .attribute(injector)
           .splice("array", JsonSpliceHandler.getInstance())
               .attribute(arrayProducer)
               .attribute(arrayConsumer)
+              .attribute(injector)
           .end()
       .build();
 
   @Test
   public void testWithObjectSplice() throws Exception {
-    final Object model = new Object();
+    final MockObject model = new MockObject();
     final ViewContext viewContext = ViewContextProducer.newContext();
     final View view = objectTemplate.generateView(model, viewContext);
 
@@ -137,15 +155,16 @@ public class JsonSpliceHandlerTest {
     final View actualView = ViewReaderFactoryProducer.getFactory("JSON")
         .newReader(inputStream).readView();
 
-    final Object actualModel =
+    final MockObject actualModel = (MockObject)
         objectTemplate.createApplicator(actualView, viewContext).create();
     assertThat(actualModel, is(not(nullValue())));
-    assertThat(actualObject, is(equalTo(object)));
+    assertThat(injectedTarget, is(sameInstance(actualModel)));
+    assertThat(injectedValue, is(sameInstance(INJECTED_VALUE)));
   }
 
   @Test
   public void testWithArraySplice() throws Exception {
-    final Object model = new Object();
+    final MockObject model = new MockObject();
     final ViewContext viewContext = ViewContextProducer.newContext();
     final View view = arrayTemplate.generateView(model, viewContext);
 
@@ -157,15 +176,16 @@ public class JsonSpliceHandlerTest {
     final View actualView = ViewReaderFactoryProducer.getFactory("JSON")
         .newReader(inputStream).readView();
 
-    final Object actualModel =
+    final MockObject actualModel = (MockObject)
         arrayTemplate.createApplicator(actualView, viewContext).create();
     assertThat(actualModel, is(not(nullValue())));
-    assertThat(actualArray, is(equalTo(array)));
+    assertThat(injectedTarget, is(sameInstance(actualModel)));
+    assertThat(injectedValue, is(sameInstance(INJECTED_VALUE)));
   }
 
   @Test
   public void testWithBothSplices() throws Exception {
-    final Object model = new Object();
+    final MockObject model = new MockObject();
     final ViewContext viewContext = ViewContextProducer.newContext();
     final View view = bothTemplate.generateView(model, viewContext);
 
@@ -177,11 +197,11 @@ public class JsonSpliceHandlerTest {
     final View actualView = ViewReaderFactoryProducer.getFactory("JSON")
         .newReader(inputStream).readView();
 
-    final Object actualModel =
+    final MockObject actualModel = (MockObject)
         bothTemplate.createApplicator(actualView, viewContext).create();
     assertThat(actualModel, is(not(nullValue())));
-    assertThat(actualObject, is(equalTo(object)));
-    assertThat(actualArray, is(equalTo(array)));
+    assertThat(injectedTarget, is(sameInstance(actualModel)));
+    assertThat(injectedValue, is(sameInstance(INJECTED_VALUE)));
   }
 
 
