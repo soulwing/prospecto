@@ -105,7 +105,7 @@ public class JsonSpliceHandlerTest {
 
   private SpliceHandler.Injector injector = new SpliceHandler.Injector() {
     @Override
-    public void inject(Object target, Object value) {
+    public void inject(Object target, Object value, ViewContext context) {
       injectedTarget = target;
       injectedValue = value;
     }

@@ -55,7 +55,7 @@ class SpliceApplicator extends AbstractViewEventApplicator<SpliceNode> {
       throws Exception {
     final SpliceHandler.Injector injector = node.get(SpliceHandler.Injector.class);
     if (injector != null) {
-      injector.inject(target, value);
+      injector.inject(target, value, context);
     }
   }
 

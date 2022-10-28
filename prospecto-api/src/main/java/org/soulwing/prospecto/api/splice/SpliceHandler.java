@@ -30,8 +30,31 @@ import org.soulwing.prospecto.api.template.SpliceNode;
  */
 public interface SpliceHandler {
 
+  /**
+   * An optional injector component for a splice node.
+   * <p>
+   * When Prospecto applies a view to create or update an object, it proceeds
+   * in two phases -- "apply" and "inject". The handler's apply method is called
+   * during the "apply" phase. If you need access to the target model object
+   * for the splice, attach an Injector instance to the splice node. It will
+   * be called using the target model object (the parent of the splice) and
+   * the value returned by the apply method.
+   */
   interface Injector {
-    void inject(Object target, Object value);
+
+    /**
+     * Allows a splice node to inject a value into the target model object.
+     * @param target the target model object (the object associated with the
+     *   splice node's parent.
+     * @param value a value that was returned by the splice handler's
+     *    {@link #apply(SpliceNode, View, ViewContext)} method
+     * @param context view context
+     * @throws ViewInputException to indicate that a problem occurred
+     *    while injecting a value into the target model object
+     */
+    void inject(Object target, Object value, ViewContext context)
+        throws ViewInputException;
+
   }
 
   /**
@@ -48,7 +71,8 @@ public interface SpliceHandler {
    * @param node splice node
    * @param view view derived for the splice
    * @param context view context
-   * @return a value that will be passed to the injector, if configured on the node
+   * @return a value that will be passed to the injector, if configured on the
+   *    splice node
    * @throws ViewInputException to indicate that there was a problem in
    *    applying the view
    */
