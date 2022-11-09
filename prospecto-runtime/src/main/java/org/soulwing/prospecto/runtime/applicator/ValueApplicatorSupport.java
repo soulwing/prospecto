@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -27,6 +28,11 @@ import java.util.Map;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewInputException;
+import org.soulwing.prospecto.api.template.ArrayNode;
+import org.soulwing.prospecto.api.template.MapNode;
+import org.soulwing.prospecto.api.template.ValueNode;
+import org.soulwing.prospecto.api.template.ViewNode;
+import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 
 /**
  * Support for applicators that handle value nodes.
@@ -35,19 +41,32 @@ import org.soulwing.prospecto.api.ViewInputException;
  */
 class ValueApplicatorSupport {
 
-  static final ValueApplicatorSupport INSTANCE = new ValueApplicatorSupport();
+  private final ViewNode node;
 
-  private ValueApplicatorSupport() {
+  private Class<?> type;
+  private boolean convertValues;
+
+  ValueApplicatorSupport(ViewNode node) {
+    this.node = node;
   }
 
-  Object consumeValue(View.Event triggerEvent, Deque<View.Event> events) {
+  Object consumeValue(View.Event triggerEvent, Deque<View.Event> events,
+      ScopedViewContext context) throws Exception {
+    if (type == null) {
+      type = type(node);
+      convertValues = isConvertible(type);
+    }
     switch (triggerEvent.getType()) {
-      case VALUE:
-        return triggerEvent.getValue();
+      case VALUE: {
+        final Object value = triggerEvent.getValue();
+        if (value == null || !convertValues) return value;
+        return context.getValueTypeConverters()
+            .toModelValue(type, triggerEvent.getValue(), node, context);
+      }
       case BEGIN_OBJECT:
-        return consumeObject(events);
+        return consumeObject(events, context);
       case BEGIN_ARRAY:
-        return consumeArray(events);
+        return consumeArray(events, context);
       default:
         throw new ViewInputException(String.format(
             "unexpected event of type %s for value node",
@@ -55,7 +74,9 @@ class ValueApplicatorSupport {
     }
   }
 
-  private Map<Object, Object> consumeObject(Deque<View.Event> events) {
+  private Map<Object, Object> consumeObject(Deque<View.Event> events,
+      ScopedViewContext context)
+      throws Exception {
     final Map<Object, Object> map = new LinkedHashMap<>();
     boolean foundEnd = false;
     while (!events.isEmpty()) {
@@ -64,7 +85,7 @@ class ValueApplicatorSupport {
         foundEnd = true;
         break;
       }
-      map.put(event.getName(), consumeValue(event, events));
+      map.put(event.getName(), consumeValue(event, events, context));
     }
     if (!foundEnd) {
       throw new ViewApplicatorException("expected end of object");
@@ -72,7 +93,8 @@ class ValueApplicatorSupport {
     return map;
   }
 
-  private List<Object> consumeArray(Deque<View.Event> events) {
+  private List<Object> consumeArray(Deque<View.Event> events,
+      ScopedViewContext context) throws Exception {
     final List<Object> list = new LinkedList<>();
     boolean foundEnd = false;
     while (!events.isEmpty()) {
@@ -81,12 +103,34 @@ class ValueApplicatorSupport {
         foundEnd = true;
         break;
       }
-      list.add(consumeValue(event, events));
+      list.add(consumeValue(event, events, context));
     }
     if (!foundEnd) {
       throw new ViewApplicatorException("expected end of array");
     }
     return list;
   }
+
+  private static boolean isConvertible(Class<?> type) {
+    return type != null
+        && !Object.class.equals(type)
+        && !Map.class.isAssignableFrom(type)
+        && !Collection.class.isAssignableFrom(type)
+        && !type.isArray();
+  }
+
+  private static Class<?> type(ViewNode node) {
+    if (node instanceof ValueNode) {
+      return ((ValueNode) node).getDataType();
+    }
+    if (node instanceof ArrayNode) {
+      return ((ArrayNode) node).getComponentType();
+    }
+    if (node instanceof MapNode) {
+      return ((MapNode) node).getComponentType();
+    }
+    throw new IllegalArgumentException("unrecognized node type");
+  }
+
 
 }

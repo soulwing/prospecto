@@ -47,6 +47,7 @@ import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
+import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -102,6 +103,9 @@ public class ValueApplicatorTest
   @Mock
   private TransformationService transformationService;
 
+  @Mock
+  ValueTypeConverterService valueTypeConverters;
+
   @Override
   ValueNode newNode() {
     return context.mock(UpdatableValueNode.class);
@@ -120,6 +124,10 @@ public class ValueApplicatorTest
       {
         allowing(node).getDataType();
         will(returnValue(MockDataType.class));
+        allowing(viewContext).getValueTypeConverters();
+        will(returnValue(valueTypeConverters));
+        oneOf(valueTypeConverters).toModelValue(MockDataType.class, VIEW_VALUE, node, viewContext);
+        will(returnValue(VIEW_VALUE));
         oneOf(transformationService).valueToInject(parentEntity,
             MockDataType.class, VIEW_VALUE, node, viewContext);
         will(returnValue(MODEL_VALUE));

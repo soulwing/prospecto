@@ -41,6 +41,7 @@ class MapOfValuesApplicator
 
   private final TransformationService transformationService;
   private final ToManyAssociationUpdater associationUpdater;
+  private final ValueApplicatorSupport applicatorSupport;
 
   MapOfValuesApplicator(MapOfValuesNode node) {
     this(node, ConcreteTransformationService.INSTANCE,
@@ -53,14 +54,15 @@ class MapOfValuesApplicator
     super(node);
     this.transformationService = transformationService;
     this.associationUpdater = associationUpdater;
+    this.applicatorSupport = new ValueApplicatorSupport(node);
   }
 
   @Override
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
 
-    final Object value = ValueApplicatorSupport.INSTANCE
-        .consumeValue(triggerEvent, events);
+    final Object value =
+        applicatorSupport.consumeValue(triggerEvent, events, context);
     if (!(value instanceof Map)) {
       throw new ViewInputException("map node requires a map input");
     }

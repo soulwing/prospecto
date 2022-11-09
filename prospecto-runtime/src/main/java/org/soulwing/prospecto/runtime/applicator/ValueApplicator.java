@@ -40,6 +40,7 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
     implements InjectableViewEntity.ValueInjector {
 
   private final TransformationService transformationService;
+  private final ValueApplicatorSupport applicatorSupport;
 
   ValueApplicator(ValueNode node) {
     this(node, ConcreteTransformationService.INSTANCE);
@@ -49,24 +50,25 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
       TransformationService transformationService) {
     super(node);
     this.transformationService = transformationService;
+    this.applicatorSupport = new ValueApplicatorSupport(node);
   }
 
   @Override
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
 
-    final Object value = consumeValue(triggerEvent, events);
+    final Object value = consumeValue(triggerEvent, events, context);
     return transformationService.valueToInject(parentEntity, node.getDataType(),
           value, node, context);
   }
 
   private Object consumeValue(View.Event triggerEvent,
-      Deque<View.Event> events) {
+      Deque<View.Event> events, ScopedViewContext context) throws Exception {
     if (JsonValue.class.isAssignableFrom(node.getDataType())) {
       return JsonValueApplicatorSupport.INSTANCE
           .consumeValue(triggerEvent, events);
     }
-    return ValueApplicatorSupport.INSTANCE.consumeValue(triggerEvent, events);
+    return applicatorSupport.consumeValue(triggerEvent, events, context);
   }
 
   @Override

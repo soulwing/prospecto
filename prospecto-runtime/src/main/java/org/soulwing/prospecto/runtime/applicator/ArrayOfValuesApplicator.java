@@ -41,6 +41,7 @@ class ArrayOfValuesApplicator
 
   private final TransformationService transformationService;
   private final ToManyAssociationUpdater associationUpdater;
+  private final ValueApplicatorSupport applicatorSupport;
 
   ArrayOfValuesApplicator(ArrayOfValuesNode node) {
     this(node, ConcreteTransformationService.INSTANCE,
@@ -53,14 +54,14 @@ class ArrayOfValuesApplicator
     super(node);
     this.transformationService = transformationService;
     this.associationUpdater = associationUpdater;
+    this.applicatorSupport = new ValueApplicatorSupport(node);
   }
 
   @Override
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
 
-    final Object value = ValueApplicatorSupport.INSTANCE
-        .consumeValue(triggerEvent, events);
+    final Object value = applicatorSupport.consumeValue(triggerEvent, events, context);
     if (value != null && !(value instanceof Collection) && !value.getClass().isArray()) {
       throw new ViewInputException("array node requires a collection or array input");
     }

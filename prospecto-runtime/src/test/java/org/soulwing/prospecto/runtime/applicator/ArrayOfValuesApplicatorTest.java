@@ -106,7 +106,7 @@ public class ArrayOfValuesApplicatorTest
   public void testOnToModelValue() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
             Object.class, Collections.singletonList(VIEW_VALUE), node, viewContext);
@@ -124,7 +124,7 @@ public class ArrayOfValuesApplicatorTest
   public void testOnToModelValueWithNullValue() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
             Object.class, Collections.singletonList(null), node, viewContext);
@@ -140,7 +140,12 @@ public class ArrayOfValuesApplicatorTest
 
   @Test(expected = ViewApplicatorException.class)
   public void testOnToModelValueWhenMissingEndEvent() throws Exception {
-    context.checking(new Expectations() { {} });
+    context.checking(new Expectations() {
+      {
+        allowing(node).getComponentType();
+        will(returnValue(Object.class));
+      }
+    });
     applicator.onToModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
@@ -148,7 +153,7 @@ public class ArrayOfValuesApplicatorTest
   public void testOnToModelValueObject() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),
@@ -167,7 +172,7 @@ public class ArrayOfValuesApplicatorTest
   public void testOnToModelValueArray() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),
@@ -186,7 +191,7 @@ public class ArrayOfValuesApplicatorTest
   public void testOnToModelValueWhenEmptyArray() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),

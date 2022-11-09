@@ -111,7 +111,7 @@ public class MapOfValuesApplicatorTest
   public void testOnToModelValue() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
             Object.class, Collections.singletonMap(NAME, VIEW_VALUE), node, viewContext);
@@ -131,7 +131,7 @@ public class MapOfValuesApplicatorTest
   public void testOnToModelValueWithNullValue() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
             Object.class, Collections.singletonMap(NAME, null), node, viewContext);
@@ -148,7 +148,12 @@ public class MapOfValuesApplicatorTest
 
   @Test(expected = ViewApplicatorException.class)
   public void testOnToModelValueWhenMissingEndEvent() throws Exception {
-    context.checking(new Expectations() { {} });
+    context.checking(new Expectations() {
+      {
+        allowing(node).getComponentType();
+        will(returnValue(Object.class));
+      }
+    });
     applicator.onToModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
@@ -157,7 +162,7 @@ public class MapOfValuesApplicatorTest
   public void testOnToModelValueObject() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),
@@ -178,7 +183,7 @@ public class MapOfValuesApplicatorTest
   public void testOnToModelValueArray() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),
@@ -198,7 +203,7 @@ public class MapOfValuesApplicatorTest
   public void testOnToModelValueWhenEmptyMap() throws Exception {
     context.checking(new Expectations() {
       {
-        oneOf(node).getComponentType();
+        allowing(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(with(parentEntity),
             with(Object.class),
