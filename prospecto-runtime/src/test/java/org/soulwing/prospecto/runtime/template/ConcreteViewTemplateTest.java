@@ -228,7 +228,7 @@ public class ConcreteViewTemplateTest {
   class MockGeneratorViewNode extends AbstractContainerNode {
 
     public MockGeneratorViewNode() {
-      super(null, null, Object.class);
+      super(null, null, null, Object.class);
     }
 
     @Override
@@ -241,7 +241,7 @@ public class ConcreteViewTemplateTest {
   class MockApplicatorViewNode extends AbstractContainerNode {
 
     public MockApplicatorViewNode() {
-      super(null, null, Object.class);
+      super(null, null, null, Object.class);
     }
 
     @Override

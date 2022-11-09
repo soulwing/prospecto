@@ -33,17 +33,19 @@ import org.soulwing.prospecto.api.template.ViewNode;
 public abstract class AbstractContainerNode extends AbstractViewNode
     implements ContainerNode {
 
-  private final List<ViewNode> children = new LinkedList<>();
+  protected final List<ViewNode> children = new LinkedList<>();
 
   /**
    * Constructs a new instance.
+   *
    * @param name node name
    * @param namespace namespace for {@code name}
+   * @param keyType element key type
    * @param modelType element model type
    */
   protected AbstractContainerNode(String name, String namespace,
-      Class<?> modelType) {
-    super(name, namespace, modelType);
+      Class<?> keyType, Class<?> modelType) {
+    super(name, namespace, keyType, modelType);
   }
 
   @Override

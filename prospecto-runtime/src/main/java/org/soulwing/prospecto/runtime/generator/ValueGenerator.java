@@ -27,7 +27,6 @@ import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
-import org.soulwing.prospecto.runtime.event.ConcreteViewEvent;
 import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
@@ -39,6 +38,7 @@ import org.soulwing.prospecto.runtime.listener.TransformationService;
 class ValueGenerator extends AbstractViewEventGenerator<ValueNode> {
 
   private final TransformationService transformationService;
+  private final ValueGeneratorSupport generatorSupport;
 
   ValueGenerator(ValueNode node) {
     this(node, ConcreteTransformationService.INSTANCE);
@@ -47,6 +47,7 @@ class ValueGenerator extends AbstractViewEventGenerator<ValueNode> {
   ValueGenerator(ValueNode node, TransformationService transformationService) {
     super(node);
     this.transformationService = transformationService;
+    this.generatorSupport = new ValueGeneratorSupport(node);
   }
 
   @Override
@@ -64,9 +65,7 @@ class ValueGenerator extends AbstractViewEventGenerator<ValueNode> {
       return Collections.emptyList();
     }
 
-    return Collections.singletonList((View.Event)
-        new ConcreteViewEvent(View.Event.Type.VALUE, node.getName(),
-            node.getNamespace(), transformedValue));
+    return generatorSupport.valueEvents(node.getName(), transformedValue, context);
   }
 
 }

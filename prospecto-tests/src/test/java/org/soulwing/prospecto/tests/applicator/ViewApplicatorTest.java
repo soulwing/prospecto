@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
@@ -32,7 +33,10 @@ import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
@@ -56,9 +60,14 @@ public class ViewApplicatorTest {
   private static final String TYPE = "type";
   private static final String CHILD = "child";
   private static final String CHILDREN_LIST = "childrenList";
+  private static final String CHILDREN_MAP = "childrenMap";
   private static final String CHILDREN_ARRAY = "childrenArray";
   private static final String STRING = "string";
   private static final String STRINGS = "strings";
+  private static final String STRING_KEY = "stringKey";
+  private static final String STRING_KEY1 = "stringKey1";
+  private static final String STRING_KEY2 = "stringKey2";
+  private static final String STRING_MAP = "stringMap";
   private static final String SUBTYPE_STRING = "subtypeString";
   private static final String UPDATED_STRING = "updated " + STRING;
   private static final String UPDATED_SUBTYPE_STRING = "updated " + SUBTYPE_STRING;
@@ -69,8 +78,10 @@ public class ViewApplicatorTest {
   public static class MockType1 {
     String string = STRING;
     String[] strings = new String[] { STRING };
+    Map<String, String> stringMap = new LinkedHashMap<>();
     MockType2 child = new MockType2();
     List<MockType2> childrenList = new ArrayList<>();
+    Map<String, MockType2> childrenMap = new LinkedHashMap<>();
     MockType2[] childrenArray = new MockType2[0];
   }
 
@@ -142,6 +153,32 @@ public class ViewApplicatorTest {
   }
 
   @Test
+  public void testObjectMapOfValues() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+        .accessType(AccessType.FIELD)
+        .mapOfValues(STRING_MAP, String.class, String.class)
+        .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_OBJECT).name(STRING_MAP)
+        .type(VALUE).name(STRING_KEY).value(UPDATED_STRING)
+        .type(END_OBJECT).name(STRING_MAP)
+        .type(END_OBJECT)
+        .end();
+
+    final ViewApplicator editor = template.createApplicator(view, context);
+
+    final MockType1 model = new MockType1();
+    editor.update(model);
+    assertThat(model.stringMap,
+        is(equalTo(Collections.singletonMap(STRING_KEY, UPDATED_STRING))));
+  }
+
+  @Test
   public void testObjectArrayOfObjects() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
         .object(MockType1.class)
@@ -173,6 +210,40 @@ public class ViewApplicatorTest {
     assertThat(model.childrenList.size(), is(equalTo(2)));
     assertThat(model.childrenList.get(0).string, is(equalTo(UPDATED_CHILD_STRING1)));
     assertThat(model.childrenList.get(1).string, is(equalTo(UPDATED_CHILD_STRING2)));
+  }
+
+  @Test
+  public void testObjectMapOfObjects() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+        .accessType(AccessType.FIELD)
+        .mapOfObjects(CHILDREN_MAP, String.class, MockType2.class)
+            .value(STRING)
+            .end()
+        .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(BEGIN_OBJECT).name(CHILDREN_MAP)
+        .type(BEGIN_OBJECT).name(STRING_KEY1)
+        .type(VALUE).name(STRING).value(UPDATED_CHILD_STRING1)
+        .type(END_OBJECT).name(STRING_KEY1)
+        .type(BEGIN_OBJECT).name(STRING_KEY2)
+        .type(VALUE).name(STRING).value(UPDATED_CHILD_STRING2)
+        .type(END_OBJECT).name(STRING_KEY2)
+        .type(END_OBJECT).name(CHILDREN_MAP)
+        .type(END_OBJECT)
+        .end();
+
+    final ViewApplicator editor = template.createApplicator(view, context);
+    final MockType1 model = new MockType1();
+    editor.update(model);
+
+    assertThat(model.childrenMap.size(), is(equalTo(2)));
+    assertThat(model.childrenMap.get(STRING_KEY1).string, is(equalTo(UPDATED_CHILD_STRING1)));
+    assertThat(model.childrenMap.get(STRING_KEY2).string, is(equalTo(UPDATED_CHILD_STRING2)));
   }
 
   @Test
@@ -366,6 +437,51 @@ public class ViewApplicatorTest {
     editor.update(model);
     assertThat(model.string, is(equalTo(UPDATED_STRING)));
     assertThat(model.child, is(sameInstance(otherChild)));
+  }
+
+  @Test
+  public void testObjectValueMapOfReferencesValue() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockType1.class)
+            .accessType(AccessType.FIELD)
+            .value(STRING)
+            .mapOfReferences(CHILDREN_MAP, String.class, MockType2.class)
+                .value(STRING)
+                .end()
+            .end()
+        .build();
+
+    final View view = ViewBuilder
+        .begin()
+        .type(BEGIN_OBJECT)
+        .type(VALUE).name(STRING).value(UPDATED_STRING)
+        .type(BEGIN_OBJECT).name(CHILDREN_MAP)
+        .type(BEGIN_OBJECT).name(STRING_KEY)
+        .type(VALUE).name(STRING).value(STRING)
+        .type(END_OBJECT).name(STRING_KEY)
+        .type(END_OBJECT).name(CHILDREN_MAP)
+        .type(END_OBJECT)
+        .end();
+
+    final MockType2 otherChild = new MockType2();
+    context.getReferenceResolvers().append(new ReferenceResolver() {
+      @Override
+      public boolean supports(Class<?> type) {
+        return MockType2.class.isAssignableFrom(type);
+      }
+
+      @Override
+      public Object resolve(Class<?> type, ViewEntity reference) {
+        return otherChild;
+      }
+    });
+
+    final ViewApplicator editor = template.createApplicator(view, context);
+    final MockType1 model = new MockType1();
+
+    editor.update(model);
+    assertThat(model.string, is(equalTo(UPDATED_STRING)));
+    assertThat(model.childrenMap, hasEntry(STRING_KEY, otherChild));
   }
 
   @Test

@@ -32,6 +32,7 @@ public class ConcreteToManyAssociationUpdater implements ToManyAssociationUpdate
 
   private static final ToManyAssociationUpdateStrategy[] DEFAULT_STRATEGIES = {
       OrderedToManyAssociationUpdateStrategy.INSTANCE,
+      KeyedToManyAssociationUpdateStrategy.INSTANCE,
       UnorderedToManyAssociationUpdateStrategy.INSTANCE
   };
 

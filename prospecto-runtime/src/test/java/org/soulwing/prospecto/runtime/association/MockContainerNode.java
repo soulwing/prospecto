@@ -29,7 +29,7 @@ import org.soulwing.prospecto.runtime.template.AbstractContainerNode;
 class MockContainerNode extends AbstractContainerNode {
 
   public MockContainerNode() {
-    super("some name", "some namespace", Object.class);
+    super("some name", "some namespace", null, Object.class);
   }
 
   @Override

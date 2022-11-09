@@ -18,21 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Deque;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonStructure;
 import javax.json.JsonValue;
 
 import org.soulwing.prospecto.api.AccessMode;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewEntity;
-import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.template.UpdatableValueNode;
 import org.soulwing.prospecto.api.template.ValueNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -64,109 +55,19 @@ class ValueApplicator extends AbstractViewEventApplicator<ValueNode>
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
 
-    final Class<?> dataType = node.getDataType();
-    if (JsonStructure.class.isAssignableFrom(dataType)) {
-      if (JsonObject.class.isAssignableFrom(dataType)) {
-        return jsonObject(triggerEvent, events);
-      }
-      else if (JsonArray.class.isAssignableFrom(dataType)) {
-        return jsonArray(triggerEvent, events);
-      }
-      else {
-        throw new ViewInputException("unrecognized JSON structure type");
-      }
-    }
-    else {
-      return transformationService.valueToInject(parentEntity, dataType,
-          triggerEvent.getValue(), node, context);
-    }
+    final Object value = consumeValue(triggerEvent, events);
+    return transformationService.valueToInject(parentEntity, node.getDataType(),
+          value, node, context);
   }
 
-  private JsonObject jsonObject(View.Event triggerEvent,
+  private Object consumeValue(View.Event triggerEvent,
       Deque<View.Event> events) {
-    if (triggerEvent.getType() != View.Event.Type.BEGIN_OBJECT) {
-      throw new ViewInputException("expected start of JSON object");
+    if (JsonValue.class.isAssignableFrom(node.getDataType())) {
+      return JsonValueApplicatorSupport.INSTANCE
+          .consumeValue(triggerEvent, events);
     }
-    final JsonObjectBuilder object = Json.createObjectBuilder();
-    while (!events.isEmpty()) {
-      final View.Event event = events.removeFirst();
-      if (event.getType().complement().equals(triggerEvent.getType())) {
-        break;
-      }
-      switch (event.getType()) {
-        case BEGIN_OBJECT:
-          object.add(event.getName(), jsonObject(event, events));
-          break;
-        case BEGIN_ARRAY:
-          object.add(event.getName(), jsonArray(event, events));
-          break;
-        case VALUE:
-          object.add(event.getName(), jsonValue(event));
-          break;
-        default:
-          throw new ViewInputException("unexpected event type " + event.getType());
-      }
-    }
-
-    return object.build();
+    return ValueApplicatorSupport.INSTANCE.consumeValue(triggerEvent, events);
   }
-
-  private JsonArray jsonArray(View.Event triggerEvent,
-      Deque<View.Event> events) {
-    if (triggerEvent.getType() != View.Event.Type.BEGIN_ARRAY) {
-      throw new ViewInputException("expected start of JSON array");
-    }
-    final JsonArrayBuilder array = Json.createArrayBuilder();
-    while (!events.isEmpty()) {
-      final View.Event event = events.removeFirst();
-      if (event.getType().complement().equals(triggerEvent.getType())) {
-        break;
-      }
-      switch (event.getType()) {
-        case BEGIN_OBJECT:
-          array.add(jsonObject(event, events));
-          break;
-        case BEGIN_ARRAY:
-          array.add(jsonArray(event, events));
-          break;
-        case VALUE:
-          array.add(jsonValue(event));
-          break;
-        default:
-          throw new ViewInputException("unexpected event type " + event.getType());
-      }
-    }
-
-    return array.build();
-
-  }
-
-  private JsonValue jsonValue(View.Event event) {
-    Object value = event.getValue();
-    if (value == null) {
-      return JsonValue.NULL;
-    }
-    if (value instanceof String) {
-      return Json.createValue((String) value);
-    }
-    if (value instanceof Boolean) {
-      return ((Boolean) value) ? JsonValue.TRUE : JsonValue.FALSE;
-    }
-    if (value instanceof Integer || value instanceof Long) {
-      return Json.createValue(((Number) value).longValue());
-    }
-    if (value instanceof BigInteger) {
-      return Json.createValue((BigInteger) value);
-    }
-    if (value instanceof BigDecimal) {
-      return Json.createValue((BigDecimal) value);
-    }
-    if (value instanceof Float || value instanceof Double) {
-      return Json.createValue(((Number) value).doubleValue());
-    }
-    throw new ViewInputException("unsupported JSON value type");
-  }
-
 
   @Override
   public void inject(Object target, Object value) throws Exception {

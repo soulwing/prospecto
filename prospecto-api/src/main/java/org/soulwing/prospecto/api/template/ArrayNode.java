@@ -43,8 +43,8 @@ public interface ArrayNode extends UpdatableNode {
   String getElementName();
 
   /**
-   * Gets an iterator for the values associated with this node in the from
-   * the given model.
+   * Gets an iterator for the values associated with this node in the given
+   * model.
    * @param model model containing the collection/array of values to iterate
    * @return iterator for the subject values
    * @throws Exception

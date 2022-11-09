@@ -30,7 +30,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.json.Json;
+import javax.json.JsonNumber;
+import javax.json.JsonString;
 import javax.json.JsonStructure;
+import javax.json.JsonValue;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 import javax.json.stream.JsonParser;
@@ -254,10 +257,30 @@ class JsonViewWriter extends AbstractViewWriter {
       writeLong(name, ((Calendar) value).getTimeInMillis());
     }
     else if (value instanceof Enum) {
-      writeString(name, ((Enum) value).name());
+      writeString(name, ((Enum<?>) value).name());
     }
     else if (value == null || value.toString() == null) {
       writeNull(name);
+    }
+    else if (value == JsonValue.NULL) {
+      writeNull(name);
+    }
+    else if (value == JsonValue.FALSE) {
+      writeBoolean(name, false);
+    }
+    else if (value == JsonValue.TRUE) {
+      writeBoolean(name, true);
+    }
+    else if (value instanceof JsonString) {
+      writeString(name, ((JsonString) value).getString());
+    }
+    else if (value instanceof JsonNumber) {
+      if (((JsonNumber) value).isIntegral()) {
+        writeBigInteger(name, ((JsonNumber) value).bigIntegerValue());
+      }
+      else {
+        writeBigDecimal(name, ((JsonNumber) value).bigDecimalValue());
+      }
     }
     else if (value instanceof JsonStructure) {
       writeJsonStructure(name, (JsonStructure) value);

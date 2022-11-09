@@ -105,4 +105,28 @@ public interface ViewNodeVisitor {
    */
   Object visitArrayOfReferences(ArrayOfReferencesNode node, Object state);
 
+  /**
+   * Visits an map-of-values node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitMapOfValues(MapOfValuesNode node, Object state);
+
+  /**
+   * Visits an map-of-objects node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitMapOfObjects(MapOfObjectsNode node, Object state);
+
+  /**
+   * Visits an map-of-references node.
+   * @param node the subject node
+   * @param state visitor state
+   * @return visit result
+   */
+  Object visitMapOfReferences(MapOfReferencesNode node, Object state);
+  
 }

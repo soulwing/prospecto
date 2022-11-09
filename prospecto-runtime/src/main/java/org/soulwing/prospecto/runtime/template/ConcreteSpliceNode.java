@@ -34,7 +34,7 @@ public class ConcreteSpliceNode extends AbstractViewNode
 
   public ConcreteSpliceNode(String name, String namespace,
       SpliceHandler accessor) {
-    super(name, namespace, null);
+    super(name, namespace, null, null);
     this.accessor = accessor;
   }
 

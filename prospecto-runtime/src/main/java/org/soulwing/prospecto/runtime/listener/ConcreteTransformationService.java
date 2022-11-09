@@ -18,6 +18,11 @@
  */
 package org.soulwing.prospecto.runtime.listener;
 
+import java.util.AbstractMap;
+import java.util.Collection;
+import java.util.Map;
+import javax.json.JsonValue;
+
 import org.soulwing.prospecto.api.ViewEntity;
 import org.soulwing.prospecto.api.listener.ViewMode;
 import org.soulwing.prospecto.api.listener.ViewNodePropertyEvent;
@@ -55,12 +60,17 @@ public class ConcreteTransformationService implements TransformationService {
   }
 
   @Override
-  public Object valueToInject(ViewEntity ownerEntity, Class<?> type, Object viewValue,
-      ViewNode node, ScopedViewContext context)
+  public Object valueToInject(ViewEntity ownerEntity, Class<?> type,
+      Object viewValue, ViewNode node, ScopedViewContext context)
       throws Exception {
 
-    final Object convertedValue = context.getValueTypeConverters()
-        .toModelValue(type, viewValue, node, context);
+    final boolean structured = viewValue instanceof Map
+        || viewValue instanceof Collection
+        || viewValue instanceof JsonValue;
+
+    final Object convertedValue = structured ?
+        viewValue : context.getValueTypeConverters().toModelValue(
+            type, viewValue, node, context);
 
     final Object valueToInject = context.getListeners().willInjectValue(
         new ViewNodePropertyEvent(ViewMode.APPLY, node,
@@ -71,6 +81,54 @@ public class ConcreteTransformationService implements TransformationService {
             ownerEntity, valueToInject, context));
 
     return valueToInject;
+  }
+
+  @Override
+  public Map.Entry<String, ?> pairToExtract(Object owner, Map.Entry<?, ?> pair,
+      ViewNode node, ScopedViewContext context) throws Exception {
+
+    final Map.Entry<?, ?> extractedValue = (Map.Entry<?, ?>)
+        context.getListeners().didExtractValue(new ViewNodePropertyEvent(
+            ViewMode.GENERATE, node, owner, pair, context));
+
+    final String viewKey = context.getKeyTypeConverters().toViewKey(
+        extractedValue.getKey(), node, context);
+
+    final Object viewValue = context.getValueTypeConverters().toViewValue(
+        extractedValue.getValue(), node, context);
+
+    final Map.Entry<String, ?> viewPair = new AbstractMap.SimpleEntry<>(viewKey, viewValue);
+
+    context.getListeners().propertyVisited(
+        new ViewNodePropertyEvent(ViewMode.GENERATE, node,
+            pair, viewPair, context));
+
+    return viewPair;
+  }
+
+  @Override
+  public Map.Entry<?, ?> pairToInject(ViewEntity ownerEntity,
+      Class<?> keyType, Class<?> valueType, String viewKey, Object viewValue,
+      ViewNode node, ScopedViewContext context) throws Exception {
+
+    final Object convertedKey = context.getKeyTypeConverters()
+        .toModelKey(keyType, viewKey, node, context);
+
+    final Object convertedValue = context.getValueTypeConverters()
+        .toModelValue(valueType, viewValue, node, context);
+
+    final Map.Entry<?, ?> convertedPair =
+        new AbstractMap.SimpleEntry<>(convertedKey, convertedValue);
+
+    final Object valueToInject = context.getListeners().willInjectValue(
+        new ViewNodePropertyEvent(ViewMode.APPLY, node,
+            ownerEntity, convertedPair, context));
+
+    context.getListeners().propertyVisited(
+        new ViewNodePropertyEvent(ViewMode.APPLY, node,
+            ownerEntity, valueToInject, context));
+
+    return (Map.Entry<?, ?>) valueToInject;
   }
 
 }

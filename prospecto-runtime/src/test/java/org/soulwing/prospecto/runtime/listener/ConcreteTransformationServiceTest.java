@@ -27,6 +27,11 @@ import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.inCo
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.propertyValue;
 import static org.soulwing.prospecto.runtime.listener.ViewNodeEventMatchers.sourceNode;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import javax.json.JsonValue;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -45,7 +50,13 @@ import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
  */
 public class ConcreteTransformationServiceTest {
 
-  private final Object VIEW_VALUE = new Object();
+  private static final Object VIEW_VALUE = new Object();
+
+  private static final Map<Object, Object> MAP_VALUE =
+      Collections.singletonMap("key", VIEW_VALUE);
+
+  private static final List<Object> LIST_VALUE =
+      Collections.singletonList(VIEW_VALUE);
 
   @Rule
   public final JUnitRuleMockery context = new JUnitRuleMockery();
@@ -72,7 +83,7 @@ public class ConcreteTransformationServiceTest {
   MockModelValue transformedValue;
 
   @Test
-  public void test() throws Exception {
+  public void testSimpleValue() throws Exception {
     context.checking(new Expectations() {
       {
         oneOf(viewContext).getValueTypeConverters();
@@ -80,21 +91,52 @@ public class ConcreteTransformationServiceTest {
         oneOf(converters).toModelValue(MockModelValue.class, VIEW_VALUE, node,
             viewContext);
         will(returnValue(convertedValue));
+      }
+    });
+    context.checking(listenerExpectations(convertedValue));
+    assertThat(ConcreteTransformationService.INSTANCE.valueToInject(
+        parentEntity, MockModelValue.class, VIEW_VALUE, node, viewContext),
+        is(sameInstance(transformedValue)));
+  }
+
+  @Test
+  public void testMapValue() throws Exception {
+    context.checking(listenerExpectations(MAP_VALUE));
+    assertThat(ConcreteTransformationService.INSTANCE.valueToInject(
+            parentEntity, MockModelValue.class, MAP_VALUE, node, viewContext),
+        is(sameInstance(transformedValue)));
+  }
+
+  @Test
+  public void testCollectionValue() throws Exception {
+    context.checking(listenerExpectations(MAP_VALUE));
+    assertThat(ConcreteTransformationService.INSTANCE.valueToInject(
+            parentEntity, MockModelValue.class, MAP_VALUE, node, viewContext),
+        is(sameInstance(transformedValue)));
+  }
+
+  @Test
+  public void testJsonValue() throws Exception {
+    context.checking(listenerExpectations(JsonValue.NULL));
+    assertThat(ConcreteTransformationService.INSTANCE.valueToInject(
+            parentEntity, MockModelValue.class, JsonValue.NULL, node, viewContext),
+        is(sameInstance(transformedValue)));
+  }
+
+  private Expectations listenerExpectations(Object value) throws Exception {
+    return new Expectations() {
+      {
         allowing(viewContext).getListeners();
         will(returnValue(listeners));
         oneOf(listeners).willInjectValue((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(parentEntity),
-                propertyValue(convertedValue), inContext(viewContext))));
+                propertyValue(value), inContext(viewContext))));
         will(returnValue(transformedValue));
         oneOf(listeners).propertyVisited((ViewNodePropertyEvent) with(
             eventDescribing(sourceNode(node), forModel(parentEntity),
                 propertyValue(transformedValue), inContext(viewContext))));
       }
-    });
-
-    assertThat(ConcreteTransformationService.INSTANCE.valueToInject(
-        parentEntity, MockModelValue.class, VIEW_VALUE, node, viewContext),
-        is(sameInstance((Object) transformedValue)));
+    };
   }
 
   private interface MockModelValue {}

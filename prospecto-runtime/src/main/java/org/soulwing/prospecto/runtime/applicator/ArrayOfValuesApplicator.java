@@ -18,13 +18,12 @@
  */
 package org.soulwing.prospecto.runtime.applicator;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
-import java.util.List;
 
 import org.soulwing.prospecto.api.View;
-import org.soulwing.prospecto.api.ViewApplicatorException;
 import org.soulwing.prospecto.api.ViewEntity;
+import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.association.ToManyAssociationUpdater;
 import org.soulwing.prospecto.runtime.association.ValueCollectionToManyAssociationUpdater;
@@ -33,7 +32,7 @@ import org.soulwing.prospecto.runtime.listener.ConcreteTransformationService;
 import org.soulwing.prospecto.runtime.listener.TransformationService;
 
 /**
- * An applicator for na array-of-values node.
+ * An applicator for an array-of-values node.
  *
  * @author Carl Harris
  */
@@ -60,33 +59,14 @@ class ArrayOfValuesApplicator
   Object onToModelValue(ViewEntity parentEntity, View.Event triggerEvent,
       Deque<View.Event> events, ScopedViewContext context) throws Exception {
 
-    int index = 0;
-    final List<Object> array = new ArrayList<>();
-    View.Event.Type lastType = triggerEvent.getType();
-    while (!events.isEmpty()) {
-      final View.Event event = events.removeFirst();
-      lastType = event.getType();
-      if (lastType == triggerEvent.getType().complement()) break;
-      if (lastType != View.Event.Type.VALUE) {
-        throw new ViewApplicatorException(
-            "unexpected non-value event in array-of-values");
-      }
-
-      context.push(index++);
-      final Object valueToInject = transformationService.valueToInject(
-          parentEntity, node.getComponentType(),
-          event.getValue(), node, context);
-      context.pop();
-
-      array.add(valueToInject);
+    final Object value = ValueApplicatorSupport.INSTANCE
+        .consumeValue(triggerEvent, events);
+    if (value != null && !(value instanceof Collection) && !value.getClass().isArray()) {
+      throw new ViewInputException("array node requires a collection or array input");
     }
 
-    if (lastType != triggerEvent.getType().complement()) {
-      throw new ViewApplicatorException("expected "
-          + triggerEvent.getType().complement() + " event");
-    }
-
-    return array;
+    return transformationService.valueToInject(
+        parentEntity, node.getComponentType(), value, node, context);
   }
 
   @Override

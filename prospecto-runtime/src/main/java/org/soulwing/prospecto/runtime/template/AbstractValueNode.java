@@ -30,7 +30,7 @@ public abstract class AbstractValueNode extends AbstractViewNode
     implements ValueNode {
 
   protected AbstractValueNode(String name, String namespace) {
-    super(name, namespace, null);
+    super(name, namespace, null, null);
   }
 
   @Override

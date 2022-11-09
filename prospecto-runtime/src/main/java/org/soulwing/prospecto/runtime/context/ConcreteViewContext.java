@@ -33,6 +33,8 @@ import org.soulwing.prospecto.api.scope.Scopes;
 import org.soulwing.prospecto.api.url.UrlDecorators;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
 import org.soulwing.prospecto.runtime.association.LinkedListAssociationManagerService;
+import org.soulwing.prospecto.runtime.converter.KeyTypeConverterService;
+import org.soulwing.prospecto.runtime.converter.LinkedListKeyTypeConverterService;
 import org.soulwing.prospecto.runtime.converter.LinkedListValueTypeConverterService;
 import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.factory.LinkedListObjectFactoryService;
@@ -58,6 +60,9 @@ class ConcreteViewContext implements ScopedViewContext {
 
   private final NotifiableViewListeners listeners =
       new LinkedListNotifiableViewListeners();
+
+  private final KeyTypeConverterService keyTypeConverters =
+      new LinkedListKeyTypeConverterService();
 
   private final ValueTypeConverterService valueTypeConverters =
       new LinkedListValueTypeConverterService();
@@ -144,6 +149,11 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
+  public KeyTypeConverterService getKeyTypeConverters() {
+    return keyTypeConverters;
+  }
+
+  @Override
   public ValueTypeConverterService getValueTypeConverters() {
     return valueTypeConverters;
   }
@@ -222,8 +232,8 @@ class ConcreteViewContext implements ScopedViewContext {
   }
 
   @Override
-  public void push(int index) {
-    push(Integer.toString(index), null);
+  public void push(Object key) {
+    push(key.toString(), null);
   }
 
   @Override

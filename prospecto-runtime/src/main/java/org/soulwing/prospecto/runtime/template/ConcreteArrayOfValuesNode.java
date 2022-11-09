@@ -62,7 +62,7 @@ public class ConcreteArrayOfValuesNode extends AbstractViewNode
   ConcreteArrayOfValuesNode(String name, String elementName, String namespace,
       Class<?> componentType,
       MultiValuedAccessorFactory accessorFactory) {
-    super(name, namespace, null);
+    super(name, namespace, null, null);
     this.elementName = elementName;
     this.componentType = componentType;
     this.accessorFactory = accessorFactory;

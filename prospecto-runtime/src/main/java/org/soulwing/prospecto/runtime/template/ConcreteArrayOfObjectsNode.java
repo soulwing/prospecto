@@ -62,7 +62,7 @@ public class ConcreteArrayOfObjectsNode extends AbstractContainerNode
   ConcreteArrayOfObjectsNode(String name, String elementName,
       String namespace, Class<?> modelType,
       MultiValuedAccessorFactory accessorFactory) {
-    super(name, namespace, modelType);
+    super(name, namespace, null, modelType);
     this.elementName = elementName;
     this.accessorFactory = accessorFactory;
   }

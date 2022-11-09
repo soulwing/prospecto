@@ -40,6 +40,7 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   private final String name;
   private final String namespace;
+  private final Class<?> keyType;
   private final Class<?> modelType;
 
   private AbstractViewNode parent;
@@ -48,14 +49,17 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
 
   /**
    * Constructs a new instance.
-   * @param name node name (may be {@code null})
+   *
+   * @param name      node name (may be {@code null})
    * @param namespace namespace (may be {@code null})
+   * @param keyType associated key type (may be {@code null})
    * @param modelType associated model type (may be {@code null})
    */
   protected AbstractViewNode(String name,
-      String namespace, Class<?> modelType) {
+      String namespace, Class<?> keyType, Class<?> modelType) {
     this.name = name;
     this.namespace = namespace;
+    this.keyType = keyType;
     this.modelType = modelType;
   }
 
@@ -77,6 +81,10 @@ public abstract class AbstractViewNode implements ViewNode, MutableScope {
   @Override
   public String getNamespace() {
     return namespace;
+  }
+
+  public Class<?> getKeyType() {
+    return keyType;
   }
 
   @Override

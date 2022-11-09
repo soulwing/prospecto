@@ -39,7 +39,7 @@ public class ConcreteObjectNode extends AbstractContainerNode
    * @param modelType model type associated with node
    */
   public ConcreteObjectNode(String name, String namespace, Class<?> modelType) {
-    super(name, namespace, modelType);
+    super(name, namespace, null, modelType);
   }
 
   @Override

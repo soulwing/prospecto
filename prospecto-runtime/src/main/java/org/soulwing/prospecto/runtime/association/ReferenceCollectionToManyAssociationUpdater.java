@@ -22,7 +22,7 @@ import org.soulwing.prospecto.runtime.context.ScopedViewContext;
 import org.soulwing.prospecto.runtime.entity.InjectableViewEntity;
 
 /**
- * A {@link ToManyAssociationUpdater} for a collection of values.
+ * A {@link ToManyAssociationUpdater} for a collection of references.
 
  * @author Carl Harris
  */

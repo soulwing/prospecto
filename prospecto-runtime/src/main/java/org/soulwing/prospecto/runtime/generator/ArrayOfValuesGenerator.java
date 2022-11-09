@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.soulwing.prospecto.api.AccessMode;
-import org.soulwing.prospecto.api.UndefinedValue;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.template.ArrayOfValuesNode;
 import org.soulwing.prospecto.runtime.context.ScopedViewContext;
@@ -41,6 +40,7 @@ class ArrayOfValuesGenerator
     extends AbstractViewEventGenerator<ArrayOfValuesNode> {
 
   private final TransformationService transformationService;
+  private final ValueGeneratorSupport generatorSupport;
 
   ArrayOfValuesGenerator(ArrayOfValuesNode node) {
     this(node, ConcreteTransformationService.INSTANCE);
@@ -50,6 +50,7 @@ class ArrayOfValuesGenerator
       TransformationService transformationService) {
     super(node);
     this.transformationService = transformationService;
+    this.generatorSupport = new ValueGeneratorSupport(node);
   }
 
   @Override
@@ -74,11 +75,8 @@ class ArrayOfValuesGenerator
           owner, value, node, context);
       context.pop();
 
-      if (transformedValue != UndefinedValue.INSTANCE) {
-        events.add(new ConcreteViewEvent(View.Event.Type.VALUE,
-            node.getElementName(), node.getNamespace(), transformedValue));
-      }
-
+      events.addAll(generatorSupport.valueEvents(
+          node.getElementName(), transformedValue, context));
     }
 
     events.add(new ConcreteViewEvent(View.Event.Type.END_ARRAY,

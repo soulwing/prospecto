@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+import javax.json.JsonString;
 import javax.xml.bind.DatatypeConverter;
 
 import org.soulwing.prospecto.api.ViewException;
@@ -86,6 +87,19 @@ import org.soulwing.prospecto.api.ViewException;
  * @author Carl Harris
  */
 public class Coerce {
+
+  /**
+   * Coerces an arbitrary value to a string.
+   * @param value the subject value
+   * @return a string representation of value or
+   *    {@code null} if {@code value} is null
+   */
+  public static String toString(Object value) {
+    if (value == null) return null;
+    if (value instanceof Enum) return ((Enum<?>) value).name();
+    if (value instanceof JsonString) return ((JsonString) value).getString();
+    return value.toString();
+  }
 
   /**
    * Coerces a view value to a model value type.

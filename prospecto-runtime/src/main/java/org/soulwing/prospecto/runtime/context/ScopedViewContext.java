@@ -19,8 +19,8 @@
 package org.soulwing.prospecto.runtime.context;
 
 import org.soulwing.prospecto.api.ViewContext;
-import org.soulwing.prospecto.api.factory.ObjectFactories;
 import org.soulwing.prospecto.runtime.association.AssociationManagerService;
+import org.soulwing.prospecto.runtime.converter.KeyTypeConverterService;
 import org.soulwing.prospecto.runtime.converter.ValueTypeConverterService;
 import org.soulwing.prospecto.runtime.factory.ObjectFactoryService;
 import org.soulwing.prospecto.runtime.listener.NotifiableViewListeners;
@@ -63,7 +63,14 @@ public interface ScopedViewContext extends ViewContext {
   ObjectFactoryService getObjectFactories();
 
   /**
-   * Gets the collection of value type converters
+   * Gets the collection of key type converters.
+   * @return converter collection
+   */
+  @Override
+  KeyTypeConverterService getKeyTypeConverters();
+
+  /**
+   * Gets the collection of value type converters.
    * @return converter collection
    */
   @Override
@@ -78,9 +85,11 @@ public interface ScopedViewContext extends ViewContext {
 
   /**
    * Pushes a new frame onto the context stack for an indexed frame
-   * @param index index to associate with the frame
+   * @param key key to associate with the frame; this is either an integer
+   *    index in the case of a frame for an array-like structure or a
+   *    key in the case of a frame for a map-like structure
    */
-  void push(int index);
+  void push(Object key);
 
   /**
    * Pops the top frame from the context stack

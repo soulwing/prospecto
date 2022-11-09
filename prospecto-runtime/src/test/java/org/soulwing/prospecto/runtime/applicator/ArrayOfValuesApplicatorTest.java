@@ -24,11 +24,13 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -56,11 +58,20 @@ public class ArrayOfValuesApplicatorTest
   private static final View.Event TRIGGER_EVENT =
       new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY, null, null, null);
 
-  private static final View.Event OTHER_EVENT =
-      new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, null, null, null);
-
   private static final View.Event VALUE_EVENT =
       new ConcreteViewEvent(View.Event.Type.VALUE, NAME, null, VIEW_VALUE);
+
+  private static final List<View.Event> OBJECT = Arrays.asList(
+      new ConcreteViewEvent(View.Event.Type.BEGIN_OBJECT, null, null, null),
+      VALUE_EVENT,
+      new ConcreteViewEvent(View.Event.Type.END_OBJECT, null, null, null)
+  );
+
+  private static final List<View.Event> ARRAY = Arrays.asList(
+      new ConcreteViewEvent(View.Event.Type.BEGIN_ARRAY, null, null, null),
+      VALUE_EVENT,
+      new ConcreteViewEvent(View.Event.Type.END_ARRAY, null, null, null)
+  );
 
   private static final View.Event NULL_VALUE_EVENT =
       new ConcreteViewEvent(View.Event.Type.VALUE, NAME, null, null);
@@ -98,10 +109,8 @@ public class ArrayOfValuesApplicatorTest
         oneOf(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
-            Object.class, VIEW_VALUE, node, viewContext);
-        will(returnValue(MODEL_VALUE));
-        oneOf(viewContext).push(0);
-        oneOf(viewContext).pop();
+            Object.class, Collections.singletonList(VIEW_VALUE), node, viewContext);
+        will(returnValue(Collections.singletonList(MODEL_VALUE)));
       }
     });
 
@@ -118,10 +127,8 @@ public class ArrayOfValuesApplicatorTest
         oneOf(node).getComponentType();
         will(returnValue(Object.class));
         oneOf(transformationService).valueToInject(parentEntity,
-            Object.class, null, node, viewContext);
-        will(returnValue(null));
-        oneOf(viewContext).push(0);
-        oneOf(viewContext).pop();
+            Object.class, Collections.singletonList(null), node, viewContext);
+        will(returnValue(Collections.singletonList(null)));
       }
     });
 
@@ -137,16 +144,57 @@ public class ArrayOfValuesApplicatorTest
     applicator.onToModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
   }
 
-  @Test(expected = ViewApplicatorException.class)
-  public void testOnToModelValueWhenNonValueEvent() throws Exception {
-    context.checking(new Expectations() { {} });
-    events.add(OTHER_EVENT);
-    applicator.onToModelValue(parentEntity, TRIGGER_EVENT, events, viewContext);
+  @Test
+  public void testOnToModelValueObject() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getComponentType();
+        will(returnValue(Object.class));
+        oneOf(transformationService).valueToInject(with(parentEntity),
+            with(Object.class),
+            with(contains(any(Map.class))),
+            with(node), with(viewContext));
+        will(returnValue(Collections.singletonList(MODEL_VALUE)));
+      }
+    });
+    events.addAll(OBJECT);
+    events.add(END_EVENT);
+    assertThat((Collection<?>) applicator.onToModelValue(parentEntity,
+        TRIGGER_EVENT, events, viewContext), contains(MODEL_VALUE));
+  }
+
+  @Test
+  public void testOnToModelValueArray() throws Exception {
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getComponentType();
+        will(returnValue(Object.class));
+        oneOf(transformationService).valueToInject(with(parentEntity),
+            with(Object.class),
+            with(contains(any(List.class))),
+            with(node), with(viewContext));
+        will(returnValue(Collections.singletonList(MODEL_VALUE)));
+      }
+    });
+    events.addAll(ARRAY);
+    events.add(END_EVENT);
+    assertThat((Collection<?>) applicator.onToModelValue(parentEntity,
+        TRIGGER_EVENT, events, viewContext), contains(MODEL_VALUE));
   }
 
   @Test
   public void testOnToModelValueWhenEmptyArray() throws Exception {
-    context.checking(new Expectations() { {} });
+    context.checking(new Expectations() {
+      {
+        oneOf(node).getComponentType();
+        will(returnValue(Object.class));
+        oneOf(transformationService).valueToInject(with(parentEntity),
+            with(Object.class),
+            with(empty()),
+            with(node), with(viewContext));
+        will(returnValue(Collections.emptyList()));
+      }
+    });
     events.add(END_EVENT);
     assertThat((Collection<?>) applicator.onToModelValue(parentEntity,
         TRIGGER_EVENT, events, viewContext), is(empty()));

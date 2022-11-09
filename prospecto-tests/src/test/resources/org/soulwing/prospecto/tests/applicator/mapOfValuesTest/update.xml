@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapOfValuesTest xmlns:v="urn:prospecto.soulwing.org:view"
+    xmlns="urn:prospecto.soulwing.org:default"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    v:type="object">
+
+  <values v:type="object">
+    <string xsi:type="xs:string">otherString</string>
+    <boolean xsi:type="xs:boolean">true</boolean>
+    <number xsi:type="xs:boolean">-1</number>
+  </values>
+
+</mapOfValuesTest>

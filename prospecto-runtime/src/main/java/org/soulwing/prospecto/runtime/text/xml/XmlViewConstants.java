@@ -31,7 +31,7 @@ public interface XmlViewConstants {
   enum ElementType {
     VALUE,
     OBJECT,
-    ARRAY
+    ARRAY,
   }
 
   String VIEW_NAMESPACE = "urn:prospecto.soulwing.org:view";

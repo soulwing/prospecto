@@ -40,7 +40,7 @@ public class ConcreteSubtypeNode extends AbstractContainerNode
    * @param subtype type which must be a subtype of the parent node's type
    */
   public ConcreteSubtypeNode(Class<?> subtype) {
-    super(null, null, subtype);
+    super(null, null, null, subtype);
   }
 
   @Override

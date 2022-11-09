@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapOfObjectsSubtypeTest xmlns:v="urn:prospecto.soulwing.org:view"
+    xmlns="urn:prospecto.soulwing.org:default"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    v:type="object">
+
+  <vehicles v:type="object">
+    <foobar v:type="object" xsi:type="ObjectSubtypeTest$Car">
+      <passengerCapacity xsi:type="xs:int">4</passengerCapacity>
+      <color xsi:type="xs:string">red</color>
+      <driveTrain xsi:type="xs:string">V6; 9-speed automatic; AWD</driveTrain>
+    </foobar>
+  </vehicles>
+
+</mapOfObjectsSubtypeTest>

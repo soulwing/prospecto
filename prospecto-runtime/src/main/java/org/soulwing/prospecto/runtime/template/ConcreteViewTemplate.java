@@ -191,11 +191,52 @@ public class ConcreteViewTemplate implements ComposableViewTemplate {
     return new ConcreteViewTemplate(root);
   }
 
+  @Override
+  public AbstractContainerNode mapOfObjects(String name,
+      String namespace, Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    final ConcreteMapOfObjectsNode node = new ConcreteMapOfObjectsNode(name,
+        namespace, keyType, root.getModelType());
+    copyInto(node);
+    return node;
+  }
+
+  @Override
+  public AbstractContainerNode mapOfReferences(String name,
+      String namespace, Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    ConcreteMapOfReferencesNode node = new ConcreteMapOfReferencesNode(name,
+        namespace, keyType, root.getModelType());
+    copyInto(node);
+    return node;
+  }
+
+  @Override
+  public ViewTemplate mapOfObjectsTemplate(String name,
+      String namespace, Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    RootMapOfObjectsNode root = new RootMapOfObjectsNode(name,
+        namespace, getRoot().getKeyType(), getRoot().getModelType());
+    copyInto(root);
+    return new ConcreteViewTemplate(root);
+  }
+
+  @Override
+  public ViewTemplate mapOfReferencesTemplate(String name,
+      String namespace, Class<?> keyType) {
+    assertRootIsContainerViewNode(name);
+    RootMapOfReferencesNode root = new RootMapOfReferencesNode(name,
+        namespace, getRoot().getKeyType(), getRoot().getModelType());
+    copyInto(root);
+    return new ConcreteViewTemplate(root);
+  }
+
   private void copyInto(AbstractContainerNode node) {
     assert root instanceof ContainerNode;
     node.addChildren((AbstractContainerNode) root);
     node.putAll(root);
   }
+
 
   private void assertRootIsContainerViewNode(String name) {
     if (!(root instanceof AbstractContainerNode)) {

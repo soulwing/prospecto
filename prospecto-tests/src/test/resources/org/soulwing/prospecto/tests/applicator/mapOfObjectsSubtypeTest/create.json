@@ -1,0 +1,10 @@
+{
+  "vehicles": {
+    "foobar": {
+      "objectType":"ObjectSubtypeTest$Car",
+      "passengerCapacity":4,
+      "color":"red",
+      "driveTrain":"V6; 9-speed automatic; AWD"
+    }
+  }
+}

@@ -83,6 +83,19 @@ public interface ViewTemplateBuilderProvider {
       throws ViewTemplateException;
 
   /**
+   * Creates a builder for a view whose root node is an array-of-references node.
+   * @param name name for the object in the view (may be {@code null})
+   * @param elementName name for the elements in the array (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param modelType model type to associate with the root view node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplateBuilder arrayOfReferences(String name,
+      String elementName, String namespace, Class<?> modelType)
+      throws ViewTemplateException;
+
+  /**
    * Creates a view template whose root node is an array-of-references node
    * using the children of the root node of the given object template.
    * @param name name for the object in the view (may be {@code null})
@@ -106,5 +119,75 @@ public interface ViewTemplateBuilderProvider {
    */
   ViewTemplate arrayOfValues(String name,
       String elementName, String namespace) throws ViewTemplateException;
+
+  /**
+   * Creates a builder for a view whose root node is a map-of-objects node.
+   *
+   * @param name      name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType   key type to associate with the root view node
+   * @param modelType model type to associate with the root view node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplateBuilder mapOfObjects(String name,
+      String namespace, Class<?> keyType, Class<?> modelType)
+      throws ViewTemplateException;
+
+  /**
+   * Creates a view template whose root node is a map-of-objects node
+   * using the children of the root node of the given object template.
+   *
+   * @param name      name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType   key type to associate with the root view node
+   * @param template  source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplate mapOfObjects(String name,
+      String namespace, Class<?> keyType, ViewTemplate template)
+      throws ViewTemplateException;
+
+  /**
+   * Creates a builder for a view whose root node is a map-of-references node.
+   *
+   * @param name      name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param modelType model type to associate with the root view node
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplateBuilder mapOfReferences(String name,
+      String namespace, Class<?> keyType, Class<?> modelType)
+      throws ViewTemplateException;
+
+  /**
+   * Creates a view template whose root node is a map-of-references node
+   * using the children of the root node of the given object template.
+   *
+   * @param name      name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @param keyType key type to associate with the root view node
+   * @param template  source template (which must have a root node of type object)
+   * @return template builder
+   * @throws ViewTemplateException
+   */
+  ViewTemplate mapOfReferences(String name,
+      String namespace, Class<?> keyType, ViewTemplate template)
+      throws ViewTemplateException;
+
+  /**
+   * Creates a view template whose root node is a map-of-values node.
+   *
+   * @param name      name for the object in the view (may be {@code null})
+   * @param namespace namespace for {@code name} (may by {@code null})
+   * @return view template
+   * @throws ViewTemplateException
+   */
+  ViewTemplate mapOfValues(String name,
+      String namespace, Class<?> keyType, Class<?> componentType)
+      throws ViewTemplateException;
+
 
 }

@@ -40,7 +40,7 @@ public class ConcreteMetaNode extends AbstractViewNode
    */
   public ConcreteMetaNode(String name, String namespace,
       Object value) {
-    super(name, namespace, null);
+    super(name, namespace, null, null);
     this.value = value;
   }
 

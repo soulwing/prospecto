@@ -16,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.soulwing.prospecto.tests.view;
+package org.soulwing.prospecto.tests.generator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.BEGIN_OBJECT;
+import static org.soulwing.prospecto.api.View.Event.Type.END_ARRAY;
 import static org.soulwing.prospecto.api.View.Event.Type.END_OBJECT;
 import static org.soulwing.prospecto.api.View.Event.Type.VALUE;
 import static org.soulwing.prospecto.testing.matcher.ViewMatchers.eventOfType;
@@ -47,12 +49,15 @@ import org.soulwing.prospecto.api.options.ViewDefaults;
  *
  * @author Carl Harris
  */
-public class ToStringValueTest {
+public class EnumNameTest {
 
-  public class MockModel {
+  public enum MockEnum {
+    MOCK;
+
+
     @Override
     public String toString() {
-      return MockModel.class.getSimpleName();
+      return name().toLowerCase();
     }
   }
 
@@ -61,25 +66,48 @@ public class ToStringValueTest {
   @Test
   public void testObject() throws Exception {
     final ViewTemplate template = ViewTemplateBuilderProducer
-        .object(MockModel.class)
-            .toStringValue()
+        .object(MockEnum.class)
+            .name()
             .end()
         .build();
 
-    assertThat(template.generateView(new MockModel(), context),
+    assertThat(template.generateView(MockEnum.MOCK, context),
         hasEventSequence(
             eventOfType(BEGIN_OBJECT,
-                withName(Introspector.decapitalize(MockModel.class.getSimpleName())),
+                withName(Introspector.decapitalize(MockEnum.class.getSimpleName())),
                 inDefaultNamespace(),
                 whereValue(is(nullValue()))),
             eventOfType(VALUE,
-                withName(ViewDefaults.TO_STRING_NODE_NAME),
+                withName(ViewDefaults.ENUM_NODE_NAME),
                 inDefaultNamespace(),
-                whereValue(is(equalTo(MockModel.class.getSimpleName())))),
+                whereValue(is(equalTo(MockEnum.MOCK.name())))),
             eventOfType(END_OBJECT,
-                withName(Introspector.decapitalize(MockModel.class.getSimpleName())),
+                withName(Introspector.decapitalize(MockEnum.class.getSimpleName())),
                 inDefaultNamespace(),
                 whereValue(is(nullValue())))
+        )
+    );
+
+  }
+
+  @Test
+  public void testArrayOfObjects() throws Exception {
+    final ViewTemplate template = ViewTemplateBuilderProducer
+        .arrayOfObjects(MockEnum.class)
+            .name()
+            .end()
+        .build();
+
+    assertThat(template.generateView(MockEnum.values(), context),
+        hasEventSequence(
+            eventOfType(BEGIN_ARRAY),
+            eventOfType(BEGIN_OBJECT),
+            eventOfType(VALUE,
+                withName(ViewDefaults.ENUM_NODE_NAME),
+                inDefaultNamespace(),
+                whereValue(is(equalTo(MockEnum.MOCK.name())))),
+            eventOfType(END_OBJECT),
+            eventOfType(END_ARRAY)
         )
     );
 
