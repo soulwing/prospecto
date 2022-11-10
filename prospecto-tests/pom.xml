@@ -22,7 +22,7 @@
   <parent>
     <artifactId>prospecto</artifactId>
     <groupId>org.soulwing.prospecto</groupId>
-    <version>2.4.0</version>
+    <version>2.5.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
