@@ -59,4 +59,11 @@ public interface WriterKeys {
    * pretty printed.
    */
   String PRETTY_PRINT_OUTPUT = ViewKeys.PREFIX + ".writer.prettyPrintOutput";
+
+  /**
+   * When set to {@code true} and supported by the writer, Java Date and Calendar
+   * values will be written as ISO 8601 date-time strings with time zone.
+   */
+  String USE_ISO_DATETIME = ViewKeys.PREFIX + ".writer.useIsoDatetime";
+
 }

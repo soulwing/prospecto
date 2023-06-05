@@ -37,6 +37,7 @@ import javax.json.JsonValue;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 import javax.json.stream.JsonParser;
+import javax.xml.bind.DatatypeConverter;
 
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewWriter;
@@ -62,6 +63,7 @@ import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 class JsonViewWriter extends AbstractViewWriter {
 
   private final JsonGeneratorFactory generatorFactory;
+  private final boolean isoDateTime;
 
   enum GeneratorContext {
     OBJECT, ARRAY
@@ -85,8 +87,8 @@ class JsonViewWriter extends AbstractViewWriter {
     Map<String, Object> config = new HashMap<>();
     if (options.isEnabled(WriterKeys.PRETTY_PRINT_OUTPUT))
       config.put(JsonGenerator.PRETTY_PRINTING, true);
-
-    generatorFactory = Json.createGeneratorFactory(config);
+    this.generatorFactory = Json.createGeneratorFactory(config);
+    this.isoDateTime = options.isEnabled(WriterKeys.USE_ISO_DATETIME);
   }
 
   /**
@@ -251,10 +253,22 @@ class JsonViewWriter extends AbstractViewWriter {
       writeBoolean(name, (Boolean) value);
     }
     else if (value instanceof Date) {
-      writeLong(name, ((Date) value).getTime());
+      if (isoDateTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) value);
+        writeString(name, DatatypeConverter.printDateTime(calendar));
+      }
+      else {
+        writeLong(name, ((Date) value).getTime());
+      }
     }
     else if (value instanceof Calendar) {
-      writeLong(name, ((Calendar) value).getTimeInMillis());
+      if (isoDateTime) {
+        writeString(name, DatatypeConverter.printDateTime((Calendar) value));
+      }
+      else {
+        writeLong(name, ((Calendar) value).getTimeInMillis());
+      }
     }
     else if (value instanceof Enum) {
       writeString(name, ((Enum<?>) value).name());

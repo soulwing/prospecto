@@ -20,6 +20,7 @@ package org.soulwing.prospecto.tests;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +39,8 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
  * TODO: DESCRIBE THE TYPE HERE
@@ -48,6 +51,7 @@ public class ObjectDemo {
 
   public static class Model {
     public String string = "foobar";
+    public Date datetime = new Date(0);
     public Map<Object, Object> map = new LinkedHashMap<>();
     public List<Object> list = new LinkedList<>();
     public Map<String, Model> nestedModels = new LinkedHashMap<>();
@@ -61,6 +65,7 @@ public class ObjectDemo {
         .object(Model.class)
         .accessType(AccessType.FIELD)
         .value("string")
+        .value("datetime")
         .value("map")
         .value("list")
         .mapOfObjects("nestedModels", String.class, Model.class)
@@ -106,10 +111,13 @@ public class ObjectDemo {
         .build();
 
     View view = template.generateView(model, context);
-    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory("JSON");
+    OptionsMap options = new OptionsMap();
+    options.put(WriterKeys.USE_ISO_DATETIME, true);
+    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory("JSON", options);
     final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     writerFactory.newWriter(view, buffer).writeView();
     buffer.flush();
+    System.out.write(buffer.toByteArray());
     final ViewReaderFactory readerFactory = ViewReaderFactoryProducer.getFactory("JSON");
     view = readerFactory.newReader(new ByteArrayInputStream(buffer.toByteArray())).readView();
     template.createApplicator(view, context).update(model);
