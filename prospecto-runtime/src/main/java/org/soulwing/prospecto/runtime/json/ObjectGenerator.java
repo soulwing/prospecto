@@ -27,6 +27,8 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
+import org.soulwing.prospecto.api.options.Options;
+
 /**
  * A generator for a JSON-P object structure.
  *
@@ -36,6 +38,10 @@ class ObjectGenerator extends AbstractStructureGenerator<JsonObject> {
 
   private interface Generator {
     void generate(JsonObjectBuilder builder);
+  }
+
+  ObjectGenerator(Options options) {
+    super(options);
   }
 
   private final List<Generator> generators = new ArrayList<>();

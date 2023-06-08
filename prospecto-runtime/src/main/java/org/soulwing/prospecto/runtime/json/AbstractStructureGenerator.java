@@ -25,6 +25,10 @@ import java.util.Date;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
+import javax.xml.bind.DatatypeConverter;
+
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
  * An abstract base for generators that produce structural JSON-P elements.
@@ -32,6 +36,12 @@ import javax.json.JsonStructure;
  * @author Carl Harris
  */
 abstract class AbstractStructureGenerator<T extends JsonStructure> {
+
+  private final boolean isoDateTime;
+
+  AbstractStructureGenerator(Options options) {
+    this.isoDateTime = options.isEnabled(WriterKeys.USE_ISO_DATETIME);
+  }
 
   abstract T finish();
 
@@ -58,13 +68,25 @@ abstract class AbstractStructureGenerator<T extends JsonStructure> {
       generateBoolean(name, (Boolean) value);
     }
     else if (value instanceof Date) {
-      generateLong(name, ((Date) value).getTime());
+      if (isoDateTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime((Date) value);
+        generateString(name, DatatypeConverter.printDateTime(calendar));
+      }
+      else {
+        generateLong(name, ((Date) value).getTime());
+      }
     }
     else if (value instanceof Calendar) {
-      generateLong(name, ((Calendar) value).getTimeInMillis());
+      if (isoDateTime) {
+        generateString(name, DatatypeConverter.printDateTime((Calendar) value));
+      }
+      else {
+        generateLong(name, ((Calendar) value).getTimeInMillis());
+      }
     }
     else if (value instanceof Enum) {
-      generateString(name, ((Enum) value).name());
+      generateString(name, ((Enum<?>) value).name());
     }
     else if (value == null || value.toString() == null) {
       generateNull(name);

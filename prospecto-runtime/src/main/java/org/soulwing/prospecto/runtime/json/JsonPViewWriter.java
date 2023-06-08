@@ -39,13 +39,13 @@ import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.runtime.text.AbstractViewWriter;
 
 /**
- * A {@link ViewWriter} that produces a JSON-P structure.
+ * An {@link AbstractViewWriter} that produces a JSON-P structure.
  *
  * @author Carl Harris
  */
 public class JsonPViewWriter extends AbstractViewWriter {
 
-  private final Deque<AbstractStructureGenerator> generatorStack =
+  private final Deque<AbstractStructureGenerator<?>> generatorStack =
       new LinkedList<>();
 
   private boolean firstEvent = true;
@@ -85,7 +85,7 @@ public class JsonPViewWriter extends AbstractViewWriter {
   @Override
   protected void onBeginObject(View.Event event) throws Exception {
     checkForEnvelope(event);
-    generatorStack.push(new ObjectGenerator());
+    generatorStack.push(new ObjectGenerator(getOptions()));
   }
 
   @Override
@@ -105,7 +105,7 @@ public class JsonPViewWriter extends AbstractViewWriter {
   @Override
   protected void onBeginArray(View.Event event) throws Exception {
     checkForEnvelope(event);
-    generatorStack.push(new ArrayGenerator());
+    generatorStack.push(new ArrayGenerator(getOptions()));
   }
 
   @Override

@@ -18,8 +18,6 @@
  */
 package org.soulwing.prospecto.tests;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -39,15 +37,17 @@ import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplate;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.json.JsonPSource;
+import org.soulwing.prospecto.api.json.JsonPTarget;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.WriterKeys;
 
 /**
- * A simple demo of writing and reading an object.
+ * A simple demo of writing and reading and object using JSON-P.
  *
  * @author Carl Harris
  */
-public class ObjectDemo {
+public class JsonPObjectDemo {
 
   public static class Model {
     public String string = "foobar";
@@ -113,12 +113,13 @@ public class ObjectDemo {
     View view = template.generateView(model, context);
     OptionsMap options = new OptionsMap();
     options.put(WriterKeys.USE_ISO_DATETIME, true);
-    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory("JSON", options);
-    final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    writerFactory.newWriter(view, buffer).writeView();
-    buffer.flush();
-    final ViewReaderFactory readerFactory = ViewReaderFactoryProducer.getFactory("JSON");
-    view = readerFactory.newReader(new ByteArrayInputStream(buffer.toByteArray())).readView();
+    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory("JSON-P", options);
+    final JsonPTarget target = new JsonPTarget();
+    writerFactory.newWriter(view).writeView(target);
+    System.out.println(target.toJson());
+    final ViewReaderFactory readerFactory = ViewReaderFactoryProducer.getFactory("JSON-P");
+    final JsonPSource source = new JsonPSource(target.toJson());
+    view = readerFactory.newReader(source).readView();
     template.createApplicator(view, context).update(model);
     System.out.println(model);
   }
