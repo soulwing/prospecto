@@ -23,8 +23,11 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import javax.json.JsonArray;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonString;
 import javax.json.JsonStructure;
+import javax.json.JsonValue;
 import javax.xml.bind.DatatypeConverter;
 
 import org.soulwing.prospecto.api.options.Options;
@@ -88,12 +91,42 @@ abstract class AbstractStructureGenerator<T extends JsonStructure> {
     else if (value instanceof Enum) {
       generateString(name, ((Enum<?>) value).name());
     }
+    else if (value instanceof JsonValue) {
+      generateJsonValue(name, (JsonValue) value);
+    }
     else if (value == null || value.toString() == null) {
       generateNull(name);
     }
     else {
       assert value != null;
       generateString(name, value.toString());
+    }
+  }
+
+  private void generateJsonValue(String name, JsonValue value) {
+    switch (value.getValueType()) {
+      case STRING:
+        generateString(name, ((JsonString) value).getString());
+        break;
+      case NUMBER:
+        if (((JsonNumber) value).isIntegral()) {
+          generateBigInteger(name, ((JsonNumber) value).bigIntegerValue());
+        }
+        else {
+          generateBigDecimal(name, ((JsonNumber) value).bigDecimalValue());
+        }
+        break;
+      case TRUE:
+        generateBoolean(name, true);
+        break;
+      case FALSE:
+        generateBoolean(name, false);
+        break;
+      case NULL:
+        generateNull(name);
+        break;
+      default:
+        throw new IllegalArgumentException("structural types not supported");
     }
   }
 

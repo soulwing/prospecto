@@ -49,8 +49,26 @@ import org.soulwing.prospecto.api.options.WriterKeys;
  */
 public class JsonPObjectDemo {
 
+  public enum Color {
+    RED("red"),
+    GREEN("green"),
+    BLUE("blue");
+
+    private final String displayName;
+
+    Color(String displayName) {
+      this.displayName = displayName;
+    }
+
+    @Override
+    public String toString() {
+      return displayName;
+    }
+  }
+
   public static class Model {
     public String string = "foobar";
+    public Color color = Color.BLUE;
     public Date datetime = new Date();
     public Map<Object, Object> map = new LinkedHashMap<>();
     public List<Object> list = new LinkedList<>();
@@ -65,6 +83,7 @@ public class JsonPObjectDemo {
         .object(Model.class)
         .accessType(AccessType.FIELD)
         .value("string")
+        .value("color").toStringValue()
         .value("datetime")
         .value("map")
         .value("list")
@@ -111,6 +130,7 @@ public class JsonPObjectDemo {
         .build();
 
     View view = template.generateView(model, context);
+
     OptionsMap options = new OptionsMap();
     options.put(WriterKeys.USE_ISO_DATETIME, true);
     final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory("JSON-P", options);
