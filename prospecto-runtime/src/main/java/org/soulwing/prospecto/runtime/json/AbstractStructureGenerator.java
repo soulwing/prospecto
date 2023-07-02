@@ -125,8 +125,14 @@ abstract class AbstractStructureGenerator<T extends JsonStructure> {
       case NULL:
         generateNull(name);
         break;
+      case OBJECT:
+        storeObject(name, (JsonObject) value);
+        break;
+      case ARRAY:
+        storeArray(name, (JsonArray) value);
+        break;
       default:
-        throw new IllegalArgumentException("structural types not supported");
+        throw new IllegalArgumentException("unrecognized type");
     }
   }
 
