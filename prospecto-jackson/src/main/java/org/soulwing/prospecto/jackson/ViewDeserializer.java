@@ -20,6 +20,7 @@ package org.soulwing.prospecto.jackson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
 import org.soulwing.prospecto.api.View;
@@ -46,7 +47,7 @@ public class ViewDeserializer extends StdDeserializer<View> {
 
   @Override
   public View deserialize(JsonParser jsonParser,
-      DeserializationContext deserializationContext) {
+      DeserializationContext deserializationContext) throws IOException  {
 
     final JsonNode tree = jsonParser.readValueAsTree();
     final ObjectMapper mapper = new ObjectMapper();

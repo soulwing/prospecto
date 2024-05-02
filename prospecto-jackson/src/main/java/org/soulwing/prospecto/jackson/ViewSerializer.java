@@ -20,6 +20,7 @@ package org.soulwing.prospecto.jackson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
@@ -45,7 +46,7 @@ public class ViewSerializer extends StdSerializer<View> {
 
   @Override
   public void serialize(View view, JsonGenerator jsonGenerator,
-      SerializerProvider serializerProvider) {
+      SerializerProvider serializerProvider) throws IOException {
 
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     writerFactory.newWriter(view, outputStream).writeView();
