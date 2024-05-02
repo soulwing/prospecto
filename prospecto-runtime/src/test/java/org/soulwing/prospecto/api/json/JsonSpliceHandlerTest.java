@@ -31,6 +31,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 
+import org.jmock.auto.Mock;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
@@ -110,6 +111,22 @@ public class JsonSpliceHandlerTest {
       injectedValue = value;
     }
   };
+
+  private JsonSpliceHandler.Producer nullProducer = new JsonSpliceHandler.Producer() {
+    @Override
+    public JsonStructure apply(SpliceNode node, ViewContext context) {
+      return null;
+    }
+  };
+
+  private ViewTemplate nullSpliceTemplate = ViewTemplateBuilderProducer
+      .object(MockObject.class)
+      .splice("json", JsonSpliceHandler.getInstance())
+          .attribute(nullProducer)
+          .attribute(NoOpJsonSpliceConsumer.INSTANCE)
+      .end()
+      .build();
+
   private ViewTemplate objectTemplate = ViewTemplateBuilderProducer
       .object(MockObject.class)
           .splice("json", JsonSpliceHandler.getInstance())
@@ -140,6 +157,21 @@ public class JsonSpliceHandlerTest {
               .attribute(injector)
           .end()
       .build();
+
+  @Test
+  public void testGenerateWithNullSplice() throws Exception {
+    final MockObject model = new MockObject();
+    final ViewContext viewContext = ViewContextProducer.newContext();
+    final View view = nullSpliceTemplate.generateView(model, viewContext);
+
+    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    final JsonPTarget target = new JsonPTarget();
+    ViewWriterFactoryProducer.getFactory("JSON-P")
+        .newWriter(view).writeView(target);
+
+    final JsonObject jsonView = target.toJson().asJsonObject();
+    assertThat(jsonView.containsKey("json"), is(false));
+  }
 
   @Test
   public void testWithObjectSplice() throws Exception {

@@ -98,6 +98,7 @@ public class JsonSpliceHandler implements SpliceHandler {
           + Producer.class.getSimpleName() + " attribute");
     }
     final JsonStructure structure = producer.apply(node, context);
+    if (structure == null) return null;
     final JsonPSource source = new JsonPSource(structure);
     return readerFactory.newReader(source).readView();
   }
