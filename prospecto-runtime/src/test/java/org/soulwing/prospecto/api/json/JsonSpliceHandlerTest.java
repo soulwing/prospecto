@@ -45,8 +45,6 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
-import org.soulwing.prospecto.api.ViewWriterFactory;
-import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.splice.SpliceHandler;
@@ -68,9 +66,6 @@ public class JsonSpliceHandlerTest {
 
   @Mock
   private SpliceNode nodeMock;
-
-  @Mock
-  private ViewWriterFactory writerFactory;
 
   private final JsonObject object = Json.createObjectBuilder()
       .add("string", "string")
@@ -258,86 +253,32 @@ public class JsonSpliceHandlerTest {
   }
 
   @Test
-  public void testApplyInvokesViewWriterWithMergedOptions() throws Exception {
-    Map<String, Object> optionsMap = new HashMap<>();
-    optionsMap.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
-
-    final Options[] capturedOptions = new Options[1];
-    JsonSpliceHandler capturingHandler = new JsonSpliceHandler() {
-      @Override
-      protected ViewWriterFactory getViewWriterFactory(Options options) {
-        capturedOptions[0] = options;
-        return JsonSpliceHandlerTest.this.writerFactory;
-      }
-    };
-
+  public void testGetMergedOptionsReturnsDefaultsWhenNoOptionsAttribute() throws Exception {
     context.checking(new Expectations() {{
-      allowing(nodeMock).get(JsonSpliceHandler.Consumer.class);
-      will(returnValue(objectConsumer));
       allowing(nodeMock).get("options", Map.class);
-      will(returnValue(optionsMap));
-      allowing(writerFactory).newWriter(with(any(View.class)));
+      will(returnValue(null));
     }});
 
-    ViewTemplate template = ViewTemplateBuilderProducer
-        .object(MockObject.class)
-        .splice("json", capturingHandler)
-        .attribute(objectProducer)
-        .attribute(objectConsumer)
-        .end()
-        .build();
+    OptionsMap mergedOptions = spliceHandler.getOptions(nodeMock);
 
-    View view = template.generateView(new MockObject(),
-        ViewContextProducer.newContext());
-
-    capturingHandler.apply(nodeMock, view,
-        ViewContextProducer.newContext());
-
-    assertThat(capturedOptions[0], is(not(nullValue())));
-    OptionsMap captured = (OptionsMap) capturedOptions[0];
-
-    assertThat(captured.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
-    assertThat(captured.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
-    assertThat(captured.isEnabled(WriterKeys.INCLUDE_NULL_PROPERTIES), is(true));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
   }
 
   @Test
-  public void testApplyInvokesViewWriterWithDefaultOptions() throws Exception {
-    final Options[] capturedOptions = new Options[1];
-    JsonSpliceHandler capturingHandler = new JsonSpliceHandler() {
-      @Override
-      protected ViewWriterFactory getViewWriterFactory(Options options) {
-        capturedOptions[0] = options;
-        return JsonSpliceHandlerTest.this.writerFactory;
-      }
-    };
+  public void testGetMergedOptionsReturnsCustomOptionsWhenOptionsAttributePresent() throws Exception {
+    Map<String, Object> optionsMap = new HashMap<>();
+    optionsMap.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
 
     context.checking(new Expectations() {{
-      allowing(nodeMock).get(JsonSpliceHandler.Consumer.class);
-      will(returnValue(objectConsumer));
       allowing(nodeMock).get("options", Map.class);
-      will(returnValue(null));
-      allowing(writerFactory).newWriter(with(any(View.class)));
+      will(returnValue(optionsMap));
     }});
 
-    ViewTemplate template = ViewTemplateBuilderProducer
-        .object(MockObject.class)
-        .splice("json", capturingHandler)
-        .attribute(objectProducer)
-        .attribute(objectConsumer)
-        .end()
-        .build();
+    OptionsMap mergedOptions = spliceHandler.getOptions(nodeMock);
 
-    View view = template.generateView(new MockObject(),
-        ViewContextProducer.newContext());
-
-    capturingHandler.apply(nodeMock, view,
-        ViewContextProducer.newContext());
-
-    assertThat(capturedOptions[0], is(not(nullValue())));
-    OptionsMap captured = (OptionsMap) capturedOptions[0];
-
-    assertThat(captured.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
-    assertThat(captured.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.INCLUDE_NULL_PROPERTIES), is(true));
   }
 }

@@ -111,21 +111,9 @@ public class JsonSpliceHandler implements SpliceHandler {
       throw new ViewTemplateException("node must specify a "
           + Consumer.class.getSimpleName() + " attribute");
     }
-    final OptionsMap mergedOptions = new OptionsMap();
-    this.defaultOptions.toMap().forEach(mergedOptions::put);
-
-    //Get any specified custom options and merge with default options
-    Map<?, ?> optionsMap = node.get("options", Map.class);
-    if (optionsMap != null) {
-      optionsMap.forEach((key, value) -> {
-        if (key instanceof String) {
-          mergedOptions.put((String) key, value);
-        }
-      });
-    }
 
     final ViewWriterFactory writerFactory =
-        getViewWriterFactory(mergedOptions);
+        getViewWriterFactory(getOptions(node));
 
     final JsonPTarget target = new JsonPTarget();
     writerFactory.newWriter(view).writeView(target);
@@ -137,6 +125,22 @@ public class JsonSpliceHandler implements SpliceHandler {
    */
   protected ViewWriterFactory getViewWriterFactory(Options options) {
     return ViewWriterFactoryProducer.getFactory(PROVIDER_NAME, options);
+  }
+
+  OptionsMap getOptions(SpliceNode node) {
+    final OptionsMap options = new OptionsMap();
+    this.defaultOptions.toMap().forEach(options::put);
+
+    //Get any specified custom options and merge with default options
+    Map<?, ?> optionsMap = node.get("options", Map.class);
+    if (optionsMap != null) {
+      optionsMap.forEach((key, value) -> {
+        if (key instanceof String) {
+          options.put((String) key, value);
+        }
+      });
+    }
+    return options;
   }
 
 }
