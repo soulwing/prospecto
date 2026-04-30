@@ -18,6 +18,7 @@
  */
 package org.soulwing.prospecto.api.json;
 
+import java.util.Map;
 import javax.json.JsonStructure;
 
 import org.soulwing.prospecto.Singleton;
@@ -29,6 +30,7 @@ import org.soulwing.prospecto.api.ViewInputException;
 import org.soulwing.prospecto.api.ViewReaderFactory;
 import org.soulwing.prospecto.api.ViewTemplateException;
 import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
 import org.soulwing.prospecto.api.options.OptionsMap;
 import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.splice.SpliceHandler;
@@ -68,7 +70,7 @@ public class JsonSpliceHandler implements SpliceHandler {
   }
 
   private final ViewReaderFactory readerFactory;
-  private final ViewWriterFactory writerFactory;
+  private final OptionsMap defaultOptions;
 
   /**
    * Gets the singleton instance of this splice handler type.
@@ -82,12 +84,10 @@ public class JsonSpliceHandler implements SpliceHandler {
    * Constructs a new instance.
    */
   private JsonSpliceHandler() {
-    final OptionsMap options = new OptionsMap();
+    this.defaultOptions = new OptionsMap();
     this.readerFactory = ViewReaderFactoryProducer.getFactory(PROVIDER_NAME);
-    options.put(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, false);
-    options.put(WriterKeys.WRAP_OBJECT_IN_ENVELOPE, false);
-    this.writerFactory =
-      ViewWriterFactoryProducer.getFactory(PROVIDER_NAME, options);
+    this.defaultOptions.put(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, false);
+    this.defaultOptions.put(WriterKeys.WRAP_OBJECT_IN_ENVELOPE, false);
   }
 
   @Override
@@ -111,9 +111,28 @@ public class JsonSpliceHandler implements SpliceHandler {
       throw new ViewTemplateException("node must specify a "
           + Consumer.class.getSimpleName() + " attribute");
     }
+
+    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory(PROVIDER_NAME, getOptions(node));
+
     final JsonPTarget target = new JsonPTarget();
     writerFactory.newWriter(view).writeView(target);
     return consumer.apply(target.toJson(), node, context);
+  }
+
+  OptionsMap getOptions(SpliceNode node) {
+    final OptionsMap options = new OptionsMap();
+    this.defaultOptions.toMap().forEach(options::put);
+
+    //Get any specified custom options and merge with default options
+    Map<?, ?> optionsMap = node.get("options", Map.class);
+    if (optionsMap != null) {
+      optionsMap.forEach((key, value) -> {
+        if (key instanceof String) {
+          options.put((String) key, value);
+        }
+      });
+    }
+    return options;
   }
 
 }

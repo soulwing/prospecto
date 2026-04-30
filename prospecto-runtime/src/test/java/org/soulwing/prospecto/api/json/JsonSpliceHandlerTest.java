@@ -26,12 +26,17 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
@@ -40,6 +45,8 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.template.SpliceNode;
 
@@ -53,6 +60,12 @@ public class JsonSpliceHandlerTest {
   public static class MockObject {}
 
   public static final Object INJECTED_VALUE = new Object();
+
+  @Rule
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private SpliceNode nodeMock;
 
   private final JsonObject object = Json.createObjectBuilder()
       .add("string", "string")
@@ -236,5 +249,33 @@ public class JsonSpliceHandlerTest {
     assertThat(injectedValue, is(sameInstance(INJECTED_VALUE)));
   }
 
+  @Test
+  public void testGetMergedOptionsReturnsDefaultsWhenNoOptionsAttribute() throws Exception {
+    context.checking(new Expectations() {{
+      allowing(nodeMock).get("options", Map.class);
+      will(returnValue(null));
+    }});
 
+    OptionsMap mergedOptions = JsonSpliceHandler.getInstance().getOptions(nodeMock);
+
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+  }
+
+  @Test
+  public void testGetMergedOptionsReturnsCustomOptionsWhenOptionsAttributePresent() throws Exception {
+    Map<String, Object> optionsMap = new HashMap<>();
+    optionsMap.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
+
+    context.checking(new Expectations() {{
+      allowing(nodeMock).get("options", Map.class);
+      will(returnValue(optionsMap));
+    }});
+
+    OptionsMap mergedOptions = JsonSpliceHandler.getInstance().getOptions(nodeMock);
+
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+    assertThat(mergedOptions.isEnabled(WriterKeys.INCLUDE_NULL_PROPERTIES), is(true));
+  }
 }
