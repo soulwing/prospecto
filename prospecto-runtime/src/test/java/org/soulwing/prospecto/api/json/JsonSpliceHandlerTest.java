@@ -171,9 +171,6 @@ public class JsonSpliceHandlerTest {
           .end()
       .build();
 
-  private JsonSpliceHandler spliceHandler =
-      new JsonSpliceHandler();
-
   @Test
   public void testGenerateWithNullSplice() throws Exception {
     final MockObject model = new MockObject();
@@ -259,7 +256,7 @@ public class JsonSpliceHandlerTest {
       will(returnValue(null));
     }});
 
-    OptionsMap mergedOptions = spliceHandler.getOptions(nodeMock);
+    OptionsMap mergedOptions = JsonSpliceHandler.getInstance().getOptions(nodeMock);
 
     assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
     assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
@@ -275,7 +272,7 @@ public class JsonSpliceHandlerTest {
       will(returnValue(optionsMap));
     }});
 
-    OptionsMap mergedOptions = spliceHandler.getOptions(nodeMock);
+    OptionsMap mergedOptions = JsonSpliceHandler.getInstance().getOptions(nodeMock);
 
     assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
     assertThat(mergedOptions.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));

@@ -83,7 +83,7 @@ public class JsonSpliceHandler implements SpliceHandler {
   /**
    * Constructs a new instance.
    */
-  JsonSpliceHandler() {
+  private JsonSpliceHandler() {
     this.defaultOptions = new OptionsMap();
     this.readerFactory = ViewReaderFactoryProducer.getFactory(PROVIDER_NAME);
     this.defaultOptions.put(WriterKeys.WRAP_ARRAY_IN_ENVELOPE, false);
@@ -112,19 +112,11 @@ public class JsonSpliceHandler implements SpliceHandler {
           + Consumer.class.getSimpleName() + " attribute");
     }
 
-    final ViewWriterFactory writerFactory =
-        getViewWriterFactory(getOptions(node));
+    final ViewWriterFactory writerFactory = ViewWriterFactoryProducer.getFactory(PROVIDER_NAME, getOptions(node));
 
     final JsonPTarget target = new JsonPTarget();
     writerFactory.newWriter(view).writeView(target);
     return consumer.apply(target.toJson(), node, context);
-  }
-
-  /**
-   * Creates a view writer factory with the given options.
-   */
-  protected ViewWriterFactory getViewWriterFactory(Options options) {
-    return ViewWriterFactoryProducer.getFactory(PROVIDER_NAME, options);
   }
 
   OptionsMap getOptions(SpliceNode node) {
