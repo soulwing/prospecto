@@ -26,12 +26,17 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
 import org.soulwing.prospecto.ViewContextProducer;
 import org.soulwing.prospecto.ViewReaderFactoryProducer;
@@ -40,6 +45,10 @@ import org.soulwing.prospecto.ViewWriterFactoryProducer;
 import org.soulwing.prospecto.api.View;
 import org.soulwing.prospecto.api.ViewContext;
 import org.soulwing.prospecto.api.ViewTemplate;
+import org.soulwing.prospecto.api.ViewWriterFactory;
+import org.soulwing.prospecto.api.options.Options;
+import org.soulwing.prospecto.api.options.OptionsMap;
+import org.soulwing.prospecto.api.options.WriterKeys;
 import org.soulwing.prospecto.api.splice.SpliceHandler;
 import org.soulwing.prospecto.api.template.SpliceNode;
 
@@ -53,6 +62,15 @@ public class JsonSpliceHandlerTest {
   public static class MockObject {}
 
   public static final Object INJECTED_VALUE = new Object();
+
+  @Rule
+  public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+  @Mock
+  private SpliceNode nodeMock;
+
+  @Mock
+  private ViewWriterFactory writerFactory;
 
   private final JsonObject object = Json.createObjectBuilder()
       .add("string", "string")
@@ -158,6 +176,9 @@ public class JsonSpliceHandlerTest {
           .end()
       .build();
 
+  private JsonSpliceHandler spliceHandler =
+      new JsonSpliceHandler();
+
   @Test
   public void testGenerateWithNullSplice() throws Exception {
     final MockObject model = new MockObject();
@@ -236,5 +257,87 @@ public class JsonSpliceHandlerTest {
     assertThat(injectedValue, is(sameInstance(INJECTED_VALUE)));
   }
 
+  @Test
+  public void testApplyInvokesViewWriterWithMergedOptions() throws Exception {
+    Map<String, Object> optionsMap = new HashMap<>();
+    optionsMap.put(WriterKeys.INCLUDE_NULL_PROPERTIES, true);
 
+    final Options[] capturedOptions = new Options[1];
+    JsonSpliceHandler capturingHandler = new JsonSpliceHandler() {
+      @Override
+      protected ViewWriterFactory getViewWriterFactory(Options options) {
+        capturedOptions[0] = options;
+        return JsonSpliceHandlerTest.this.writerFactory;
+      }
+    };
+
+    context.checking(new Expectations() {{
+      allowing(nodeMock).get(JsonSpliceHandler.Consumer.class);
+      will(returnValue(objectConsumer));
+      allowing(nodeMock).get("options", Map.class);
+      will(returnValue(optionsMap));
+      allowing(writerFactory).newWriter(with(any(View.class)));
+    }});
+
+    ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockObject.class)
+        .splice("json", capturingHandler)
+        .attribute(objectProducer)
+        .attribute(objectConsumer)
+        .end()
+        .build();
+
+    View view = template.generateView(new MockObject(),
+        ViewContextProducer.newContext());
+
+    capturingHandler.apply(nodeMock, view,
+        ViewContextProducer.newContext());
+
+    assertThat(capturedOptions[0], is(not(nullValue())));
+    OptionsMap captured = (OptionsMap) capturedOptions[0];
+
+    assertThat(captured.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(captured.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+    assertThat(captured.isEnabled(WriterKeys.INCLUDE_NULL_PROPERTIES), is(true));
+  }
+
+  @Test
+  public void testApplyInvokesViewWriterWithDefaultOptions() throws Exception {
+    final Options[] capturedOptions = new Options[1];
+    JsonSpliceHandler capturingHandler = new JsonSpliceHandler() {
+      @Override
+      protected ViewWriterFactory getViewWriterFactory(Options options) {
+        capturedOptions[0] = options;
+        return JsonSpliceHandlerTest.this.writerFactory;
+      }
+    };
+
+    context.checking(new Expectations() {{
+      allowing(nodeMock).get(JsonSpliceHandler.Consumer.class);
+      will(returnValue(objectConsumer));
+      allowing(nodeMock).get("options", Map.class);
+      will(returnValue(null));
+      allowing(writerFactory).newWriter(with(any(View.class)));
+    }});
+
+    ViewTemplate template = ViewTemplateBuilderProducer
+        .object(MockObject.class)
+        .splice("json", capturingHandler)
+        .attribute(objectProducer)
+        .attribute(objectConsumer)
+        .end()
+        .build();
+
+    View view = template.generateView(new MockObject(),
+        ViewContextProducer.newContext());
+
+    capturingHandler.apply(nodeMock, view,
+        ViewContextProducer.newContext());
+
+    assertThat(capturedOptions[0], is(not(nullValue())));
+    OptionsMap captured = (OptionsMap) capturedOptions[0];
+
+    assertThat(captured.isEnabled(WriterKeys.WRAP_ARRAY_IN_ENVELOPE), is(false));
+    assertThat(captured.isEnabled(WriterKeys.WRAP_OBJECT_IN_ENVELOPE), is(false));
+  }
 }
