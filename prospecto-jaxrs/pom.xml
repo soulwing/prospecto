@@ -26,6 +26,7 @@
   </parent>
 
   <artifactId>prospecto-jaxrs</artifactId>
+  <name>${parent.name} JAX-RS</name>
 
   <dependencies>
     <dependency>

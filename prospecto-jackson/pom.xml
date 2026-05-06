@@ -26,6 +26,7 @@
   </parent>
 
   <artifactId>prospecto-jackson</artifactId>
+  <name>${parent.name} Jackson</name>
 
   <dependencies>
     <dependency>

@@ -26,6 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>prospecto-api</artifactId>
+  <name>${parent.name} API</name>
 
   <dependencies>
     <dependency>

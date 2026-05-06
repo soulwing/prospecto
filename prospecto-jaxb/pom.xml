@@ -27,6 +27,7 @@
   </parent>
 
   <artifactId>prospecto-jaxb</artifactId>
+  <name>${parent.name} JAXB</name>
 
   <dependencies>
     <dependency>
